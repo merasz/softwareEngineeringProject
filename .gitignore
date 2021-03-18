@@ -6,3 +6,6 @@
 /src/main/webapp/WEB-INF/.faces-config.xml.jsfdia
 /.idea/
 /lib/
+.DS_Store
+documents/softwarekonzept/DS_Store
+skeleton.iml
