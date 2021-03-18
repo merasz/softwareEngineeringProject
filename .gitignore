@@ -7,5 +7,5 @@
 /.idea/
 /lib/
 .DS_Store
-documents/softwarekonzept/DS_Store
+documents/softwarekonzept/.DS_Store
 skeleton.iml
