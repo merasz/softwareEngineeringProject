@@ -1,0 +1,190 @@
+gap service
+00001800-0000-1000-8000-00805f9b34fb
+gatt service
+00001801-0000-1000-8000-00805f9b34fb
+device info service
+0000180a-0000-1000-8000-00805f9b34fb
+batterie service
+0000180f-0000-1000-8000-00805f9b34fb
+
+
+sudo hcitool lescan
+gatttool -b 0C:61:CF:C7:95:D0 -I
+char-write-req 25 303030303030
+char-read-hnd 19
+
+
+char-desc (character description)
+uuid: 00002800-...	das attribut 2800 gibt an das ein service beginnt (startpunkt eines services)
+uuid: 00002803-...	das attribut 2803 gibt an das ein characteristic beginnt characteristic declaration attribute
+uuid: 00002a00-...	das gibt hierbei an das es eine ausprägung des zuvor angegebenen char ist
+			es ist das char value attribut des ersten services, hierbei des gatt services
+			2a00 beinhaltet den namen des devices
+			
+eine uuid bestimmt ein bestimmtes verhalten oder funktion.
+uuids sind innerhalb eines attribut tables nicht unique
+um sie wirklich zu identifizieren benötigt man auch noch den
+handle.
+der handle macht das attribut eindeutig addressierbar
+
+der befehl "primary"
+gibt an welche handles zu welchem service gehören
+es ist immer eine spanne von handles, somit gibt er
+beginn und ende des jeweiligen services an.
+
+attribute des gapp services erhält man durch
+char-desc 1 7
+
+nicht jeder handle is wichtig für uns, da wir oft handles
+nicht benötigen die uns zeigen das ein neues char im handle beginnt
+
+
+der befehl "characteristics" gibt dann wirklich die uuids an die 
+wirklich nötig sind mit welchen wir arbeiten
+
+char properties geben an welche operationen auf das spezifische 
+characteristic ausgeführt werden koennen
+
+char value handle gibt jenes handle an der das char value addressiert
+und nicht das attribut dass das char deklariert
+
+welche operationen kann man auf die char value attribute ausführen?
+es gibt verschiedene möglichkeiten/operationen die auf ein attribut ausführbar sind
+mögliche operationen:
+lesen
+schreiben
+schreiben mit oder ohne antwort
+notification
+indication
+broadcast
+und noch ein paar nicht relevante operationen für unseren timeflip
+
+jede diese operationen ist durch eine hexa decimal zahl definiert
+0x02 ist read access
+0x10 notification access
+0x0a read access und write access (read = 2, write = 8)
+
+
+
+
+wie liest man ein char value attribute aus?
+mit dem befehl "char-read-hnd" mit dem jeweiligen handle welchen man auslesen möchte bsp
+char-read-hnd 3 gibt mir den inhalt zurück hierbei der name des devices
+
+will ich ein char schreiben dann mit char-write-req 3
+char-write-req 3 5473747365
+immer hexa angeben
+
+charachteristics 15 ffff gibt mir nur die vom timeflip spezifischen services zurück
+
+
+session beenden
+disconnect
+exit
+
+um zugriff auf die timeflip services zu bekommen muss man das passwort hinterlegen
+char-write-req 25 303030303030
+danach könnte man die anderen services benutzen und auslesen
+bspweise den facet des timeflips auslesen welcher gerade oben liegt.
+char-read-hnd 19
+
+wichtig fuer unser bsp ist das zusammenspiel des command characteristic
+und dem command result output characteristic
+
+
+für das command char gibt es verschiedene commandos
+die ausgeführt werden wenn sie in das command char geschrieben werden
+
+das command char ist ebenso wieder auslesbar sowie den statuscode ob
+der befehl erfolgreich ausgeführt worden ist oder nicht
+
+durch manche commandos erhält man daten, bspweise history read out request
+dadruch erhält man in das command result output char den output
+
+
+bsp auf den handle 1e schreibe ich das commande 01
+char-write-req 1e 01
+char-read-hnd 1e 	ueberprüft mir ob das kommando erfolgreich ausgeführt wurde
+ergebnis sollte 01 02 sein, das dass kommando 01 im status 2 erfolgreich ausgeführt wurde
+
+das beispiel gibt den history read out für die jeweiligen facets wie oft sie auf den jewieligen seiten
+seit dem letzten history clean befunden haben
+und wielange sie sich seit dem letzten history readout auf dieser seite befunden haben
+
+
+
+
+weitere wichtige kommandos
+
+status request kommando, dieses commando kann 3 verschiedene ausprägungen haben.
+pause
+auto pause
+lock
+
+lock funktion sperrt den wuerfel
+
+sollte lock oder pause aktiv sein, ist der status auf 0x01 gesetzt
+0x02 wenn lock function off
+wenn auto pause aktiv ist dann wird ein timer value aktiviert welcher wieder im status request ausgelesen werden kann
+
+sollte man diesen status request schreiben
+char-write-req 1e 10
+und dann wieder auslesen
+char-read-hnd 1c
+Characteristic value/descriptor: 02 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+sieht man beim ersten 02 das der status der lockfuntkion aus ist (also lock ist deaktiviert)
+das naechste 02 sagt mir das pause ebenso deaktiviert ist
+und die folgenden 00 zeigen das kein timer für autopause gestzt wurde
+
+wie sperrt man den würfel?
+was ist mit sperren gemeint?
+wird ein würfel gesperrt, ist es egal auf welche seite der würfel gedreht wird, die zeitmessung, wird 
+weiterhin auf den facet welcher oben gelegen ist als er gesperrt wurde weiterhin gestopt
+
+bsp für eine beliebige seite welche ich sperren möchte und auf die ich die zeit messen moechte.
+zuerst die seite auslesen welche ich sperren moechte
+char-read-hnd 19
+gibt mir die jeweilige facet aus der oben liegt.
+nun schreibe ich das char
+04 ist das kommando lock und 01 das es aktiviert wird
+nun schreibt man in das char value
+char-write-req 1e 0401
+
+sollte ich nun das char-read-hnd 19 auslesen und ich es mehrmals ausführe
+sollte ich mitbekommen das es immer die selbe seite ausgibt, da der wurfel gesperrt wurde
+mit char-read-hnd 1c kann ich nun wieder den request auslesen und sehe dabei das sich nun ein lock darauf
+befindet
+
+den lock hebe ich mit
+char-write-req 1e 10
+auf
+
+wichtig die zeile für das facet char in den properties besitzt 0x12
+wobei das zwei lesezugriff gewährt und das 1 für notification,
+heißt man kann notifications auf dieses char value attribut einstellen.
+
+ab min 13 nochmal kuken
+
+
+notification mit der man den ständigen facet bekommt der gerade oben liegt.
+char-write-req 1a 0100
+
+char-read-uuid 2902 
+mit 
+char-write-req 1a 0000 schalte ich es wieder aus
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
