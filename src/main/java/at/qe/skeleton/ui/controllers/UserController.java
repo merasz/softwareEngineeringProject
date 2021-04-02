@@ -57,29 +57,17 @@ public class UserController extends Controller implements Serializable {
     }
 
     /**
-     * Action to save the currently displayed user.
-     */
-    public void doSaveUser() {
-        user = this.userService.saveUser(user);
-    }
-
-    /**
      * Action to delete the currently displayed user.
      */
     public void doDeleteUser() {
-        this.userService.deleteUser(user);
-        user = null;
-    }
-
-    /**
-     * Action to change a user's password.
-     */
-    public void doUpdatePassword() {
         try {
-            user = this.userService.updatePassword(user, password);
-            displayInfo("Password changed" ,"Password successfully changed.");
+            this.userService.deleteUser(user);
+            user = null;
+            displayInfo("User deleted", "Account successfully deleted.");
         } catch (IllegalArgumentException e){
-            displayError("Password cannot be empty", "Please enter any characters for your password.");
+            displayError("Error", e.getMessage());
+        } catch (Exception e) {
+            displayError("Error", "Account could not be deleted.");
         }
     }
 

@@ -3,9 +3,8 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.UserRole;
 import at.qe.skeleton.repositories.UserRepository;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Set;
+
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -58,7 +57,7 @@ public class UserService {
      * @param user the user to save
      * @return the updated user
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #username")
     public User saveUser(User user) {
         if (user.isNew()) {
             user.setCreateDate(new Date());
@@ -75,7 +74,7 @@ public class UserService {
      *
      * @param user the user to delete
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #username")
     public void deleteUser(User user) throws IllegalArgumentException {
         // Last Admin can't be deleted
         if (user.getRoles().contains(UserRole.ADMIN) && userRepository.findByRole(UserRole.ADMIN).size() < 2) {
@@ -88,21 +87,18 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public User saveNewUser(String username, String password, String firstName, String lastName, String email, Set<UserRole> roles) throws IllegalArgumentException, NullPointerException {
-        User user = createNewUser(username, password, firstName, lastName, email, roles);
-        return saveUser(user);
-    }
-
-    public User saveEditedUser(User user) throws IllegalArgumentException {
-        validateInput(user.getUsername(), user.getPassword(), user.getFirstName(), user.getLastName(), user.getRoles());
-        return saveUser(user);
-    }
-
-    private User createNewUser(String username, String password, String firstName, String lastName, String email, Set<UserRole> roles) throws IllegalArgumentException, NullPointerException {
-        validateInput(username, password, firstName, lastName, roles);
+    public User createUser(User user, String username, String password, String firstName, String lastName, String email) throws IllegalArgumentException, NullPointerException {
+        validateInput(username, password, firstName, lastName);
         validateUsername(username);
 
-        User user = new User();
+        Set<UserRole> roles = user.getRoles();
+        if (user.isNew()) {
+            user = new User();
+        }
+        //TODO: check
+        if (roles.isEmpty()) {
+            roles = new HashSet<>(Collections.singletonList(UserRole.EMPLOYEE));
+        }
         user.setUsername(username);
         user.setPassword(password);
         user.setFirstName(firstName);
@@ -111,21 +107,31 @@ public class UserService {
         user.setEnabled(true);
         user.setRoles(roles);
 
-        return user;
+        return saveUser(user);
     }
 
     @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #username")
-    public User updatePassword(User user, String password) throws IllegalArgumentException {
+    public User updatePassword(User user, String password, String confirm) throws IllegalArgumentException {
         if (password.trim().isEmpty()) {
             throw new IllegalArgumentException("Password cannot be empty.");
+        } else if (!password.equals(confirm)) {
+            throw new IllegalArgumentException("Confirmed password differs.");
         }
 
         user.setPassword(password.trim());
         return saveUser(user);
     }
 
-    private void validateInput(String username, String password, String firstName, String lastName, Set<UserRole> roles) throws IllegalArgumentException, NullPointerException {
-        if (username.isEmpty() || password.isEmpty() || firstName.isEmpty() || lastName.isEmpty() || roles.isEmpty()) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public User updateRoles(User user, UserRole[] roles) {
+        Set<UserRole> ur = new HashSet<>(Arrays.asList(roles));
+        user.setRoles(ur);
+
+        return userRepository.save(user);
+    }
+
+    private void validateInput(String username, String password, String firstName, String lastName) throws IllegalArgumentException, NullPointerException {
+        if (username.isEmpty() || password.isEmpty() || firstName.isEmpty() || lastName.isEmpty()) {
             throw new IllegalArgumentException("All fields need to be filled.");
         }
     }
