@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
- * Controller for the user detail view.
+ * Controller for the user view.
  *
  * This class is part of the skeleton project provided for students of the
  * courses "Software Architecture" and "Software Engineering" offered by the
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Scope("view")
-public class UserDetailController implements Serializable {
+public class UserController extends Controller implements Serializable {
 
     @Autowired
     private UserService userService;
@@ -25,6 +25,7 @@ public class UserDetailController implements Serializable {
      * Attribute to cache the currently displayed user
      */
     private User user;
+    private String password;
 
     /**
      * Sets the currently displayed user and reloads it form db. This user is
@@ -42,7 +43,7 @@ public class UserDetailController implements Serializable {
     /**
      * Returns the currently displayed user.
      *
-     * @return
+     * @return User
      */
     public User getUser() {
         return user;
@@ -70,4 +71,19 @@ public class UserDetailController implements Serializable {
         user = null;
     }
 
+    /**
+     * Action to change a user's password.
+     */
+    public void doUpdatePassword() {
+        try {
+            user = this.userService.updatePassword(user, password);
+            displayInfo("Password changed" ,"Password successfully changed.");
+        } catch (IllegalArgumentException e){
+            displayError("Password cannot be empty", "Please enter any characters for your password.");
+        }
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
 }
