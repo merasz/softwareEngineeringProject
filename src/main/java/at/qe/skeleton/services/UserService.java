@@ -2,6 +2,7 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.UserRole;
+import at.qe.skeleton.repositories.ScoreRepository;
 import at.qe.skeleton.repositories.UserRepository;
 
 import java.util.*;
@@ -26,6 +27,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ScoreRepository scoreRepository;
 
     /**
      * Returns a collection of all users.
@@ -82,13 +86,13 @@ public class UserService {
         }
 
         //TODO: delete scores
-        this.scoreRepository.findAllByUser(user).stream().forEach(score -> this.scoreRepository.delete(score));
+        this.scoreRepository.findAllByUser(user).forEach(score -> this.scoreRepository.delete(score));
 
         userRepository.delete(user);
     }
 
-    public User createUser(User user, String username, String password, String firstName, String lastName, String email) throws IllegalArgumentException, NullPointerException {
-        validateInput(username, password, firstName, lastName);
+    public User createUser(User user, String username, String password) throws IllegalArgumentException, NullPointerException {
+        validateInput(username, password);
         validateUsername(username);
 
         Set<UserRole> roles = user.getRoles();
@@ -101,9 +105,6 @@ public class UserService {
         }
         user.setUsername(username);
         user.setPassword(password);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setEmail(email);
         user.setEnabled(true);
         user.setRoles(roles);
 
@@ -130,8 +131,8 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    private void validateInput(String username, String password, String firstName, String lastName) throws IllegalArgumentException, NullPointerException {
-        if (username.isEmpty() || password.isEmpty() || firstName.isEmpty() || lastName.isEmpty()) {
+    private void validateInput(String username, String password) throws IllegalArgumentException, NullPointerException {
+        if (username.isEmpty() || password.isEmpty()) {
             throw new IllegalArgumentException("All fields need to be filled.");
         }
     }
