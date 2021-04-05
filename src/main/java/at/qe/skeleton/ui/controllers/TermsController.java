@@ -1,10 +1,12 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.services.TermsService;
+import org.apache.tomcat.util.json.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -90,6 +92,16 @@ public class TermsController extends Controller implements Serializable {
 
     public void setTerm(Term term) {
         this.term = term;
+    }
+
+    public void importTerms() {
+        try {
+            termsService.importTerms();
+        } catch (FileNotFoundException e) {
+            displayError("File not found", "Error: File not found.");
+        } catch (ParseException e) {
+            displayError("Parse error", "Error: File could not be read.");
+        }
     }
 
     public TermsService getTermsService() {

@@ -3,9 +3,15 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.repositories.TermsRepository;
 import at.qe.skeleton.repositories.TopicRepository;
+import at.qe.skeleton.utils.JsonImport;
+import org.apache.tomcat.util.json.ParseException;
+import org.primefaces.shaded.json.JSONArray;
+import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import java.io.FileNotFoundException;
 
 @Component
 @Scope("application")
@@ -48,6 +54,33 @@ public class TermsService {
         Topic t = topicRepository.findFirstByName(name);
         if (t != null) {
             throw new IllegalArgumentException("Topic already exists.");
+        }
+    }
+
+    public void importTerms() throws FileNotFoundException, ParseException {
+        JSONArray json = JsonImport.readJson("terms");
+
+        for (Object o : json) {
+            JSONObject jsonObject = (JSONObject) o;
+
+            String topicName = jsonObject.keys().next();
+//            Topic topic = topicRepository.findFirstByName(topicName);
+//            if (topic == null) {
+//                topic = new Topic(topicName);
+//            }
+
+            String termName = (String) jsonObject.names().get(0);
+//            Term term = termsRepository.findFirstByName(termName);
+//            if (term == null || term.getTopic().getName() != topicName) {
+//                term = new Term(termName, topic);
+//            }
+//
+//            topicRepository.save(topic);
+//            termsRepository.save(term);
+
+            System.out.println(topicName);
+            System.out.println(termName);
+            System.out.println("-----");
         }
     }
 
