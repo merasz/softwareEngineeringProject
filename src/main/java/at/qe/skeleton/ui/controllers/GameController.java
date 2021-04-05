@@ -45,4 +45,6 @@ public class GameController extends Controller implements Serializable {
         game = gameService.haltGame(game);
         return game;
     }
+
+
 }

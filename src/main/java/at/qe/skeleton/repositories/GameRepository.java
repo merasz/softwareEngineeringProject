@@ -5,5 +5,4 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface GameRepository extends AbstractRepository<Game, Integer> {
 
-
 }

@@ -35,51 +35,53 @@ public class TermsController extends Controller implements Serializable {
     }
 
     public void addTopic(String name) {
-        if (topics.stream().map(Topic::getName).collect(Collectors.toList()).contains(name)) {
-            displayError("Topic not created", "Topic already exists.");
-        } else {
-            termsService.saveTopic(name);
+        try {
+            termsService.saveTopic(name, new Topic());
             displayInfo("Topic created", "New topic successfully created.");
+        } catch (IllegalArgumentException e) {
+            displayError("Topic not created", e.getMessage());
         }
     }
 
     public void addTerm(String name) {
-        if (terms.stream().map(Term::getName).collect(Collectors.toList()).contains(name)) {
-            displayError("Term not created", "Term already exists.");
-        } else {
-            termsService.saveTerm(name, this.topic);
+        try {
+            termsService.saveTerm(name, this.topic, new Term());
             displayInfo("Term created", "New term successfully created.");
+        } catch (IllegalArgumentException e) {
+            displayError("Term not created", e.getMessage());
         }
     }
 
     public void editTopic(String name) {
-        if (topics.stream().map(Topic::getName).collect(Collectors.toList()).contains(name)) {
-            displayError("Topic not changed", "Topic already exists.");
-        } else {
-            termsService.updateTopic(name, topic);
+        try {
+            termsService.saveTopic(name, topic);
             displayInfo("Topic updated", "Topic successfully changed.");
+        } catch (IllegalArgumentException e) {
+            displayError("Topic not updated", e.getMessage());
         }
     }
 
     public void editTerm(String name, Topic topic) {
-        if (terms.stream().map(Term::getName).collect(Collectors.toList()).contains(name)) {
-            displayError("Term not changed", "Term already exists.");
-        } else {
-            termsService.updateTerm(name, topic, term);
+        try {
+            termsService.saveTerm(name, topic, term);
             displayInfo("Term updated", "Term successfully changed.");
+        } catch (IllegalArgumentException e) {
+            displayError("Term not updated", e.getMessage());
         }
     }
 
     public void deleteTopic() {
         try {
             termsService.deleteTopic(topic);
+            displayInfo("Topic deleted", "Topic successfully deleted.");
         } catch (IllegalArgumentException e) {
-            displayError("Topic not deleted", e.getMessage());;
+            displayError("Topic not deleted", e.getMessage());
         }
     }
 
     public void deleteTerm() {
         termsService.getTermsRepository().delete(term);
+        displayInfo("Term deleted", "Term successfully deleted.");
     }
 
     public void setTopic(Topic topic) {

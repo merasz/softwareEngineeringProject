@@ -1,5 +1,6 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.model.User;
 import at.qe.skeleton.repositories.TermsRepository;
 import at.qe.skeleton.repositories.TopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,20 +16,14 @@ public class TermsService {
     @Autowired
     private TopicRepository topicRepository;
 
-    public void saveTopic(String name) {
-        topicRepository.save(new Topic(name));
-    }
-
-    public void saveTerm(String name, Topic topic) {
-        termsRepository.save(new Term(name, topic));
-    }
-
-    public void updateTopic(String name, Topic topic) {
+    public void saveTopic(String name, Topic topic) throws IllegalArgumentException {
+        validateTopic(name);
         topic.setName(name);
-        termsRepository.save(topic);
+        topicRepository.save(topic);
     }
 
-    public void updateTerm(String name, Topic topic, Term term) {
+    public void saveTerm(String name, Topic topic, Term term) throws IllegalArgumentException {
+        validateTerm(name);
         term.setName(name);
         term.setTopic(topic);
         termsRepository.save(term);
@@ -39,6 +34,20 @@ public class TermsService {
             throw new IllegalArgumentException("Topic contains terms and therefore cannot be deleted.");
         } else {
             topicRepository.delete(topic);
+        }
+    }
+
+    private void validateTerm(String name) throws IllegalArgumentException {
+        Term t = termsRepository.findFirstByName(name);
+        if (t != null) {
+            throw new IllegalArgumentException("Term already exists.");
+        }
+    }
+
+    private void validateTopic(String name) throws IllegalArgumentException {
+        Topic t = topicRepository.findFirstByName(name);
+        if (t != null) {
+            throw new IllegalArgumentException("Topic already exists.");
         }
     }
 

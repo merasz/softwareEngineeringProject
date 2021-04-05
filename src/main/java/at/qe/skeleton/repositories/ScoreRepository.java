@@ -8,5 +8,8 @@ import java.util.List;
 public interface ScoreRepository extends AbstractRepository<Score, Integer> {
 
     List<Score> findAllByUser(User user);
-    List<Scores> findAllByGame(Game game);
+    List<Score> findAllByGame(Game game);
+
+    //@Query("SELECT s FROM Score s WHERE s.game = :game AND s.team = :team")
+    List<Score> findAllByGameAndTeam(@Param("game") Game game, @Param("team") Team team);
 }

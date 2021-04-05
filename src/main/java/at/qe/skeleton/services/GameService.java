@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+
 @Component
 @Scope("application")
 public class GameService {
@@ -28,6 +30,29 @@ public class GameService {
         for (Score s : scoreRepository.findAllByGame(game)) {
             scoreRepository.delete(s);
         }
+    }
+
+    //total game score stats
+    public Score getGameScores(Game game) {
+        return sumScores(game.getScores());
+    }
+
+    //scores per team
+    public List<Score> getTeamScores(Game game) {
+        List<Score> scores = new ArrayList<>();
+        for (Team t : game.getTeams()) {
+            scores.add(sumScores(scoreRepository.findAllByGameAndTeam(game, t)));
+        }
+        return scores;
+    }
+
+    private Score sumScores(List<Score> scores) {
+        Score score = new Score();
+        for (Score s : scores) {
+            //sum up all corresponding score-entries
+            //save to new Score
+        }
+        return score;
     }
 
     public GameRepository getGameRepository() {
