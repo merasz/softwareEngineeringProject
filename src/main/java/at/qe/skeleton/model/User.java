@@ -4,17 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
+import java.util.List;
+
 import org.springframework.data.domain.Persistable;
 
 /**
@@ -51,6 +43,19 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
     private String phone;
 
     boolean enabled;
+
+    @ManyToOne
+    private Device device;
+
+    @ManyToOne
+    private Team team;
+
+    @ManyToOne
+    private GameLobby gameLobby;
+
+    @OneToMany(mappedBy = "user")
+    private List<Raspberry> raspberryList;
+
 
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "User_UserRole")
