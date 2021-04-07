@@ -1,10 +1,8 @@
 package at.qe.skeleton.model;
 
-
 /**
  * Enum for AuditLogEvents
  */
-
 
 public enum AuditLogEvent {
     AUDIT_LOG_UPDATE,
