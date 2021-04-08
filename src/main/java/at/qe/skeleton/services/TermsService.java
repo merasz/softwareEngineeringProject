@@ -1,6 +1,7 @@
 package at.qe.skeleton.services;
 
-import at.qe.skeleton.model.User;
+import at.qe.skeleton.model.Term;
+import at.qe.skeleton.model.Topic;
 import at.qe.skeleton.repositories.TermsRepository;
 import at.qe.skeleton.repositories.TopicRepository;
 import at.qe.skeleton.utils.JsonImport;
@@ -24,13 +25,13 @@ public class TermsService {
 
     public void saveTopic(String name, Topic topic) throws IllegalArgumentException {
         validateTopic(name);
-        topic.setName(name);
+        topic.setTopicName(name);
         topicRepository.save(topic);
     }
 
     public void saveTerm(String name, Topic topic, Term term) throws IllegalArgumentException {
         validateTerm(name);
-        term.setName(name);
+        term.setTermName(name);
         term.setTopic(topic);
         termsRepository.save(term);
     }
@@ -44,14 +45,14 @@ public class TermsService {
     }
 
     private void validateTerm(String name) throws IllegalArgumentException {
-        Term t = termsRepository.findFirstByName(name);
+        Term t = termsRepository.findFirstByTermName(name);
         if (t != null) {
             throw new IllegalArgumentException("Term already exists.");
         }
     }
 
     private void validateTopic(String name) throws IllegalArgumentException {
-        Topic t = topicRepository.findFirstByName(name);
+        Topic t = topicRepository.findFirstByTopicName(name);
         if (t != null) {
             throw new IllegalArgumentException("Topic already exists.");
         }

@@ -2,6 +2,7 @@ package at.qe.skeleton.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -12,20 +13,25 @@ public class Game implements Serializable {
     private int gameId;
 
     private int scoreToWin;
-    private String guessingField;
-    private int teamId;
-    private int virtualRoomId;
     private int totalScore;
     private int nrRound;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date startTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date endTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date pausedTime;
+
+    //TODO: change type to Raspberry
     private int raspberryId;
 
     @ManyToMany
-    private List<Team> playerList;
+    private List<Team> teamList;
 
     //private List<Integer> deviceTeamIdList;
 
     @ManyToOne
-    private GuessingTopic guessingTopic;
+    private Topic topic;
 
     @OneToMany(mappedBy = "game")
     private List<Score> scores;
@@ -44,30 +50,6 @@ public class Game implements Serializable {
 
     public void setScoreToWin(int scoreToWin) {
         this.scoreToWin = scoreToWin;
-    }
-
-    public String getGuessingField() {
-        return guessingField;
-    }
-
-    public void setGuessingField(String guessingField) {
-        this.guessingField = guessingField;
-    }
-
-    public int getTeamId() {
-        return teamId;
-    }
-
-    public void setTeamId(int teamId) {
-        this.teamId = teamId;
-    }
-
-    public int getVirtualRoomId() {
-        return virtualRoomId;
-    }
-
-    public void setVirtualRoomId(int virtualRoomId) {
-        this.virtualRoomId = virtualRoomId;
     }
 
     public int getTotalScore() {
@@ -94,24 +76,54 @@ public class Game implements Serializable {
         this.raspberryId = raspberryId;
     }
 
-    public List<Team> getPlayerList() {
-        return playerList;
+    public List<Team> getTeamList() {
+        return teamList;
     }
 
-    public void setPlayerList(List<Team> playerList) {
-        this.playerList = playerList;
+    public void setTeamList(List<Team> playerList) {
+        this.teamList = playerList;
     }
 
-    public Game(int gameId, int scoreToWin, String guessingField, int teamId, int virtualRoomId, int totalScore, int nrRound, int raspberryId, List<Team> playerList, List<Integer> deviceTeamIdList) {
-        this.gameId = gameId;
+    public Topic getTopic() {
+        return topic;
+    }
+
+    public List<Score> getScores() {
+        return scores;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public Date getPausedTime() {
+        return pausedTime;
+    }
+
+    public void setPausedTime(Date pausedTime) {
+        this.pausedTime = pausedTime;
+    }
+
+    public Game(int scoreToWin, int totalScore, int nrRound, Topic topic, int raspberryId, Date startTime, List<Team> teamList) {
         this.scoreToWin = scoreToWin;
-        this.guessingField = guessingField;
-        this.teamId = teamId;
-        this.virtualRoomId = virtualRoomId;
         this.totalScore = totalScore;
         this.nrRound = nrRound;
+        this.topic = topic;
         this.raspberryId = raspberryId;
-        this.playerList = playerList;
+        this.startTime = startTime;
+        this.teamList = teamList;
     }
 
     public Game() {

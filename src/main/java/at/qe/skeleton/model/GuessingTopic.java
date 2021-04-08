@@ -16,8 +16,8 @@ public class GuessingTopic implements Serializable {
     @ManyToOne
     private Entry entry;
 
-    @OneToMany(mappedBy = "guessingTopic")
-    private List<Game> games;
+    //@OneToMany(mappedBy = "guessingTopic")
+    //private List<Game> games;
 
     public GuessingTopic() {
     }

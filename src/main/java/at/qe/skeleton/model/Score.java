@@ -14,6 +14,9 @@ public class Score implements Serializable {
     private int totalRoundScore;
 
     @ManyToOne
+    private User user;
+
+    @ManyToOne
     private Team team;
 
     @ManyToMany
@@ -22,19 +25,16 @@ public class Score implements Serializable {
     @ManyToMany
     private List<Term> notGuessedTerms;
 
-    private int virtualRoomId;
-
     @ManyToOne
     private Game game;
 
     public Score() {
     }
 
-    public Score(int scoreId, int totalRoundScore, Team team, int virtualRoomId) {
+    public Score(int scoreId, int totalRoundScore, Team team) {
         this.scoreId = scoreId;
         this.totalRoundScore = totalRoundScore;
         this.team = team;
-        this.virtualRoomId = virtualRoomId;
     }
 
     public int getScoreId() {
@@ -53,6 +53,14 @@ public class Score implements Serializable {
         this.totalRoundScore = totalRoundScore;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public Team getTeam() {
         return team;
     }
@@ -61,11 +69,19 @@ public class Score implements Serializable {
         this.team = team;
     }
 
-    public int getVirtualRoomId() {
-        return virtualRoomId;
+    public List<Term> getGuessedTerms() {
+        return guessedTerms;
     }
 
-    public void setVirtualRoomId(int virtualRoomId) {
-        this.virtualRoomId = virtualRoomId;
+    public void setGuessedTerms(List<Term> guessedTerms) {
+        this.guessedTerms = guessedTerms;
+    }
+
+    public List<Term> getNotGuessedTerms() {
+        return notGuessedTerms;
+    }
+
+    public void setNotGuessedTerms(List<Term> notGuessedTerms) {
+        this.notGuessedTerms = notGuessedTerms;
     }
 }

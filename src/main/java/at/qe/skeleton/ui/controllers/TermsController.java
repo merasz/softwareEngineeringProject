@@ -1,5 +1,7 @@
 package at.qe.skeleton.ui.controllers;
 
+import at.qe.skeleton.model.Term;
+import at.qe.skeleton.model.Topic;
 import at.qe.skeleton.services.TermsService;
 import org.apache.tomcat.util.json.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
