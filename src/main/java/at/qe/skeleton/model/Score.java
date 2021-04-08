@@ -16,15 +16,16 @@ public class Score implements Serializable {
     @ManyToOne
     private Team team;
 
-    //private List<String> guessedTerms;
-    //private List<String> notGuessedTerms;
+    @ManyToMany
+    private List<Term> guessedTerms;
+
+    @ManyToMany
+    private List<Term> notGuessedTerms;
+
     private int virtualRoomId;
 
     @ManyToOne
-    private VirtualRoom virtualRoom;
-
-    //@ManyToOne
-    //private Team teamName;
+    private Game game;
 
     public Score() {
     }

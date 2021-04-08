@@ -1,8 +1,12 @@
 package at.qe.skeleton.model;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 public class Team implements Serializable {
@@ -14,21 +18,16 @@ public class Team implements Serializable {
     @OneToMany(mappedBy = "team")
     private List<User> teamPlayers;
 
-    @OneToMany(mappedBy = "team")
-    private List<GameConfig> gameConfigs;
-
     private String teamName;
 
-    //deviceIdsFromTeam
+    @ManyToMany
+    private List<Game> games;
 
-    //@OneToMany(mappedBy = "team")
-    //private List<Score> scores;
-
-    @ManyToOne
-    private VirtualRoom virtualRoom;
+    //@Type(type = "json")
+    //private Map<User,String> deviceIdsFromTeam;
 
     @OneToMany(mappedBy = "team")
-    private List<Score> score;
+    private List<Score> scores;
 
     public Team() {
     }

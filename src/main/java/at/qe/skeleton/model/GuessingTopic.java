@@ -13,11 +13,11 @@ public class GuessingTopic implements Serializable {
 
     private String guessingTopicName;
 
-    @OneToMany(mappedBy = "guessingTopic")
-    private List<GameConfig> gameConfigs;
-
     @ManyToOne
     private Entry entry;
+
+    @OneToMany(mappedBy = "guessingTopic")
+    private List<Game> games;
 
     public GuessingTopic() {
     }

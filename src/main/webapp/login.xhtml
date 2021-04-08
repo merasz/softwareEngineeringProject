@@ -1,24 +1,48 @@
-<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
-                xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:ng="http://xmlns.jcp.org/jsf/passthrough"
-                xmlns:p="http://primefaces.org/ui"
-                template="/WEB-INF/templates/main.xhtml">
-    <ui:define name ="content">
-        <form id="login_form" action="#{request.contextPath}/login" method="post">
-            <h:panelGrid columns="2">
-                <p:outputLabel for="username" value="Username:"/>
-                <p:inputText id="username" type="text" required="true"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-                <p:outputLabel for="password" value="Password:"/>
-                <p:inputText id="password" type="password" required="true"/>
+<h:head>
+    <title>Gruppe6Team1 - Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" href="resources/css/style.css"/>
+</h:head>
 
-                <button type="submit" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
-                    <span class="ui-button-text">Login</span>
-                    <button onclick="window.location.href = 'signUp.xhtml'" type="button" class="btn btn-primary btn-block btn-flat">Sign up</button>
-                </button>
-            </h:panelGrid>
-        </form>
-    </ui:define>
-</ui:composition>
+<h:body style="background-color: #34495e">
+
+    <p style="margin-top:1cm; font-size:25pt; color: white; margin-left: 30px; font-family: 'Berlin Sans FB Demi'">LOGIN</p>
+
+    <div class="login-box" style="box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);">
+        <div class="login-box-body">
+            <p class="login-box-msg"> #{!param['error']? 'Bitte melden Sie sich an' : 'Benutzername oder Passwort falsch'}</p>
+
+            <form id="login_form" action="#{request.contextPath}/login" method="post">
+                <div class="form-group has-feedback">
+                    <p:inputText id="username" type="text" required="true" class="form-control"
+                                 placeholder="Benutzername"/>
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <p:inputText id="password" type="password" required="true" class="form-control"
+                                 placeholder="Passwort"/>
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">Login</button>
+                        <button onclick="window.location.href = 'SingUp.xhtml'" type="button"
+                                class="btn btn-primary btn-block btn-flat">Sign up
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</h:body>
+</html>
