@@ -7,33 +7,39 @@
     <body>
         <ui:composition>
             <h:form>
-                <p:menubar>
-                    <p:submenu label="Employee Submenu 1" rendered="#{sessionInfoBean.hasRole('EMPLOYEE')}">
-                        <p:menuitem value="Employee Action 1 - 1"/>
-                        <p:menuitem value="Employee Action 1 - 2"/>
-                    </p:submenu>
-                    <p:submenu label="Employee Submenu 2" rendered="#{sessionInfoBean.hasRole('EMPLOYEE')}">
-                        <p:menuitem value="Employee Action 2 - 1"/>
-                        <p:menuitem value="Employee Action 2 - 2"/>
-                    </p:submenu>
-                    <p:submenu label="Manager Submenu" rendered="#{sessionInfoBean.hasRole('MANAGER')}">
-                        <p:menuitem value="Manager Action 1"/>
-                        <p:menuitem value="Manager Action 2"/>
-                    </p:submenu>
-                    <p:submenu label="Admin Submenu" rendered="#{sessionInfoBean.hasRole('ADMIN')}">
-                        <p:menuitem value="Manage Users" url="/admin/users.xhtml"/>
-                    </p:submenu>
-                    <p:submenu label="Test Submenu" rendered="#{sessionInfoBean.loggedIn}">
-                        <p:menuitem value="Security Test" url="/secured/test.xhtml"/>
-                    </p:submenu>                    
-                    <p:submenu label="Demos" rendered="#{sessionInfoBean.loggedIn}">                    
-						<p:menuitem value="Websockets" url="/secured/demos/chatRoom.xhtml"/>                    
-                    </p:submenu>
-                    
-                    <p:menuitem value="Login" url="/login.xhtml" rendered="#{!sessionInfoBean.loggedIn}"/>
-                    <p:menuitem value="Logout" url="/logout" rendered="#{sessionInfoBean.loggedIn}"/>                    
-                    
-                </p:menubar>
+                <input type="checkbox" id="check"/>
+                <div class="header">
+                    <label for="check">
+                        <i class="fas fa-bars" id="sidebar_btn"></i>
+                    </label>
+
+
+                    <div class="left_area">
+                     <h1>Gruppe6<span style="color: #0d9dbb">Team1</span></h1>
+                    </div>
+
+                    <div class="right_area">
+                        <a href="/logout" class="logout_btn">Logout</a>
+                    </div>
+                </div>
+
+                <div class="sidebar">
+                    <center>
+                        <img src="/loginpage.jpg" class="logo" alt=""/>
+                        <h4>Gruppe6Team1</h4>
+                    </center>
+                    <a href="#"><i class="fas fa-desktop"></i><span>Employee Submenu 1</span></a>
+                    <a href="#"><i class="fas fa-cogs"></i><span>Employee Submenu 2</span></a>
+                    <a href="#"><i class="fas fa-table"></i><span>Manager Submenu</span></a>
+                    <a href="/admin/users.xhtml"><i class="fas fa-th"></i><span>Admin Submenu</span></a>
+                    <a href="/secured/test.xhtml"><i class="fas fa-info-circle"></i><span>Test Submenu</span></a>
+                    <a href="/secured/demos/chatRoom.xhtml"><i class="fas fa-th"></i><span>Demos</span></a>
+
+                </div>
+
+                <div class="content">
+
+                </div>
             </h:form>
         </ui:composition>
     </body>
