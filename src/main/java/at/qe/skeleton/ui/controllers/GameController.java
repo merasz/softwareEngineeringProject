@@ -2,6 +2,7 @@ package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.GameService;
+import at.qe.skeleton.services.TermsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,9 @@ import java.util.List;
 public class GameController extends Controller implements Serializable {
     @Autowired
     private GameService gameService;
+
+    @Autowired
+    private TermsService termsService;
 
     private List<Game> games;
     private Game game;
@@ -70,12 +74,11 @@ public class GameController extends Controller implements Serializable {
         }
     }
 
+    //TODO
     public Game nextRound(int guessedRight) {
-        //guessedRight: -1 - foul, 0, not guessed, 1 guessed right
-        //gameService.updateScores(game, guessedRight, term, task);
-        //choose next term
-        //choose next player
-        //return updated game
+        //get current task
+        //int guessedRight: -1 -> foul, 0 -> not guessed, 1 -> guessed right
+        //gameService.updateScores(game, guessedRight, termsService.getNextTerm(game), task);
         return null;
     }
 
@@ -92,6 +95,10 @@ public class GameController extends Controller implements Serializable {
     }
 
     public void setTopic(Topic topic) {
-        this.topic = topic;
+        try {
+            this.topic = termsService.setGameTopic(game, topic);
+        } catch (IllegalArgumentException e) {
+            displayError("Too few terms in topic", e.getMessage());
+        }
     }
 }

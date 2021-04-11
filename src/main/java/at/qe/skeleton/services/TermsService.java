@@ -1,7 +1,9 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.Term;
 import at.qe.skeleton.model.Topic;
+import at.qe.skeleton.model.User;
 import at.qe.skeleton.repositories.TermsRepository;
 import at.qe.skeleton.repositories.TopicRepository;
 import at.qe.skeleton.utils.JsonImport;
@@ -13,6 +15,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @Component
 @Scope("application")
@@ -22,6 +27,13 @@ public class TermsService {
 
     @Autowired
     private TopicRepository topicRepository;
+
+    private final int MIN_NUMBER_TERMS = 10;
+    private int numTerms;
+    private Random r;
+    private Term currentTerm;
+    private List<Term> termsInTopic;
+    private List<Term> termsInThisGame;
 
     public void saveTopic(String name, Topic topic) throws IllegalArgumentException {
         validateTopic(name);
@@ -44,9 +56,34 @@ public class TermsService {
         }
     }
 
-    public Term getNextTerm() {
-        //TODO
-        return null;
+    public Topic setGameTopic(Game game, Topic topic) throws IllegalArgumentException {
+        termsInTopic = termsRepository.findAllByTopic(topic);
+        numTerms = termsInTopic.size();
+
+        if (numTerms == 0) {
+            throw new IllegalArgumentException("Topic has less than " + MIN_NUMBER_TERMS + " terms in this topi. Please choose another topic.");
+        } else {
+            r = new Random();
+            termsInThisGame = new ArrayList<>();
+            return topic;
+        }
+    }
+
+    public Term getNextTerm(Game game) {
+        if (numTerms == termsInThisGame.size()) {
+            termsInThisGame = new ArrayList<>();
+        }
+
+        int t;
+        Term term;
+        do {
+            t = r.nextInt(numTerms);
+            term = termsInTopic.get(t);
+        } while (termsInThisGame.contains(term));
+
+        currentTerm = term;
+        termsInThisGame.add(term);
+        return currentTerm;
     }
 
     private void validateTerm(String name) throws IllegalArgumentException {

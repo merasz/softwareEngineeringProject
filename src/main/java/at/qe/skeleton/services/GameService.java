@@ -28,7 +28,7 @@ public class GameService {
     private Random r;
     private User currentPlayer;
     private int currentTeam;
-    private List<User> usersPlayedThisRound;
+    private List<User> usersPlayedAlready;
 
     public Game createGame(int scoreToWin, int totalScore, int nrRound, Topic topic, int raspberryId, List<Team> teamList) {
         Game game = new Game(scoreToWin, totalScore, nrRound, topic, raspberryId, Timestamp.valueOf(LocalDateTime.now()), teamList);
@@ -72,7 +72,7 @@ public class GameService {
         Score score = scoreRepository.findFirstByUserAndGame(currentPlayer, game);
         int currentPoints = score.getTotalRoundScore();
 
-        //guessedRight: -1 - foul, 0, not guessed, 1 guessed right
+        //int guessedRight: -1 -> foul, 0 -> not guessed, 1 -> guessed right
         if (guessedRight == 1) {
             score.setTotalRoundScore(currentPoints + task.getPointsForTask());
             score.getGuessedTerms().add(term);
@@ -141,22 +141,22 @@ public class GameService {
 
     private void setCurrentPlayer(Game game) {
         r = new Random();
-        usersPlayedThisRound = new ArrayList<>();
+        usersPlayedAlready = new ArrayList<>();
         currentTeam = r.nextInt(game.getTeamList().size());
         List<User> players = game.getTeamList().get(currentTeam).getTeamPlayers();
         int p = r.nextInt(players.size());
         User player = players.get(p);
 
         this.currentPlayer = player;
-        this.usersPlayedThisRound.add(player);
+        this.usersPlayedAlready.add(player);
     }
 
     private void selectNextPlayer(Game game) {
         currentTeam = (currentTeam + 1) % game.getTeamList().size();
         List<User> players = game.getTeamList().get(currentTeam).getTeamPlayers();
 
-        if (usersPlayedThisRound.size() == numPlayers) {
-            usersPlayedThisRound = new ArrayList<>();
+        if (usersPlayedAlready.size() == numPlayers) {
+            usersPlayedAlready = new ArrayList<>();
         }
 
         int p;
@@ -164,9 +164,9 @@ public class GameService {
         do {
             p = r.nextInt(players.size());
             player = players.get(p);
-        } while (usersPlayedThisRound.contains(player));
+        } while (usersPlayedAlready.contains(player));
 
         this.currentPlayer = player;
-        this.usersPlayedThisRound.add(player);
+        this.usersPlayedAlready.add(player);
     }
 }
