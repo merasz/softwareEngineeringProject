@@ -14,6 +14,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+
+
 class ValueNotification implements BluetoothNotification<byte[]> {
     public void run(byte[] tempRaw) {
             System.out.print(tempRaw[0]);
@@ -126,12 +128,14 @@ public final class Main {
                 System.out.println("Connection established");
                 System.out.println("Save Timeflip MacAddress in file, for later use, if it gets disconnected and we want to reconect");
                 createFile(device.getAddress());
-                // TODO: read from device
                 System.out.println("Try to read out data from: " + device.getName());
-                readDataFromTimeflip(device);
-   //             device.enableConnectedNotifications(new ConnectedNotification());
-   //             notifyFacet(device);
-                device.disconnect();
+                try {
+                    readDataFromTimeflip(device);
+                    //             device.enableConnectedNotifications(new ConnectedNotification());
+                    //             notifyFacet(device);
+                } finally {
+                    device.disconnect();
+                }
             } else {
                 System.out.println("Connection not established - trying next one");
             }
@@ -196,20 +200,31 @@ public final class Main {
         setTimeflipPasswd(device, timeflipService);
 
         boolean set;
-        set = deleteHistory(device, timeflipService);
-        set = deleteHistory(device, timeflipService);
-        set = deleteHistory(device, timeflipService);
-        set = deleteHistory(device, timeflipService);
-        set = deleteHistory(device, timeflipService);
-        set = deleteHistory(device, timeflipService);
-        set = deleteHistory(device, timeflipService);
-        set = deleteHistory(device, timeflipService);
-        System.out.println("sleep 20 seconds, history is clear");
-        Thread.sleep(180000);
+        System.out.println("sleep 10 seconds, history is clear");
+        System.out.println("rssi: " + device.getRSSI());
+        Thread.sleep(10000);
         set = readHistory(device, timeflipService);
         System.out.println("history" + getTimeflipCommandResultOutputHistory(device, timeflipService));
 
         System.out.println(getCurrentTimeflipFacet(device, timeflipService));
+
+        //now try to check for 50 seconds if facet changes
+        int current = getCurrentTimeflipFacet(device, timeflipService);
+        int next = getCurrentTimeflipFacet(device, timeflipService);
+        System.out.println("before: " + current);
+        Date date = new Date();
+        long start = System.currentTimeMillis();
+        System.out.println("time start: " + start);
+        long end = System.currentTimeMillis()+15000L;
+        System.out.println("time start: " + end);
+        System.out.println("now u can roll the dice and see what happens\n");
+        while(current == next || start < end) {
+            start = System.currentTimeMillis();
+            next = getCurrentTimeflipFacet(device, timeflipService);
+            System.out.println("current facet: "+ next);
+            Thread.sleep(500);
+        }
+        System.out.println("after: " + next);
     }
 
     private static void createFile(String address) {
@@ -366,6 +381,16 @@ public final class Main {
             return true;
         return false;
     }
+
+    private static boolean autoStopTime(BluetoothDevice device, BluetoothGattService timeflipService) throws InterruptedException {
+        byte[] command = { 0x05 };
+        boolean setCommand = setTimeflipCommand(device, timeflipService, command);
+        if(setCommand)
+            return true;
+        return false;
+    }
+
+
 
     private static List<String> readAllHistory(BluetoothGattCharacteristic chara) {
         byte[] history = chara.readValue();
