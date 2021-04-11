@@ -1,6 +1,6 @@
 package at.qe.skeleton.api.controllers;
 
-import at.qe.skeleton.api.model.Team;
+import at.qe.skeleton.api.model.RestTeamDemoModel;
 import at.qe.skeleton.api.services.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,18 +11,18 @@ public class TeamController {
     private TeamService teamService;
 
     @PostMapping("/teams")
-    private Team createTeam(@RequestBody Team team) {
-        return teamService.addTeam(team);
+    private RestTeamDemoModel createTeam(@RequestBody RestTeamDemoModel restTeamDemoModel) {
+        return teamService.addTeam(restTeamDemoModel);
     }
 
     @GetMapping("/teams/{id}")
-    private Team getOneTeam(@PathVariable Long id) {
+    private RestTeamDemoModel getOneTeam(@PathVariable Long id) {
         return teamService.findOneTeam(id);
     }
 
     @PatchMapping("/teams/{id}")
-    private Team updateTeam(@PathVariable Long id, @RequestBody Team team) {
-        return teamService.updateTeam(id, team);
+    private RestTeamDemoModel updateTeam(@PathVariable Long id, @RequestBody RestTeamDemoModel restTeamDemoModel) {
+        return teamService.updateTeam(id, restTeamDemoModel);
     }
 
 }

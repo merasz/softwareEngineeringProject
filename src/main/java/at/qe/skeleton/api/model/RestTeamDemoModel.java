@@ -1,6 +1,6 @@
 package at.qe.skeleton.api.model;
 
-public class Team {
+public class RestTeamDemoModel {
     private long id;
     private String name;
     private Integer points;
