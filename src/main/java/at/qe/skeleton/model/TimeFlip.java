@@ -3,10 +3,13 @@ package at.qe.skeleton.model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 public class TimeFlip implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,15 +28,13 @@ public class TimeFlip implements Serializable {
 
     private boolean inUse;
 
-    @ElementCollection(targetClass = RequestType.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "Timeflip_RequestType")
-    @Enumerated(EnumType.STRING)
-    private Set<RequestType> requestTypes;
-
-    @ElementCollection(targetClass = TimeflipSetupStatus.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = TimeFlipSetupStatus.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "Timeflip_TimeflipSetupStatuts")
     @Enumerated(EnumType.STRING)
-    private Set<TimeflipSetupStatus> timeflipSetupStatuses;
+    private Set<TimeFlipSetupStatus> timeFlipSetupStatuses;
+
+    @OneToMany(mappedBy = "timeFlip")
+    private List<Task> tasks;
 
     public int getTimeFlipId() {
         return timeFlipId;

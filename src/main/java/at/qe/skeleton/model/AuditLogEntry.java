@@ -8,6 +8,8 @@ import javax.persistence.*;
 @Entity
 public class AuditLogEntry implements Serializable {
 
+    private static final long serialVersionUID = 2L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int auditLogId;
@@ -20,6 +22,18 @@ public class AuditLogEntry implements Serializable {
     @CollectionTable(name = "Auditlogentry_AuditLogEvent")
     @Enumerated(EnumType.STRING)
     private Set<AuditLogEvent> auditLogEvents;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Set<AuditLogEvent> getAuditLogEvents() {
+        return auditLogEvents;
+    }
+
+    public void setAuditLogEvents(Set<AuditLogEvent> auditLogEvents) {
+        this.auditLogEvents = auditLogEvents;
+    }
 
     public AuditLogEntry() {
     }
