@@ -12,4 +12,5 @@ public interface ScoreRepository extends AbstractRepository<Score, Integer> {
     List<Score> findAllByUser(User user);
     List<Score> findAllByGame(Game game);
     List<Score> findAllByGameAndTeam(Game game, Team team);
+    Score findFirstByUserAndGame(User user, Game game);
 }

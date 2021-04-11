@@ -96,7 +96,6 @@ public class UserServiceTest {
         Assertions.assertNull(toBeSavedUser.getUpdateUser(), "User \"" + username + "\" has a updateUser defined");
         Assertions.assertNull(toBeSavedUser.getUpdateDate(), "User \"" + username + "\" has a updateDate defined");
 
-        toBeSavedUser.setEmail("changed-email@whatever.wherever");
         userService.saveUser(toBeSavedUser);
 
         User freshlyLoadedUser = userService.loadUser("user1");
@@ -104,7 +103,6 @@ public class UserServiceTest {
         Assertions.assertNotNull(freshlyLoadedUser.getUpdateUser(), "User \"" + username + "\" does not have a updateUser defined after being saved");
         Assertions.assertEquals(adminUser, freshlyLoadedUser.getUpdateUser(), "User \"" + username + "\" has wrong updateUser set");
         Assertions.assertNotNull(freshlyLoadedUser.getUpdateDate(), "User \"" + username + "\" does not have a updateDate defined after being saved");
-        Assertions.assertEquals("changed-email@whatever.wherever", freshlyLoadedUser.getEmail(), "User \"" + username + "\" does not have a the correct email attribute stored being saved");
     }
 
     @DirtiesContext
@@ -124,10 +122,6 @@ public class UserServiceTest {
         toBeCreatedUser.setUsername(username);
         toBeCreatedUser.setPassword(password);
         toBeCreatedUser.setEnabled(true);
-        toBeCreatedUser.setFirstName(fName);
-        toBeCreatedUser.setLastName(lName);
-        toBeCreatedUser.setEmail(email);
-        toBeCreatedUser.setPhone(phone);
         toBeCreatedUser.setRoles(Sets.newSet(UserRole.PLAYER, UserRole.GAME_MANAGER));
         userService.saveUser(toBeCreatedUser);
 
@@ -135,10 +129,6 @@ public class UserServiceTest {
         Assertions.assertNotNull(freshlyCreatedUser, "New user could not be loaded from test data source after being saved");
         Assertions.assertEquals(username, freshlyCreatedUser.getUsername(), "New user could not be loaded from test data source after being saved");
         Assertions.assertEquals(password, freshlyCreatedUser.getPassword(), "User \"" + username + "\" does not have a the correct password attribute stored being saved");
-        Assertions.assertEquals(fName, freshlyCreatedUser.getFirstName(), "User \"" + username + "\" does not have a the correct firstName attribute stored being saved");
-        Assertions.assertEquals(lName, freshlyCreatedUser.getLastName(), "User \"" + username + "\" does not have a the correct lastName attribute stored being saved");
-        Assertions.assertEquals(email, freshlyCreatedUser.getEmail(), "User \"" + username + "\" does not have a the correct email attribute stored being saved");
-        Assertions.assertEquals(phone, freshlyCreatedUser.getPhone(), "User \"" + username + "\" does not have a the correct phone attribute stored being saved");
         Assertions.assertTrue(freshlyCreatedUser.getRoles().contains(UserRole.GAME_MANAGER), "User \"" + username + "\" does not have role GAME MANAGER");
         Assertions.assertTrue(freshlyCreatedUser.getRoles().contains(UserRole.PLAYER), "User \"" + username + "\" does not have role PLAYER");
         Assertions.assertNotNull(freshlyCreatedUser.getCreateUser(), "User \"" + username + "\" does not have a createUser defined after being saved");

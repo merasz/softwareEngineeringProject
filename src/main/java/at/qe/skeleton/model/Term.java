@@ -33,11 +33,11 @@ public class Term implements Serializable {
         this.termName = termName;
     }
 
-    public Topic getGuessingTopic() {
+    public Topic getTopic() {
         return topic;
     }
 
-    public void setGuessingTopic(Topic topic) {
+    public void setTopic(Topic topic) {
         this.topic = topic;
     }
 

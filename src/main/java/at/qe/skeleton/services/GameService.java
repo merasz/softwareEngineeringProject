@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Component
 @Scope("application")
@@ -22,9 +23,31 @@ public class GameService {
     @Autowired
     private ScoreRepository scoreRepository;
 
+    private final int PENALTY_POINTS = 1;
+    private int numPlayers = 0;
+    private Random r;
+    private User currentPlayer;
+    private int currentTeam;
+    private List<User> usersPlayedThisRound;
+
     public Game createGame(int scoreToWin, int totalScore, int nrRound, Topic topic, int raspberryId, List<Team> teamList) {
         Game game = new Game(scoreToWin, totalScore, nrRound, topic, raspberryId, Timestamp.valueOf(LocalDateTime.now()), teamList);
+        for (Team t : teamList) {
+            for (User u : t.getTeamPlayers()) {
+                Score s = new Score(u, t, game);
+                scoreRepository.save(s);
+                numPlayers++;
+            }
+        }
+        setCurrentPlayer(game);
         gameRepository.save(game);
+        return game;
+    }
+
+    //TODO
+    public Game nextTurn(Game game) {
+        selectNextPlayer(game);
+        //selectNextTerm();
         return game;
     }
 
@@ -43,6 +66,23 @@ public class GameService {
         for (Score s : scoreRepository.findAllByGame(game)) {
             scoreRepository.delete(s);
         }
+    }
+
+    public Game updateScores(Game game, int guessedRight, Term term, Task task) {
+        Score score = scoreRepository.findFirstByUserAndGame(currentPlayer, game);
+        int currentPoints = score.getTotalRoundScore();
+
+        //guessedRight: -1 - foul, 0, not guessed, 1 guessed right
+        if (guessedRight == 1) {
+            score.setTotalRoundScore(currentPoints + task.getPointsForTask());
+            score.getGuessedTerms().add(term);
+        } else if (guessedRight == -1) {
+            score.setTotalRoundScore(currentPoints - PENALTY_POINTS);
+            score.getNotGuessedTerms().add(term);
+        } else {
+            score.getNotGuessedTerms().add(term);
+        }
+        return game;
     }
 
     public boolean isFinished(Game game) {
@@ -97,5 +137,36 @@ public class GameService {
 
     public GameRepository getGameRepository() {
         return gameRepository;
+    }
+
+    private void setCurrentPlayer(Game game) {
+        r = new Random();
+        usersPlayedThisRound = new ArrayList<>();
+        currentTeam = r.nextInt(game.getTeamList().size());
+        List<User> players = game.getTeamList().get(currentTeam).getTeamPlayers();
+        int p = r.nextInt(players.size());
+        User player = players.get(p);
+
+        this.currentPlayer = player;
+        this.usersPlayedThisRound.add(player);
+    }
+
+    private void selectNextPlayer(Game game) {
+        currentTeam = (currentTeam + 1) % game.getTeamList().size();
+        List<User> players = game.getTeamList().get(currentTeam).getTeamPlayers();
+
+        if (usersPlayedThisRound.size() == numPlayers) {
+            usersPlayedThisRound = new ArrayList<>();
+        }
+
+        int p;
+        User player;
+        do {
+            p = r.nextInt(players.size());
+            player = players.get(p);
+        } while (usersPlayedThisRound.contains(player));
+
+        this.currentPlayer = player;
+        this.usersPlayedThisRound.add(player);
     }
 }

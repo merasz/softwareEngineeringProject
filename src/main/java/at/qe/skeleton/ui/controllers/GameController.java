@@ -1,8 +1,6 @@
 package at.qe.skeleton.ui.controllers;
 
-import at.qe.skeleton.model.Game;
-import at.qe.skeleton.model.Team;
-import at.qe.skeleton.model.Topic;
+import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -70,6 +68,15 @@ public class GameController extends Controller implements Serializable {
         } catch (UnsupportedOperationException e) {
             return "...unfinished";
         }
+    }
+
+    public Game nextRound(int guessedRight) {
+        //guessedRight: -1 - foul, 0, not guessed, 1 guessed right
+        //gameService.updateScores(game, guessedRight, term, task);
+        //choose next term
+        //choose next player
+        //return updated game
+        return null;
     }
 
     public void setScoreToWin(int scoreToWin) {

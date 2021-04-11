@@ -60,10 +60,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //Permit access only for some roles
                 .antMatchers("/secured/**")
                 //TODO set correct user role names
-                .hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE")
+                .hasAnyAuthority("ADMIN", "GAME_MANAGER", "PLAYER")
                 // Allow only certain roles to use websockets (only logged in users)
                 .antMatchers("/omnifaces.push/**")
-                .hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE")
+                .hasAnyAuthority("ADMIN", "GAME_MANAGER", "PLAYER")
                 .and().formLogin()
                 .loginPage("/login.xhtml")
                 .loginProcessingUrl("/login")

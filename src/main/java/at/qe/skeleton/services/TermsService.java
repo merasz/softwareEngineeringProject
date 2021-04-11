@@ -44,6 +44,11 @@ public class TermsService {
         }
     }
 
+    public Term getNextTerm() {
+        //TODO
+        return null;
+    }
+
     private void validateTerm(String name) throws IllegalArgumentException {
         Term t = termsRepository.findFirstByTermName(name);
         if (t != null) {

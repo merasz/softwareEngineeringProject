@@ -11,9 +11,7 @@ public class Topic implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int guessingTopicId;
-
-    private String guessingTopicName;
+    private String topicName;
 
     @OneToMany(mappedBy = "topic")
     private List<Game> games;
@@ -24,24 +22,15 @@ public class Topic implements Serializable {
     public Topic() {
     }
 
-    public Topic(int guessingTopicId, String guessingTopicName) {
-        this.guessingTopicId = guessingTopicId;
-        this.guessingTopicName = guessingTopicName;
+    public Topic(String topicName) {
+        this.topicName = topicName;
     }
 
-    public int getGuessingTopicId() {
-        return guessingTopicId;
+    public String getTopicName() {
+        return topicName;
     }
 
-    public void setGuessingTopicId(int guessingTopicId) {
-        this.guessingTopicId = guessingTopicId;
-    }
-
-    public String getGuessingTopicName() {
-        return guessingTopicName;
-    }
-
-    public void setGuessingTopicName(String guessingTopicName) {
-        this.guessingTopicName = guessingTopicName;
+    public void setTopicName(String guessingTopicName) {
+        this.topicName = guessingTopicName;
     }
 }

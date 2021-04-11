@@ -101,7 +101,7 @@ public class UserService {
         }
         //TODO: check
         if (roles.isEmpty()) {
-            roles = new HashSet<>(Collections.singletonList(UserRole.EMPLOYEE));
+            roles = new HashSet<>(Collections.singletonList(UserRole.PLAYER));
         }
         user.setUsername(username);
         user.setPassword(password);
