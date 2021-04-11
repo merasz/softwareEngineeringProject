@@ -1,9 +1,8 @@
 package at.qe.skeleton.api.services;
 
-import at.qe.skeleton.api.model.Team;
+import at.qe.skeleton.api.model.RestTeamDemoModel;
 import org.springframework.stereotype.Service;
 
-import java.util.ConcurrentModificationException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -12,30 +11,30 @@ public class TeamService {
 
     private static final AtomicLong ID_COUNTER = new AtomicLong(1);
     //statt concurrenthashmap brauchen wir eine datenbankverbindung
-    private static final ConcurrentHashMap<Long, Team> teams = new ConcurrentHashMap<Long, Team>();
+    private static final ConcurrentHashMap<Long, RestTeamDemoModel> teams = new ConcurrentHashMap<Long, RestTeamDemoModel>();
 
-    public Team addTeam(Team team) {
-        Team newTeam = new Team();
-        newTeam.setId(ID_COUNTER.getAndIncrement());
-        newTeam.setName(team.getName());
-        newTeam.setPoints(team.getPoints() == null ? 0 : team.getPoints());
-        teams.put(newTeam.getId(), newTeam);
-        return teams.get(newTeam.getId());
+    public RestTeamDemoModel addTeam(RestTeamDemoModel restTeamDemoModel) {
+        RestTeamDemoModel newRestTeamDemoModel = new RestTeamDemoModel();
+        newRestTeamDemoModel.setId(ID_COUNTER.getAndIncrement());
+        newRestTeamDemoModel.setName(restTeamDemoModel.getName());
+        newRestTeamDemoModel.setPoints(restTeamDemoModel.getPoints() == null ? 0 : restTeamDemoModel.getPoints());
+        teams.put(newRestTeamDemoModel.getId(), newRestTeamDemoModel);
+        return teams.get(newRestTeamDemoModel.getId());
     }
 
-    public Team findOneTeam(Long id) {
+    public RestTeamDemoModel findOneTeam(Long id) {
         return teams.get(id);
     }
 
-    public Team updateTeam(Long id, Team team) {
-        if(team.getName() != null)
+    public RestTeamDemoModel updateTeam(Long id, RestTeamDemoModel restTeamDemoModel) {
+        if(restTeamDemoModel.getName() != null)
             teams.computeIfPresent(id, (key, value) -> {
-                value.setName(team.getName());
+                value.setName(restTeamDemoModel.getName());
                 return value;
             });
-        if(team.getPoints() != null)
+        if(restTeamDemoModel.getPoints() != null)
             teams.computeIfPresent(id, (key, value) -> {
-                value.setPoints(team.getPoints());
+                value.setPoints(restTeamDemoModel.getPoints());
                 return value;
             });
         return teams.get(id);
