@@ -39,13 +39,13 @@ public class UserServiceTest {
                 Assertions.assertNull(user.getUpdateUser(), "User \"" + user + "\" has a updateUser defined");
                 Assertions.assertNull(user.getUpdateDate(), "User \"" + user + "\" has a updateDate defined");
             } else if ("user1".equals(user.getUsername())) {
-                Assertions.assertTrue(user.getRoles().contains(UserRole.MANAGER), "User \"" + user + "\" does not have role MANAGER");
+                Assertions.assertTrue(user.getRoles().contains(UserRole.GAME_MANAGER), "User \"" + user + "\" does not have role GAME MANAGER");
                 Assertions.assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
                 Assertions.assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
                 Assertions.assertNull(user.getUpdateUser(), "User \"" + user + "\" has a updateUser defined");
                 Assertions.assertNull(user.getUpdateDate(), "User \"" + user +"\" has a updateDate defined");
             } else if ("user2".equals(user.getUsername())) {
-                Assertions.assertTrue(user.getRoles().contains(UserRole.EMPLOYEE), "User \"" + user + "\" does not have role EMPLOYEE");
+                Assertions.assertTrue(user.getRoles().contains(UserRole.PLAYER), "User \"" + user + "\" does not have role PLAYER");
                 Assertions.assertNotNull(user.getCreateUser(), "User \"" + user + "\" does not have a createUser defined");
                 Assertions.assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
                 Assertions.assertNull(user.getUpdateUser(), "User \"" + user + "\" has a updateUser defined");
@@ -128,7 +128,7 @@ public class UserServiceTest {
         toBeCreatedUser.setLastName(lName);
         toBeCreatedUser.setEmail(email);
         toBeCreatedUser.setPhone(phone);
-        toBeCreatedUser.setRoles(Sets.newSet(UserRole.EMPLOYEE, UserRole.MANAGER));
+        toBeCreatedUser.setRoles(Sets.newSet(UserRole.PLAYER, UserRole.GAME_MANAGER));
         userService.saveUser(toBeCreatedUser);
 
         User freshlyCreatedUser = userService.loadUser(username);
@@ -139,8 +139,8 @@ public class UserServiceTest {
         Assertions.assertEquals(lName, freshlyCreatedUser.getLastName(), "User \"" + username + "\" does not have a the correct lastName attribute stored being saved");
         Assertions.assertEquals(email, freshlyCreatedUser.getEmail(), "User \"" + username + "\" does not have a the correct email attribute stored being saved");
         Assertions.assertEquals(phone, freshlyCreatedUser.getPhone(), "User \"" + username + "\" does not have a the correct phone attribute stored being saved");
-        Assertions.assertTrue(freshlyCreatedUser.getRoles().contains(UserRole.MANAGER), "User \"" + username + "\" does not have role MANAGER");
-        Assertions.assertTrue(freshlyCreatedUser.getRoles().contains(UserRole.EMPLOYEE), "User \"" + username + "\" does not have role EMPLOYEE");
+        Assertions.assertTrue(freshlyCreatedUser.getRoles().contains(UserRole.GAME_MANAGER), "User \"" + username + "\" does not have role GAME MANAGER");
+        Assertions.assertTrue(freshlyCreatedUser.getRoles().contains(UserRole.PLAYER), "User \"" + username + "\" does not have role PLAYER");
         Assertions.assertNotNull(freshlyCreatedUser.getCreateUser(), "User \"" + username + "\" does not have a createUser defined after being saved");
         Assertions.assertEquals(adminUser, freshlyCreatedUser.getCreateUser(), "User \"" + username + "\" has wrong createUser set");
         Assertions.assertNotNull(freshlyCreatedUser.getCreateDate(), "User \"" + username + "\" does not have a createDate defined after being saved");

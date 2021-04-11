@@ -7,6 +7,8 @@ import java.util.List;
 @Entity
 public class Score implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int scoreId;
@@ -30,11 +32,8 @@ public class Score implements Serializable {
     public Score() {
     }
 
-    public Score(int scoreId, int totalRoundScore, Team team, int virtualRoomId) {
-        this.scoreId = scoreId;
-        this.totalRoundScore = totalRoundScore;
-        this.team = team;
-        this.virtualRoomId = virtualRoomId;
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
     public int getScoreId() {
@@ -61,11 +60,45 @@ public class Score implements Serializable {
         this.team = team;
     }
 
+    public List<Term> getGuessedTerms() {
+        return guessedTerms;
+    }
+
+    public void setGuessedTerms(List<Term> guessedTerms) {
+        this.guessedTerms = guessedTerms;
+    }
+
+    public List<Term> getNotGuessedTerms() {
+        return notGuessedTerms;
+    }
+
+    public void setNotGuessedTerms(List<Term> notGuessedTerms) {
+        this.notGuessedTerms = notGuessedTerms;
+    }
+
     public int getVirtualRoomId() {
         return virtualRoomId;
     }
 
     public void setVirtualRoomId(int virtualRoomId) {
         this.virtualRoomId = virtualRoomId;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    public Score(int scoreId, int totalRoundScore, Team team, List<Term> guessedTerms, List<Term> notGuessedTerms, int virtualRoomId, Game game) {
+        this.scoreId = scoreId;
+        this.totalRoundScore = totalRoundScore;
+        this.team = team;
+        this.guessedTerms = guessedTerms;
+        this.notGuessedTerms = notGuessedTerms;
+        this.virtualRoomId = virtualRoomId;
+        this.game = game;
     }
 }

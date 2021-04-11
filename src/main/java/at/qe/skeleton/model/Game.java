@@ -25,7 +25,7 @@ public class Game implements Serializable {
     //private List<Integer> deviceTeamIdList;
 
     @ManyToOne
-    private GuessingTopic guessingTopic;
+    private Topic topic;
 
     @OneToMany(mappedBy = "game")
     private List<Score> scores;
