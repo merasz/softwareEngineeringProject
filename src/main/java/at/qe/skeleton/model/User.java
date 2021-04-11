@@ -56,11 +56,13 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
     @OneToMany(mappedBy = "user")
     private List<Raspberry> raspberryList;
 
-
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "User_UserRole")
     @Enumerated(EnumType.STRING)
     private Set<UserRole> roles;
+
+    public User() {
+    }
 
     public String getUsername() {
         return username;

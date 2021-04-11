@@ -7,9 +7,16 @@ import java.util.List;
 @Entity
 public class Topic implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String topicName;
+    private int guessingTopicId;
+
+    private String guessingTopicName;
+
+    @OneToMany(mappedBy = "topic")
+    private List<Game> games;
 
     @OneToMany(mappedBy = "topic")
     private List<Term> terms;
@@ -17,15 +24,24 @@ public class Topic implements Serializable {
     public Topic() {
     }
 
-    public String getTopicName() {
-        return topicName;
+    public Topic(int guessingTopicId, String guessingTopicName) {
+        this.guessingTopicId = guessingTopicId;
+        this.guessingTopicName = guessingTopicName;
     }
 
-    public void setTopicName(String topicName) {
-        this.topicName = topicName;
+    public int getGuessingTopicId() {
+        return guessingTopicId;
     }
 
-    public Topic(String topicName) {
-        this.topicName = topicName;
+    public void setGuessingTopicId(int guessingTopicId) {
+        this.guessingTopicId = guessingTopicId;
+    }
+
+    public String getGuessingTopicName() {
+        return guessingTopicName;
+    }
+
+    public void setGuessingTopicName(String guessingTopicName) {
+        this.guessingTopicName = guessingTopicName;
     }
 }
