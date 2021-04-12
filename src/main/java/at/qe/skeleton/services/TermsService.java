@@ -3,7 +3,6 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.Term;
 import at.qe.skeleton.model.Topic;
-import at.qe.skeleton.model.User;
 import at.qe.skeleton.repositories.TermsRepository;
 import at.qe.skeleton.repositories.TopicRepository;
 import at.qe.skeleton.utils.JsonImport;
@@ -15,9 +14,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Component
 @Scope("application")
@@ -29,11 +26,9 @@ public class TermsService {
     private TopicRepository topicRepository;
 
     private final int MIN_NUMBER_TERMS = 10;
-    private int numTerms;
-    private Random r;
     private Term currentTerm;
-    private List<Term> termsInTopic;
-    private List<Term> termsInThisGame;
+    private List<Term> termsInGame;
+    private Iterator<Term> iterateTerms;
 
     public void saveTopic(String name, Topic topic) throws IllegalArgumentException {
         validateTopic(name);
@@ -56,33 +51,24 @@ public class TermsService {
         }
     }
 
-    public Topic setGameTopic(Game game, Topic topic) throws IllegalArgumentException {
-        termsInTopic = termsRepository.findAllByTopic(topic);
-        numTerms = termsInTopic.size();
-
-        if (numTerms == 0) {
+    public Topic setGameTopic(Topic topic) throws IllegalArgumentException {
+        List<Term> terms = termsRepository.findAllByTopic(topic);
+        if (terms.size() < MIN_NUMBER_TERMS) {
             throw new IllegalArgumentException("Topic has less than " + MIN_NUMBER_TERMS + " terms in this topi. Please choose another topic.");
         } else {
-            r = new Random();
-            termsInThisGame = new ArrayList<>();
+            termsInGame = terms;
+            Collections.shuffle(termsInGame);
+            iterateTerms = termsInGame.iterator();
             return topic;
         }
     }
 
     public Term getNextTerm(Game game) {
-        if (numTerms == termsInThisGame.size()) {
-            termsInThisGame = new ArrayList<>();
+        if (!iterateTerms.hasNext()) {
+            Collections.shuffle(termsInGame);
+            iterateTerms = termsInGame.iterator();
         }
-
-        int t;
-        Term term;
-        do {
-            t = r.nextInt(numTerms);
-            term = termsInTopic.get(t);
-        } while (termsInThisGame.contains(term));
-
-        currentTerm = term;
-        termsInThisGame.add(term);
+        currentTerm = iterateTerms.next();
         return currentTerm;
     }
 

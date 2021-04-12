@@ -53,7 +53,7 @@ public class GameController extends Controller implements Serializable {
         List<Team> teamList = null;
 
         displayInfo("Game started", "Game started successfully.");
-        game = gameService.createGame(scoreToWin, totalScore, nrRound, topic, raspberryId, teamList);
+        game = gameService.createGame(scoreToWin, totalScore, topic, raspberryId, teamList);
         return game;
     }
 
@@ -96,7 +96,7 @@ public class GameController extends Controller implements Serializable {
 
     public void setTopic(Topic topic) {
         try {
-            this.topic = termsService.setGameTopic(game, topic);
+            this.topic = termsService.setGameTopic(topic);
         } catch (IllegalArgumentException e) {
             displayError("Too few terms in topic", e.getMessage());
         }

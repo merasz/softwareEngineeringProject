@@ -10,9 +10,7 @@ import org.springframework.stereotype.Component;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Component
 @Scope("application")
@@ -26,28 +24,34 @@ public class GameService {
     private final int PENALTY_POINTS = 1;
     private int numPlayers = 0;
     private Random r;
+    private Team currentTeam;
     private User currentPlayer;
-    private int currentTeam;
-    private List<User> usersPlayedAlready;
+    private List<TeamPlayer> teams;
+    private Iterator<Team> iterateTeams;
+    private Iterator<User> iteratePlayers;
 
-    public Game createGame(int scoreToWin, int totalScore, int nrRound, Topic topic, int raspberryId, List<Team> teamList) {
-        Game game = new Game(scoreToWin, totalScore, nrRound, topic, raspberryId, Timestamp.valueOf(LocalDateTime.now()), teamList);
+    public Game createGame(int scoreToWin, int totalScore, Topic topic, int raspberryId, List<Team> teamList) {
+        Game game = new Game(scoreToWin, totalScore, topic, raspberryId, Timestamp.valueOf(LocalDateTime.now()), teamList);
+        //TODO: validate: at least 2 Teams with 2 Players each
         for (Team t : teamList) {
             for (User u : t.getTeamPlayers()) {
                 Score s = new Score(u, t, game);
                 scoreRepository.save(s);
-                numPlayers++;
             }
         }
-        setCurrentPlayer(game);
+        createPlayerOrdering(game);
         gameRepository.save(game);
         return game;
     }
 
     //TODO
     public Game nextTurn(Game game) {
-        selectNextPlayer(game);
+        TeamPlayer tp = selectNextPlayer(game);
+        currentTeam = tp.team;
+        currentPlayer = tp.player;
         //selectNextTerm();
+        game.incrementNrRound();
+        gameRepository.save(game);
         return game;
     }
 
@@ -139,34 +143,34 @@ public class GameService {
         return gameRepository;
     }
 
-    private void setCurrentPlayer(Game game) {
-        r = new Random();
-        usersPlayedAlready = new ArrayList<>();
-        currentTeam = r.nextInt(game.getTeamList().size());
-        List<User> players = game.getTeamList().get(currentTeam).getTeamPlayers();
-        int p = r.nextInt(players.size());
-        User player = players.get(p);
+    private void createPlayerOrdering(Game game) {
+        List<List<TeamPlayer>> tpList = new ArrayList<>();
+        for (Team t : game.getTeamList()) {
+            List<TeamPlayer> tP = new ArrayList<>();
+            numPlayers += t.getTeamPlayers().size();
 
-        this.currentPlayer = player;
-        this.usersPlayedAlready.add(player);
+            for (User p : t.getTeamPlayers()) {
+                tP.add(new TeamPlayer(p, t));
+            }
+
+            Collections.shuffle(tP);
+            tpList.add(tP);
+        }
+        Collections.shuffle(teams);
+        tpList.forEach(teams::addAll);
     }
 
-    private void selectNextPlayer(Game game) {
-        currentTeam = (currentTeam + 1) % game.getTeamList().size();
-        List<User> players = game.getTeamList().get(currentTeam).getTeamPlayers();
+    private TeamPlayer selectNextPlayer(Game game) {
+        return teams.get((game.getNrRound() - 1) % numPlayers);
+    }
 
-        if (usersPlayedAlready.size() == numPlayers) {
-            usersPlayedAlready = new ArrayList<>();
-        }
-
-        int p;
+    private class TeamPlayer {
         User player;
-        do {
-            p = r.nextInt(players.size());
-            player = players.get(p);
-        } while (usersPlayedAlready.contains(player));
+        Team team;
 
-        this.currentPlayer = player;
-        this.usersPlayedAlready.add(player);
+        TeamPlayer(User player, Team team) {
+            this.player = player;
+            this.team = team;
+        }
     }
 }

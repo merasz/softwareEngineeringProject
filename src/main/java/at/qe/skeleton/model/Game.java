@@ -64,8 +64,8 @@ public class Game implements Serializable {
         return nrRound;
     }
 
-    public void setNrRound(int nrRound) {
-        this.nrRound = nrRound;
+    public void incrementNrRound() {
+        this.nrRound++;
     }
 
     public int getRaspberryId() {
@@ -116,10 +116,10 @@ public class Game implements Serializable {
         this.pausedTime = pausedTime;
     }
 
-    public Game(int scoreToWin, int totalScore, int nrRound, Topic topic, int raspberryId, Date startTime, List<Team> teamList) {
+    public Game(int scoreToWin, int totalScore, Topic topic, int raspberryId, Date startTime, List<Team> teamList) {
         this.scoreToWin = scoreToWin;
         this.totalScore = totalScore;
-        this.nrRound = nrRound;
+        this.nrRound = 1;
         this.topic = topic;
         this.raspberryId = raspberryId;
         this.startTime = startTime;
@@ -127,5 +127,6 @@ public class Game implements Serializable {
     }
 
     public Game() {
+        this.nrRound = 1;
     }
 }
