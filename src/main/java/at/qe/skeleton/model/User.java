@@ -56,8 +56,7 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
     @Enumerated(EnumType.STRING)
     private Set<UserRole> roles;
 
-    public User() {
-    }
+    public User() { }
 
     public String getUsername() {
         return username;
