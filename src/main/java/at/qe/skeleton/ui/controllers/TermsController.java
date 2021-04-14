@@ -20,13 +20,15 @@ public class TermsController extends Controller implements Serializable {
 
     private List<Topic> topics;
     private List<Term> terms;
-    private Topic topic;
+    private Topic topic = new Topic();
     private Term term;
 
     public List<Topic> getAllTopics() {
         topics = termsService.getTopicRepository().findAll();
         return topics;
     }
+
+
 
     public Topic getTopic() {
         return topic;

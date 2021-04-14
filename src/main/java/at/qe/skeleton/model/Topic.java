@@ -33,4 +33,12 @@ public class Topic implements Serializable {
     public void setTopicName(String guessingTopicName) {
         this.topicName = guessingTopicName;
     }
+
+    public void setTerms(List<Term> terms) {
+        this.terms = terms;
+    }
+
+    public List<Term> getTerms() {
+        return terms;
+    }
 }

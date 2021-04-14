@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/main.xhtml">
+    <ui:define name="content">
+        <h:form id="topicForm" style="width: 80%; margin-top: 25px;margin-left: 25px; float: right;">
+            <p:growl id="growl" showDetail="false" life="6000">
+                <p:autoUpdate/>
+            </p:growl>
+            <p:dataTable id="topicTable" var="topic" value="#{termsController.allTopics}" style="margin-top:10%;">
+
+                <p:column headerText="Topic Name" priority="1">
+                    <h:outputText value="#{topic.topicName}"/>
+                </p:column>
+                <p:column headerText="Anzahl Terms" priority="2">
+                    <h:outputText value="#{topic.terms.size()}"/>
+                </p:column>
+
+
+                <p:column style="width:100px;text-align: center">
+                    <p:commandButton update=":topicForm:topicEditDialog" oncomplete="PF('topicEditDialog').show()"
+                                     icon="ui-icon-note" title="Edit">
+                        <f:setPropertyActionListener value="#{topic}" target="#{termsController.topic}"/>
+                    </p:commandButton>
+                    <p:commandButton action="#{termsController.deleteTopic}" icon="ui-icon-trash" title="Delete"
+                                     update=":topicForm:topicTable">
+                        <f:setPropertyActionListener value="#{topic}" target="#{termsController.topic}"/>
+                        <p:confirm header="Confirmation"
+                                   message="Are you sure that you want to delete this aircraft? You cannot undo this operation."
+                                   icon="ui-icon-alert"/>
+                    </p:commandButton>
+                </p:column>
+
+            </p:dataTable>
+
+            <p:commandButton style="width: 25%; margin-top: 25px; float: left;" oncomplete="PF('topicCreationDialog').show()" icon="ui-icon-add-box"
+                             value="New Topic" >
+                <f:setPropertyActionListener value="#{topic}" target="#{termsController.topic}"/>
+            </p:commandButton>
+
+
+            <p:dialog header="Create Topic" id="topicCreationDialog" widgetVar="topicCreationDialog" modal="true"
+                      showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="topicCreateData" rendered="#{termsController.setTopic(topic)}">
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="topicName" value="Topic Name: "/>
+                        <p:inputText id="newTopicName" value="#{termsController.topic.topicName}" style="color:white;"/>
+                        <p:outputLabel for="#" value="# Type: "/>
+
+                    </h:panelGrid>
+
+                    <p:separator/>
+
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="Save" action="#{termsController.addTopic(topic)}"
+                                         oncomplete="PF('topicEditDialog').hide()" update=":topicForm:topicTable"/>
+                        <p:commandButton value="Abort" onclick="PF('topicCreationDialog').hide()"/>
+                    </h:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+
+            <p:dialog header="Edit Topic" id="topicEditDialog" widgetVar="topicEditDialog" modal="true"
+                      showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="topicData" rendered="#{termsController.topic}">
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="topicName" value="Topic Name: "/>
+                        <p:inputText id="topicName" value="#{termsController.topic.topicName}" disabled="true"
+                                     style="color:white;"/>
+
+                    </h:panelGrid>
+
+                    <p:separator/>
+
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="Save" action="#{termsController.addTopic(topic)}"
+                                         oncomplete="PF('topicEditDialog').hide()"
+                                         update=":topicForm:topicTable"/>
+                        <p:commandButton value="Abort" onclick="PF('topicEditDialog').hide()"/>
+                    </h:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+
+
+        </h:form>
+
+
+    </ui:define>
+</ui:composition>
