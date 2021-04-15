@@ -32,14 +32,9 @@ public class APIController {
         String testToken = "7173b055-4674-4ca2-8348-60e1b3fa8204";
         if(!apiKey.equals(testToken)) {throw new RequestUnauthorizedException();}
     }
+    
 
-    /* Test Method */
-    @PostMapping("/string")
-    private String getString(@RequestBody String input) {
-        return apiService.getString(input);
-    }
-
-    @PostMapping("/api/update")
+    @PatchMapping("/api/update")
     private void updateTimeFlipFacet(@RequestBody PiRequest piRequest, @RequestHeader("Authorization") String authToken) throws RequestUnauthorizedException {
         authorizeRequest(authToken);
         apiService.updateTimeFlip(piRequest, authToken);

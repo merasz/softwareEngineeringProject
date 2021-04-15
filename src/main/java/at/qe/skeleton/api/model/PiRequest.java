@@ -5,7 +5,7 @@ import java.util.Objects;
 public class PiRequest {
 
     private long id;
-    private String macAddress;
+    private String ipAddress;
     private int facetId;
 
     public long getId() {
@@ -16,12 +16,12 @@ public class PiRequest {
         this.id = id;
     }
 
-    public String getMacAddress() {
-        return macAddress;
+    public String getIpAddress() {
+        return ipAddress;
     }
 
-    public void setMacAddress(String macAddress) {
-        this.macAddress = macAddress;
+    public void setIpAddress(String macAddress) {
+        this.ipAddress = macAddress;
     }
 
     public int getFacetId() {
@@ -39,11 +39,11 @@ public class PiRequest {
         PiRequest piRequest = (PiRequest) o;
         return id == piRequest.id &&
                 facetId == piRequest.facetId &&
-                macAddress.equals(piRequest.macAddress);
+                ipAddress.equals(piRequest.ipAddress);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, macAddress, facetId);
+        return Objects.hash(id, ipAddress, facetId);
     }
 }

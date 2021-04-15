@@ -10,20 +10,14 @@ public class APIService {
 
     private static final AtomicLong ID_COUNTER = new AtomicLong(1);
 
-    /* Test Method */
-    public String getString(String input) {
-
-        return "ID: " + ID_COUNTER.getAndIncrement()  + " " + input;
-    }
-
 
     public void updateTimeFlip(PiRequest piRequest, String authToken) {
 
-        System.out.println("MAC: " + piRequest.getMacAddress());
+        System.out.println("IP: " + piRequest.getIpAddress());
         System.out.println("Facet: " + piRequest.getFacetId());
 
         PiRequest newRequest = new PiRequest();
-        newRequest.setMacAddress(piRequest.getMacAddress());
+        newRequest.setIpAddress(piRequest.getIpAddress());
         newRequest.setFacetId(piRequest.getFacetId());
 
     }
