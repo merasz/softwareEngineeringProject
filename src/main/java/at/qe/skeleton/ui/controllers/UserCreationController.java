@@ -1,12 +1,12 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.User;
-import at.qe.skeleton.model.UserRole;
 import at.qe.skeleton.services.UserService;
-import java.io.Serializable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import java.io.Serializable;
 
 /**
  * Controller for the user view.
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Scope("view")
-public class UserController extends Controller implements Serializable {
+public class UserCreationController extends Controller implements Serializable {
 
     @Autowired
     private UserService userService;

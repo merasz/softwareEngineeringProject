@@ -8,6 +8,9 @@
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name ="content">
         <h:form id="userForm">
+            <p:growl id="growl" showDetail="false" life="6000" >
+                <p:autoUpdate/>
+            </p:growl>
             <p:dataTable  id="usersTable" var="user" value="#{userListController.users}" style="width: 83%; margin-top: 110px; float: right;">
                 <p:column headerText="Username">
                     <h:outputText value="#{user.username}"/>
@@ -29,6 +32,35 @@
                 </p:column>
             </p:dataTable>
 
+            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('userCreationDialog').show()" icon="ui-icon-add-box" value ="Create new User">
+            </p:commandButton>
+
+            <p:dialog header="Create User" id="userCreationDialog" widgetVar="userCreationDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="userCreateData" >
+                    <h:panelGrid columns ="2">
+                        <p:outputLabel for="username" value="Username: "/>
+                        <p:inputText id="newUserName" value="#{userCreationController.user.username}" />
+                        <p:outputLabel for="password" value="Password: " />
+                        <p:password id="newUserPassword" value="#{userCreationController.user.password}" />
+                    </h:panelGrid>
+                    <h:panelGrid columns ="2">
+                    <p:outputLabel for="addRoll" value="Roll: " />
+                    <h:selectOneMenu id ="addRoll" >
+                        <f:selectItem itemValue = "1" itemLabel = "Admin" />
+                        <f:selectItem itemValue = "2" itemLabel = "Manager" />
+                        <f:selectItem itemValue = "2" itemLabel = "Player" />
+                    </h:selectOneMenu>
+                    </h:panelGrid>
+                    <p:separator />
+
+                    <h:panelGrid columns ="2">
+                        <p:commandButton value="Save" action="#{userCreationController.doSaveUser()}" oncomplete="PF('userCreationDialog').hide()" update=":userForm:usersTable">
+                        </p:commandButton>
+                    </h:panelGrid>
+
+                </p:outputPanel>
+            </p:dialog>
+
             <p:dialog header="Edit User" id="userEditDialog" widgetVar="userEditDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                 <p:outputPanel id="userData" rendered="#{not empty userController.user}">
                     <h:panelGrid columns="2">
@@ -43,6 +75,21 @@
                         <p:selectBooleanCheckbox id="enabled" value="#{userController.user.enabled}"/>
                     </h:panelGrid>
                     <p:separator />
+                <h:panelGrid columns ="2">
+                    <p:outputLabel for="addNewRoll" value="Add Roll: " />
+                    <h:selectOneMenu id ="addNewRoll" >
+                        <f:selectItem itemValue = "1" itemLabel = "Admin" />
+                        <f:selectItem itemValue = "2" itemLabel = "Manager" />
+                        <f:selectItem itemValue = "2" itemLabel = "Player" />
+                    </h:selectOneMenu>
+                    <p:outputLabel for="deleteRoll" value="Delete Roll: " />
+                    <h:selectOneMenu id ="deleteRoll" >
+                        <f:selectItem itemValue = "1" itemLabel = "Admin" />
+                        <f:selectItem itemValue = "2" itemLabel = "Manager" />
+                        <f:selectItem itemValue = "2" itemLabel = "Player" />
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <p:separator />
                     <h:panelGrid columns="3">
                         <p:commandButton value="Save" action="#{userController.doSaveUser()}" oncomplete="PF('userEditDialog').hide()" update=":userForm:usersTable"/>
                         <p:commandButton value="Reload" action="#{userController.doReloadUser()}" update=":userForm:userData"/>
@@ -55,7 +102,7 @@
                 <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                 <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
             </p:confirmDialog>
-
         </h:form>
+
     </ui:define>
 </ui:composition>

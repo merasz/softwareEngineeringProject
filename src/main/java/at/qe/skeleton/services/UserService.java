@@ -7,6 +7,7 @@ import at.qe.skeleton.repositories.UserRepository;
 
 import java.util.*;
 
+import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -65,6 +66,7 @@ public class UserService {
     public User saveUser(User user) {
         if (user.isNew()) {
             user.setCreateDate(new Date());
+            user.setEnabled(true);
             user.setCreateUser(getAuthenticatedUser());
         } else {
             user.setUpdateDate(new Date());
