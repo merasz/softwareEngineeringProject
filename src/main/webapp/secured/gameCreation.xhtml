@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/main.xhtml">
+    <ui:define name ="content">
+        <h:form id="userForm">
+            <p:growl id="growl" showDetail="false" life="6000" >
+                <p:autoUpdate/>
+            </p:growl>
+            <p:dataTable  id="usersTable" var="user" value="#{userListController.users}" style="width: 83%; margin-top: 110px; float: right;">
+                <f:facet name="header">Current Pending Games</f:facet>
+                <p:column headerText="Game ID">
+                    <h:outputText value="#{user.username}"/>
+                </p:column>
+                <p:column headerText="Game Name">
+                    <h:outputText value="#{user.roles}" />
+                </p:column>
+                <p:column headerText="Topic">
+                    <h:outputText value="#{user.roles}" />
+                </p:column>
+                <p:column headerText="Required Teams">
+                    <h:selectBooleanCheckbox value="#{user.enabled}" disabled="true"/>
+                </p:column>
+                <p:column style="width:100px;text-align: center">
+                    <p:commandButton title="Edit" icon="ui-icon-note"  update=":userForm:userEditDialog" oncomplete="PF('userEditDialog').show()" style="width:20px;height:20px">
+                        <f:setPropertyActionListener value="#{user}" target="#{userController.user}" />
+                    </p:commandButton>
+                    <p:commandButton title="Edit" icon="ui-icon-trash" update=":userForm:userEditDialog" oncomplete="PF('userEditDialog').show()" style="width:20px;height:20px">
+                        <f:setPropertyActionListener value="#{user}" target="#{userController.user}" />
+                    </p:commandButton>
+                    <p:commandButton title="Delete" icon="pi pi-check" action="#{userController.doDeleteUser}" update=":userForm:usersTable" style="width:20px;height:20px">
+                        <f:setPropertyActionListener value="#{user}" target="#{userController.user}" />
+                        <p:confirm header="Confirmation" message="Are you sure that you want to delete this user? You cannot undo this operation." icon="ui-icon-alert" />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+
+            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('gameCreationDialog').show()" icon="ui-icon-add-box" value ="Create new Game">
+            </p:commandButton>
+
+            <p:dialog header="Create new Game" id="gameCreationDialog" widgetVar="gameCreationDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="userCreateData" >
+                    <h:panelGrid columns ="2">
+                        <p:outputLabel for="gameName" value="Game Name: "/>
+                        <p:inputText id="gameName" value="#{userCreationController.user.username}" />
+                    </h:panelGrid>
+                    <h:panelGrid columns ="2">
+                        <p:outputLabel for="addRoll" value="Topic: " />
+                        <h:selectOneMenu id ="addRoll" >
+                            <f:selectItem itemValue = "1" itemLabel = "Geo" />
+                            <f:selectItem itemValue = "2" itemLabel = "Maths" />
+                            <f:selectItem itemValue = "2" itemLabel = "Computer Science" />
+                        </h:selectOneMenu>
+                    </h:panelGrid>
+                    <p:separator />
+                    <h:panelGrid columns ="2">
+                        <p:outputLabel for="teamCount" value="How many Teams: " />
+                        <h:selectOneMenu id ="teamCount" >
+                            <f:selectItem itemValue = "1" itemLabel = "2" />
+                            <f:selectItem itemValue = "2" itemLabel = "3" />
+                            <f:selectItem itemValue = "2" itemLabel = "4" />
+                            <f:selectItem itemValue = "2" itemLabel = "5" />
+                            <f:selectItem itemValue = "2" itemLabel = "6" />
+                        </h:selectOneMenu>
+                    </h:panelGrid>
+                    <p:separator />
+
+                    <h:panelGrid columns ="2">
+                        <p:commandButton value="Save" action="#{userCreationController.doSaveUser()}" oncomplete="PF('userCreationDialog').hide()" update=":userForm:usersTable">
+                        </p:commandButton>
+                    </h:panelGrid>
+
+                </p:outputPanel>
+            </p:dialog>
+
+            <p:dialog header="Edit User" id="userEditDialog" widgetVar="userEditDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="userData" rendered="#{not empty userController.user}">
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="username" value="Username: " />
+                        <p:inputText id="username" value="#{userController.user.username}" disabled="true"/>
+                        <p:outputLabel for="password" value="Password: " />
+                        <p:password id="password" value="#{userController.user.password}" disabled="true"/>
+                    </h:panelGrid>
+                    <p:separator />
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="enabled" value="Enabled: " />
+                        <p:selectBooleanCheckbox id="enabled" value="#{userController.user.enabled}"/>
+                    </h:panelGrid>
+                    <p:separator />
+                    <h:panelGrid columns ="2">
+                        <p:outputLabel for="addNewRoll" value="Add Roll: " />
+                        <h:selectOneMenu id ="addNewRoll" >
+                            <f:selectItem itemValue = "1" itemLabel = "Admin" />
+                            <f:selectItem itemValue = "2" itemLabel = "Manager" />
+                            <f:selectItem itemValue = "2" itemLabel = "Player" />
+                        </h:selectOneMenu>
+                        <p:outputLabel for="deleteRoll" value="Delete Roll: " />
+                        <h:selectOneMenu id ="deleteRoll" >
+                            <f:selectItem itemValue = "1" itemLabel = "Admin" />
+                            <f:selectItem itemValue = "2" itemLabel = "Manager" />
+                            <f:selectItem itemValue = "2" itemLabel = "Player" />
+                        </h:selectOneMenu>
+                    </h:panelGrid>
+                    <p:separator />
+                    <h:panelGrid columns="3">
+                        <p:commandButton value="Save" action="#{userController.doSaveUser()}" oncomplete="PF('userEditDialog').hide()" update=":userForm:usersTable"/>
+                        <p:commandButton value="Reload" action="#{userController.doReloadUser()}" update=":userForm:userData"/>
+                        <p:commandButton value="Abort" onclick="PF('userEditDialog').hide()"/>
+                    </h:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </h:form>
+
+    </ui:define>
+</ui:composition>
