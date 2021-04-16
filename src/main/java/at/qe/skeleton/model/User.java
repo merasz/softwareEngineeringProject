@@ -18,7 +18,6 @@ import org.springframework.data.domain.Persistable;
  */
 @Entity
 public class User implements Persistable<String>, Serializable, Comparable<User> {
-
     private static final long serialVersionUID = 1L;
 
     @Id

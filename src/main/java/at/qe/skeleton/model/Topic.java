@@ -6,7 +6,6 @@ import java.util.List;
 
 @Entity
 public class Topic implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -22,6 +21,7 @@ public class Topic implements Serializable {
     public Topic() {
     }
 
+    //TODO: add new parameters to constructor
     public Topic(String topicName) {
         this.topicName = topicName;
     }
@@ -40,5 +40,17 @@ public class Topic implements Serializable {
 
     public List<Term> getTerms() {
         return terms;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public List<Game> getGames() {
+        return games;
+    }
+
+    public void setGames(List<Game> games) {
+        this.games = games;
     }
 }

@@ -2,11 +2,13 @@ package at.qe.skeleton.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 public class Game implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,13 +30,34 @@ public class Game implements Serializable {
     @ManyToMany
     private List<Team> teamList;
 
-    //private List<Integer> deviceTeamIdList;
+    @ElementCollection
+    private List<Integer> deviceTeamIdList;
 
     @ManyToOne
     private Topic topic;
 
     @OneToMany(mappedBy = "game")
-    private List<Score> scores;
+    private List<Score> scoreList;
+
+    public Game() {
+    }
+
+    public Game(int gameId, int scoreToWin, int totalScore, Topic topic, int raspberryId,
+                Date startTime, Date endTime, Date pausedTime, List<Team> teamList,
+                List<Integer> deviceTeamIdList, List<Score> scoreList) {
+        this.gameId = gameId;
+        this.scoreToWin = scoreToWin;
+        this.totalScore = totalScore;
+        this.nrRound = 1;
+        this.topic = topic;
+        this.raspberryId = raspberryId;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.teamList = teamList;
+        this.pausedTime = pausedTime;
+        this.deviceTeamIdList = deviceTeamIdList;
+        this.scoreList = scoreList;
+    }
 
     public int getGameId() {
         return gameId;
@@ -84,12 +107,20 @@ public class Game implements Serializable {
         this.teamList = playerList;
     }
 
+    public void setTopic(Topic topic) {
+        this.topic = topic;
+    }
+
     public Topic getTopic() {
         return topic;
     }
 
+    public void setScores(List<Score> scoreList) {
+        this.scoreList = scoreList;
+    }
+
     public List<Score> getScores() {
-        return scores;
+        return scoreList;
     }
 
     public Date getStartTime() {
@@ -116,17 +147,19 @@ public class Game implements Serializable {
         this.pausedTime = pausedTime;
     }
 
-    public Game(int scoreToWin, int totalScore, Topic topic, int raspberryId, Date startTime, List<Team> teamList) {
-        this.scoreToWin = scoreToWin;
-        this.totalScore = totalScore;
-        this.nrRound = 1;
-        this.topic = topic;
-        this.raspberryId = raspberryId;
-        this.startTime = startTime;
-        this.teamList = teamList;
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
-    public Game() {
+    public List<Integer> getDeviceTeamIdList() {
+        return deviceTeamIdList;
+    }
+
+    public void setDeviceTeamIdList(List<Integer> deviceTeamIdList) {
+        this.deviceTeamIdList = deviceTeamIdList;
+    }
+
+    public Game(int scoreToWin, int totalScore, Topic topic, int raspberryId, Timestamp timestamp, List<Team> teamList) {
         this.nrRound = 1;
     }
 }

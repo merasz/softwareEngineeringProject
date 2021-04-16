@@ -6,7 +6,6 @@ import java.util.List;
 
 @Entity
 public class GameLobby implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -14,13 +13,31 @@ public class GameLobby implements Serializable {
     private int gameLobbyId;
 
     private int userDeviceId;
-    //private List<Integer> lastPlayedGameStats;
+
+    @ElementCollection
+    private List<Integer> lastPlayedGameStats;
+
     @OneToMany(mappedBy = "gameLobby")
     private List<User> activeUsers;
-    //private List<Integer> activeVirtualRooms;
+
+    @ElementCollection
+    private List<Integer> activeVirtualRooms;
 
     @OneToOne
     private User user;
+
+    public GameLobby() {
+    }
+
+    public GameLobby(int gameLobbyId, int userDeviceId, List<Integer> lastPlayedGameStats,
+                     List<User> activeUsers, List<Integer> activeVirtualRooms, User user) {
+        this.gameLobbyId = gameLobbyId;
+        this.userDeviceId = userDeviceId;
+        this.activeUsers = activeUsers;
+        this.user = user;
+        this.lastPlayedGameStats = lastPlayedGameStats;
+        this.activeVirtualRooms = activeVirtualRooms;
+    }
 
     public int getGameLobbyId() {
         return gameLobbyId;
@@ -54,13 +71,23 @@ public class GameLobby implements Serializable {
         this.user = user;
     }
 
-    public GameLobby(int gameLobbyId, int userDeviceId, List<Integer> lastPlayedGameStats, List<User> activeUsers, List<Integer> activeVirtualRooms, User user) {
-        this.gameLobbyId = gameLobbyId;
-        this.userDeviceId = userDeviceId;
-        this.activeUsers = activeUsers;
-        this.user = user;
+    public List<Integer> getLastPlayedGameStats() {
+        return lastPlayedGameStats;
     }
 
-    public GameLobby() {
+    public void setLastPlayedGameStats(List<Integer> lastPlayedGameStats) {
+        this.lastPlayedGameStats = lastPlayedGameStats;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public List<Integer> getActiveVirtualRooms() {
+        return activeVirtualRooms;
+    }
+
+    public void setActiveVirtualRooms(List<Integer> activeVirtualRooms) {
+        this.activeVirtualRooms = activeVirtualRooms;
     }
 }

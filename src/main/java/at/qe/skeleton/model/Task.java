@@ -6,7 +6,6 @@ import java.util.Set;
 
 @Entity
 public class Task implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -24,6 +23,19 @@ public class Task implements Serializable {
     @CollectionTable(name = "Task_RequestType")
     @Enumerated(EnumType.STRING)
     private Set<RequestType> requestTypes;
+
+    public Task() {
+    }
+
+    public Task(int taskId, int facetId, int durationInMinutes, int pointsForTask, TimeFlip timeFlip,
+                Set<RequestType> requestTypes) {
+        this.taskId = taskId;
+        this.facetId = facetId;
+        this.durationInMinutes = durationInMinutes;
+        this.pointsForTask = pointsForTask;
+        this.timeFlip = timeFlip;
+        this.requestTypes = requestTypes;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -61,13 +73,19 @@ public class Task implements Serializable {
         this.pointsForTask = pointsForTask;
     }
 
-    public Task() {
+    public Set<RequestType> getRequestTypes() {
+        return requestTypes;
     }
 
-    public Task(int taskId, int facetId, int durationInMinutes, int pointsForTask) {
-        this.taskId = taskId;
-        this.facetId = facetId;
-        this.durationInMinutes = durationInMinutes;
-        this.pointsForTask = pointsForTask;
+    public void setRequestTypes(Set<RequestType> requestTypes) {
+        this.requestTypes = requestTypes;
+    }
+
+    public TimeFlip getTimeFlip() {
+        return timeFlip;
+    }
+
+    public void setTimeFlip(TimeFlip timeFlip) {
+        this.timeFlip = timeFlip;
     }
 }

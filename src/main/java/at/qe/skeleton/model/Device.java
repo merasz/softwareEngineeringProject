@@ -6,7 +6,6 @@ import java.util.List;
 
 @Entity
 public class Device implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -18,7 +17,17 @@ public class Device implements Serializable {
     @OneToMany(mappedBy = "device")
     private List<User> userDevice;
 
+    @ManyToOne
+    private Game game;
+
     public Device() {
+    }
+
+    public Device(int deviceId, String deviceIdIp, List<User> userDevice, Game game) {
+        this.deviceId = deviceId;
+        this.deviceIdIp = deviceIdIp;
+        this.userDevice = userDevice;
+        this.game = game;
     }
 
     public static long getSerialVersionUID() {
@@ -49,9 +58,11 @@ public class Device implements Serializable {
         this.userDevice = userDevice;
     }
 
-    public Device(int deviceId, String deviceIdIp, List<User> userDevice) {
-        this.deviceId = deviceId;
-        this.deviceIdIp = deviceIdIp;
-        this.userDevice = userDevice;
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
     }
 }
