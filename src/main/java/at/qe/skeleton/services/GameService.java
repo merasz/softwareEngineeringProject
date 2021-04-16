@@ -11,6 +11,8 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Component
 @Scope("application")
@@ -23,16 +25,13 @@ public class GameService {
 
     private final int PENALTY_POINTS = 1;
     private int numPlayers = 0;
-    private Random r;
     private Team currentTeam;
     private User currentPlayer;
-    private List<TeamPlayer> teams;
-    private Iterator<Team> iterateTeams;
-    private Iterator<User> iteratePlayers;
+    private List<TeamPlayer> players;
 
     public Game createGame(int scoreToWin, int totalScore, Topic topic, int raspberryId, List<Team> teamList) {
         Game game = new Game(scoreToWin, totalScore, topic, raspberryId, Timestamp.valueOf(LocalDateTime.now()), teamList);
-        //TODO: validate: at least 2 Teams with 2 Players each
+        //TODO: validate: at least 2 Teams with 2 Players each & all teams same size
         for (Team t : teamList) {
             for (User u : t.getTeamPlayers()) {
                 Score s = new Score(u, t, game);
@@ -156,12 +155,14 @@ public class GameService {
             Collections.shuffle(tP);
             tpList.add(tP);
         }
-        Collections.shuffle(teams);
-        tpList.forEach(teams::addAll);
+        Collections.shuffle(tpList);
+        IntStream.range(0, tpList.get(0).size()).boxed().collect(Collectors.toList()).stream()
+                .map(i -> tpList.stream().map(t -> t.get(i)).collect(Collectors.toList()))
+                .collect(Collectors.toList()).forEach(players::addAll);
     }
 
     private TeamPlayer selectNextPlayer(Game game) {
-        return teams.get((game.getNrRound() - 1) % numPlayers);
+        return players.get((game.getNrRound() - 1) % numPlayers);
     }
 
     private class TeamPlayer {
