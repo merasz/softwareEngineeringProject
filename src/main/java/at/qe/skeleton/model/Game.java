@@ -2,7 +2,6 @@ package at.qe.skeleton.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +15,7 @@ public class Game implements Serializable {
 
     private int scoreToWin;
     private int totalScore;
+    private int countPlayers;
     private int nrRound;
     @Temporal(TemporalType.TIMESTAMP)
     private Date startTime;
@@ -42,29 +42,15 @@ public class Game implements Serializable {
     public Game() {
     }
 
-    public Game(int gameId, int scoreToWin, int totalScore, Topic topic, int raspberryId,
-                Date startTime, Date endTime, Date pausedTime, List<Team> teamList,
-                List<Integer> deviceTeamIdList, List<Score> scoreList) {
-        this.gameId = gameId;
+    public Game(int scoreToWin, int countPlayers, Topic topic, int raspberryId, Date startTime, List<Team> teamList) {
         this.scoreToWin = scoreToWin;
-        this.totalScore = totalScore;
+        this.totalScore = 0;
+        this.countPlayers = countPlayers;
         this.nrRound = 1;
         this.topic = topic;
         this.raspberryId = raspberryId;
         this.startTime = startTime;
-        this.endTime = endTime;
         this.teamList = teamList;
-        this.pausedTime = pausedTime;
-        this.deviceTeamIdList = deviceTeamIdList;
-        this.scoreList = scoreList;
-    }
-
-    public int getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(int gameId) {
-        this.gameId = gameId;
     }
 
     public int getScoreToWin() {
@@ -81,6 +67,10 @@ public class Game implements Serializable {
 
     public void setTotalScore(int totalScore) {
         this.totalScore = totalScore;
+    }
+
+    public int getCountPlayers() {
+        return countPlayers;
     }
 
     public int getNrRound() {
@@ -157,9 +147,5 @@ public class Game implements Serializable {
 
     public void setDeviceTeamIdList(List<Integer> deviceTeamIdList) {
         this.deviceTeamIdList = deviceTeamIdList;
-    }
-
-    public Game(int scoreToWin, int totalScore, Topic topic, int raspberryId, Timestamp timestamp, List<Team> teamList) {
-        this.nrRound = 1;
     }
 }
