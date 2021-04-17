@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/main.xhtml">
+    <ui:define name ="content">
+        <h:form id="raspberryForm">
+            <p:dataTable id="raspberryTable" var="raspberry" value="#{raspberryListController.raspberries}">
+                <p:column headerText="ID" style="width: 100px">
+                    <h:outputText value="#{raspberry.raspberryId}"/>
+                </p:column>
+                <p:column headerText="IP Address">
+                    <h:outputText value="#{raspberry.ipAddress}"/>
+                </p:column>
+                <p:column headerText="API Key">
+                    <h:outputText value="#{raspberry.apiKey}"/>
+                </p:column>
+                <p:column headerText="inUse">
+                    <h:selectBooleanCheckbox value="#{raspberry.inUse}" disabled="true" style="margin: 0px auto; display: block"/>
+                </p:column>
+                <p:column headerText="actions" style="width:100px;text-align: center">
+                    <p:commandButton update=":raspberryForm:raspberryEditDialog" oncomplete="PF('raspberryEditDialog').show()" icon="ui-icon-note" title="Edit">
+                        <f:setPropertyActionListener value="#{raspberry}" target="#{raspberryController.raspberry}" />
+                    </p:commandButton>
+                    <p:commandButton update=":raspberryForm:raspberryTable" title="Invalidate API Key" icon="ui-icon-close" action="#{raspberryController.doInvalidateApiKey()}">
+                        <f:setPropertyActionListener value="#{raspberry}" target="#{raspberryController.raspberry}" />
+                    </p:commandButton>
+                    <p:commandButton update=":raspberryForm:raspberryTable" title="Delete Raspberry" icon="ui-icon-trash" action="#{raspberryController.doDeleteRaspberry()}">
+                        <f:setPropertyActionListener value="#{raspberry}" target="#{raspberryController.raspberry}" />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+
+            <!-- Edit Raspi Dialog -->
+            <p:dialog header="Edit Raspberry" id="raspberryEditDialog" widgetVar="raspberryEditDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="raspberryData" rendered="#{not empty raspberryController.raspberry}">
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="ipAddress" value="IP Address: " />
+                        <p:inputText id="ipAddress" value="#{raspberryController.raspberry.ipAddress}"/>
+                        <p:outputLabel for="apiKey" value="API-KEY: " />
+                        <p:inputText id="apiKey" value="#{raspberryController.raspberry.apiKey}"/>
+                    </h:panelGrid>
+                    <p:separator />
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="inUse" value="Enabled: " />
+                        <p:selectBooleanCheckbox id="inUse" value="#{raspberryController.raspberry.inUse}"/>
+                    </h:panelGrid>
+                    <p:separator />
+                    <h:panelGrid columns="3">
+                        <p:commandButton value="Save" action="#{raspberryController.doSaveRaspberry()}" oncomplete="PF('raspberryEditDialog').hide()" update=":raspberryForm:raspberryTable"/>
+                        <p:commandButton value="Abort" onclick="PF('userEditDialog').hide()"/>
+                    </h:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+
+        </h:form>
+        <!-- Create Raspberry Button -->
+        <p:commandButton update=":raspberryForm:raspberryEditDialog" oncomplete="PF('raspberryEditDialog').show();" title="Add new Raspberry" action="#{raspberryController.doCreateRaspberry()}"></p:commandButton>
+
+    </ui:define>
+</ui:composition>
