@@ -1,6 +1,7 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.Game;
+import at.qe.skeleton.model.Task;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,11 @@ public class GamePlayService extends GameService {
         return game;
     }
 
+    public Task getTask(Game game) {
+        //TODO
+        return null;
+    }
+
     private TeamPlayer selectNextPlayer(Game game) {
         return getPlayers().get((game.getNrRound() - 1) % getNumPlayers());
     }
@@ -34,11 +40,17 @@ public class GamePlayService extends GameService {
 
     public Game stopGame(Game game) {
         game.setEndTime(Timestamp.valueOf(LocalDateTime.now()));
+        getGameRepository().save(game);
         return game;
     }
 
-    public Game pauseGame(Game game) {
-        game.setPausedTime(Timestamp.valueOf(LocalDateTime.now()));
+    public Game pauseGame(Game game, boolean paused) {
+        if (paused) {
+            game.setPausedTime(null);
+        } else {
+            game.setPausedTime(Timestamp.valueOf(LocalDateTime.now()));
+        }
+        getGameRepository().save(game);
         return game;
     }
 }

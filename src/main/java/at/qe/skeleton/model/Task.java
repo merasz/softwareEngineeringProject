@@ -19,22 +19,18 @@ public class Task implements Serializable {
     @ManyToOne
     private TimeFlip timeFlip;
 
-    @ElementCollection(targetClass = RequestType.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "Task_RequestType")
     @Enumerated(EnumType.STRING)
-    private Set<RequestType> requestTypes;
+    private RequestType requestType;
 
     public Task() {
     }
 
-    public Task(int taskId, int facetId, int durationInMinutes, int pointsForTask, TimeFlip timeFlip,
-                Set<RequestType> requestTypes) {
-        this.taskId = taskId;
+    public Task(int facetId, int durationInMinutes, int pointsForTask, TimeFlip timeFlip, RequestType requestType) {
         this.facetId = facetId;
         this.durationInMinutes = durationInMinutes;
         this.pointsForTask = pointsForTask;
         this.timeFlip = timeFlip;
-        this.requestTypes = requestTypes;
+        this.requestType = requestType;
     }
 
     public static long getSerialVersionUID() {
@@ -73,12 +69,12 @@ public class Task implements Serializable {
         this.pointsForTask = pointsForTask;
     }
 
-    public Set<RequestType> getRequestTypes() {
-        return requestTypes;
+    public RequestType getRequestType() {
+        return requestType;
     }
 
-    public void setRequestTypes(Set<RequestType> requestTypes) {
-        this.requestTypes = requestTypes;
+    public void setRequestType(RequestType requestType) {
+        this.requestType = requestType;
     }
 
     public TimeFlip getTimeFlip() {

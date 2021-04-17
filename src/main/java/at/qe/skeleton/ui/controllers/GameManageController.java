@@ -1,6 +1,7 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.Game;
+import at.qe.skeleton.model.Raspberry;
 import at.qe.skeleton.model.Topic;
 import at.qe.skeleton.services.GameManageService;
 import at.qe.skeleton.services.TermsService;
@@ -24,13 +25,13 @@ public class GameManageController extends GameController implements Serializable
     private int scoreToWin;
     private int countPlayers;
     private int countTeams;
+    private Raspberry raspberry;
     private Topic topic;
 
     //TODO: get connected Raspberry
     public Game createGame() {
-        int raspberryId = 0;
         try {
-            setGame(gameManageService.createGame(scoreToWin, countPlayers, topic, raspberryId, countTeams));
+            setGame(gameManageService.createGame(scoreToWin, countPlayers, topic, raspberry, countTeams));
             displayInfo("Game created", "Game created successfully.");
         } catch (IllegalArgumentException e) {
             displayError("Game creation failed", e.getMessage());

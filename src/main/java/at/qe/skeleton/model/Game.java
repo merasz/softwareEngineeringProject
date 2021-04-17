@@ -24,8 +24,8 @@ public class Game implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date pausedTime;
 
-    //TODO: change type to Raspberry
-    private int raspberryId;
+    @ManyToOne
+    private Raspberry raspberry;
 
     @ManyToMany
     private List<Team> teamList;
@@ -42,13 +42,13 @@ public class Game implements Serializable {
     public Game() {
     }
 
-    public Game(int scoreToWin, int countPlayers, Topic topic, int raspberryId, Date startTime, List<Team> teamList) {
+    public Game(int scoreToWin, int countPlayers, Topic topic, Raspberry raspberry, Date startTime, List<Team> teamList) {
         this.scoreToWin = scoreToWin;
         this.totalScore = 0;
         this.countPlayers = countPlayers;
         this.nrRound = 1;
         this.topic = topic;
-        this.raspberryId = raspberryId;
+        this.raspberry = raspberry;
         this.startTime = startTime;
         this.teamList = teamList;
     }
@@ -81,12 +81,8 @@ public class Game implements Serializable {
         this.nrRound++;
     }
 
-    public int getRaspberryId() {
-        return raspberryId;
-    }
-
-    public void setRaspberryId(int raspberryId) {
-        this.raspberryId = raspberryId;
+    public Raspberry getRaspberry() {
+        return raspberry;
     }
 
     public List<Team> getTeamList() {

@@ -28,6 +28,7 @@ public class TimeFlip implements Serializable {
 
     private boolean inUse;
 
+    //TODO: multiple status instances per timeflip?
     @ElementCollection(targetClass = TimeFlipSetupStatus.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "Timeflip_TimeflipSetupStatuts")
     @Enumerated(EnumType.STRING)

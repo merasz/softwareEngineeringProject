@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 public class GameManageService extends GameService {
 
     //region create Game
-    public Game createGame(int scoreToWin, int countPlayers, Topic topic, int raspberryId, int countTeams) throws IllegalArgumentException {
+    public Game createGame(int scoreToWin, int countPlayers, Topic topic, Raspberry raspberry, int countTeams) throws IllegalArgumentException {
         if (countTeams < 2) {
             throw new IllegalArgumentException("Create at least 2 Teams.");
         } else if (countPlayers % countTeams != 0) {
@@ -27,7 +27,7 @@ public class GameManageService extends GameService {
         } else {
             List<Team> teams = new ArrayList<>();
             IntStream.range(0,countTeams).forEach(i -> teams.add(new Team()));
-            Game game = new Game(scoreToWin, countPlayers, topic, raspberryId, Timestamp.valueOf(LocalDateTime.now()), teams);
+            Game game = new Game(scoreToWin, countPlayers, topic, raspberry, Timestamp.valueOf(LocalDateTime.now()), teams);
             getGameRepository().save(game);
             return game;
         }
