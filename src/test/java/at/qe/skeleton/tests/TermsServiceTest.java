@@ -1,6 +1,5 @@
 package at.qe.skeleton.tests;
 
-import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.Term;
 import at.qe.skeleton.model.Topic;
 import at.qe.skeleton.services.TermsService;
