@@ -72,13 +72,12 @@
                 <p:dialog header="END GAME" id="stopGameDialog" widgetVar="stopGameDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                     <p:outputPanel id="stopGamePanel" >
                         <p>Are you sure? The game will be ended and connot be resumed.<br/>
-                            To pause and resume a game press the <em>PAUSE GAME</em> button instead.</p>
+                            To pause and resume a game press the <b>PAUSE GAME</b> button instead.</p>
                         <p:separator />
                         <h:panelGrid columns ="2">
-                            <p:commandButton value="END GAME" actionListener="#{gamePlayController.endGame}"
-                                             action="end_screen.xhtml?faces-redirect=true" oncomplete="PF('stopGameDialog').hide()">
+                            <p:commandButton value="END GAME" action="#{gamePlayController.endGame}" oncomplete="PF('stopGameDialog').hide()" update=":userForm:usersTable">
                             </p:commandButton>
-                            <p:commandButton value="CANCEL" oncomplete="PF('stopGameDialog').hide()" ajax="false">
+                            <p:commandButton value="CANCEL" oncomplete="PF('stopGameDialog').hide()">
                             </p:commandButton>
                         </h:panelGrid>
                     </p:outputPanel>

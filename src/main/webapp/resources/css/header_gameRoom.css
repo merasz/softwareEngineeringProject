@@ -20,17 +20,14 @@ body{
 .header span{
     color: #1dc4e7;
 }
-/*
-.middle_area {
-    position: fixed;
-    padding: 20px;
-    width: 50%;
-    height: 30px;
-    left: 0;
+
+.main {
+    background: #22242a;
+    text-align: center;
 }
-*/
+
 .scoreboard {
-    position: fixed;
+    float: bottom;
     background: #22242a;
     padding: 20px;
     width: 100%;
@@ -39,6 +36,7 @@ body{
 }
 
 .right_area {
+    position: fixed;
     float: right;
     padding: 20px;
     width: 30%;
