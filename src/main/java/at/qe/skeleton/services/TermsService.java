@@ -11,6 +11,7 @@ import org.primefaces.shaded.json.JSONArray;
 import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.access.prepost.*;
 import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
@@ -29,6 +30,13 @@ public class TermsService {
     private Term currentTerm;
     private List<Term> termsInGame;
     private Iterator<Term> iterateTerms;
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Topic loadTopic(String topicName) {
+        return (Topic) topicRepository.findByTopicName(topicName);
+    }
+
+
 
     public void saveTopic(String name, Topic topic) throws IllegalArgumentException {
         validateTopic(name);

@@ -1,8 +1,10 @@
 package at.qe.skeleton.model;
 
+import org.graalvm.compiler.lir.*;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.*;
 
 @Entity
 public class Topic implements Serializable {
@@ -17,6 +19,17 @@ public class Topic implements Serializable {
 
     @OneToMany(mappedBy = "topic")
     private List<Term> terms;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createDate;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updateDate;
+
+    @ManyToOne(optional = true)
+    private Topic updateTopic;
+
+
 
     public Topic() {
     }
@@ -52,5 +65,33 @@ public class Topic implements Serializable {
 
     public void setGames(List<Game> games) {
         this.games = games;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public boolean isNew(){
+        return (null == createDate);
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public Topic getUpdateTopic() {
+        return updateTopic;
+    }
+
+    public void setUpdateTopic(Topic updateTopic) {
+        this.updateTopic = updateTopic;
     }
 }
