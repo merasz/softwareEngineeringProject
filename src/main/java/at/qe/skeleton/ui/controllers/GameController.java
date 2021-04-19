@@ -3,6 +3,7 @@ package at.qe.skeleton.ui.controllers;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.GameService;
 import at.qe.skeleton.services.GameStatsService;
+import at.qe.skeleton.services.TermsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,9 @@ public class GameController extends Controller implements Serializable {
     @Autowired
     private GameStatsService gameStatsService;
 
+    @Autowired
+    private TermsService termsService;
+
     private List<Game> games;
     private Game game;
 
@@ -30,6 +34,10 @@ public class GameController extends Controller implements Serializable {
     //region getter & setter
     public GameStatsService getGameStatsService() {
         return gameStatsService;
+    }
+
+    public TermsService getTermsService() {
+        return termsService;
     }
 
     public Game getGame() {

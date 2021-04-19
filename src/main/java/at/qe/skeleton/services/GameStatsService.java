@@ -14,20 +14,23 @@ import java.util.List;
 @Scope("application")
 public class GameStatsService extends GameService {
 
-    public Game updateScores(Game game, int guessedRight, Term term, Task task) {
+    //TODO: where task?
+    public Game updateScores(Game game, int guessAccepted, Term term) {
         Score score = getScoreRepository().findFirstByUserAndGame(getCurrentPlayer(), game);
         int currentPoints = score.getTotalRoundScore();
+        Task task = new Task();
 
-        //int guessedRight: -1 -> foul, 0 -> not guessed, 1 -> guessed right
-        if (guessedRight == 1) {
+        //int guessedRight: -1 -> foul, 1 -> guessed right, else -> not guessed
+        if (guessAccepted == 1) {
             score.setTotalRoundScore(currentPoints + task.getPointsForTask());
             score.getGuessedTerms().add(term);
-        } else if (guessedRight == -1) {
+        } else if (guessAccepted == -1) {
             score.setTotalRoundScore(currentPoints + PENALTY_POINTS);
             score.getNotGuessedTerms().add(term);
         } else {
             score.getNotGuessedTerms().add(term);
         }
+        getGameRepository().save(game);
         return game;
     }
 

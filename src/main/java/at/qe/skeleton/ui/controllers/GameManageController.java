@@ -19,9 +19,6 @@ public class GameManageController extends GameController implements Serializable
     @Autowired
     private GameManageService gameManageService;
 
-    @Autowired
-    private TermsService termsService;
-
     private int scoreToWin;
     private int countPlayers;
     private int countTeams;
@@ -54,7 +51,7 @@ public class GameManageController extends GameController implements Serializable
 
     public void setTopic(Topic topic) {
         try {
-            this.topic = termsService.setGameTopic(topic);
+            this.topic = getTermsService().setGameTopic(topic);
         } catch (IllegalArgumentException e) {
             displayError("Too few terms in topic", e.getMessage());
         }

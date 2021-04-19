@@ -21,6 +21,30 @@ public class GamePlayController extends GameController implements Serializable {
 
     private User user;
     private boolean paused = false;
+    private int guessAccepted = 0;
+
+    //region gaming round
+    public void startRound() {
+        Thread timerThread = new Thread(){
+            @Override
+            public void run() {
+                gamePlayService.runGameRound(getGame());
+                setGame(getGameStatsService().updateScores(getGame(), guessAccepted, getTermsService().getNextTerm(getGame())));
+            }
+        };
+        timerThread.start();
+    }
+
+    public String getTimer() {
+        return gamePlayService.getTimerString();
+    }
+
+    public void acceptAnswer(int guessAccepted) {
+        //int guessedRight: -1 -> foul, 1 -> guessed right
+        this.guessAccepted = guessAccepted;
+        gamePlayService.setGuessAccepted(true);
+    }
+    //endregion
 
     public int countGuessesForWin() {
         return gamePlayService.countGuessesForWin(getGame());
@@ -37,10 +61,8 @@ public class GamePlayController extends GameController implements Serializable {
     }
 
     //TODO
-    public Game nextRound(int guessedRight) {
-        //get current task
-        //int guessedRight: -1 -> foul, 0 -> not guessed, 1 -> guessed right
-        //gameService.updateScores(game, guessedRight, termsService.getNextTerm(game), task);
+    public Game nextRound() {
+        //get new task
         return null;
     }
 
@@ -48,10 +70,7 @@ public class GamePlayController extends GameController implements Serializable {
         return gamePlayService.getTask(getGame());
     }
 
-    //TODO: get time from timer
     public Game endGame() {
-        int seconds = 0;
-        displayInfo("Game stopped", "Game stopped successfully.");
         return gamePlayService.stopGame(getGame());
     }
 

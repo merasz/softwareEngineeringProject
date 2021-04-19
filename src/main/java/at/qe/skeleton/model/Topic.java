@@ -1,7 +1,5 @@
 package at.qe.skeleton.model;
 
-import org.graalvm.compiler.lir.*;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
