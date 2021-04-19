@@ -23,6 +23,13 @@ public class TermsController extends Controller implements Serializable {
     private Topic topic = new Topic();
     private Term term;
 
+    public boolean setNewTopic(){
+        this.topic.setTopicName("");
+        this.topic.setTerms(terms);
+
+        return true;
+    }
+
     public List<Topic> getAllTopics() {
         topics = termsService.getTopicRepository().findAll();
         return topics;
@@ -91,6 +98,10 @@ public class TermsController extends Controller implements Serializable {
 
     public void setTopic(Topic topic) {
         this.topic = topic;
+    }
+
+    public Term getTerm() {
+        return term;
     }
 
     public void setTerm(Term term) {
