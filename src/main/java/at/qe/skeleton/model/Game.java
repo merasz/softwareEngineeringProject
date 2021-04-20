@@ -43,8 +43,7 @@ public class Game implements Serializable {
     @OneToMany(mappedBy = "game")
     private List<Score> scoreList;
 
-    public Game() {
-    }
+    public Game() { }
 
     public Game(int scoreToWin, int countPlayers, Topic topic, Raspberry raspberry, Date startTime, List<Team> teamList) {
         this.scoreToWin = scoreToWin;

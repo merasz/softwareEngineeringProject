@@ -112,29 +112,33 @@
                 <p:autoUpdate/>
             </p:growl>
             <p:commandButton style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('gameCreationDialog').show()" icon="ui-icon-add-box" value ="Create new Game">
-                <f:setPropertyActionListener value="#{game}" target="#{gameController.game}" />
+                <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}" />
             </p:commandButton>
 
             <p:dialog header="Create new Game" id="gameCreationDialog" widgetVar="gameCreationDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                 <p:outputPanel id="gameCreateData" >
                     <h:panelGrid columns ="2">
                         <p:outputLabel for="gameName" value="Game Name: "/>
-                        <p:inputText id="gameName" value="#{gameController.game.gameName}" />
+                        <p:inputText id="gameName" value="#{gameCreationController.game.gameName}" />
                     </h:panelGrid>
                     <h:panelGrid columns ="2">
                         <p:outputLabel for="scoreToWin" value="Score to win: "/>
-                        <p:inputText id="scoreToWin" value="#{gameController.game.scoreToWin}" />
+                        <p:inputText id="scoreToWin" value="#{gameCreationController.game.scoreToWin}" />
                     </h:panelGrid>
-                    <h:panelGrid columns ="2">
-                        <p:outputLabel for="topic" value="Topic: " />
-                        <h:selectOneMenu id ="topic" value="#{gameController.game.topic}">
-                            <f:selectItems value="#{topicListController.topics}"/>
-                        </h:selectOneMenu>
-                    </h:panelGrid>
+<!--                    <h:panelGrid columns ="2">-->
+<!--                        <p:outputLabel for="topic" value="Topic: " />-->
+<!--&lt;!&ndash;                        <h:selectOneMenu id ="topic" value="#{gameCreationController.game.topic}">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <f:selectItems value="#{topicListController.topics}"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </h:selectOneMenu>&ndash;&gt;-->
+<!--                        <p:outputLabel for="newTopic" value="Topic: "/>-->
+<!--                        <p:selectOneMenu id="newTopic" value="#{gameCreationController.game.topic}" converter="#{TopicConverter}" showCheckbox="true" required="true" requiredMessage="Topic required." style="width: 175px;">-->
+<!--                            <f:selectItems value="#{gameCreationController.topicsList}"/>-->
+<!--                        </p:selectOneMenu>-->
+<!--                    </h:panelGrid>-->
                     <p:separator />
                     <h:panelGrid columns ="2">
                         <p:outputLabel for="teamCount" value="How many Teams: " />
-                        <h:selectOneMenu id ="teamCount" >
+                        <h:selectOneMenu id ="teamCount" value="#{gameCreationController.game.teamSize}">
                             <f:selectItem itemValue = "1" itemLabel = "2" />
                             <f:selectItem itemValue = "2" itemLabel = "3" />
                             <f:selectItem itemValue = "3" itemLabel = "4" />
@@ -144,7 +148,7 @@
                     </h:panelGrid>
                     <h:panelGrid columns ="2">
                         <p:outputLabel for="numPlayersPerTeam" value="How many per Team: " />
-                        <h:selectOneMenu id ="numPlayersPerTeam" >
+                        <h:selectOneMenu id ="numPlayersPerTeam" value="#{gameCreationController.game.teamSize}">
                         <f:selectItem itemValue = "1" itemLabel = "2" />
                         <f:selectItem itemValue = "2" itemLabel = "3" />
                         <f:selectItem itemValue = "3" itemLabel = "4" />

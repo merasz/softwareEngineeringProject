@@ -65,7 +65,7 @@ public class GameController extends Controller implements Serializable {
     }
 
     public int getMaxPlayers() {
-        return this.game.getNumberOfTeams()*this.game.getTeamSize();
+        return 1;
     }
     //endregion
 }

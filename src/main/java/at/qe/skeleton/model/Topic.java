@@ -91,4 +91,6 @@ public class Topic implements Serializable {
     public void setUpdateTopic(Topic updateTopic) {
         this.updateTopic = updateTopic;
     }
+
+
 }
