@@ -7,6 +7,7 @@ public class PiRequest {
     private long id;
     private String ipAddress;
     private int facetId;
+    private String val;
 
     public long getId() {
         return id;
@@ -30,6 +31,14 @@ public class PiRequest {
 
     public void setFacetId(int facetId) {
         this.facetId = facetId;
+    }
+
+    public String getVal() {
+        return val;
+    }
+
+    public void setVal(String val) {
+        this.val = val;
     }
 
     @Override

@@ -22,6 +22,11 @@ public class APIController {
         private static final long serialVersionUID = 1L;
     }
 
+    @ResponseStatus(code = HttpStatus.FORBIDDEN)
+    public class RequestErrorException extends Exception {
+        private static final long serialVersionUID = 2L;
+    }
+
     private void authorizeRequest(String ipAddress,String authToken) throws RequestUnauthorizedException {
 
         String[] input = authToken.split(" ");
@@ -33,12 +38,24 @@ public class APIController {
 
         if(!type.equals("Bearer")) {throw new RequestUnauthorizedException();}
 
-        /* TODO: read token from database */
-        String testToken = "7173b055-4674-4ca2-8348-60e1b3fa8204";
-
         Raspberry raspi = raspberryService.loadRaspberryByIp(ipAddress);
         if (raspi == null) {throw new RequestUnauthorizedException(); }
         if(!apiKey.equals(raspi.getApiKey())) {throw new RequestUnauthorizedException();}
+    }
+
+    @GetMapping("/api/apikey")
+    private String getApiKey(@RequestParam String ipAddress) throws RequestErrorException {
+
+        Raspberry raspi = raspberryService.loadRaspberryByIp(ipAddress);
+        if (raspi == null) {throw new RequestErrorException(); }
+
+        String apiKey = raspi.getApiKey();
+        if(apiKey != null && apiKey != "") {
+            return apiKey;
+        } else {
+            return apiService.generateApiKeyForRaspberry(raspi);
+        }
+
     }
 
 
