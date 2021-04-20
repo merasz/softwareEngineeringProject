@@ -133,6 +133,19 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public Collection<User> getAllAdmins() {
+        return userRepository.findAllAdmins();
+    }
+
+    public Collection<User> getAllManagers() {
+        return userRepository.findAllManagers();
+    }
+
+    public Collection<User> getAllPlayers() {
+        return userRepository.findAllPlayers();
+    }
+
+
     private void validateInput(String username, String password) throws IllegalArgumentException, NullPointerException {
         if (username.isEmpty() || password.isEmpty()) {
             throw new IllegalArgumentException("All fields need to be filled.");

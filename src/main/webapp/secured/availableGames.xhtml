@@ -11,75 +11,43 @@
             <p:growl id="growl" showDetail="false" life="6000" >
                 <p:autoUpdate/>
             </p:growl>
-            <p:dataTable  id="usersTable" var="user" value="#{userListController.users}" style="width: 83%; margin-top: 110px; float: right;">
+            <p:dataTable  id="usersTable" var="game" value="#{gameListController.games}" style="width: 83%; margin-top: 110px; float: right;">
                 <f:facet name="header">Join Game</f:facet>
                 <p:column headerText="Game ID">
-                    <h:outputText value="#{user.username}"/>
+                    <h:outputText value="#{game.gameId}"/>
                 </p:column>
                 <p:column headerText="Game Name">
-                    <h:outputText value="#{user.roles}" />
+                    <h:outputText value="#{game.gameName}" />
                 </p:column>
                 <p:column headerText="Topic">
-                    <h:outputText value="#{user.roles}" />
+                    <h:outputText value="#{game.topic}" />
                 </p:column>
                 <p:column headerText="current Players/max Players">
-                    <h:selectBooleanCheckbox value="#{user.enabled}" disabled="true"/>
+                    <h:outputText value="#{gameController.maxPlayers}" disabled="true"/>
+                    /
+                    <h:outputText value="#{game.teamSize}" disabled="true"/>
+                </p:column>
+                <p:column headerText="score to win">
+                    <h:outputText value="#{game.scoreToWin}" disabled="true"/>
                 </p:column>
                 <p:column style="width:100px;text-align: center" headerText="Autoassign">
-                    <p:commandButton title="Edit" icon="ui-icon-note"  update=":userForm:userEditDialog" oncomplete="PF('userEditDialog').show()" style="width:20px;height:20px">
+                    <p:commandButton title="Edit" icon="ui-icon-note"  update=":userForm:autoAssignDialog" oncomplete="PF('autoAssignDialog').show()" style="width:20px;height:20px">
                         <f:setPropertyActionListener value="#{user}" target="#{userController.user}" />
                     </p:commandButton>
                 </p:column>
                 <p:column style="width:100px;text-align: center" headerText="Choose Team">
-                    <p:commandButton title="Edit" icon="ui-icon-note"  update=":userForm:userEditDialog" oncomplete="PF('userEditDialog').show()" style="width:20px;height:20px">
+                    <p:commandButton title="Edit" icon="ui-icon-note"  update=":userForm:autoAssignDialog" oncomplete="PF('autoAssignDialog').show()" style="width:20px;height:20px">
+                        <f:setPropertyActionListener value="#{user}" target="#{userController.user}" />
+                    </p:commandButton>
+                </p:column>
+                <p:column style="width:100px;text-align: center" headerText="Assign a Friend">
+                    <p:commandButton title="Edit" icon="ui-icon-note"  update=":userForm:autoAssignDialog" oncomplete="PF('autoAssignDialog').show()" style="width:20px;height:20px">
                         <f:setPropertyActionListener value="#{user}" target="#{userController.user}" />
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
 
-
-            <div class="card">
-                <p:multiSelectListbox value="#{multiSelectView.selection}" effect="slide" header="Categories" showHeaders="true" >
-                    <f:selectItems value="#{multiSelectView.categories}"/>
-                </p:multiSelectListbox>
-            </div>
-
-            <p:dialog header="Create new Game" id="gameCreationDialog" widgetVar="gameCreationDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-                <p:outputPanel id="userCreateData" >
-                    <h:panelGrid columns ="2">
-                        <p:outputLabel for="gameName" value="Game Name: "/>
-                        <p:inputText id="gameName" value="#{userCreationController.user.username}" />
-                    </h:panelGrid>
-                    <h:panelGrid columns ="2">
-                        <p:outputLabel for="addRoll" value="Topic: " />
-                        <h:selectOneMenu id ="addRoll" >
-                            <f:selectItem itemValue = "1" itemLabel = "Geo" />
-                            <f:selectItem itemValue = "2" itemLabel = "Maths" />
-                            <f:selectItem itemValue = "2" itemLabel = "Computer Science" />
-                        </h:selectOneMenu>
-                    </h:panelGrid>
-                    <p:separator />
-                    <h:panelGrid columns ="2">
-                        <p:outputLabel for="teamCount" value="How many Teams: " />
-                        <h:selectOneMenu id ="teamCount" >
-                            <f:selectItem itemValue = "1" itemLabel = "2" />
-                            <f:selectItem itemValue = "2" itemLabel = "3" />
-                            <f:selectItem itemValue = "2" itemLabel = "4" />
-                            <f:selectItem itemValue = "2" itemLabel = "5" />
-                            <f:selectItem itemValue = "2" itemLabel = "6" />
-                        </h:selectOneMenu>
-                    </h:panelGrid>
-                    <p:separator />
-
-                    <h:panelGrid columns ="2">
-                        <p:commandButton value="Save" action="#{userCreationController.doSaveUser()}" oncomplete="PF('userCreationDialog').hide()" update=":userForm:usersTable">
-                        </p:commandButton>
-                    </h:panelGrid>
-
-                </p:outputPanel>
-            </p:dialog>
-
-            <p:dialog header="Edit User" id="userEditDialog" widgetVar="userEditDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+            <p:dialog header="Edit User" id="autoAssignDialog" widgetVar="autoAssignDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                 <p:outputPanel id="userData" rendered="#{not empty userController.user}">
                     <h:panelGrid columns="2">
                         <p:outputLabel for="username" value="Username: " />
@@ -109,19 +77,90 @@
                     </h:panelGrid>
                     <p:separator />
                     <h:panelGrid columns="3">
-                        <p:commandButton value="Save" action="#{userController.doSaveUser()}" oncomplete="PF('userEditDialog').hide()" update=":userForm:usersTable"/>
+                        <p:commandButton value="Save" action="#{userController.doSaveUser()}" oncomplete="PF('autoAssignDialog').hide()" update=":userForm:usersTable"/>
                         <p:commandButton value="Reload" action="#{userController.doReloadUser()}" update=":userForm:userData"/>
-                        <p:commandButton value="Abort" onclick="PF('userEditDialog').hide()"/>
+                        <p:commandButton value="Abort" onclick="PF('autoAssignDialog').hide()"/>
                     </h:panelGrid>
                 </p:outputPanel>
-
             </p:dialog>
-
             <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
                 <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                 <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
             </p:confirmDialog>
 
+            <p:dialog header="Edit User" id="chooseTeamDialog" widgetVar="autoAssignDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <p:separator />
+                    <h:panelGrid columns="3">
+                        <p:commandButton value="Save" action="#{userController.doSaveUser()}" oncomplete="PF('autoAssignDialog').hide()" update=":userForm:usersTable"/>
+                        <p:commandButton value="Reload" action="#{userController.doReloadUser()}" update=":userForm:userData"/>
+                        <p:commandButton value="Abort" onclick="PF('autoAssignDialog').hide()"/>
+                    </h:panelGrid>
+            </p:dialog>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+
+        </h:form>
+
+        <h:form id="createGameForm">
+            <p:growl id="growl" showDetail="false" life="6000" >
+                <p:autoUpdate/>
+            </p:growl>
+            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('gameCreationDialog').show()" icon="ui-icon-add-box" value ="Create new Game">
+                <f:setPropertyActionListener value="#{game}" target="#{gameController.game}" />
+            </p:commandButton>
+
+            <p:dialog header="Create new Game" id="gameCreationDialog" widgetVar="gameCreationDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="gameCreateData" >
+                    <h:panelGrid columns ="2">
+                        <p:outputLabel for="gameName" value="Game Name: "/>
+                        <p:inputText id="gameName" value="#{gameController.game.gameName}" />
+                    </h:panelGrid>
+                    <h:panelGrid columns ="2">
+                        <p:outputLabel for="scoreToWin" value="Score to win: "/>
+                        <p:inputText id="scoreToWin" value="#{gameController.game.scoreToWin}" />
+                    </h:panelGrid>
+                    <h:panelGrid columns ="2">
+                        <p:outputLabel for="topic" value="Topic: " />
+                        <h:selectOneMenu id ="topic" value="#{gameController.game.topic}">
+                            <f:selectItems value="#{topicListController.topics}"/>
+                        </h:selectOneMenu>
+                    </h:panelGrid>
+                    <p:separator />
+                    <h:panelGrid columns ="2">
+                        <p:outputLabel for="teamCount" value="How many Teams: " />
+                        <h:selectOneMenu id ="teamCount" >
+                            <f:selectItem itemValue = "1" itemLabel = "2" />
+                            <f:selectItem itemValue = "2" itemLabel = "3" />
+                            <f:selectItem itemValue = "3" itemLabel = "4" />
+                            <f:selectItem itemValue = "4" itemLabel = "5" />
+                            <f:selectItem itemValue = "5" itemLabel = "6" />
+                        </h:selectOneMenu>
+                    </h:panelGrid>
+                    <h:panelGrid columns ="2">
+                        <p:outputLabel for="numPlayersPerTeam" value="How many per Team: " />
+                        <h:selectOneMenu id ="numPlayersPerTeam" >
+                        <f:selectItem itemValue = "1" itemLabel = "2" />
+                        <f:selectItem itemValue = "2" itemLabel = "3" />
+                        <f:selectItem itemValue = "3" itemLabel = "4" />
+                        <f:selectItem itemValue = "4" itemLabel = "5" />
+                        <f:selectItem itemValue = "5" itemLabel = "6" />
+                        </h:selectOneMenu>
+                    </h:panelGrid>
+                    <p:separator />
+
+                    <h:panelGrid columns ="2">
+                        <p:commandButton value="Save" action="#{gameController.doSaveGame()}" oncomplete="PF('gameCreationDialog').hide()" />
+                        <p:commandButton value="Abort" onclick="PF('Dialog').hide()"/>
+                    </h:panelGrid>
+
+                </p:outputPanel>
+            </p:dialog>
         </h:form>
 
     </ui:define>

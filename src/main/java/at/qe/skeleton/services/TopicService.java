@@ -71,12 +71,15 @@ public class TopicService {
         }
     }
 
+    public Topic getTopicByName(Topic topic) {
+        return this.loadTopic(topic.getTopicName());
+    }
+
     private void validateTopic(String name) throws IllegalArgumentException {
         Topic t = topicRepository.findFirstByTopicName(name);
         if (t != null) {
             throw new IllegalArgumentException("Topic already exists.");
         }
-
     }
 
     private Topic getAuthenticatedTopic() {

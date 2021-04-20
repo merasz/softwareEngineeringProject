@@ -67,5 +67,13 @@ public class GameService {
     public List<TeamPlayer> getPlayers() {
         return players;
     }
+
+    public Game saveGame(Game game) {
+        return gameRepository.save(game);
+    }
+
+    public Collection<Game> getAllGames() {
+        return gameRepository.findAll();
+    }
     //endregion
 }

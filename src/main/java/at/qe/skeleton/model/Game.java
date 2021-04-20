@@ -1,5 +1,7 @@
 package at.qe.skeleton.model;
 
+import org.springframework.lang.Nullable;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -12,10 +14,12 @@ public class Game implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int gameId;
-
+    private String gameName;
     private int scoreToWin;
     private int totalScore;
     private int countPlayers;
+    private int teamSize;
+    private int numberOfTeams;
     private int nrRound;
     @Temporal(TemporalType.TIMESTAMP)
     private Date startTime;
@@ -24,7 +28,7 @@ public class Game implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date pausedTime;
 
-    @ManyToOne
+    @ManyToOne(optional = true)
     private Raspberry raspberry;
 
     @ManyToMany
@@ -143,5 +147,41 @@ public class Game implements Serializable {
 
     public void setDeviceTeamIdList(List<Integer> deviceTeamIdList) {
         this.deviceTeamIdList = deviceTeamIdList;
+    }
+
+    public int getGameId() { return gameId; }
+
+    public String getGameName() { return gameName; }
+
+    public List<Score> getScoreList() { return scoreList; }
+
+    public void setGameName(String gameName) { this.gameName = gameName; }
+
+    public void setCountPlayers(int countPlayers) { this.countPlayers = countPlayers; }
+
+    public void setNrRound(int nrRound) { this.nrRound = nrRound; }
+
+    public void setRaspberry(Raspberry raspberry) { this.raspberry = raspberry; }
+
+    public void setScoreList(List<Score> scoreList) { this.scoreList = scoreList; }
+
+    public void setGameId(int gameId) {
+        this.gameId = gameId;
+    }
+
+    public int getTeamSize() {
+        return teamSize;
+    }
+
+    public void setTeamSize(int teamSize) {
+        this.teamSize = teamSize;
+    }
+
+    public int getNumberOfTeams() {
+        return numberOfTeams;
+    }
+
+    public void setNumberOfTeams(int numberOfTeams) {
+        this.numberOfTeams = numberOfTeams;
     }
 }
