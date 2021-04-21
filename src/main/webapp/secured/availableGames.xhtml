@@ -125,16 +125,19 @@
                         <p:outputLabel for="scoreToWin" value="Score to win: "/>
                         <p:inputText id="scoreToWin" value="#{gameCreationController.game.scoreToWin}" />
                     </h:panelGrid>
-<!--                    <h:panelGrid columns ="2">-->
-<!--                        <p:outputLabel for="topic" value="Topic: " />-->
-<!--&lt;!&ndash;                        <h:selectOneMenu id ="topic" value="#{gameCreationController.game.topic}">&ndash;&gt;-->
-<!--&lt;!&ndash;                            <f:selectItems value="#{topicListController.topics}"/>&ndash;&gt;-->
-<!--&lt;!&ndash;                        </h:selectOneMenu>&ndash;&gt;-->
-<!--                        <p:outputLabel for="newTopic" value="Topic: "/>-->
-<!--                        <p:selectOneMenu id="newTopic" value="#{gameCreationController.game.topic}" converter="#{TopicConverter}" showCheckbox="true" required="true" requiredMessage="Topic required." style="width: 175px;">-->
-<!--                            <f:selectItems value="#{gameCreationController.topicsList}"/>-->
-<!--                        </p:selectOneMenu>-->
-<!--                    </h:panelGrid>-->
+
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="newTopic" value="Topic: "/>
+                        <p:selectOneMenu id="newTopic" >
+                            <f:selectItem itemValue = "1" itemLabel = "2" />
+                            <f:selectItem itemValue = "2" itemLabel = "3" />
+                            <f:selectItem itemValue = "3" itemLabel = "4" />
+                            <f:selectItem itemValue = "4" itemLabel = "5" />
+                            <f:selectItem itemValue = "5" itemLabel = "6" />
+                        </p:selectOneMenu>
+
+                    </h:panelGrid>
+
                     <p:separator />
                     <h:panelGrid columns ="2">
                         <p:outputLabel for="teamCount" value="How many Teams: " />
