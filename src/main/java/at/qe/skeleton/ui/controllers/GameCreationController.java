@@ -1,15 +1,14 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.*;
-import at.qe.skeleton.services.GameService;
-import at.qe.skeleton.services.GameStatsService;
-import at.qe.skeleton.services.TermsService;
-import at.qe.skeleton.services.TopicService;
+import at.qe.skeleton.services.*;
+import org.primefaces.event.SelectEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.el.MethodExpression;
 import java.io.Serializable;
 import java.util.*;
 
@@ -22,16 +21,23 @@ public class GameCreationController extends Controller implements Serializable {
     @Autowired
     private TopicService topicService;
 
-    private Topic currentTopic;
+    @Autowired
+    private UserService userService;
+
+    private String currentTopic;
 
 
     private Game game;
     private List<Topic> topicsList;
 
+    private List<User> userList;
+    private List<User> tmp;
+
     @PostConstruct
     public void init() {
         setTopicsList();
         doCreateNewGame();
+        setUserList();
     }
 
     public void doCreateNewGame() {
@@ -39,7 +45,8 @@ public class GameCreationController extends Controller implements Serializable {
     }
 
     public void doSaveGame() {
-        System.out.println(currentTopic);
+        game.setTopic(topicService.loadTopic(currentTopic));
+        System.out.println(tmp);
         try {
             game = gameService.saveGame(game);
         } catch (IllegalArgumentException e){
@@ -59,11 +66,11 @@ public class GameCreationController extends Controller implements Serializable {
         return topicsList;
     }
 
-    public void setCurrentTopic(Topic currentTopic) {
+    public void setCurrentTopic(String currentTopic) {
         this.currentTopic = currentTopic;
     }
 
-    public Topic getCurrentTopic() {
+    public String getCurrentTopic() {
         return currentTopic;
     }
 
@@ -72,4 +79,24 @@ public class GameCreationController extends Controller implements Serializable {
         arr.addAll(topicService.getAllTopics());
         topicsList =  arr;
     }
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList() {
+        List<User> arr = new ArrayList<>();
+        arr.addAll(userService.getAllUsers());
+        userList = arr;
+        System.out.println(userList.size());
+    }
+
+    public List<User> getTmp() {
+        return tmp;
+    }
+
+    public void setTmp(List<User> tmp) {
+        this.tmp = tmp;
+    }
+
 }

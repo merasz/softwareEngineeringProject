@@ -64,8 +64,6 @@ public class GameController extends Controller implements Serializable {
         return this.topicService.getTopicByName(game.getTopic());
     }
 
-    public int getMaxPlayers() {
-        return 1;
-    }
+
     //endregion
 }

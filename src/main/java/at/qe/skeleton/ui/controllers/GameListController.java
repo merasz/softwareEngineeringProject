@@ -20,4 +20,6 @@ public class GameListController {
     public Collection<Game> getGames() {
         return gameService.getAllGames();
     }
+
+
 }

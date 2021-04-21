@@ -26,7 +26,7 @@ public class TopicConverter implements Converter {
     @Override
     public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object val) {
 
-        if(val == null ){
+        if(val == null){
             return null;
         }
 

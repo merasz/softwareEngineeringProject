@@ -183,4 +183,8 @@ public class Game implements Serializable {
     public void setNumberOfTeams(int numberOfTeams) {
         this.numberOfTeams = numberOfTeams;
     }
+
+    public int getMaxPlayers() {
+        return teamSize * numberOfTeams;
+    }
 }

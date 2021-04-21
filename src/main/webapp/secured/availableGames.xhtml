@@ -22,10 +22,13 @@
                 <p:column headerText="Topic">
                     <h:outputText value="#{game.topic.topicName}" />
                 </p:column>
+                <p:column headerText="Teams">
+                    <h:outputText value="#{game.numberOfTeams}" disabled="true"/>
+                </p:column>
                 <p:column headerText="current Players/max Players">
-                    <h:outputText value="#{gameController.maxPlayers}" disabled="true"/>
+                    <h:outputText value="#{game.countPlayers}" disabled="true"/>
                     /
-                    <h:outputText value="#{game.teamSize}" disabled="true"/>
+                    <h:outputText value="#{game.maxPlayers}" disabled="true"/>
                 </p:column>
                 <p:column headerText="score to win">
                     <h:outputText value="#{game.scoreToWin}" disabled="true"/>
@@ -75,6 +78,7 @@
                             <f:selectItem itemValue = "2" itemLabel = "Player" />
                         </h:selectOneMenu>
                     </h:panelGrid>
+
                     <p:separator />
                     <h:panelGrid columns="3">
                         <p:commandButton value="Save" action="#{userController.doSaveUser()}" oncomplete="PF('autoAssignDialog').hide()" update=":gamesForm:gameCreationTable"/>
@@ -127,9 +131,9 @@
                     </h:panelGrid>
                     <p:separator />
 
-                    <p:selectOneMenu id="topic" value="#{gameCreationController.currentTopic}">
+                    <p:selectOneMenu id="topic" value="#{gameCreationController.currentTopic}" >
                         <f:selectItem itemLabel="Select One" itemValue=""/>
-                        <f:selectItems value="#{gameCreationController.topicsList}" var="topic" itemLabel="#{topic.topicName}" itemValue="#{topic}"/>
+                        <f:selectItems value="#{gameCreationController.topicsList}" var="topic" itemLabel="#{topic.topicName}" itemValue="#{topic.topicName}"/>
                     </p:selectOneMenu>
 
 
@@ -137,30 +141,40 @@
                     <h:panelGrid columns ="2">
                         <p:outputLabel for="teamCount" value="How many Teams: " />
                         <h:selectOneMenu id ="teamCount" value="#{gameCreationController.game.teamSize}">
-                            <f:selectItem itemValue = "1" itemLabel = "2" />
-                            <f:selectItem itemValue = "2" itemLabel = "3" />
-                            <f:selectItem itemValue = "3" itemLabel = "4" />
-                            <f:selectItem itemValue = "4" itemLabel = "5" />
-                            <f:selectItem itemValue = "5" itemLabel = "6" />
+                            <f:selectItem itemValue = "2" itemLabel = "2" />
+                            <f:selectItem itemValue = "3" itemLabel = "3" />
+                            <f:selectItem itemValue = "4" itemLabel = "4" />
+                            <f:selectItem itemValue = "5" itemLabel = "5" />
+                            <f:selectItem itemValue = "6" itemLabel = "6" />
+                            
                         </h:selectOneMenu>
                     </h:panelGrid>
                     <h:panelGrid columns ="2">
                         <p:outputLabel for="numPlayersPerTeam" value="How many per Team: " />
-                        <h:selectOneMenu id ="numPlayersPerTeam" value="#{gameCreationController.game.teamSize}">
-                            <f:selectItem itemValue = "1" itemLabel = "2" />
-                            <f:selectItem itemValue = "2" itemLabel = "3" />
-                            <f:selectItem itemValue = "3" itemLabel = "4" />
-                            <f:selectItem itemValue = "4" itemLabel = "5" />
-                            <f:selectItem itemValue = "5" itemLabel = "6" />
+                        <h:selectOneMenu id ="numPlayersPerTeam" value="#{gameCreationController.game.numberOfTeams}">
+                            <f:selectItem itemValue = "2" itemLabel = "2" />
+                            <f:selectItem itemValue = "3" itemLabel = "3" />
+                            <f:selectItem itemValue = "4" itemLabel = "4" />
+                            <f:selectItem itemValue = "5" itemLabel = "5" />
+                            <f:selectItem itemValue = "6" itemLabel = "6" />
                         </h:selectOneMenu>
                     </h:panelGrid>
                     <p:separator />
+
+                    <p:outputPanel>
+                    <p:selectManyMenu id="advanced" value="#{gameCreationController.tmp}"  showCheckbox="true" styleClass="manymenu-advanced">
+                        <f:selectItems value="#{gameCreationController.userList}" var="user" itemLabel="#{user.username}" itemValue="#{user}"/>
+                    </p:selectManyMenu>
+
+                    <p:selectManyMenu id="advanced2" value="#{gameCreationController.tmp}"  showCheckbox="true" styleClass="manymenu-advanced" rendered="#{gameCreationController.game.numberOfTeams >1}">
+                        <f:selectItems value="#{gameCreationController.userList}" var="user" itemLabel="#{user.username}" itemValue="#{user}"/>
+                    </p:selectManyMenu>
 
                     <h:panelGrid columns ="2">
                         <p:commandButton value="Save" action="#{gameCreationController.doSaveGame()}" oncomplete="PF('gameCreationDialog').hide()" update=":gamesForm:gameCreationTable"/>
                         <p:commandButton value="Abort" onclick="PF('Dialog').hide()"/>
                     </h:panelGrid>
-
+                    </p:outputPanel>
                 </p:outputPanel>
             </p:dialog>
         </h:form>
