@@ -22,6 +22,8 @@ public class GameCreationController extends Controller implements Serializable {
     @Autowired
     private TopicService topicService;
 
+    private Topic currentTopic;
+
 
     private Game game;
     private List<Topic> topicsList;
@@ -37,6 +39,7 @@ public class GameCreationController extends Controller implements Serializable {
     }
 
     public void doSaveGame() {
+        System.out.println(currentTopic);
         try {
             game = gameService.saveGame(game);
         } catch (IllegalArgumentException e){
@@ -54,6 +57,14 @@ public class GameCreationController extends Controller implements Serializable {
 
     public List<Topic> getTopicsList() {
         return topicsList;
+    }
+
+    public void setCurrentTopic(Topic currentTopic) {
+        this.currentTopic = currentTopic;
+    }
+
+    public Topic getCurrentTopic() {
+        return currentTopic;
     }
 
     public void setTopicsList() {

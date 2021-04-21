@@ -16,11 +16,24 @@ public class TopicConverter implements Converter {
 
     @Override
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String s) {
-        return null;
+        if (s == null || s.equals("")){
+            return null;
+        }
+
+        return topicService.loadTopic(s);
     }
 
     @Override
     public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object val) {
+
+        if(val == null ){
+            return null;
+        }
+
+        if(val.getClass().equals(String.class)) {
+            return val.toString();
+        }
+
         return ((Topic) val).getTopicName();
     }
 }

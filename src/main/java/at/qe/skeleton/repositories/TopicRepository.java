@@ -12,7 +12,7 @@ public interface TopicRepository extends AbstractRepository<Topic, String> {
 
     List<Topic> findByTopicNameContaining(String topicName);
 
-    @Query("SELECT t FROM Topic t where t.topicName =: topicName")
-    List<Topic> findByTopicName(@Param(converter = "topicName") String topicName);
+    //@Query("SELECT t FROM Topic t where t.topicName =: topicName")
+    //List<Topic> findByTopicName(@Param(converter = "topicName") String topicName);
 
 }

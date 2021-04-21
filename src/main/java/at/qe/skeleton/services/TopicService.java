@@ -36,7 +36,7 @@ public class TopicService {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     public Topic loadTopic(String topicName) {
-        return (Topic) topicRepository.findByTopicName(topicName);
+        return (Topic) topicRepository.findFirstByTopicName(topicName);
     }
 
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('GAME_MANAGER')")
@@ -84,6 +84,6 @@ public class TopicService {
 
     private Topic getAuthenticatedTopic() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return (Topic) topicRepository.findByTopicName(auth.getName());
+        return (Topic) topicRepository.findFirstByTopicName(auth.getName());
     }
 }

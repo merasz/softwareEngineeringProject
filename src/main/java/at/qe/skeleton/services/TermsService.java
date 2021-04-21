@@ -33,7 +33,7 @@ public class TermsService {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     public Topic loadTopic(String topicName) {
-        return (Topic) topicRepository.findByTopicName(topicName);
+        return (Topic) topicRepository.findFirstByTopicName(topicName);
     }
 
 
