@@ -50,7 +50,7 @@ public class APIController {
         if (raspi == null) {throw new RequestErrorException(); }
 
         String apiKey = raspi.getApiKey();
-        if(apiKey != null && apiKey != "") {
+        if(apiKey != null && !apiKey.equals("")) {
             return apiKey;
         } else {
             return apiService.generateApiKeyForRaspberry(raspi);
