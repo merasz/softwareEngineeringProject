@@ -14,13 +14,14 @@ public class Team implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long teamId;
 
-    @OneToMany(mappedBy = "team")
+    @ManyToMany(cascade=CascadeType.ALL)
     private List<User> teamPlayers;
 
     private String teamName;
 
-    @ManyToMany
-    private List<Game> games;
+
+    @ManyToOne
+    private Game games;
 
     @ElementCollection
     @MapKeyColumn(name="key") // column name for map "key"
@@ -33,7 +34,7 @@ public class Team implements Serializable {
     public Team() {
     }
 
-    public Team(Long teamId, List<User> teamPlayers, String teamName, List<Game> games, List<Score> scores,
+    public Team(Long teamId, List<User> teamPlayers, String teamName, Game games, List<Score> scores,
                 Map<User,String> deviceIdsFromTeam) {
         this.teamId = teamId;
         this.teamPlayers = teamPlayers;
@@ -71,11 +72,11 @@ public class Team implements Serializable {
         this.teamName = teamName;
     }
 
-    public List<Game> getGames() {
+    public Game getGames() {
         return games;
     }
 
-    public void setGames(List<Game> games) {
+    public void setGames(Game games) {
         this.games = games;
     }
 

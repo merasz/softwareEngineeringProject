@@ -9,7 +9,6 @@ public class Topic implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String topicName;
 
     @OneToMany(mappedBy = "topic")
@@ -41,8 +40,8 @@ public class Topic implements Serializable {
         return topicName;
     }
 
-    public void setTopicName(String guessingTopicName) {
-        this.topicName = guessingTopicName;
+    public void setTopicName(String topicName) {
+        this.topicName = topicName;
     }
 
     public void setTerms(List<Term> terms) {
@@ -92,4 +91,7 @@ public class Topic implements Serializable {
     public void setUpdateTopic(Topic updateTopic) {
         this.updateTopic = updateTopic;
     }
+
+
+
 }

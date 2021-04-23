@@ -4,6 +4,7 @@ import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.GameService;
 import at.qe.skeleton.services.GameStatsService;
 import at.qe.skeleton.services.TermsService;
+import at.qe.skeleton.services.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,9 @@ import java.util.List;
 public class GameController extends Controller implements Serializable {
     @Autowired
     private GameService gameService;
+
+    @Autowired
+    private TopicService topicService;
 
     @Autowired
     private GameStatsService gameStatsService;
@@ -47,5 +51,19 @@ public class GameController extends Controller implements Serializable {
     public void setGame(Game game) {
         this.game = game;
     }
+
+    public void doSaveGame() {
+        try {
+            game = gameService.saveGame(game);
+        } catch (IllegalArgumentException e){
+            displayError("Error", e.getMessage());
+        }
+    }
+
+    public Topic getGameTopic() {
+        return this.topicService.getTopicByName(game.getTopic());
+    }
+
+
     //endregion
 }

@@ -7,120 +7,198 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name ="content">
-        <h:form id="userForm">
+        <h:form id="gamesForm">
             <p:growl id="growl" showDetail="false" life="6000" >
                 <p:autoUpdate/>
             </p:growl>
-            <p:dataTable  id="usersTable" var="user" value="#{userListController.users}" style="width: 83%; margin-top: 110px; float: right;">
+            <p:dataTable widgetVar="gameCreationTable" id="gameCreationTable" var="game" value="#{gameListController.games}" style="width: 83%; margin-top: 110px; float: right;">
                 <f:facet name="header">Join Game</f:facet>
                 <p:column headerText="Game ID">
-                    <h:outputText value="#{user.username}"/>
+                    <h:outputText value="#{game.gameId}"/>
                 </p:column>
                 <p:column headerText="Game Name">
-                    <h:outputText value="#{user.roles}" />
+                    <h:outputText value="#{game.gameName}" />
                 </p:column>
                 <p:column headerText="Topic">
-                    <h:outputText value="#{user.roles}" />
+                    <h:outputText value="#{game.topic.topicName}" />
+                </p:column>
+                <p:column headerText="Teams">
+                    <h:outputText value="#{game.numberOfTeams}" disabled="true"/>
                 </p:column>
                 <p:column headerText="current Players/max Players">
-                    <h:selectBooleanCheckbox value="#{user.enabled}" disabled="true"/>
+                    <h:outputText value="#{game.countPlayers}" disabled="true"/>
+                    /
+                    <h:outputText value="#{game.maxPlayers}" disabled="true"/>
                 </p:column>
-                <p:column style="width:100px;text-align: center" headerText="Autoassign">
-                    <p:commandButton title="Edit" icon="ui-icon-note"  update=":userForm:userEditDialog" oncomplete="PF('userEditDialog').show()" style="width:20px;height:20px">
-                        <f:setPropertyActionListener value="#{user}" target="#{userController.user}" />
-                    </p:commandButton>
+                <p:column headerText="score to win">
+                    <h:outputText value="#{game.scoreToWin}" disabled="true"/>
                 </p:column>
-                <p:column style="width:100px;text-align: center" headerText="Choose Team">
-                    <p:commandButton title="Edit" icon="ui-icon-note"  update=":userForm:userEditDialog" oncomplete="PF('userEditDialog').show()" style="width:20px;height:20px">
-                        <f:setPropertyActionListener value="#{user}" target="#{userController.user}" />
+                <p:column style="width:100px;text-align: center" headerText="Teams">
+                    <p:commandButton title="Teams" icon="ui-icon-note" action="#{teamListController.doSetGame(gameCreationController.game)}" update=":teamsForm" oncomplete="$('#gamesForm').hide();$('#teamsForm').show();"  style="width:20px;height:20px">
+                        <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}" />
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
 
-
-            <div class="card">
-                <p:multiSelectListbox value="#{multiSelectView.selection}" effect="slide" header="Categories" showHeaders="true" >
-                    <f:selectItems value="#{multiSelectView.categories}"/>
-                </p:multiSelectListbox>
-            </div>
-
-            <p:dialog header="Create new Game" id="gameCreationDialog" widgetVar="gameCreationDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-                <p:outputPanel id="userCreateData" >
-                    <h:panelGrid columns ="2">
-                        <p:outputLabel for="gameName" value="Game Name: "/>
-                        <p:inputText id="gameName" value="#{userCreationController.user.username}" />
-                    </h:panelGrid>
-                    <h:panelGrid columns ="2">
-                        <p:outputLabel for="addRoll" value="Topic: " />
-                        <h:selectOneMenu id ="addRoll" >
-                            <f:selectItem itemValue = "1" itemLabel = "Geo" />
-                            <f:selectItem itemValue = "2" itemLabel = "Maths" />
-                            <f:selectItem itemValue = "2" itemLabel = "Computer Science" />
-                        </h:selectOneMenu>
-                    </h:panelGrid>
+            <p:dialog header="Edit Teams" id="teamsDialog" widgetVar="teamsDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="userData" rendered="#{not empty gameController.game}">
+                    <div style="display: flex; justify-content: space-between; align-items: center">
+                        <div class="formHeading" style="font-weight: bold; font-size: 20px;">Game Name:</div>
+                        <div class="formText">#{gameController.game.gameName}</div>
+                    </div>
                     <p:separator />
-                    <h:panelGrid columns ="2">
-                        <p:outputLabel for="teamCount" value="How many Teams: " />
-                        <h:selectOneMenu id ="teamCount" >
-                            <f:selectItem itemValue = "1" itemLabel = "2" />
-                            <f:selectItem itemValue = "2" itemLabel = "3" />
-                            <f:selectItem itemValue = "2" itemLabel = "4" />
-                            <f:selectItem itemValue = "2" itemLabel = "5" />
-                            <f:selectItem itemValue = "2" itemLabel = "6" />
-                        </h:selectOneMenu>
+                    <p:commandButton value="add Team" oncomplete="PF('autoAssignDialog').hide()" update=":gamesForm:gameCreationTable" style="display:block;margin: 0px auto"/>
+                    <h:panelGrid columns="3" style="margin-top:50px">
+                        <p:commandButton value="Save" action="#{userController.doSaveUser()}" oncomplete="PF('autoAssignDialog').hide()" update=":gamesForm:gameCreationTable"/>
+                        <p:commandButton value="Reload" action="#{userController.doReloadUser()}" update=":gamesForm:gameCreationTable"/>
+                        <p:commandButton value="Abort" onclick="PF('autoAssignDialog').hide()"/>
                     </h:panelGrid>
-                    <p:separator />
-
-                    <h:panelGrid columns ="2">
-                        <p:commandButton value="Save" action="#{userCreationController.doSaveUser()}" oncomplete="PF('userCreationDialog').hide()" update=":userForm:usersTable">
-                        </p:commandButton>
-                    </h:panelGrid>
-
                 </p:outputPanel>
             </p:dialog>
-
-            <p:dialog header="Edit User" id="userEditDialog" widgetVar="userEditDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-                <p:outputPanel id="userData" rendered="#{not empty userController.user}">
-                    <h:panelGrid columns="2">
-                        <p:outputLabel for="username" value="Username: " />
-                        <p:inputText id="username" value="#{userController.user.username}" disabled="true"/>
-                        <p:outputLabel for="password" value="Password: " />
-                        <p:password id="password" value="#{userController.user.password}" disabled="true"/>
-                    </h:panelGrid>
-                    <p:separator />
-                    <h:panelGrid columns="2">
-                        <p:outputLabel for="enabled" value="Enabled: " />
-                        <p:selectBooleanCheckbox id="enabled" value="#{userController.user.enabled}"/>
-                    </h:panelGrid>
-                    <p:separator />
-                    <h:panelGrid columns ="2">
-                        <p:outputLabel for="addNewRoll" value="Add Roll: " />
-                        <h:selectOneMenu id ="addNewRoll" >
-                            <f:selectItem itemValue = "1" itemLabel = "Admin" />
-                            <f:selectItem itemValue = "2" itemLabel = "Manager" />
-                            <f:selectItem itemValue = "2" itemLabel = "Player" />
-                        </h:selectOneMenu>
-                        <p:outputLabel for="deleteRoll" value="Delete Roll: " />
-                        <h:selectOneMenu id ="deleteRoll" >
-                            <f:selectItem itemValue = "1" itemLabel = "Admin" />
-                            <f:selectItem itemValue = "2" itemLabel = "Manager" />
-                            <f:selectItem itemValue = "2" itemLabel = "Player" />
-                        </h:selectOneMenu>
-                    </h:panelGrid>
-                    <p:separator />
-                    <h:panelGrid columns="3">
-                        <p:commandButton value="Save" action="#{userController.doSaveUser()}" oncomplete="PF('userEditDialog').hide()" update=":userForm:usersTable"/>
-                        <p:commandButton value="Reload" action="#{userController.doReloadUser()}" update=":userForm:userData"/>
-                        <p:commandButton value="Abort" onclick="PF('userEditDialog').hide()"/>
-                    </h:panelGrid>
-                </p:outputPanel>
-
-            </p:dialog>
-
             <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
                 <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                 <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
             </p:confirmDialog>
+
+            <p:dialog header="Edit User" id="chooseTeamDialog" widgetVar="autoAssignDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:separator />
+                <h:panelGrid columns="3">
+                    <p:commandButton value="Save" action="#{userController.doSaveUser()}" oncomplete="PF('autoAssignDialog').hide()" update=":gamesForm:gameCreationTable"/>
+                    <p:commandButton value="Reload" action="#{userController.doReloadUser()}" update=":gamesForm:gameCreationTable"/>
+                    <p:commandButton value="Abort" onclick="PF('autoAssignDialog').hide()"/>
+                </h:panelGrid>
+            </p:dialog>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('gameCreationDialog').show()" icon="ui-icon-add-box" action="#{gameCreationController.doCreateNewGame()}" value ="Create new Game">
+                <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}" />
+            </p:commandButton>
+        </h:form>
+
+        <h:form id="createGameForm">
+            <p:growl id="growl" showDetail="false" life="6000" >
+                <p:autoUpdate/>
+            </p:growl>
+
+
+            <p:dialog header="Create new Game" id="gameCreationDialog" widgetVar="gameCreationDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="gameCreateData" >
+                    <h:panelGrid columns ="2">
+                        <p:outputLabel for="gameName" value="Game Name: "/>
+                        <p:inputText id="gameName" value="#{gameCreationController.game.gameName}" />
+                    </h:panelGrid>
+                    <h:panelGrid columns ="2">
+                        <p:outputLabel for="scoreToWin" value="Score to win: "/>
+                        <p:inputText id="scoreToWin" value="#{gameCreationController.game.scoreToWin}" />
+                    </h:panelGrid>
+                    <p:separator />
+
+                    <p:selectOneMenu id="topic" value="#{gameCreationController.currentTopic}" >
+                        <f:selectItem itemLabel="Select One" itemValue=""/>
+                        <f:selectItems value="#{gameCreationController.topicsList}" var="topic" itemLabel="#{topic.topicName}" itemValue="#{topic.topicName}"/>
+                    </p:selectOneMenu>
+
+
+                    <p:separator />
+                    <h:panelGrid columns ="2">
+                        <p:outputLabel for="teamCount" value="How many Teams: " />
+                        <h:selectOneMenu id ="teamCount" value="#{gameCreationController.game.teamSize}">
+                            <f:selectItem itemValue = "2" itemLabel = "2" />
+                            <f:selectItem itemValue = "3" itemLabel = "3" />
+                            <f:selectItem itemValue = "4" itemLabel = "4" />
+                            <f:selectItem itemValue = "5" itemLabel = "5" />
+                            <f:selectItem itemValue = "6" itemLabel = "6" />
+                            
+                        </h:selectOneMenu>
+                    </h:panelGrid>
+                    <h:panelGrid columns ="2">
+                        <p:outputLabel for="numPlayersPerTeam" value="How many per Team: " />
+                        <h:selectOneMenu id ="numPlayersPerTeam" value="#{gameCreationController.game.numberOfTeams}">
+                            <f:selectItem itemValue = "2" itemLabel = "2" />
+                            <f:selectItem itemValue = "3" itemLabel = "3" />
+                            <f:selectItem itemValue = "4" itemLabel = "4" />
+                            <f:selectItem itemValue = "5" itemLabel = "5" />
+                            <f:selectItem itemValue = "6" itemLabel = "6" />
+                        </h:selectOneMenu>
+                    </h:panelGrid>
+                    <p:separator />
+
+                    <p:outputPanel>
+
+
+                    <h:panelGrid columns ="2">
+                        <p:commandButton value="Save" action="#{gameCreationController.doSaveGame()}" oncomplete="PF('gameCreationDialog').hide()" update=":gamesForm:gameCreationTable"/>
+                        <p:commandButton value="Abort" onclick="PF('Dialog').hide()"/>
+                    </h:panelGrid>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+
+        <h:form id="teamsForm" style="display: none">
+            <p:dataTable widgetVar="teamsTable" id="teamsTable" var="team" value="#{teamListController.teamsByGame}" style="width: 83%; margin-top: 110px; float: right;">
+                <f:facet name="header">Teams</f:facet>
+                <p:column headerText="Team name">
+                    <h:outputText value="#{team.teamName}"/>
+                </p:column>
+                <p:column style="width:100px;text-align: center" headerText="Teams">
+                    <p:commandButton title="Teams" icon="ui-icon-note" action="#{playerListController.doSetTeam(teamController.team)}" update=":teamsForm" oncomplete="$('#teamsForm').hide();$('#playerForm').show();"  style="width:20px;height:20px">
+                        <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}" />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('teamCreationDialog').show()" icon="ui-icon-add-box" action="#{teamController.doCreateTeam()}" value ="Create new Team" >
+                <f:setPropertyActionListener value="#{team}" target="#{teamController.team}" />
+            </p:commandButton>
+
+
+            <p:dialog header="Create new Game" id="teamCreationDialog" widgetVar="teamCreationDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="teamCreateData" >
+                    <h:panelGrid columns ="2">
+                        <p:outputLabel for="teamName" value="Team Name: "/>
+                        <p:inputText id="teamName" value="#{teamController.team.teamName}" />
+                    </h:panelGrid>
+                    <p:separator />
+                    <h:panelGrid columns ="2">
+                        <p:commandButton value="Save" action="#{teamController.doSaveTeam(teamListController.game)}" oncomplete="PF('teamCreationDialog').hide()" update=":teamsForm:teamsTable"/>
+                        <p:commandButton value="Abort" onclick="PF('Dialog').hide()"/>
+                    </h:panelGrid>
+
+                </p:outputPanel>
+            </p:dialog>
+
+
+        </h:form>
+
+        <h:form id="playerForm" style="display: none">
+            <p:dataTable widgetVar="playerTable" id="playerTable" var="player" value="#{playerListController.playerByTeam}" style="width: 83%; margin-top: 110px; float: right;">
+                <f:facet name="header">Player</f:facet>
+                <p:column headerText="Player name">
+                    <h:outputText value="#{player.username}"/>
+                </p:column>
+            </p:dataTable>
+            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('playerAddDialog').show()" icon="ui-icon-add-box" value ="Add Player" action="">
+            </p:commandButton>
+
+
+            <p:dialog header="Create new Game" id="playerAddDialog" widgetVar="playerAddDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="playerAddData" >
+                    <p:selectOneListbox id="basic" value="#{teamController.team.teamPlayers}">
+                        <f:selectItems value="#{userListController.getAllPlayers()}" var="player" itemLabel="#{player.username}" itemValue="#{player}" />
+                    </p:selectOneListbox>
+                    <h:panelGrid columns ="2">
+                        <p:commandButton value="Save" action="#{teamController.doSaveUserToTeam()}" oncomplete="PF('teamCreationDialog').hide()" update=":playerForm:playerTable"/>
+                        <p:commandButton value="Abort" onclick="PF('Dialog').hide()"/>
+                    </h:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+
 
         </h:form>
 

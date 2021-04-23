@@ -36,23 +36,23 @@ public class TopicService {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     public Topic loadTopic(String topicName) {
-        return (Topic) topicRepository.findByTopicName(topicName);
+        return (Topic) topicRepository.findFirstByTopicName(topicName);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('GAME_MANAGER')")
+//    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('GAME_MANAGER')")
     public Topic saveTopic(Topic topic) {
-        AuditLog auditLog = new AuditLog();
-        auditLog.setTime(new Date());
+//        AuditLog auditLog = new AuditLog();
+//        auditLog.setTime(new Date());
         if (topic.isNew()) {
             topic.setCreateDate(new Date());
-            auditLog.setMessage("Topic" + topic.getTopicName() + "was created.");
+//            auditLog.setMessage("Topic" + topic.getTopicName() + "was created.");
         } else {
             topic.setUpdateDate(new Date());
             topic.setUpdateTopic(getAuthenticatedTopic());
             topic.setCreateDate(new Date());
-            auditLog.setMessage("Topic" + topic.getTopicName() + "was updated.");
+//            auditLog.setMessage("Topic" + topic.getTopicName() + "was updated.");
         }
-        auditLogRepository.save(auditLog);
+//        auditLogRepository.save(auditLog);
         if(topic.getUpdateDate() == null)
             messageBean.alertInformation("Info", "Topic was created!");
         else
@@ -71,16 +71,19 @@ public class TopicService {
         }
     }
 
+    public Topic getTopicByName(Topic topic) {
+        return this.loadTopic(topic.getTopicName());
+    }
+
     private void validateTopic(String name) throws IllegalArgumentException {
         Topic t = topicRepository.findFirstByTopicName(name);
         if (t != null) {
             throw new IllegalArgumentException("Topic already exists.");
         }
-
     }
 
     private Topic getAuthenticatedTopic() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return (Topic) topicRepository.findByTopicName(auth.getName());
+        return (Topic) topicRepository.findFirstByTopicName(auth.getName());
     }
 }

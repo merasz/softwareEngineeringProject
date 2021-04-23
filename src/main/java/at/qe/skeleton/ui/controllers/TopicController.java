@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.annotation.*;
 import org.springframework.stereotype.*;
 
+import javax.annotation.PostConstruct;
 import java.io.*;
+import java.util.Collection;
 
 @Component
 @Scope("view")
@@ -15,11 +17,29 @@ public class TopicController extends Controller implements Serializable {
     @Autowired
     private TopicService topicService;
 
-    private Topic topic = new Topic();
+    @Autowired
+    private TermsService termsService;
+
+    public Topic topic;
+
+    private Collection<Topic> topicList;
+
+    @PostConstruct
+    public void init() {
+        doCreateNewTopic();
+    }
+
+    public void doCreateNewTopic() {
+        setTopicList();
+        topic = new Topic();
+    }
+
+    public void setTopicList() {
+        topicList = topicService.getAllTopics();
+    }
 
     public void setTopic(Topic topic) {
-        this.topic = topic;
-        doReloadTopic();
+        this.topic = new Topic();
     }
 
     private void doReloadTopic() {
@@ -47,5 +67,26 @@ public class TopicController extends Controller implements Serializable {
         }
     }
 
+    public Collection<Topic> getTopics() {
+        return topicService.getAllTopics();
+    }
 
+    /*update fx to get the num size of a specific topic
+    * */
+    public int getNumTermsATopic() {
+        return 1;
+    }
+
+    public Topic getTopic() {
+        return topic;
+    }
+
+
+    public Collection<Topic> getTopicList() {
+        return topicList;
+    }
+
+    public void setTopicList(Collection<Topic> topicList) {
+        this.topicList = topicList;
+    }
 }

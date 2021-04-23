@@ -67,5 +67,16 @@ public class GameService {
     public List<TeamPlayer> getPlayers() {
         return players;
     }
+
+    public Game saveGame(Game game) {
+        game.setCountPlayers(1);
+        game.setNrRound(0);
+        game.setTotalScore(0);
+        return gameRepository.save(game);
+    }
+
+    public Collection<Game> getAllGames() {
+        return gameRepository.findAll();
+    }
     //endregion
 }

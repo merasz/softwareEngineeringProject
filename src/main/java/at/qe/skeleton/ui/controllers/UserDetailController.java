@@ -2,6 +2,7 @@ package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.services.UserService;
+import at.qe.skeleton.ui.beans.SessionInfoBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -22,10 +23,13 @@ public class UserDetailController extends Controller implements Serializable {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private SessionInfoBean sessionInfoBean;
+
     /**
      * Attribute to cache the currently displayed user
      */
-    private User user = new User();
+    private User user;
 
     /**
      * Sets the currently displayed user and reloads it form db. This user is
@@ -76,8 +80,10 @@ public class UserDetailController extends Controller implements Serializable {
      */
     public void doSaveUser() {
         try {
-            user = userService.saveUser(user);
-            displayInfo("Player created", "You have been successfully registered. You can log in now.");
+            if(user.getRoles().size() > 0) {
+                user = userService.saveUser(user);
+                displayInfo("Player created", "You have been successfully registered. You can log in now.");
+            }
         } catch (IllegalArgumentException e) {
             displayError("Error", e.getMessage());
         }

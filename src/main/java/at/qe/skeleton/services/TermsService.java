@@ -33,7 +33,7 @@ public class TermsService {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     public Topic loadTopic(String topicName) {
-        return (Topic) topicRepository.findByTopicName(topicName);
+        return (Topic) topicRepository.findFirstByTopicName(topicName);
     }
 
 
@@ -119,6 +119,10 @@ public class TermsService {
             System.out.println(termName);
             System.out.println("-----");
         }
+    }
+
+    public List<Term> getAllTermsForTopic(Topic topic) {
+        return termsRepository.findAllByTopic(topic);
     }
 
     public TermsRepository getTermsRepository() {

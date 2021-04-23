@@ -1,12 +1,18 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.User;
+import at.qe.skeleton.model.UserRole;
 import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Controller for the user view.
@@ -25,7 +31,17 @@ public class UserCreationController extends Controller implements Serializable {
     /**
      * Attribute to cache the currently displayed user
      */
-    private User user = new User();
+    private User user;
+
+    @PostConstruct
+    public void init() {
+        doCreateNewUser();
+    }
+
+    public void doCreateNewUser() {
+        user = new User();
+        user.setEnabled(true);
+    }
 
     /**
      * Sets the currently displayed user and reloads it form db. This user is
@@ -57,25 +73,13 @@ public class UserCreationController extends Controller implements Serializable {
     }
 
     /**
-     * Action to delete the currently displayed user.
-     */
-    public void doDeleteUser() {
-        try {
-            this.userService.deleteUser(user);
-            user = null;
-            displayInfo("User deleted", "Account successfully deleted.");
-        } catch (IllegalArgumentException e){
-            displayError("Error", e.getMessage());
-        } catch (Exception e) {
-            displayError("Error", "Account could not be deleted.");
-        }
-    }
-
-    /**
      * Action to save the currently displayed user.
      */
     public void doSaveUser() {
         try {
+            Set<UserRole> val = new HashSet<>();
+            val.add(UserRole.PLAYER);
+            user.setRoles(val);
             user = userService.saveUser(user);
             displayInfo("Player created", "You have been successfully registered. You can log in now.");
         } catch (IllegalArgumentException e) {
@@ -83,28 +87,11 @@ public class UserCreationController extends Controller implements Serializable {
         }
     }
 
-//    /**
-//     * Action to change a user's password.
-//     */
-//    public void doUpdatePassword() {
-//        try {
-//            user = userService.updatePassword(user, password, confirmPass);
-//            displayInfo("Password changed" ,"Password successfully changed.");
-//        } catch (IllegalArgumentException e){
-//            displayError("Password cannot be empty", "Please enter any characters for your password.");
-//        }
-//    }
-
-//    /**
-//     * Action to change a user's roles.
-//     */
-//    public void doUpdateRoles() {
-//        try {
-//            user = userService.updateRoles(user, roles);
-//            displayInfo("User rolle changed" ,"Roll successfully changed.");
-//        } catch (IllegalArgumentException e){
-//            displayError("Password cannot be empty", "Please enter any characters for your password.");
-//        }
-//    }
-
+    public List<UserRole> getListRoles(){
+        List<UserRole> list = new ArrayList<>();
+        list.add(UserRole.ADMIN);
+        list.add(UserRole.GAME_MANAGER);
+        list.add(UserRole.PLAYER);
+        return list;
+    }
 }
