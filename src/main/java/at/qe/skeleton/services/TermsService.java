@@ -121,6 +121,10 @@ public class TermsService {
         }
     }
 
+    public List<Term> getAllTermsForTopic(Topic topic) {
+        return termsRepository.findAllByTopic(topic);
+    }
+
     public TermsRepository getTermsRepository() {
         return termsRepository;
     }

@@ -40,8 +40,8 @@ public class Topic implements Serializable {
         return topicName;
     }
 
-    public void setTopicName(String guessingTopicName) {
-        this.topicName = guessingTopicName;
+    public void setTopicName(String topicName) {
+        this.topicName = topicName;
     }
 
     public void setTerms(List<Term> terms) {
@@ -91,6 +91,7 @@ public class Topic implements Serializable {
     public void setUpdateTopic(Topic updateTopic) {
         this.updateTopic = updateTopic;
     }
+
 
 
 }
