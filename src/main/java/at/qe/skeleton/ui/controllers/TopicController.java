@@ -39,7 +39,7 @@ public class TopicController extends Controller implements Serializable {
     }
 
     public void setTopic(Topic topic) {
-        this.topic = new Topic();
+        this.topic = topic;
     }
 
     private void doReloadTopic() {
@@ -48,11 +48,12 @@ public class TopicController extends Controller implements Serializable {
 
     public void doDeleteTopic() {
         try {
+            System.out.println("inside dodeletetopic");
             this.topicService.deleteTopic(topic);
             topic = null;
             displayInfo("Topic deleted", "Topic successfully deleted");
         } catch (IllegalArgumentException e) {
-            displayError("Error", e.getMessage());
+            displayError("Error Topic not empty", e.getMessage());
         } catch (Exception e) {
             displayError("Error", "Topic could not be deleted");
         }
