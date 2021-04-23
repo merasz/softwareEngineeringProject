@@ -1,6 +1,7 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,10 @@ import java.util.stream.IntStream;
 @Component
 @Scope("application")
 public class GameManageService extends GameService {
+    @Autowired
+    private TeamService teamService;
+
+    private int registered = 0;
 
     //region create Game
     public Game createGame(int scoreToWin, int countPlayers, Topic topic, Raspberry raspberry, int countTeams) throws IllegalArgumentException {
@@ -26,7 +31,7 @@ public class GameManageService extends GameService {
             throw new IllegalArgumentException("Teams must have at least 2 players.");
         } else {
             List<Team> teams = new ArrayList<>();
-            IntStream.range(0,countTeams).forEach(i -> teams.add(new Team()));
+            IntStream.range(0,countTeams).forEach(i -> teams.add(teamService.saveTeam(new Team())));
             Game game = new Game(scoreToWin, countPlayers, topic, raspberry, Timestamp.valueOf(LocalDateTime.now()), teams);
             getGameRepository().save(game);
             return game;
@@ -34,7 +39,10 @@ public class GameManageService extends GameService {
     }
 
     //start game: all players have to press start
-    public Game startGame(Game game) {
+    public Game startGame(Game game, int countPlayers) {
+        while(registered != countPlayers) {
+
+        }
         //TODO: accept when all players have pressed start
         for (Team t : game.getTeamList()) {
             for (User u : t.getTeamPlayers()) {

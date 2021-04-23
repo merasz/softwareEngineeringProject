@@ -7,6 +7,7 @@ import org.springframework.context.annotation.*;
 import org.springframework.stereotype.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @Scope("view")
@@ -17,5 +18,9 @@ public class TopicListController {
 
     public Collection<Topic> getTopics() {
         return topicService.getAllTopics();
+    }
+
+    public List<String> getTopicNames() {
+        return getTopics().stream().map(Topic::getTopicName).collect(Collectors.toList());
     }
 }

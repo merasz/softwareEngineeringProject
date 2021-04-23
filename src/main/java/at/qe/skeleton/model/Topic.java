@@ -92,6 +92,8 @@ public class Topic implements Serializable {
         this.updateTopic = updateTopic;
     }
 
-
-
+    @Override
+    public String toString() {
+        return topicName;
+    }
 }

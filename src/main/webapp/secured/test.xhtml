@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<!--suppress ALL -->
 <ui:composition xmlns="http://www.w3c.org/1999/xhtml"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:h="http://java.sun.com/jsf/html"
@@ -9,14 +8,14 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name ="content">
-        <h:form >
-        <p:panel header="Security Test Page" style="width: 79%; padding-left: 72px; margin-top: 85px; float: right">
+        <h:form style="width: 98%; margin-top: 15px;margin-left: 25px; float: right;">
+            <p:panel header="Security Test Page" style="width: 79%; padding-left: 72px; margin-top: 85px; float: right">
                 <p>You can use the following buttons to test the security settings for specific user roles</p>
                 <p>If the currently logged on user does not have the denoted role, an AccessDeniedException is thrown.</p>
                 <h:panelGrid columns="3">
-                    <p:commandButton action="#{securityTestBean.doEmployeeAction}" value="EMPLOYEE" update="okDialog"/>
-                    <p:commandButton action="#{securityTestBean.doManagerAction}" value="MANAGER" update="okDialog"/>
-                    <p:commandButton action="#{securityTestBean.doAdminAction}" value="ADMIN" update="okDialog"/>
+                    <p:commandButton action="#{securityTestBean.doPlayerAction}" value="PLAYER" update="okDialog"/>
+                    <p:commandButton action="#{securityTestBean.doManagerAction}" value="GAME MANAGER" update="okDialog"/>
+                    <p:commandButton action="#{securityTestBean.doAdminAction}" value="ADMIN" update="okDialog" />
                 </h:panelGrid>
             </p:panel>
 
@@ -34,6 +33,18 @@
                 <p>You could successfully call the action <strong><h:outputText value="#{securityTestBean.performedAction}"/></strong>.</p>
                 <p:commandButton value="Close" action="#{securityTestBean.doHideOkDialog}" update="okDialog"/>
             </p:dialog>
+
+            <p:ajaxExceptionHandler type="org.springframework.security.access.AccessDeniedException"
+                                    update="accessDeniedExceptionDialog"
+                                    onexception="PF('accessDeniedExceptionDialog').show();" />
+
+            <p:dialog id="accessDeniedExceptionDialog" header="Access Denied Exception occured!" widgetVar="accessDeniedExceptionDialog" width="800px" height="500px">
+                <strong>Message:</strong> #{pfExceptionHandler.message} <br/>
+                <strong>StackTrace:</strong><br/>
+                <div style="width: 750px; height: 400px; overflow-x: scroll; white-space: nowrap;"><h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false"/></div><br/>
+                <p:button value="Close" onclick="PF('accessDeniedExceptionDialog').hide();"/>
+            </p:dialog>
+
         </h:form>
     </ui:define>
 </ui:composition>

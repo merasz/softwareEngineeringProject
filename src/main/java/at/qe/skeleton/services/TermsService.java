@@ -62,7 +62,7 @@ public class TermsService {
     public Topic setGameTopic(Topic topic) throws IllegalArgumentException {
         List<Term> terms = termsRepository.findAllByTopic(topic);
         if (terms.size() < MIN_NUMBER_TERMS) {
-            throw new IllegalArgumentException("Topic has less than " + MIN_NUMBER_TERMS + " terms in this topi. Please choose another topic.");
+            throw new IllegalArgumentException("Topic has less than " + MIN_NUMBER_TERMS + " terms. Please choose another topic.");
         } else {
             termsInGame = terms;
             Collections.shuffle(termsInGame);
