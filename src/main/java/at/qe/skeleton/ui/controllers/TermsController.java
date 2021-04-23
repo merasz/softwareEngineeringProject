@@ -35,7 +35,7 @@ public class TermsController extends Controller implements Serializable {
         doCreateNewTerm();
     }
 
-    private void doCreateNewTerm() {
+    public void doCreateNewTerm() {
         System.out.println("doCreateNewTerm:");
         term = new Term();
     }
