@@ -1,5 +1,6 @@
 package at.qe.skeleton.repositories;
 
+import at.qe.skeleton.model.Team;
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.UserRole;
 
@@ -32,5 +33,7 @@ public interface UserRepository extends AbstractRepository<User, String> {
 
     @Query("SELECT u FROM User u join u.roles r WHERE r = at.qe.skeleton.model.UserRole.PLAYER")
     List<User> findAllPlayers();
+
+    List<User> findAllPlayersByTeam(Team team);
 
 }

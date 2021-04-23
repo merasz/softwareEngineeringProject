@@ -1,5 +1,6 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.model.Team;
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.UserRole;
 import at.qe.skeleton.repositories.ScoreRepository;
@@ -164,4 +165,7 @@ public class UserService {
         return userRepository.findFirstByUsername(auth.getName());
     }
 
+    public List<User> getUserByTeam(Team team) {
+        return userRepository.findAllPlayersByTeam(team);
+    }
 }

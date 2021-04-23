@@ -69,6 +69,10 @@ public class UserListController implements Serializable {
         }
     }
 
+    public Collection<User> getAllPlayers(){
+        return userService.getAllPlayers();
+    }
+
     public String getOption() { return option; }
 
     public void setOption(String option) {

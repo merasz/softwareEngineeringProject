@@ -41,8 +41,8 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
     @ManyToOne
     private Device device;
 
-    @ManyToOne
-    private Team team;
+    @ManyToMany(cascade=CascadeType.ALL)
+    private List<Team> team;
 
     @ManyToOne
     private GameLobby gameLobby;

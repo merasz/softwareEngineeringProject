@@ -13,7 +13,7 @@ public class Game implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int gameId;
+    private Integer gameId;
     private String gameName;
     private int scoreToWin;
     private int totalScore;
@@ -31,7 +31,7 @@ public class Game implements Serializable {
     @ManyToOne(optional = true)
     private Raspberry raspberry;
 
-    @ManyToMany
+    @OneToMany
     private List<Team> teamList;
 
     @ElementCollection
@@ -148,7 +148,7 @@ public class Game implements Serializable {
         this.deviceTeamIdList = deviceTeamIdList;
     }
 
-    public int getGameId() { return gameId; }
+    public Integer getGameId() { return gameId; }
 
     public String getGameName() { return gameName; }
 
