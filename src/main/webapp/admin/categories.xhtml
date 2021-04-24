@@ -75,7 +75,7 @@
                     </h:panelGrid>
                     <p:separator />
                     <h:panelGrid columns ="2">
-                        <p:commandButton value="Save" action="#{termsController.doSaveTerm(termListController.term)}" oncomplete="PF('termCreationDialog').hide()" update=":termsForm:termsTable"/>
+                        <p:commandButton value="Save" action="#{termsController.doSaveTerm(topicController.topic)}" oncomplete="PF('termCreationDialog').hide()" update=":termsForm:termsTable"/>
                         <p:commandButton value="Abort" onclick="PF('Dialog').hide()"/>
                     </h:panelGrid>
 
