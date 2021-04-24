@@ -8,6 +8,8 @@ import org.primefaces.shaded.json.*;
 import org.slf4j.*;
 import org.springframework.stereotype.Controller;
 
+import javax.faces.application.*;
+import javax.faces.context.*;
 import java.io.*;
 
 @Controller
@@ -22,10 +24,12 @@ public class TopicParserController {
     }
 
     public void upload() {
-
         if (file != null) {
-            parseAndSave();
+            FacesMessage message = new FacesMessage("Successful", file.getFileName() + " is uploaded.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
         }
+
+        System.out.println("Schauen obs funktioniert --> es funktioniert!!!");
     }
 
     public void parseAndSave() {
