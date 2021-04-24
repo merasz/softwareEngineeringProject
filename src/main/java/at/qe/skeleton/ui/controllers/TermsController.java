@@ -9,6 +9,8 @@ import org.apache.tomcat.util.json.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.PostConstruct;
 import java.io.FileNotFoundException;
@@ -17,6 +19,7 @@ import java.util.List;
 
 @Component
 @Scope("view")
+@RequestMapping("/terms")
 public class TermsController extends Controller implements Serializable {
     @Autowired
     private TermsService termsService;
@@ -33,6 +36,13 @@ public class TermsController extends Controller implements Serializable {
         System.out.println("init Terms");
         doCreateNewTerm();
     }
+
+//--------
+    @GetMapping("/list")
+    public Iterable<Term> list() {
+        return termsService.list();
+    }
+//--------
 
     public void doCreateNewTerm() {
         System.out.println("doCreateNewTerm:");

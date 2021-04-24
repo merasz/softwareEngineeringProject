@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -53,6 +54,17 @@ public class TermsService {
         term.setTopic(curr);
         return termsRepository.save(term);
     }
+
+//---------
+    public Iterable<Term> list() {
+        return termsRepository.findAll();
+    }
+
+    public Iterable<Term> saveTerm(List<Term> terms) {
+        return (Iterable<Term>) termsRepository.save((Term) terms);
+    }
+//---------
+
 
 //    public void saveTerm(String name, Topic topic, Term term) throws IllegalArgumentException {
 //        validateTerm(name);
