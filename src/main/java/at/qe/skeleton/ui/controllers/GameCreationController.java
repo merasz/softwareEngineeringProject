@@ -46,7 +46,6 @@ public class GameCreationController extends Controller implements Serializable {
 
     public void doSaveGame() {
         game.setTopic(topicService.loadTopic(currentTopic));
-        System.out.println(tmp);
         try {
             game = gameService.saveGame(game);
         } catch (IllegalArgumentException e){
@@ -88,7 +87,6 @@ public class GameCreationController extends Controller implements Serializable {
         List<User> arr = new ArrayList<>();
         arr.addAll(userService.getAllUsers());
         userList = arr;
-        System.out.println(userList.size());
     }
 
     public List<User> getTmp() {

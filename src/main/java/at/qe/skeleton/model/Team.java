@@ -1,5 +1,8 @@
 package at.qe.skeleton.model;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -15,6 +18,7 @@ public class Team implements Serializable {
     private Long teamId;
 
     @ManyToMany(cascade=CascadeType.ALL)
+    @Fetch(FetchMode.JOIN)
     private List<User> teamPlayers;
 
     private String teamName;
