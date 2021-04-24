@@ -60,7 +60,7 @@
                 <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
             </p:confirmDialog>
 
-            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('gameCreationDialog').show()" icon="ui-icon-add-box" action="#{gameCreationController.doCreateNewGame()}" value ="Create new Game">
+            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('gameCreationDialog').show()" icon="ui-icon-plusthick" action="#{gameCreationController.doCreateNewGame()}" value ="Create new Game">
                 <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}" />
                 <f:setPropertyActionListener value="#{game}" target="#{teamController.game}" />
             </p:commandButton>
@@ -139,7 +139,9 @@
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
-            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('teamCreationDialog').show()" icon="ui-icon-add-box" action="#{teamController.doCreateTeam}" value ="Create new Team" update=":teamsForm:teamCreationDialog" >
+            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('teamCreationDialog').show()" icon="ui-icon-plusthick" action="#{teamController.doCreateTeam}" value ="Create new Team" update=":teamsForm:teamCreationDialog" >
+            </p:commandButton>
+            <p:commandButton style="width: 200px; margin-top: 25px; float: left; margin-left: 290px" oncomplete="$('#teamsForm').hide();$('#gamesForm').show();" icon="ui-icon-arrowthick-1-w" value ="Back to Games">
             </p:commandButton>
 
 
@@ -169,12 +171,12 @@
                     <h:outputText value="#{player.username}"/>
                 </p:column>
                 <p:column style="width:100px;text-align: center" headerText="Delete Player">
-                    <p:commandButton title="Player" icon="ui-icon-note" action="#{teamController.doDeletePlayer()}" update=":playerForm:playerTable" oncomplete="$('#teamsForm').hide();$('#playerForm').show();"  style="width:20px;height:20px">
+                    <p:commandButton title="Player" icon="ui-icon-trash" action="#{teamController.doDeletePlayer()}" update=":playerForm:playerTable" oncomplete="$('#teamsForm').hide();$('#playerForm').show();"  style="width:20px;height:20px">
                         <f:setPropertyActionListener value="#{player}" target="#{teamController.tmpPlayer}" />
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
-            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('playerAddDialog').show()" icon="ui-icon-add-box" value ="Add Player" >
+            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('playerAddDialog').show()" icon="ui-icon-plusthick" value ="Add Player" >
                 <f:setPropertyActionListener value="#{playerListController.team}" target="#{teamController.team}" />
             </p:commandButton>
 
@@ -190,6 +192,9 @@
                     </h:panelGrid>
                 </p:outputPanel>
             </p:dialog>
+
+            <p:commandButton style="width: 200px; margin-top: 25px; float: left; margin-left: 290px" oncomplete="$('#playerForm').hide();$('#teamsForm').show();" icon="ui-icon-arrowthick-1-w" value ="Back to Teams">
+            </p:commandButton>
 
 
         </h:form>
