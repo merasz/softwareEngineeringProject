@@ -58,4 +58,10 @@ public class TeamService {
         team.setTeamPlayers(players);
         return teamRepository.save(team);
     }
+
+    public void deleteTeam(Team team) {
+        team.setTeamPlayers(new ArrayList<User>());
+        teamRepository.save(team);
+        teamRepository.delete(team);
+    }
 }

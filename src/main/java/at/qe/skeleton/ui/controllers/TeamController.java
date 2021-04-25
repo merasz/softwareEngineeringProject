@@ -38,9 +38,7 @@ public class TeamController extends Controller implements Serializable {
     }
     */
     public void doCreateTeam() {
-        System.out.println("test");
         this.team = new Team();
-        System.out.println(team);
     }
 
     public Team getTeam() {
@@ -48,12 +46,10 @@ public class TeamController extends Controller implements Serializable {
     }
 
     public void setTeam(Team team) {
-        System.out.println("setTeam: " + team);
         this.team = team;
     }
 
     public void doSaveTeam(Game game) {
-        System.out.println("Teamcontroller dosaveTeam:"  + team);
         this.team.setGames(game);
         try {
             team = teamService.saveTeam(team);
@@ -64,7 +60,6 @@ public class TeamController extends Controller implements Serializable {
 
     public void doSaveUserToTeam() {
         try {
-            System.out.println(tmpPlayer);
             team = teamService.savePlayerToTeam(team,tmpPlayer);
         } catch (IllegalArgumentException e){
             displayError("Error", e.getMessage());
@@ -92,8 +87,16 @@ public class TeamController extends Controller implements Serializable {
         try {
             team = teamService.deletePlayerFromTeam(team,tmpPlayer);
             playerListController.setTeam(team);
-            System.out.println(team.getTeamPlayers());
         } catch (IllegalArgumentException e){
+            displayError("Error", e.getMessage());
+        }
+    }
+
+    public void doDeleteTeam() {
+        try {
+            teamService.deleteTeam(team);
+            team = null;
+        } catch(IllegalArgumentException e) {
             displayError("Error", e.getMessage());
         }
     }

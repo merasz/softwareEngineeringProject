@@ -33,7 +33,6 @@ public class PlayerListController {
     }
 
     public Team getTeam() {
-        System.out.println("playerlistcontroller getteam");
         return team;
     }
 
