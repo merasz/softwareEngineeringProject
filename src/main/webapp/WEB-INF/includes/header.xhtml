@@ -7,6 +7,9 @@
     <body>
         <ui:composition>
             <h:form>
+                <p:growl id="message" showDetail="true" >
+                    <p:autoUpdate />
+                </p:growl>
                 <input type="checkbox" id="check"/>
                 <div class="header">
                     <label for="check">
@@ -35,6 +38,9 @@
                     <a href="/secured/gameCreation.xhtml"><i class="fas fa-th"></i><span>Game Creation</span></a>
                     <a href="/secured/availableGames.xhtml"><i class="fas fa-th"></i><span>Available Games</span></a>
                     <a href="/secured/testGame.xhtml"><i class="fas fa-info-circle"></i><span>Test Game</span></a>
+                    <p:commandLink id="join" action="#{gamePlayController.joinGame}">
+                        <i class="fas fa-th"></i><h:outputText value="Join Game"/>
+                    </p:commandLink>
 
                 </div>
 

@@ -3,13 +3,11 @@ package at.qe.skeleton.ui.controllers;
 import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.Team;
 import at.qe.skeleton.services.TeamService;
-import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.el.MethodExpression;
 import java.io.Serializable;
 
 @Component
@@ -39,7 +37,7 @@ public class TeamController extends Controller implements Serializable {
     }
 
     public void doSaveTeam(Game game) {
-        team.setGames(game);
+        team.setGame(game);
         try {
             team = teamService.saveTeam(team);
         } catch (IllegalArgumentException e){

@@ -1,7 +1,5 @@
 package at.qe.skeleton.model;
 
-import org.springframework.lang.Nullable;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -18,9 +16,10 @@ public class Game implements Serializable {
     private int scoreToWin;
     private int totalScore;
     private int countPlayers;
-    private int teamSize;
+    //private int teamSize;
     private int numberOfTeams;
     private int nrRound;
+    private boolean active;
     @Temporal(TemporalType.TIMESTAMP)
     private Date startTime;
     @Temporal(TemporalType.TIMESTAMP)
@@ -31,7 +30,7 @@ public class Game implements Serializable {
     @ManyToOne(optional = true)
     private Raspberry raspberry;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Team> teamList;
 
     @ElementCollection
@@ -45,15 +44,16 @@ public class Game implements Serializable {
 
     public Game() { }
 
-    public Game(int scoreToWin, int countPlayers, Topic topic, Raspberry raspberry, Date startTime, List<Team> teamList) {
+    public Game(int scoreToWin, int countPlayers, Topic topic, Raspberry raspberry, List<Team> teamList) {
         this.scoreToWin = scoreToWin;
         this.totalScore = 0;
         this.countPlayers = countPlayers;
         this.nrRound = 1;
         this.topic = topic;
         this.raspberry = raspberry;
-        this.startTime = startTime;
         this.teamList = teamList;
+        this.active = false;
+        this.numberOfTeams = teamList.size();
     }
 
     public int getScoreToWin() {
@@ -82,6 +82,14 @@ public class Game implements Serializable {
 
     public void incrementNrRound() {
         this.nrRound++;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public Raspberry getRaspberry() {
@@ -169,11 +177,7 @@ public class Game implements Serializable {
     }
 
     public int getTeamSize() {
-        return teamSize;
-    }
-
-    public void setTeamSize(int teamSize) {
-        this.teamSize = teamSize;
+        return countPlayers / numberOfTeams;
     }
 
     public int getNumberOfTeams() {
@@ -185,6 +189,6 @@ public class Game implements Serializable {
     }
 
     public int getMaxPlayers() {
-        return teamSize * numberOfTeams;
+        return getTeamSize() * numberOfTeams;
     }
 }

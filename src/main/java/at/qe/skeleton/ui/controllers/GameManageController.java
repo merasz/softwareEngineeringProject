@@ -21,13 +21,12 @@ public class GameManageController extends GameController implements Serializable
     private int scoreToWin;
     private int countPlayers;
     private int countTeams;
-    private Raspberry raspberry;
     private Topic topic;
 
-    //TODO: get connected Raspberry
     public Game createGame() {
+        setUser();
         try {
-            setGame(gameManageService.createGame(scoreToWin, countPlayers, topic, raspberry, countTeams));
+            setGame(gameManageService.createGame(scoreToWin, countPlayers, topic, getUser().getRaspberry(), countTeams));
             displayInfo("Game created", "Game created successfully.");
         } catch (IllegalArgumentException e) {
             displayError("Game creation failed", e.getMessage());
@@ -36,8 +35,13 @@ public class GameManageController extends GameController implements Serializable
     }
 
     public String startGame() {
-        setGame(gameManageService.startGame(getGame(), countPlayers));
-        return "/secured/game_room/gameRoom.xhtml?faces-redirect=true";
+        try {
+            setGame(gameManageService.startGame(getGame(), countPlayers));
+            return "/secured/game_room/join.xhtml?faces-redirect=true";
+        } catch (NullPointerException e) {
+            displayError("No available Game", "Please create a game first.");
+            return "";
+        }
     }
 
     public void deleteGame() {
@@ -71,13 +75,7 @@ public class GameManageController extends GameController implements Serializable
         scoreToWin = 12;
         countPlayers = 4;
         countTeams = 2;
-        raspberry = null;
         setGame(createGame());
-    }
-
-    public void doSomething() {
-        System.out.println("\n-----\nsomething\n-----\n");
-        displayInfo("do", "did something");
     }
 
     //region getter & setter

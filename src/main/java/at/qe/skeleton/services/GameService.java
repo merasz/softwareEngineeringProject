@@ -3,6 +3,7 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.GameRepository;
 import at.qe.skeleton.repositories.ScoreRepository;
+import at.qe.skeleton.ui.controllers.gameSockets.GameStartController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,9 @@ public class GameService {
 
     @Autowired
     private ScoreRepository scoreRepository;
+
+    @Autowired
+    private GameStartController gameStartController;
 
     protected final int PENALTY_POINTS = -1;
     protected final int SUCCESS_POINTS = 3;
@@ -33,6 +37,13 @@ public class GameService {
             this.player = player;
             this.team = team;
         }
+    }
+
+    public Game saveGame(Game game) {
+        game.setCountPlayers(1);
+        game.setNrRound(0);
+        game.setTotalScore(0);
+        return gameRepository.save(game);
     }
 
     //region getter & setter
@@ -68,11 +79,8 @@ public class GameService {
         return players;
     }
 
-    public Game saveGame(Game game) {
-        game.setCountPlayers(1);
-        game.setNrRound(0);
-        game.setTotalScore(0);
-        return gameRepository.save(game);
+    public GameStartController getGameStartController() {
+        return gameStartController;
     }
 
     public Collection<Game> getAllGames() {

@@ -2,6 +2,7 @@ package at.qe.skeleton.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,9 +20,8 @@ public class Team implements Serializable {
 
     private String teamName;
 
-
     @ManyToOne
-    private Game games;
+    private Game game;
 
     @ElementCollection
     @MapKeyColumn(name="key") // column name for map "key"
@@ -32,14 +32,15 @@ public class Team implements Serializable {
     private List<Score> scores;
 
     public Team() {
+        this.teamPlayers = new ArrayList<>();
     }
 
-    public Team(Long teamId, List<User> teamPlayers, String teamName, Game games, List<Score> scores,
+    public Team(Long teamId, List<User> teamPlayers, String teamName, Game game, List<Score> scores,
                 Map<User,String> deviceIdsFromTeam) {
         this.teamId = teamId;
         this.teamPlayers = teamPlayers;
         this.teamName = teamName;
-        this.games = games;
+        this.game = game;
         this.scores = scores;
         this.deviceIdsFromTeam = deviceIdsFromTeam;
     }
@@ -72,12 +73,12 @@ public class Team implements Serializable {
         this.teamName = teamName;
     }
 
-    public Game getGames() {
-        return games;
+    public Game getGame() {
+        return game;
     }
 
-    public void setGames(Game games) {
-        this.games = games;
+    public void setGame(Game game) {
+        this.game = game;
     }
 
     public List<Score> getScores() {

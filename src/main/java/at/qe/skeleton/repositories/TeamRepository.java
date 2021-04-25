@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface TeamRepository extends AbstractRepository<Team,Integer>{
 
-    @Query("SELECT t FROM Team t WHERE t.games.gameId = :game")
+    @Query("SELECT t FROM Team t WHERE t.game.gameId = :game")
     List<Team> findByGame(@Param("game") Integer game);
 }

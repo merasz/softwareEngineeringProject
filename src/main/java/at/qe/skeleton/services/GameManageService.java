@@ -31,19 +31,31 @@ public class GameManageService extends GameService {
             throw new IllegalArgumentException("Teams must have at least 2 players.");
         } else {
             List<Team> teams = new ArrayList<>();
-            IntStream.range(0,countTeams).forEach(i -> teams.add(teamService.saveTeam(new Team())));
-            Game game = new Game(scoreToWin, countPlayers, topic, raspberry, Timestamp.valueOf(LocalDateTime.now()), teams);
+            for (int i = 0; i < countPlayers / countTeams; i++) {
+                Team t = new Team();
+                t.setTeamName("Team " + (i + 1));
+                teams.add(t);
+                teamService.saveTeam(t);
+            }
+            Game game = new Game(scoreToWin, countPlayers, topic, raspberry, teams);
             getGameRepository().save(game);
+            teams.forEach(t -> t.setGame(game));
+            teams.forEach(teamService::saveTeam);
             return game;
         }
     }
 
     //start game: all players have to press start
     public Game startGame(Game game, int countPlayers) {
-        while(registered != countPlayers) {
+        game.setActive(true);
+        getGameStartController().onJoin(game);
+        getGameRepository().save(game);
+        return game;
+    }
 
-        }
+    public void initializeGame(Game game) {
         //TODO: accept when all players have pressed start
+
         for (Team t : game.getTeamList()) {
             for (User u : t.getTeamPlayers()) {
                 Score s = new Score(u, t, game);
@@ -51,8 +63,13 @@ public class GameManageService extends GameService {
             }
         }
         createPlayerOrdering(game);
+        if (game.getStartTime() == null) {
+            game.setStartTime(Timestamp.valueOf(LocalDateTime.now()));
+        } else {
+            game.setPausedTime(Timestamp.valueOf(LocalDateTime.now()));
+        }
+        game.setActive(true);
         getGameRepository().save(game);
-        return game;
     }
 
     private void createPlayerOrdering(Game game) {

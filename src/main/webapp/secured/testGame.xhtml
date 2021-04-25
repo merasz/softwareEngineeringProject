@@ -25,11 +25,7 @@
                 <b>Selected topic:</b> <h:outputText id="selected_item" value="#{gameManageController.topic}" />
                 <br />
                 <p:commandButton action="#{gameManageController.test}" value="create game" />
-                <p:commandButton action="/secured/game_room/start.xhtml?faces-redirect=true" value="start game" ajax="false" />
-            </p:panel>
-
-            <p:panel header="Test test" style="width: 79%; padding-left: 72px; margin-top: 45px; float: right" >
-                <p:commandButton action="#{gameManageController.doSomething}" value="do something" />
+                <p:commandButton action="#{gameManageController.startGame}" value="join game" ajax="false" />
             </p:panel>
         </h:form>
     </ui:define>

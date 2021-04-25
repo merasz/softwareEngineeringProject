@@ -5,6 +5,7 @@ import at.qe.skeleton.services.GameService;
 import at.qe.skeleton.services.GameStatsService;
 import at.qe.skeleton.services.TermsService;
 import at.qe.skeleton.services.TopicService;
+import at.qe.skeleton.ui.beans.SessionInfoBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,10 @@ public class GameController extends Controller implements Serializable {
     @Autowired
     private TermsService termsService;
 
+    @Autowired
+    private SessionInfoBean sessionInfoBean;
+
+    private User user;
     private List<Game> games;
     private Game game;
 
@@ -42,6 +47,14 @@ public class GameController extends Controller implements Serializable {
 
     public TermsService getTermsService() {
         return termsService;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser() {
+        this.user = sessionInfoBean.getCurrentUser();
     }
 
     public Game getGame() {

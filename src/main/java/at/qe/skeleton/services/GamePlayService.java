@@ -2,6 +2,9 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.Task;
+import at.qe.skeleton.model.Team;
+import at.qe.skeleton.model.User;
+import at.qe.skeleton.repositories.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -9,13 +12,42 @@ import org.springframework.stereotype.Component;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.NoSuchElementException;
 
 @Component
 @Scope("application")
 public class GamePlayService extends GameService {
+
+    @Autowired
+    private TeamRepository teamRepository;
+
+    private Game game;
+    private User user;
     private Task task;
     private String timerString;
     private boolean guessAccepted = false;
+
+    public Game joinGame(User user) throws NoSuchElementException {
+        this.user = user;
+        game = getGameRepository().findActiveGameByRaspberry(user.getRaspberry().getRaspberryId());
+
+        if (game == null ) {
+            throw new NoSuchElementException("No active game found. Ask a game manager to create a new game.");
+        }
+        return game;
+    }
+
+    public void joinTeam(Team team) throws IllegalArgumentException {
+        this.game = team.getGame();
+        if (team.getTeamPlayers().size() == game.getTeamSize()) {
+            throw new IllegalArgumentException("Team already full. Please choose another team.");
+        } else {
+            team.getTeamPlayers().add(user);
+            teamRepository.save(team);
+            getGameRepository().save(game);
+            getGameStartController().onJoin(game);
+        }
+    }
 
     //region guessing round with timer loop
     //TODO: where task?
@@ -95,4 +127,12 @@ public class GamePlayService extends GameService {
         getGameRepository().save(game);
         return game;
     }
+
+    //region getter & setter
+    public Game getGame() {
+        return game;
+    }
+
+
+    //endregion
 }

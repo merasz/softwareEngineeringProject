@@ -1,5 +1,6 @@
 package at.qe.skeleton.repositories;
 
+import at.qe.skeleton.model.Raspberry;
 import at.qe.skeleton.model.Team;
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.UserRole;
@@ -36,4 +37,5 @@ public interface UserRepository extends AbstractRepository<User, String> {
 
     List<User> findAllPlayersByTeam(Team team);
 
+    List<User> findAllByRaspberry(Raspberry raspberry);
 }

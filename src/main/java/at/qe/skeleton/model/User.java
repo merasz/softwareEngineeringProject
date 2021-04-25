@@ -47,8 +47,8 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
     @ManyToOne
     private GameLobby gameLobby;
 
-    @OneToMany(mappedBy = "user")
-    private List<Raspberry> raspberryList;
+    @ManyToOne
+    private Raspberry raspberry;
 
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "User_UserRole")
@@ -87,6 +87,14 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
 
     public void setRoles(Set<UserRole> roles) {
         this.roles = roles;
+    }
+
+    public Raspberry getRaspberry() {
+        return raspberry;
+    }
+
+    public void setRaspberry(Raspberry raspberry) {
+        this.raspberry = raspberry;
     }
 
     public User getCreateUser() {

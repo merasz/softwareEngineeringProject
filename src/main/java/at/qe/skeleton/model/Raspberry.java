@@ -14,9 +14,8 @@ public class Raspberry implements Serializable {
 
     private String hostname;
 
-    //TODO: review this, many raspberries for one user?
-    @ManyToOne
-    private User user;
+    @OneToMany(mappedBy = "raspberry")
+    private List<User> users;
 
     private boolean inUse;
     private String ipAddress;
@@ -27,10 +26,9 @@ public class Raspberry implements Serializable {
     public Raspberry() {
     }
 
-    public Raspberry(int raspberryId, String hostname, User user, boolean inUse, String ipAddress, TimeFlip timeFlip) {
-        this.raspberryId = raspberryId;
+    public Raspberry(String hostname, List<User> users, boolean inUse, String ipAddress, TimeFlip timeFlip) {
         this.hostname = hostname;
-        this.user = user;
+        this.users = users;
         this.inUse = inUse;
         this.ipAddress = ipAddress;
         this.timeFlip = timeFlip;
@@ -52,12 +50,12 @@ public class Raspberry implements Serializable {
         this.hostname = hostname;
     }
 
-    public User getUser() {
-        return user;
+    public List<User> getUser() {
+        return users;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(List<User> users) {
+        this.users = users;
     }
 
     public boolean isInUse() {

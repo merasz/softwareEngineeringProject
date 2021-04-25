@@ -47,6 +47,10 @@ public class WebSocketManager implements Serializable {
     @Inject
     @Push(channel = "messageChannel")
     private PushContext messageChannel;
+    @Inject
+    @Push(channel = "joinChannel")
+    private PushContext joinChannel;
+
 
     public PushContext getUserRegistrationChannel() {
         return userRegistrationChannel;
@@ -56,4 +60,7 @@ public class WebSocketManager implements Serializable {
         return messageChannel;
     }
 
+    public PushContext getJoinChannel() {
+        return joinChannel;
+    }
 }
