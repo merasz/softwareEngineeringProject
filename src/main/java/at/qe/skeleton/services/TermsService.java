@@ -1,5 +1,6 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.Term;
 import at.qe.skeleton.model.Topic;
 import at.qe.skeleton.repositories.TermsRepository;
@@ -10,9 +11,12 @@ import org.primefaces.shaded.json.JSONArray;
 import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.access.prepost.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.io.FileNotFoundException;
+import java.util.*;
 
 @Component
 @Scope("application")
@@ -23,18 +27,51 @@ public class TermsService {
     @Autowired
     private TopicRepository topicRepository;
 
+    private final int MIN_NUMBER_TERMS = 10;
+    private Term currentTerm;
+    private List<Term> termsInGame;
+    private Iterator<Term> iterateTerms;
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Topic loadTopic(String topicName) {
+        return (Topic) topicRepository.findFirstByTopicName(topicName);
+    }
+
+
+
     public void saveTopic(String name, Topic topic) throws IllegalArgumentException {
         validateTopic(name);
         topic.setTopicName(name);
         topicRepository.save(topic);
     }
 
-    public void saveTerm(String name, Topic topic, Term term) throws IllegalArgumentException {
-        validateTerm(name);
-        term.setTermName(name);
-        term.setTopic(topic);
-        termsRepository.save(term);
+    public Term saveTerm(Term term) throws IllegalArgumentException {
+        return termsRepository.save(term);
     }
+
+    public Term demoSaveTerm(Term term) throws IllegalArgumentException {
+        Topic curr = topicRepository.findFirstByTopicName("Geo");
+        term.setTopic(curr);
+        return termsRepository.save(term);
+    }
+
+//---------
+    public Iterable<Term> list() {
+        return termsRepository.findAll();
+    }
+
+    public Iterable<Term> saveTerm(List<Term> terms) {
+        return (Iterable<Term>) termsRepository.save((Term) terms);
+    }
+//---------
+
+
+//    public void saveTerm(String name, Topic topic, Term term) throws IllegalArgumentException {
+//        validateTerm(name);
+//        term.setTermName(name);
+//        term.setTopic(topic);
+//        termsRepository.save(term);
+//    }
 
     public void deleteTopic(Topic topic) throws IllegalArgumentException {
         if (!termsRepository.findAllByTopic(topic).isEmpty()) {
@@ -42,6 +79,27 @@ public class TermsService {
         } else {
             topicRepository.delete(topic);
         }
+    }
+
+    public Topic setGameTopic(Topic topic) throws IllegalArgumentException {
+        List<Term> terms = termsRepository.findAllByTopic(topic);
+        if (terms.size() < MIN_NUMBER_TERMS) {
+            throw new IllegalArgumentException("Topic has less than " + MIN_NUMBER_TERMS + " terms in this topic. Please choose another topic.");
+        } else {
+            termsInGame = terms;
+            Collections.shuffle(termsInGame);
+            iterateTerms = termsInGame.iterator();
+            return topic;
+        }
+    }
+
+    public Term getNextTerm(Game game) {
+        if (!iterateTerms.hasNext()) {
+            Collections.shuffle(termsInGame);
+            iterateTerms = termsInGame.iterator();
+        }
+        currentTerm = iterateTerms.next();
+        return currentTerm;
     }
 
     private void validateTerm(String name) throws IllegalArgumentException {
@@ -85,11 +143,19 @@ public class TermsService {
         }
     }
 
+    public List<Term> getTermsForTopic(Topic topic) {
+        return termsRepository.findAllByTopic(topic);
+    }
+
     public TermsRepository getTermsRepository() {
         return termsRepository;
     }
 
     public TopicRepository getTopicRepository() {
         return topicRepository;
+    }
+
+    public Collection<Term> getAllTerms() {
+        return termsRepository.findAll();
     }
 }

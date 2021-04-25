@@ -7,11 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Component
 @Scope("application")
@@ -22,80 +18,65 @@ public class GameService {
     @Autowired
     private ScoreRepository scoreRepository;
 
-    public Game createGame(int scoreToWin, int totalScore, int nrRound, Topic topic, int raspberryId, List<Team> teamList) {
-        Game game = new Game(scoreToWin, totalScore, nrRound, topic, raspberryId, Timestamp.valueOf(LocalDateTime.now()), teamList);
-        gameRepository.save(game);
-        return game;
-    }
+    protected final int PENALTY_POINTS = -1;
+    protected final int SUCCESS_POINTS = 3;
+    private int numPlayers = 0;
+    private Team currentTeam;
+    private User currentPlayer;
+    private List<TeamPlayer> players;
 
-    public Game stopGame(Game game) {
-        game.setEndTime(Timestamp.valueOf(LocalDateTime.now()));
-        return game;
-    }
+    public class TeamPlayer {
+        User player;
+        Team team;
 
-    public Game pauseGame(Game game) {
-        game.setPausedTime(Timestamp.valueOf(LocalDateTime.now()));
-        return game;
-    }
-
-    public void deleteGame(Game game) {
-        gameRepository.delete(game);
-        for (Score s : scoreRepository.findAllByGame(game)) {
-            scoreRepository.delete(s);
+        TeamPlayer(User player, Team team) {
+            this.player = player;
+            this.team = team;
         }
     }
 
-    public boolean isFinished(Game game) {
-        return game.getEndTime() != null;
-    }
-
-    public int getSecondsPlayed(Game game) throws UnsupportedOperationException {
-        if (game.getEndTime() == null) {
-            if (game.getPausedTime() == null) {
-                throw new UnsupportedOperationException();
-            } else {
-                LocalDateTime start = new Timestamp(game.getStartTime().getTime()).toLocalDateTime();
-                return (int) start.until(game.getPausedTime().toInstant(), ChronoUnit.SECONDS);
-            }
-        } else {
-            LocalDateTime start = new Timestamp(game.getStartTime().getTime()).toLocalDateTime();
-            return (int) start.until(game.getEndTime().toInstant(), ChronoUnit.SECONDS);
-        }
-    }
-
-    //total game score stats
-    public Score getGameScores(Game game) {
-        return sumScores(game.getScores());
-    }
-
-    //scores per team
-    public List<Score> getTeamScores(Game game) {
-        List<Score> scores = new ArrayList<>();
-        for (Team t : game.getTeamList()) {
-            scores.add(sumScores(scoreRepository.findAllByGameAndTeam(game, t)));
-        }
-        return scores;
-    }
-
-    private Score sumScores(List<Score> scores) {
-        Score score = new Score();
-        int totalScore = 0;
-        List<Term> guessedTerms = new ArrayList<>();
-        List<Term> notGuessedTerms = new ArrayList<>();
-
-        for (Score s : scores) {
-            totalScore += s.getTotalRoundScore();
-            guessedTerms.addAll(s.getGuessedTerms());
-            notGuessedTerms.addAll(s.getNotGuessedTerms());
-        }
-
-        score.setTotalRoundScore(totalScore);
-        score.setGuessedTerms(guessedTerms);
-        score.setNotGuessedTerms(notGuessedTerms);
-        return score;
-    }
-
+    //region getter & setter
     public GameRepository getGameRepository() {
         return gameRepository;
     }
+
+    public ScoreRepository getScoreRepository() {
+        return scoreRepository;
+    }
+
+    public int getNumPlayers() {
+        return numPlayers;
+    }
+
+    public void incrementNumPlayers(int numPlayers) {
+        this.numPlayers += numPlayers;
+    }
+
+    public void setCurrentTeam(Team currentTeam) {
+        this.currentTeam = currentTeam;
+    }
+
+    public User getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(User currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public List<TeamPlayer> getPlayers() {
+        return players;
+    }
+
+    public Game saveGame(Game game) {
+        game.setCountPlayers(1);
+        game.setNrRound(0);
+        game.setTotalScore(0);
+        return gameRepository.save(game);
+    }
+
+    public Collection<Game> getAllGames() {
+        return gameRepository.findAll();
+    }
+    //endregion
 }

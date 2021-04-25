@@ -1,36 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      >
+>
 
-    <h:head>
-        <title>Skeleton</title>
-	    <!-- stylesheets here -->
-		<h:outputStylesheet library="css" name="chat.css" />
-		<!-- js-utils here -->		
-		<h:outputScript library="js" name="chat.js" />
-    </h:head>
-    <h:body style="margin:10px;">
-		
-        <div id="page">
+<h:head>
+    <title>Gruppe6Team1</title>
+    <!-- stylesheets here -->
+    <h:outputStylesheet library="css" name="chat.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"/>
+    <link rel="stylesheet" href="/resources/css/categories.css"/>
+    <link rel="stylesheet" href="/resources/css/header.css"/>
+    <!-- js-utils here -->
+    <h:outputScript library="js" name="chat.js"/>
+    <h:outputScript library="js" name="categories.js"/>
+</h:head>
 
-            <div id="header" style="margin-bottom: 10px;">
-                <ui:include src="/WEB-INF/includes/header.xhtml" />
-            </div>
+<h:body style="margin:10px;">
 
-            <div id="content">
-                <ui:insert name="content">Content</ui:insert>
-            </div>
 
-            <div id="footer" style="margin-top: 10px;">
-                <ui:include src="/WEB-INF/includes/footer.xhtml" />
-            </div>
-
+    <div id="page">
+        <div class="header" style="margin-bottom: 20px;">
+            <ui:include src="/WEB-INF/includes/header.xhtml"/>
         </div>
-        
+
+        <div id="content">
+            <ui:insert name="content">Content</ui:insert>
+        </div>
+
+        <div id="footer" style="margin-top: 10px;">
+            <ui:include src="/WEB-INF/includes/footer.xhtml"/>
+        </div>
+
+    </div>
 
 </h:body>
 </html>

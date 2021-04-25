@@ -1,7 +1,7 @@
 package at.qe.skeleton.model;
 
-public enum TimeflipSetupStatus {
-    NOTSETUP,
+public enum TimeFlipSetupStatus {
+    NOT_SETUP,
     PENDING,
     COMPLETE
 }

@@ -8,9 +8,7 @@ package at.qe.skeleton.model;
  * University of Innsbruck.
  */
 public enum UserRole {
-
     ADMIN,
-    MANAGER,
-    EMPLOYEE
-
+    GAME_MANAGER,
+    PLAYER
 }

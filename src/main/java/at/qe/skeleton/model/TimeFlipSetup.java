@@ -6,10 +6,12 @@ import java.util.List;
 
 @Entity
 public class TimeFlipSetup implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int timeFlipSetupId;
+
     private int setupTime;
     private int facetId;
 
@@ -17,6 +19,13 @@ public class TimeFlipSetup implements Serializable {
     private List<TimeFlip> timeFlipList;
 
     public TimeFlipSetup() {
+    }
+
+    public TimeFlipSetup(int timeFlipSetupId, int setupTime, int facetId, List<TimeFlip> timeFlipList) {
+        this.timeFlipSetupId = timeFlipSetupId;
+        this.setupTime = setupTime;
+        this.facetId = facetId;
+        this.timeFlipList = timeFlipList;
     }
 
     public int getTimeFlipSetupId() {
@@ -43,9 +52,15 @@ public class TimeFlipSetup implements Serializable {
         this.facetId = facetId;
     }
 
-    public TimeFlipSetup(int timeFlipSetupId, int setupTime, int facetId) {
-        this.timeFlipSetupId = timeFlipSetupId;
-        this.setupTime = setupTime;
-        this.facetId = facetId;
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public List<TimeFlip> getTimeFlipList() {
+        return timeFlipList;
+    }
+
+    public void setTimeFlipList(List<TimeFlip> timeFlipList) {
+        this.timeFlipList = timeFlipList;
     }
 }

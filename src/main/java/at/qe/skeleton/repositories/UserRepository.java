@@ -1,7 +1,10 @@
 package at.qe.skeleton.repositories;
 
+import at.qe.skeleton.model.Team;
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.UserRole;
+
+import java.util.Collection;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,10 +22,18 @@ public interface UserRepository extends AbstractRepository<User, String> {
 
     List<User> findByUsernameContaining(String username);
 
-    @Query("SELECT u FROM User u WHERE CONCAT(u.firstName, ' ', u.lastName) = :wholeName")
-    List<User> findByWholeNameConcat(@Param("wholeName") String wholeName);
-
     @Query("SELECT u FROM User u WHERE :role MEMBER OF u.roles")
     List<User> findByRole(@Param("role") UserRole role);
+
+    @Query("SELECT u FROM User u join u.roles r WHERE r = at.qe.skeleton.model.UserRole.ADMIN")
+    List<User> findAllAdmins();
+
+    @Query("SELECT u FROM User u join u.roles r WHERE r = at.qe.skeleton.model.UserRole.GAME_MANAGER")
+    List<User> findAllManagers();
+
+    @Query("SELECT u FROM User u join u.roles r WHERE r = at.qe.skeleton.model.UserRole.PLAYER")
+    List<User> findAllPlayers();
+
+    List<User> findAllPlayersByTeam(Team team);
 
 }

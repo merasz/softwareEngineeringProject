@@ -7,6 +7,7 @@ import javax.persistence.*;
 
 @Entity
 public class AuditLogEntry implements Serializable {
+    private static final long serialVersionUID = 2L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +23,25 @@ public class AuditLogEntry implements Serializable {
     private Set<AuditLogEvent> auditLogEvents;
 
     public AuditLogEntry() {
+    }
+
+    public AuditLogEntry(int auditLogId, int auditLogEntryId, String message, Date modificationDate) {
+        this.auditLogId = auditLogId;
+        this.auditLogEntryId = auditLogEntryId;
+        this.message = message;
+        this.modificationDate = modificationDate;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Set<AuditLogEvent> getAuditLogEvents() {
+        return auditLogEvents;
+    }
+
+    public void setAuditLogEvents(Set<AuditLogEvent> auditLogEvents) {
+        this.auditLogEvents = auditLogEvents;
     }
 
     public int getAuditLogId() {
@@ -53,13 +73,6 @@ public class AuditLogEntry implements Serializable {
     }
 
     public void setModificationDate(Date modificationDate) {
-        this.modificationDate = modificationDate;
-    }
-
-    public AuditLogEntry(int auditLogId, int auditLogEntryId, String message, Date modificationDate) {
-        this.auditLogId = auditLogId;
-        this.auditLogEntryId = auditLogEntryId;
-        this.message = message;
         this.modificationDate = modificationDate;
     }
 }

@@ -25,11 +25,7 @@ public class UserController extends Controller implements Serializable {
     /**
      * Attribute to cache the currently displayed user
      */
-    private User user;
-    private String username;
-    private String password;
-    private String confirmPass;
-    private UserRole[] roles;
+    private User user = new User();
 
     /**
      * Sets the currently displayed user and reloads it form db. This user is
@@ -80,38 +76,35 @@ public class UserController extends Controller implements Serializable {
      */
     public void doSaveUser() {
         try {
-            user = userService.createUser(user, username, password);
+            user = userService.saveUser(user);
             displayInfo("Player created", "You have been successfully registered. You can log in now.");
         } catch (IllegalArgumentException e) {
             displayError("Error", e.getMessage());
         }
     }
 
-    /**
-     * Action to change a user's password.
-     */
-    public void doUpdatePassword() {
-        try {
-            user = userService.updatePassword(user, password, confirmPass);
-            displayInfo("Password changed" ,"Password successfully changed.");
-        } catch (IllegalArgumentException e){
-            displayError("Password cannot be empty", "Please enter any characters for your password.");
-        }
-    }
+//    /**
+//     * Action to change a user's password.
+//     */
+//    public void doUpdatePassword() {
+//        try {
+//            user = userService.updatePassword(user, password, confirmPass);
+//            displayInfo("Password changed" ,"Password successfully changed.");
+//        } catch (IllegalArgumentException e){
+//            displayError("Password cannot be empty", "Please enter any characters for your password.");
+//        }
+//    }
 
-    /**
-     * Action to change a user's roles.
-     */
-    public void doUpdateRoles() {
-        try {
-            user = userService.updateRoles(user, roles);
-            displayInfo("Password changed" ,"Password successfully changed.");
-        } catch (IllegalArgumentException e){
-            displayError("Password cannot be empty", "Please enter any characters for your password.");
-        }
-    }
+//    /**
+//     * Action to change a user's roles.
+//     */
+//    public void doUpdateRoles() {
+//        try {
+//            user = userService.updateRoles(user, roles);
+//            displayInfo("User rolle changed" ,"Roll successfully changed.");
+//        } catch (IllegalArgumentException e){
+//            displayError("Password cannot be empty", "Please enter any characters for your password.");
+//        }
+//    }
 
-    public UserService getUserService() {
-        return userService;
-    }
 }

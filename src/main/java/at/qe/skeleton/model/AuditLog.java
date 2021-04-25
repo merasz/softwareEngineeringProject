@@ -16,7 +16,6 @@ import org.springframework.data.domain.Persistable;
 
 @Entity
 public class AuditLog implements Persistable<Long> {
-
     private static final long serialVersionUID = 2L;
 
     @Id
@@ -35,6 +34,9 @@ public class AuditLog implements Persistable<Long> {
     @Column(length = 4096, nullable = false)
     private String message;
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     public void setId(long id) {
         this.id = id;

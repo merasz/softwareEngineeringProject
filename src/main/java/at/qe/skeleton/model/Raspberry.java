@@ -2,16 +2,19 @@ package at.qe.skeleton.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 public class Raspberry implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int raspberryId;
+
     private String hostname;
 
-    //shouldn't it be a list of users? one raspberry for many users
+    //TODO: review this, many raspberries for one user?
     @ManyToOne
     private User user;
 
@@ -21,6 +24,18 @@ public class Raspberry implements Serializable {
 
     @OneToOne
     private TimeFlip timeFlip;
+
+    public Raspberry() {
+    }
+
+    public Raspberry(int raspberryId, String hostname, User user, boolean inUse, String ipAddress, TimeFlip timeFlip) {
+        this.raspberryId = raspberryId;
+        this.hostname = hostname;
+        this.user = user;
+        this.inUse = inUse;
+        this.ipAddress = ipAddress;
+        this.timeFlip = timeFlip;
+    }
 
     public int getRaspberryId() {
         return raspberryId;
@@ -74,6 +89,11 @@ public class Raspberry implements Serializable {
         this.ipAddress = ipAddress;
     }
 
-    public Raspberry() {
+    public TimeFlip getTimeFlip() {
+        return timeFlip;
+    }
+
+    public void setTimeFlip(TimeFlip timeFlip) {
+        this.timeFlip = timeFlip;
     }
 }

@@ -1,5 +1,7 @@
 package at.qe.skeleton.model;
 
+import org.springframework.lang.Nullable;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -7,13 +9,17 @@ import java.util.List;
 
 @Entity
 public class Game implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int gameId;
-
+    private Integer gameId;
+    private String gameName;
     private int scoreToWin;
     private int totalScore;
+    private int countPlayers;
+    private int teamSize;
+    private int numberOfTeams;
     private int nrRound;
     @Temporal(TemporalType.TIMESTAMP)
     private Date startTime;
@@ -22,26 +28,32 @@ public class Game implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date pausedTime;
 
-    //TODO: change type to Raspberry
-    private int raspberryId;
+    @ManyToOne(optional = true)
+    private Raspberry raspberry;
 
-    @ManyToMany
+    @OneToMany
     private List<Team> teamList;
 
-    //private List<Integer> deviceTeamIdList;
+    @ElementCollection
+    private List<Integer> deviceTeamIdList;
 
     @ManyToOne
     private Topic topic;
 
     @OneToMany(mappedBy = "game")
-    private List<Score> scores;
+    private List<Score> scoreList;
 
-    public int getGameId() {
-        return gameId;
-    }
+    public Game() { }
 
-    public void setGameId(int gameId) {
-        this.gameId = gameId;
+    public Game(int scoreToWin, int countPlayers, Topic topic, Raspberry raspberry, Date startTime, List<Team> teamList) {
+        this.scoreToWin = scoreToWin;
+        this.totalScore = 0;
+        this.countPlayers = countPlayers;
+        this.nrRound = 1;
+        this.topic = topic;
+        this.raspberry = raspberry;
+        this.startTime = startTime;
+        this.teamList = teamList;
     }
 
     public int getScoreToWin() {
@@ -60,20 +72,20 @@ public class Game implements Serializable {
         this.totalScore = totalScore;
     }
 
+    public int getCountPlayers() {
+        return countPlayers;
+    }
+
     public int getNrRound() {
         return nrRound;
     }
 
-    public void setNrRound(int nrRound) {
-        this.nrRound = nrRound;
+    public void incrementNrRound() {
+        this.nrRound++;
     }
 
-    public int getRaspberryId() {
-        return raspberryId;
-    }
-
-    public void setRaspberryId(int raspberryId) {
-        this.raspberryId = raspberryId;
+    public Raspberry getRaspberry() {
+        return raspberry;
     }
 
     public List<Team> getTeamList() {
@@ -84,12 +96,20 @@ public class Game implements Serializable {
         this.teamList = playerList;
     }
 
+    public void setTopic(Topic topic) {
+        this.topic = topic;
+    }
+
     public Topic getTopic() {
         return topic;
     }
 
+    public void setScores(List<Score> scoreList) {
+        this.scoreList = scoreList;
+    }
+
     public List<Score> getScores() {
-        return scores;
+        return scoreList;
     }
 
     public Date getStartTime() {
@@ -116,16 +136,55 @@ public class Game implements Serializable {
         this.pausedTime = pausedTime;
     }
 
-    public Game(int scoreToWin, int totalScore, int nrRound, Topic topic, int raspberryId, Date startTime, List<Team> teamList) {
-        this.scoreToWin = scoreToWin;
-        this.totalScore = totalScore;
-        this.nrRound = nrRound;
-        this.topic = topic;
-        this.raspberryId = raspberryId;
-        this.startTime = startTime;
-        this.teamList = teamList;
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
-    public Game() {
+    public List<Integer> getDeviceTeamIdList() {
+        return deviceTeamIdList;
+    }
+
+    public void setDeviceTeamIdList(List<Integer> deviceTeamIdList) {
+        this.deviceTeamIdList = deviceTeamIdList;
+    }
+
+    public Integer getGameId() { return gameId; }
+
+    public String getGameName() { return gameName; }
+
+    public List<Score> getScoreList() { return scoreList; }
+
+    public void setGameName(String gameName) { this.gameName = gameName; }
+
+    public void setCountPlayers(int countPlayers) { this.countPlayers = countPlayers; }
+
+    public void setNrRound(int nrRound) { this.nrRound = nrRound; }
+
+    public void setRaspberry(Raspberry raspberry) { this.raspberry = raspberry; }
+
+    public void setScoreList(List<Score> scoreList) { this.scoreList = scoreList; }
+
+    public void setGameId(int gameId) {
+        this.gameId = gameId;
+    }
+
+    public int getTeamSize() {
+        return teamSize;
+    }
+
+    public void setTeamSize(int teamSize) {
+        this.teamSize = teamSize;
+    }
+
+    public int getNumberOfTeams() {
+        return numberOfTeams;
+    }
+
+    public void setNumberOfTeams(int numberOfTeams) {
+        this.numberOfTeams = numberOfTeams;
+    }
+
+    public int getMaxPlayers() {
+        return teamSize * numberOfTeams;
     }
 }

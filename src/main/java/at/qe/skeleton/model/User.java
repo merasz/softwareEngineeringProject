@@ -18,7 +18,6 @@ import org.springframework.data.domain.Persistable;
  */
 @Entity
 public class User implements Persistable<String>, Serializable, Comparable<User> {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -37,18 +36,13 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
 
     private String password;
 
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String phone;
-
     boolean enabled;
 
     @ManyToOne
     private Device device;
 
-    @ManyToOne
-    private Team team;
+    @ManyToMany(cascade=CascadeType.ALL, mappedBy = "teamPlayers")
+    private List<Team> team;
 
     @ManyToOne
     private GameLobby gameLobby;
@@ -56,11 +50,12 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
     @OneToMany(mappedBy = "user")
     private List<Raspberry> raspberryList;
 
-
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "User_UserRole")
     @Enumerated(EnumType.STRING)
     private Set<UserRole> roles;
+
+    public User() { }
 
     public String getUsername() {
         return username;
@@ -76,38 +71,6 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public boolean isEnabled() {

@@ -6,6 +6,7 @@ import java.util.List;
 
 @Entity
 public class Score implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,10 +32,11 @@ public class Score implements Serializable {
     public Score() {
     }
 
-    public Score(int scoreId, int totalRoundScore, Team team) {
-        this.scoreId = scoreId;
-        this.totalRoundScore = totalRoundScore;
+    //TODO: add new parameters to constructor
+    public Score(User user, Team team, Game game) {
+        this.user = user;
         this.team = team;
+        this.game = game;
     }
 
     public int getScoreId() {
@@ -83,5 +85,17 @@ public class Score implements Serializable {
 
     public void setNotGuessedTerms(List<Term> notGuessedTerms) {
         this.notGuessedTerms = notGuessedTerms;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
     }
 }
