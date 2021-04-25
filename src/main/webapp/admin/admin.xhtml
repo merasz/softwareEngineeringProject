@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/main.xhtml">
+    <ui:define name="content">
+
+        <h:form id="adminForm">
+            <p:dataTable widgetVar="adminTable" id="adminTable" var="game" value="#{gameListController.games}" style="width: 83%; margin-top: 110px; float: right;">
+                <f:facet name="header">Ongoing Games</f:facet>
+                <p:column headerText="Game ID">
+                    <h:outputText value="#{game.gameId}"/>
+                </p:column>
+                <p:column headerText="Game Name">
+                    <h:outputText value="#{game.gameName}" />
+                </p:column>
+                <p:column headerText="Topic">
+                    <h:outputText value="#{game.topic.topicName}" />
+                </p:column>
+                <p:column headerText="Teams">
+                    <h:outputText value="#{game.numberOfTeams}" disabled="true"/>
+                </p:column>
+                <p:column headerText="current Players/max Players">
+                    <h:outputText value="#{game.countPlayers}" disabled="true"/>
+                    <h:outputText value="#{game.maxPlayers}" disabled="true"/>
+                </p:column>
+                <p:column headerText="score to win">
+                    <h:outputText value="#{game.scoreToWin}" disabled="true"/>
+                </p:column>
+<!--                <p:column style="width:100px;text-align: center" headerText="Teams">
+                    <h:outputText value="#{}"
+                </p:column>-->
+            </p:dataTable>
+        </h:form>
+
+
+    </ui:define>
+</ui:composition>
