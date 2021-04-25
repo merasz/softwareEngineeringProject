@@ -2,15 +2,16 @@ package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.GameService;
+import at.qe.skeleton.services.GameStatsService;
 import at.qe.skeleton.services.TermsService;
+import at.qe.skeleton.services.TopicService;
+import org.primefaces.model.chart.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Component
 @Scope("view")
@@ -19,86 +20,79 @@ public class GameController extends Controller implements Serializable {
     private GameService gameService;
 
     @Autowired
+    private TopicService topicService;
+
+    @Autowired
+    private GameStatsService gameStatsService;
+
+    @Autowired
     private TermsService termsService;
+
+    private DonutChartModel model;
+
+    public GameController(){
+        model = new DonutChartModel();
+        updateChart();
+    }
+
+    public void updateChart() {
+
+        Map<String, Number> circle1 = new LinkedHashMap<String, Number>();
+        circle1.put("Game 1", 24);
+        circle1.put("Game 2", 12);
+        circle1.put("Game 3", 6);
+        circle1.put("Game 4", 4);
+
+        model.addCircle(circle1);
+        model.setTitle("Current Players in each Game");
+        model.setLegendPosition("w");
+    }
+
+    public DonutChartModel getModel() {
+        return model;
+    }
+
+    public void setModel(DonutChartModel model) {
+        this.model = model;
+    }
 
     private List<Game> games;
     private Game game;
-
-    private int scoreToWin;
-    private int totalScore;
-    private int nrRound;
-    private Topic topic;
 
     public List<Game> getGames() {
         games = gameService.getGameRepository().findAll();
         return games;
     }
 
-    public void stopOrDeleteGame() {
-        if (gameService.isFinished(game)) {
-            deleteGame();
-        } else {
-            endGame();
-        }
+    //region getter & setter
+    public GameStatsService getGameStatsService() {
+        return gameStatsService;
     }
 
-    private void deleteGame() {
-        gameService.deleteGame(game);
-        displayInfo("Game deleted", "Game deleted successfully.");
+    public TermsService getTermsService() {
+        return termsService;
     }
 
-    //TODO: get connected Raspberry, get Teams connected with raspberry
-    public Game startGame() {
-        int raspberryId = 0;
-        List<Team> teamList = null;
-
-        displayInfo("Game started", "Game started successfully.");
-        game = gameService.createGame(scoreToWin, totalScore, nrRound, topic, raspberryId, teamList);
+    public Game getGame() {
         return game;
     }
 
-    //TODO: get time from timer
-    public Game endGame() {
-        int seconds = 0;
-
-        displayInfo("Game stopped", "Game stopped successfully.");
-        game = gameService.stopGame(game);
-        return game;
+    public void setGame(Game game) {
+        this.game = game;
     }
 
-    public String getTimePlayed() {
+    public void doSaveGame() {
         try {
-            return new SimpleDateFormat("hh:mm:ss").format(new Date(gameService.getSecondsPlayed(game) * 1000L));
-        } catch (UnsupportedOperationException e) {
-            return "...unfinished";
+            game = gameService.saveGame(game);
+        } catch (IllegalArgumentException e){
+            displayError("Error", e.getMessage());
         }
     }
 
-    //TODO
-    public Game nextRound(int guessedRight) {
-        //get current task
-        //int guessedRight: -1 -> foul, 0 -> not guessed, 1 -> guessed right
-        //gameService.updateScores(game, guessedRight, termsService.getNextTerm(game), task);
-        return null;
+    public Topic getGameTopic() {
+        return this.topicService.getTopicByName(game.getTopic());
     }
 
-    public void setScoreToWin(int scoreToWin) {
-        this.scoreToWin = scoreToWin;
-    }
 
-    public void setTotalScore(int totalScore) {
-        this.totalScore = totalScore;
-    }
-
-    public void setNrRound(int nrRound) {
-        this.nrRound = nrRound;
-    }
-
-    public void setTopic(Topic topic) {
-        try {
-            this.topic = termsService.setGameTopic(game, topic);
-        } catch (IllegalArgumentException e) {
-            displayError("Too few terms in topic", e.getMessage());
-        }
-    }
+    //endregion
 }

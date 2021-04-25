@@ -18,7 +18,6 @@ import org.springframework.data.domain.Persistable;
  */
 @Entity
 public class User implements Persistable<String>, Serializable, Comparable<User> {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -42,8 +41,8 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
     @ManyToOne
     private Device device;
 
-    @ManyToOne
-    private Team team;
+    @ManyToMany(cascade=CascadeType.ALL, mappedBy = "teamPlayers")
+    private List<Team> team;
 
     @ManyToOne
     private GameLobby gameLobby;
@@ -56,8 +55,7 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
     @Enumerated(EnumType.STRING)
     private Set<UserRole> roles;
 
-    public User() {
-    }
+    public User() { }
 
     public String getUsername() {
         return username;

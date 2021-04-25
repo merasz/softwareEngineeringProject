@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/main.xhtml">
+    <ui:define name="content">
+        <h:form id="adminForm">
+            <p:growl id="growl" showDetail="false" life="6000">
+                <p:autoUpdate/>
+            </p:growl>
+
+            <p:chart style="color: #00a7d0; width: 83%; margin-top: 80px; float: right;" type="donut" model="#{gameController.model}" />
+
+            <p:dataTable widgetVar="adminTable" id="adminTable" var="game" value="#{gameListController.games}"
+                         style="width: 83%; margin-top: 30px; float: right;">
+                <f:facet name="header">Ongoing Games</f:facet>
+                <p:column headerText="Game ID">
+                    <h:outputText value="#{game.gameId}"/>
+                </p:column>
+                <p:column headerText="Game Name">
+                    <h:outputText value="#{game.gameName}"/>
+                </p:column>
+                <p:column headerText="Topic">
+                    <h:outputText value="#{game.topic.topicName}"/>
+                </p:column>
+                <p:column headerText="Teams">
+                    <h:outputText value="#{game.numberOfTeams}" disabled="true"/>
+                </p:column>
+                <p:column headerText="current Players/max Players">
+                    <h:outputText value="#{game.countPlayers}" disabled="true"/>
+                    /
+                    <h:outputText value="#{game.maxPlayers}" disabled="true"/>
+                </p:column>
+                <p:column headerText="score to win">
+                    <h:outputText value="#{game.scoreToWin}" disabled="true"/>
+                </p:column>
+
+                <p:column style="width:100px;text-align: center" headerText="Teams">
+                    <p:commandButton title="Teams" icon="ui-icon-note"
+                                     action="#{teamListController.doSetGame(gameCreationController.game)}"
+                                     update=":teamsForm" oncomplete="$('#adminForm').hide();$('#teamsForm').show();"
+                                     style="width:20px;height:20px">
+                        <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}"/>
+                    </p:commandButton>
+                </p:column>
+
+            </p:dataTable>
+
+        </h:form>
+
+        <h:form id="teamsForm" style="display: none">
+            <p:dataTable widgetVar="teamsTable" id="teamsTable" var="team" value="#{teamListController.teamsByGame}"
+                         style="width: 83%; margin-top: 110px; float: right;">
+                <f:facet name="header">Teams - #{teamListController.game.gameName}</f:facet>
+                <p:column headerText="Team name">
+                    <h:outputText value="#{team.teamName}"/>
+                </p:column>
+                <p:column style="width:100px;text-align: center" headerText="Player">
+                    <p:commandButton title="Player" icon="ui-icon-note"
+                                     action="#{teamController.doSaveTeam(teamListController.game)}"
+                                     update=":playerForm:playerTable"
+                                     oncomplete="$('#teamsForm').hide();$('#playerForm').show();"
+                                     style="width:20px;height:20px">
+                        <f:setPropertyActionListener value="#{team}" target="#{playerListController.team}"/>
+                        <f:setPropertyActionListener value="#{team}" target="#{teamController.team}"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+            <p:commandButton style="width: 200px; margin-top: 25px; float: left; margin-left: 290px"
+                             oncomplete="$('#teamsForm').hide();$('#adminForm').show();" icon="ui-icon-arrowthick-1-w"
+                             value="Back to Games">
+            </p:commandButton>
+        </h:form>
+
+
+    </ui:define>
+</ui:composition>

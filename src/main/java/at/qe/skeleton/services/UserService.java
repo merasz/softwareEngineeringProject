@@ -1,5 +1,6 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.model.Team;
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.UserRole;
 import at.qe.skeleton.repositories.ScoreRepository;
@@ -7,6 +8,7 @@ import at.qe.skeleton.repositories.UserRepository;
 
 import java.util.*;
 
+import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -65,6 +67,7 @@ public class UserService {
     public User saveUser(User user) {
         if (user.isNew()) {
             user.setCreateDate(new Date());
+            user.setEnabled(true);
             user.setCreateUser(getAuthenticatedUser());
         } else {
             user.setUpdateDate(new Date());
@@ -131,6 +134,19 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public Collection<User> getAllAdmins() {
+        return userRepository.findAllAdmins();
+    }
+
+    public Collection<User> getAllManagers() {
+        return userRepository.findAllManagers();
+    }
+
+    public Collection<User> getAllPlayers() {
+        return userRepository.findAllPlayers();
+    }
+
+
     private void validateInput(String username, String password) throws IllegalArgumentException, NullPointerException {
         if (username.isEmpty() || password.isEmpty()) {
             throw new IllegalArgumentException("All fields need to be filled.");
@@ -149,4 +165,7 @@ public class UserService {
         return userRepository.findFirstByUsername(auth.getName());
     }
 
+    public List<User> getUserByTeam(Team team) {
+        return userRepository.findAllPlayersByTeam(team);
+    }
 }

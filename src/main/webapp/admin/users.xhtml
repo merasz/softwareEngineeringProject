@@ -7,33 +7,58 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name ="content">
-        <h:form style="width: 83%; padding-left: 72px; margin-top: 100px; float: right" id="userForm">
-            <p:dataTable  id="usersTable" var="user" value="#{userListController.users}">
-                <p:column headerText="Username">
+        <h:form id="userForm" style="width: 98%; margin-top: 15px;margin-left: 25px; float: right;">
+            <p:growl id="growl" showDetail="false" life="6000" >
+                <p:autoUpdate/>
+            </p:growl>
+            <p:dataTable  id="usersTable" var="user" value="#{userListController.users}" widgetVar="usersTable" paginator="true" rows="10" emptyMessage="Select Role." style="width:85%; margin-top:100px; float:right;">
+                <f:facet name="header">
+                    <p:outputPanel>
+                        <p:commandButton id="help" oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
+                        <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="400">
+                            <h:panelGrid columns="1">
+                                <h3>Create User</h3>
+                                <h:outputText value="Create a new User!"/>
+                                <h3>Edit user</h3>
+                                <h:outputText value="Edit a User's data!"/>
+                                <h3>Delete user</h3>
+                                <h:outputText value="Delete a User!"/>
+                            </h:panelGrid>
+                        </p:dialog>
+                        <div align="right">
+                            <h:outputText style="font-size: 0.8em;"/>
+                            <p:selectOneButton value="#{userListController.option}" onchange="PF('usersTable').filter()" unselectable="false">
+                                <f:selectItem itemLabel="All" itemValue="all"/>
+                                <f:selectItem itemLabel="Admin" itemValue="admin"/>
+                                <f:selectItem itemLabel="Manager" itemValue="manager"/>
+                                <f:selectItem itemLabel="Player" itemValue="player"/>
+                                <p:ajax event="change" update=":userForm:usersTable"/>
+                            </p:selectOneButton>
+                        </div>
+                    </p:outputPanel>
+                </f:facet>
+                <p:column headerText="Username" filterBy="#{user.username}" filterMatchMode="contains" sortBy="#{user.username}" style="text-align: center; width: 20%">
                     <h:outputText value="#{user.username}"/>
                 </p:column>
-                <p:column headerText="First Name">
-                    <h:outputText value="#{user.firstName}"/>
-                </p:column>
-                <p:column headerText="Last Name">
-                    <h:outputText value="#{user.lastName}"/>
-                </p:column>
-                <p:column headerText="Roles">
+                <p:column headerText="Roles" style="text-align: center; width: 25%">
                     <h:outputText value="#{user.roles}" />
                 </p:column>
-                <p:column headerText="Enabled">
+                <p:column headerText="Enabled" style="text-align: center; width: 5%">
                     <h:selectBooleanCheckbox value="#{user.enabled}" disabled="true"/>
                 </p:column>
-                <p:column style="width:100px;text-align: center">
-                    <p:commandButton update=":userForm:userEditDialog" oncomplete="PF('userEditDialog').show()" icon="ui-icon-note" title="Edit">
-                        <f:setPropertyActionListener value="#{user}" target="#{userController.user}" />
+                <p:column headerText="Operation" style="width:100px;text-align: center">
+                    <p:commandButton title="Edit" icon="ui-icon-note" update=":userForm:userEditDialog" oncomplete="PF('userEditDialog').show()">
+                        <f:setPropertyActionListener value="#{user}" target="#{userDetailController.user}" />
                     </p:commandButton>
-                    <p:commandButton action="#{userController.doDeleteUser}" icon="ui-icon-trash" title="Delete" update=":userForm:usersTable">
-                        <f:setPropertyActionListener value="#{user}" target="#{userController.user}" />
+                    <p:commandButton title="Delete" icon="ui-icon-trash" action="#{userDetailController.doDeleteUser()}" update=":userForm:usersTable">
+                        <f:setPropertyActionListener value="#{user}" target="#{userDetailController.user}" />
                         <p:confirm header="Confirmation" message="Are you sure that you want to delete this user? You cannot undo this operation." icon="ui-icon-alert" />
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
+
+            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('userCreationDialog').show()" icon="ui-icon-add-box" value ="Create new User">
+            </p:commandButton>
 
             <p:dialog header="Edit User" id="userEditDialog" widgetVar="userEditDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                 <p:outputPanel id="userData" rendered="#{not empty userController.user}">
@@ -45,21 +70,25 @@
                     </h:panelGrid>
                     <p:separator />
                     <h:panelGrid columns="2">
-                        <p:outputLabel for="firstName" value="First Name: " />
-                        <p:inputText id="firstName" value="#{userController.user.firstName}"/>
-                        <p:outputLabel for="firstName" value="Last Name: " />
-                        <p:inputText id="lastName" value="#{userController.user.lastName}"/>
-                        <p:outputLabel for="email" value="E-Mail: " />
-                        <p:inputText id="email" value="#{userController.user.email}"/>
-                        <p:outputLabel for="phone" value="Phone: " />
-                        <p:inputMask id="phone" value="#{userController.user.phone}" mask="+99? 999 9999999"/>
-                    </h:panelGrid>
-                    <p:separator />
-                    <h:panelGrid columns="2">
                         <p:outputLabel for="enabled" value="Enabled: " />
                         <p:selectBooleanCheckbox id="enabled" value="#{userController.user.enabled}"/>
                     </h:panelGrid>
                     <p:separator />
+                <h:panelGrid columns ="2">
+                    <p:outputLabel for="addNewRoll" value="Add Roll: " />
+                    <h:selectOneMenu id ="addNewRoll" >
+                        <f:selectItem itemValue = "1" itemLabel = "Admin" />
+                        <f:selectItem itemValue = "2" itemLabel = "Manager" />
+                        <f:selectItem itemValue = "2" itemLabel = "Player" />
+                    </h:selectOneMenu>
+                    <p:outputLabel for="deleteRoll" value="Delete Roll: " />
+                    <h:selectOneMenu id ="deleteRoll" >
+                        <f:selectItem itemValue = "1" itemLabel = "Admin" />
+                        <f:selectItem itemValue = "2" itemLabel = "Manager" />
+                        <f:selectItem itemValue = "2" itemLabel = "Player" />
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <p:separator />
                     <h:panelGrid columns="3">
                         <p:commandButton value="Save" action="#{userController.doSaveUser()}" oncomplete="PF('userEditDialog').hide()" update=":userForm:usersTable"/>
                         <p:commandButton value="Reload" action="#{userController.doReloadUser()}" update=":userForm:userData"/>
@@ -72,7 +101,45 @@
                 <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                 <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
             </p:confirmDialog>
-
         </h:form>
+
+        <h:form id="userCreationForm">
+            <p:dialog header="Create User" id="userCreationDialog" widgetVar="userCreationDialog"
+                      modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="userCreateData" >
+                    <h:panelGrid columns ="2">
+                        <p:outputLabel for="newUsername" value="Username: "/>
+                        <p:inputText id="newUsername" value="#{userCreationController.user.username}" required="true" requiredMessage="Insert Username."
+                                     validatorMessage="letters/numbers">
+                            <f:validateRegex pattern="^[a-zA-Z0-9]+$"/>
+                        </p:inputText>
+                        <p:outputLabel for="newPassword" value="Password: " />
+                        <p:password id="newPassword" value="#{userCreationController.user.password}" />
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="newRole" value="Role: "/>
+                        <p:selectManyMenu id="newRole" value="#{userCreationController.user.roles}" collectionType="java.util.LinkedHashSet" showCheckbox="true" required="true" requiredMessage="Role(s) required." style="width: 175px;">
+                            <f:selectItems value="#{userCreationController.listRoles}"/>
+                        </p:selectManyMenu>
+                    </h:panelGrid>
+<!--                    <h:panelGrid columns ="2">-->
+<!--                        <p:outputLabel for="addRoll" value="Roll: " />-->
+<!--&lt;!&ndash;                        <h:selectOneMenu id ="addRoll" value="#{userCreationController.roleOption}">&ndash;&gt;-->
+<!--                        <h:selectOneMenu id ="addRoll" value="#{userCreationController.user.roles}">-->
+<!--                            <f:selectItem itemValue = "1" itemLabel = "ADMIN" />-->
+<!--                            <f:selectItem itemValue = "2" itemLabel = "GAME MANAGER" />-->
+<!--                            <f:selectItem itemValue = "2" itemLabel = "PLAYER" />-->
+<!--                        </h:selectOneMenu>-->
+<!--                    </h:panelGrid>-->
+                    <p:separator />
+
+                    <h:panelGrid columns ="2">
+                        <p:commandButton value="Save" action="#{userCreationController.doSaveUser()}" oncomplete="PF('userCreationDialog').hide()" update=":userForm:usersTable">
+                        </p:commandButton>
+                    </h:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+
     </ui:define>
 </ui:composition>

@@ -6,11 +6,9 @@ import java.util.List;
 
 @Entity
 public class Term implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String termName;
 
     @ManyToOne
@@ -23,6 +21,13 @@ public class Term implements Serializable {
     private List<Score> scoresNotGuessedTerms;
 
     public Term() {
+    }
+
+    public Term(String termName, Topic topic, List<Score> scoresGuessedTerms, List<Score> scoresNotGuessedTerms) {
+        this.termName = termName;
+        this.topic = topic;
+        this.scoresGuessedTerms = scoresGuessedTerms;
+        this.scoresNotGuessedTerms = scoresNotGuessedTerms;
     }
 
     public String getTermName() {
@@ -57,10 +62,7 @@ public class Term implements Serializable {
         this.scoresNotGuessedTerms = scoresNotGuessedTerms;
     }
 
-    public Term(String termName, Topic topic, List<Score> scoresGuessedTerms, List<Score> scoresNotGuessedTerms) {
-        this.termName = termName;
-        this.topic = topic;
-        this.scoresGuessedTerms = scoresGuessedTerms;
-        this.scoresNotGuessedTerms = scoresNotGuessedTerms;
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 }
