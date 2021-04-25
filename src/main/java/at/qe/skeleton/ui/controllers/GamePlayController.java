@@ -20,8 +20,8 @@ public class GamePlayController extends GameController implements Serializable {
     @Autowired
     private GamePlayService gamePlayService;
 
-    private TeamInfo team;
-    //private Team team;
+    private TeamInfo teamInfo;
+    private Team team;
     private boolean paused = false;
     private int guessAccepted = 0;
 
@@ -37,11 +37,10 @@ public class GamePlayController extends GameController implements Serializable {
     }
 
     public void joinTeam(SelectEvent<TeamInfo> event) {
-        System.out.println("\n-----\njoin\n-----\n");
-        this.team = event.getObject();
-        //this.team = event.getObject().getTeam();
+        this.teamInfo = event.getObject();
         try {
-            gamePlayService.joinTeam(team.getTeam());
+            gamePlayService.joinTeam(teamInfo.getTeam());
+            this.team = teamInfo.getTeam();
         } catch (IllegalArgumentException e) {
             displayError("Team full", e.getMessage());
         }
@@ -112,12 +111,16 @@ public class GamePlayController extends GameController implements Serializable {
         return getGame().getTeamList();
     }
 
-    public TeamInfo getTeam() {
-        return team;
+    public TeamInfo getTeamInfo() {
+        return teamInfo;
     }
 
-    public void setTeam(TeamInfo team) {
-        this.team = team;
+    public void setTeamInfo(TeamInfo team) {
+        this.teamInfo = team;
+    }
+
+    public Team getTeam() {
+        return team;
     }
 
     //endregion

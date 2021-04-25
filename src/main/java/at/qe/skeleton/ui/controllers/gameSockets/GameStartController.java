@@ -30,20 +30,15 @@ public class GameStartController {
     @Autowired
     private UserRepository userRepository;
 
-    private List<Team> teams = new CopyOnWriteArrayList<>();
     private List<TeamInfo> teamInfo = new CopyOnWriteArrayList<>();
 
     public void onJoin(Game game) {
         List<String> sendTo = userRepository.findAllByRaspberry(game.getRaspberry()).stream()
                                 .map(User::getUsername).collect(Collectors.toList());
-        teams.addAll(game.getTeamList());
-        game.getTeamList().forEach(t -> teamInfo.add(new TeamInfo(game, t)));
+        if (teamInfo.isEmpty()) {
+            game.getTeamList().forEach(t -> teamInfo.add(new TeamInfo(game, t)));
+        }
         this.webSocketManager.getJoinChannel().send("teamJoin", sendTo);
-    }
-
-    public Collection<Team> getTeams() {
-        System.out.println("\n-----\nreceive\n-----\n");
-        return Collections.unmodifiableCollection(this.teams);
     }
 
     public Collection<TeamInfo> getTeamInfo() {

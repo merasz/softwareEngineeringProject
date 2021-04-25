@@ -1,7 +1,6 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.Game;
-import at.qe.skeleton.model.Raspberry;
 import at.qe.skeleton.model.Topic;
 import at.qe.skeleton.services.GameManageService;
 import org.springframework.beans.factory.annotation.Autowired;

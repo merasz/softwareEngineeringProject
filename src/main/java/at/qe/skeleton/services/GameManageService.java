@@ -23,7 +23,9 @@ public class GameManageService extends GameService {
 
     //region create Game
     public Game createGame(int scoreToWin, int countPlayers, Topic topic, Raspberry raspberry, int countTeams) throws IllegalArgumentException {
-        if (countTeams < 2) {
+        if (topic == null) {
+            throw new IllegalArgumentException("Select a topic.");
+        } else if (countTeams < 2) {
             throw new IllegalArgumentException("Create at least 2 Teams.");
         } else if (countPlayers % countTeams != 0) {
             throw new IllegalArgumentException("Teams need to have same number of players.");
