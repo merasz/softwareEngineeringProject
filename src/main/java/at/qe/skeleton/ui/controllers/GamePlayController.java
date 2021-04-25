@@ -21,7 +21,6 @@ public class GamePlayController extends GameController implements Serializable {
     private GamePlayService gamePlayService;
 
     private TeamInfo teamInfo;
-    private Team team;
     private boolean paused = false;
     private int guessAccepted = 0;
 
@@ -40,10 +39,13 @@ public class GamePlayController extends GameController implements Serializable {
         this.teamInfo = event.getObject();
         try {
             gamePlayService.joinTeam(teamInfo.getTeam());
-            this.team = teamInfo.getTeam();
         } catch (IllegalArgumentException e) {
             displayError("Team full", e.getMessage());
         }
+    }
+
+    public boolean teamReady() {
+        return teamInfo.getCurrentTeamSize() == teamInfo.getMaxTeamSize();
     }
 
     //region gaming round
@@ -118,10 +120,5 @@ public class GamePlayController extends GameController implements Serializable {
     public void setTeamInfo(TeamInfo team) {
         this.teamInfo = team;
     }
-
-    public Team getTeam() {
-        return team;
-    }
-
     //endregion
 }

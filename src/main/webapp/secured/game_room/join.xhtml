@@ -29,7 +29,7 @@
                                 <h:outputText value="CHOOSE YOUR TEAM"/>
                             </div>
                             <p:dataTable id="teamList" var="team" value="#{gameStartController.teamInfo}" selectionMode="single"
-                                         selection="#{gamePlayController.teamInfo}" rowKey="#{team.teamName}" disabledSelection="#{gamePlayController.team != null}">
+                                         selection="#{gamePlayController.teamInfo}" rowKey="#{team.teamName}" disabledSelection="#{gamePlayController.teamReady}">
                                 <p:ajax event="rowSelect" listener="#{gamePlayController.joinTeam}" />
                                 <p:column headerText="Team Name">
                                     <h:outputText value="#{team.teamName}" />
