@@ -2,6 +2,7 @@ package at.qe.skeleton.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -44,16 +45,16 @@ public class Game implements Serializable {
 
     public Game() { }
 
-    public Game(int scoreToWin, int countPlayers, Topic topic, Raspberry raspberry, List<Team> teamList) {
+    public Game(int scoreToWin, int countPlayers, int numberOfTeams, Topic topic, Raspberry raspberry) {
         this.scoreToWin = scoreToWin;
         this.totalScore = 0;
         this.countPlayers = countPlayers;
         this.nrRound = 1;
         this.topic = topic;
         this.raspberry = raspberry;
-        this.teamList = teamList;
+        this.teamList = new ArrayList<>();
         this.active = false;
-        this.numberOfTeams = teamList.size();
+        this.numberOfTeams = numberOfTeams;
     }
 
     public int getScoreToWin() {

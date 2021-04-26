@@ -35,7 +35,7 @@ public class GameManageController extends GameController implements Serializable
 
     public String startGame() {
         try {
-            setGame(gameManageService.startGame(getGame(), countPlayers));
+            setGame(gameManageService.startGame(getGame(), getUser()));
             return "/secured/game_room/join.xhtml?faces-redirect=true";
         } catch (NullPointerException e) {
             displayError("No available Game", "Please create a game first.");
@@ -69,12 +69,14 @@ public class GameManageController extends GameController implements Serializable
         }
     }
 
-    public void test() {
+    public String test() {
         System.out.println("\n-----\ntest\n-----\n");
         scoreToWin = 12;
         countPlayers = 4;
         countTeams = 2;
+        topic = getTopicService().loadTopic("Animals");
         setGame(createGame());
+        return startGame();
     }
 
     //region getter & setter

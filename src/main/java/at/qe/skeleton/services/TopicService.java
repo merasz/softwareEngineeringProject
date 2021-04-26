@@ -36,7 +36,7 @@ public class TopicService {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     public Topic loadTopic(String topicName) {
-        return (Topic) topicRepository.findFirstByTopicName(topicName);
+        return topicRepository.findFirstByTopicName(topicName);
     }
 
 //    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('GAME_MANAGER')")

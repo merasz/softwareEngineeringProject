@@ -22,6 +22,7 @@ public class GamePlayService extends GameService {
     private TeamRepository teamRepository;
 
     private Game game;
+    private Team team;
     private User user;
     private Task task;
     private String timerString;
@@ -29,24 +30,37 @@ public class GamePlayService extends GameService {
 
     public Game joinGame(User user) throws NoSuchElementException {
         this.user = user;
-        game = getGameRepository().findActiveGameByRaspberry(user.getRaspberry().getRaspberryId());
+        this.game = getGameRepository().findActiveGameByRaspberry(user.getRaspberry().getRaspberryId());
 
         if (game == null ) {
             throw new NoSuchElementException("No active game found. Ask a game manager to create a new game.");
         }
+
+        this.team = getTeamService().createTeam(game);
+        this.game.getTeamList().add(team);
         return game;
     }
 
-    public void joinTeam(Team team) throws IllegalArgumentException {
-        this.game = team.getGame();
-        if (team.getTeamPlayers().size() == game.getTeamSize()) {
-            throw new IllegalArgumentException("Team already full. Please choose another team.");
-        } else {
-            team.getTeamPlayers().add(user);
-            teamRepository.save(team);
-            getGameRepository().save(game);
-            getGameStartController().onJoin(game);
+    public void selectPlayer(User user) {
+        team.getTeamPlayers().add(user);
+        this.team = getTeamService().saveTeam(team);
+        this.game = getGameRepository().save(game);
+        getGameStartController().onSelect(user);
+    }
+
+    public boolean teamReady() {
+        return game.getTeamSize() == team.getTeamPlayers().size();
+    }
+
+    public void startGame(String teamName) throws IllegalArgumentException {
+        if (teamName.isEmpty()) {
+            throw new IllegalArgumentException("Give your team a name first.");
+        } else if (!teamReady()) {
+            throw new IllegalArgumentException("You haven't assigned enough team mates yet.");
         }
+        this.team.setTeamName(teamName);
+        getTeamService().saveTeam(team);
+        getGameRepository().save(game);
     }
 
     //region guessing round with timer loop
@@ -133,6 +147,9 @@ public class GamePlayService extends GameService {
         return game;
     }
 
+    public String getTeamSizeString() {
+        return team.getTeamPlayers().size() + " of " + game.getTeamSize() + " players assigned.";
+    }
 
     //endregion
 }

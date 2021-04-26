@@ -3,6 +3,7 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.GameRepository;
 import at.qe.skeleton.repositories.ScoreRepository;
+import at.qe.skeleton.repositories.TeamRepository;
 import at.qe.skeleton.ui.controllers.gameSockets.GameStartController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -18,6 +19,9 @@ public class GameService {
 
     @Autowired
     private ScoreRepository scoreRepository;
+
+    @Autowired
+    private TeamService teamService;
 
     @Autowired
     private GameStartController gameStartController;
@@ -53,6 +57,10 @@ public class GameService {
 
     public ScoreRepository getScoreRepository() {
         return scoreRepository;
+    }
+
+    public TeamService getTeamService() {
+        return teamService;
     }
 
     public int getNumPlayers() {

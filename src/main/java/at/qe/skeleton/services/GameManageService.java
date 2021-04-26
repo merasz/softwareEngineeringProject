@@ -16,8 +16,9 @@ import java.util.stream.IntStream;
 @Component
 @Scope("application")
 public class GameManageService extends GameService {
+
     @Autowired
-    private TeamService teamService;
+    private GamePlayService gamePlayService;
 
     private int registered = 0;
 
@@ -32,26 +33,18 @@ public class GameManageService extends GameService {
         } else if (countPlayers / countTeams < 2) {
             throw new IllegalArgumentException("Teams must have at least 2 players.");
         } else {
-            List<Team> teams = new ArrayList<>();
-            for (int i = 0; i < countPlayers / countTeams; i++) {
-                Team t = new Team();
-                t.setTeamName("Team " + (i + 1));
-                teams.add(t);
-                teamService.saveTeam(t);
-            }
-            Game game = new Game(scoreToWin, countPlayers, topic, raspberry, teams);
+            Game game = new Game(scoreToWin, countPlayers, countTeams, topic, raspberry);
             getGameRepository().save(game);
-            teams.forEach(t -> t.setGame(game));
-            teams.forEach(teamService::saveTeam);
             return game;
         }
     }
 
     //start game: all players have to press start
-    public Game startGame(Game game, int countPlayers) {
+    public Game startGame(Game game, User user) {
         game.setActive(true);
-        getGameStartController().onJoin(game);
         getGameRepository().save(game);
+        game = gamePlayService.joinGame(user);
+        getGameStartController().onJoin(game);
         return game;
     }
 

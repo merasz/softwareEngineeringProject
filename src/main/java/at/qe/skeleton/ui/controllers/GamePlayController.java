@@ -1,7 +1,7 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.*;
-import at.qe.skeleton.model.demo.TeamInfo;
+import at.qe.skeleton.model.demo.PlayerAvailability;
 import at.qe.skeleton.services.GamePlayService;
 import org.primefaces.event.SelectEvent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,9 @@ public class GamePlayController extends GameController implements Serializable {
     @Autowired
     private GamePlayService gamePlayService;
 
-    private TeamInfo teamInfo;
+    private PlayerAvailability player;
+    private String teamName;
+    private boolean teamComplete = false;
     private boolean paused = false;
     private int guessAccepted = 0;
 
@@ -35,17 +37,23 @@ public class GamePlayController extends GameController implements Serializable {
         return "";
     }
 
-    public void joinTeam(SelectEvent<TeamInfo> event) {
-        this.teamInfo = event.getObject();
-        try {
-            gamePlayService.joinTeam(teamInfo.getTeam());
-        } catch (IllegalArgumentException e) {
-            displayError("Team full", e.getMessage());
-        }
+    public void selectPlayer(SelectEvent<PlayerAvailability> event) {
+        this.player = event.getObject();
+        gamePlayService.selectPlayer(player.getUser());
     }
 
-    public boolean teamReady() {
-        return teamInfo.getCurrentTeamSize() == teamInfo.getMaxTeamSize();
+    public boolean getTeamReady() {
+        return gamePlayService.teamReady();
+    }
+
+    public void startGame() {
+        try {
+            gamePlayService.startGame(teamName);
+            teamComplete = true;
+        } catch (IllegalArgumentException e) {
+            displayError("Not so fast", e.getMessage());
+        }
+
     }
 
     //region gaming round
@@ -113,12 +121,29 @@ public class GamePlayController extends GameController implements Serializable {
         return getGame().getTeamList();
     }
 
-    public TeamInfo getTeamInfo() {
-        return teamInfo;
+    public PlayerAvailability getPlayer() {
+        return player;
     }
 
-    public void setTeamInfo(TeamInfo team) {
-        this.teamInfo = team;
+    public void setPlayer(PlayerAvailability player) {
+        this.player = player;
     }
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String name) {
+        this.teamName = name;
+    }
+
+    public String getTeamSizeString() {
+        return gamePlayService.getTeamSizeString();
+    }
+
+    public boolean isTeamComplete() {
+        return teamComplete;
+    }
+
     //endregion
 }

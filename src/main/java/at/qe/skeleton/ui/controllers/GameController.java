@@ -49,6 +49,10 @@ public class GameController extends Controller implements Serializable {
         return termsService;
     }
 
+    public TopicService getTopicService() {
+        return topicService;
+    }
+
     public User getUser() {
         return user;
     }
@@ -76,7 +80,5 @@ public class GameController extends Controller implements Serializable {
     public Topic getGameTopic() {
         return this.topicService.getTopicByName(game.getTopic());
     }
-
-
     //endregion
 }

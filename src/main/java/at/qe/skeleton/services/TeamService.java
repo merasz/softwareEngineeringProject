@@ -26,4 +26,11 @@ public class TeamService {
     public Team saveTeam(Team team){
         return teamRepository.save(team);
     }
+
+    public Team createTeam(Game game) {
+        Team t = new Team();
+        t.setGame(game);
+        teamRepository.save(t);
+        return t;
+    }
 }

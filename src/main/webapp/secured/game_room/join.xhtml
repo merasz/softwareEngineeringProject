@@ -25,24 +25,50 @@
                             <p:growl id="message" showDetail="true" >
                                 <p:autoUpdate />
                             </p:growl>
-                            <div style="font-size: xx-large; color: white; padding-bottom: 25px">
-                                <h:outputText value="CHOOSE YOUR TEAM"/>
+
+                            <div style="font-size: xx-large; color: white; padding-bottom: 10px">
+                                <h:outputText value="BUILD YOUR TEAM"/>
                             </div>
-                            <p:dataTable id="teamList" var="team" value="#{gameStartController.teamInfo}" selectionMode="single"
-                                         selection="#{gamePlayController.teamInfo}" rowKey="#{team.teamName}" disabledSelection="#{gamePlayController.teamReady}">
-                                <p:ajax event="rowSelect" listener="#{gamePlayController.joinTeam}" />
-                                <p:column headerText="Team Name">
-                                    <h:outputText value="#{team.teamName}" />
+
+                            <h:panelGrid columns ="2" >
+                                <p:outputLabel for="teamName" value="Team Name: " style="color: white"/>
+                                <p:inputText id="teamName" value="#{gamePlayController.teamName}" style="color: black; background-color: white"/>
+                            </h:panelGrid>
+
+                            <div style="font-size: large; color: white; padding-bottom: 20px">
+                                <h:outputText id="numberAssigned" value="#{gamePlayController.teamSizeString}"/>
+                            </div>
+
+                            <p:dataTable id="playerList" var="player" value="#{gameStartController.playerAvailability}" selectionMode="single"
+                                         selection="#{gamePlayController.player}" rowKey="#{player.username}"
+                                         disabledSelection="#{!player.available || gamePlayController.teamReady}">
+                                <p:ajax event="rowSelect" listener="#{gamePlayController.selectPlayer}" />
+                                <p:column headerText="Player Name">
+                                    <h:outputText value="#{player.username}" />
                                 </p:column>
-                                <p:column headerText="assigned / total players">
-                                    <h:outputText value="#{team.currentTeamSize} / #{team.maxTeamSize}" />
+                                <p:column headerText="available">
+                                    <h:outputText value="#{player.availableString}" />
                                 </p:column>
                             </p:dataTable>
+
+                            <h:panelGroup id="confirm">
+                                <p:commandButton id="join" action="#{gamePlayController.startGame}" value="Join Game" update="confirm"
+                                                 rendered="#{!gamePlayController.teamComplete}"
+                                                 style="height:50px; width:300px; font-size: x-large; border: 2px solid #2ecc71;
+                                                 border-radius: 48px; padding: 0; margin-top: 20px; text-align: center" />
+
+                                <div style="font-size: large; color: white; margin-top: 30px">
+                                    <h:outputText value="waiting for the other teams . . ." rendered="#{gamePlayController.teamComplete}"/>
+                                </div>
+                            </h:panelGroup>
+
+                            
+
 
                             <o:socket channel="joinChannel" scope="session" user="#{sessionInfoBean.currentUserName}"
                                       onmessage="function(m){console.log(m);}">
                                 <f:ajax event="teamJoin" execute="@all"
-                                        render="teamList name size"/>
+                                        render="playerList numberAssigned"/>
                             </o:socket>
 
                         </h:form>

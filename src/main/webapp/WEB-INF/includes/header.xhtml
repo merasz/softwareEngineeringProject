@@ -37,10 +37,17 @@
                     <a href="/secured/demos/chatRoom.xhtml"><i class="fas fa-th"></i><span>Lobby</span></a>
                     <a href="/secured/gameCreation.xhtml"><i class="fas fa-th"></i><span>Game Creation</span></a>
                     <a href="/secured/availableGames.xhtml"><i class="fas fa-th"></i><span>Available Games</span></a>
+
+                    <p:commandLink id="join" action="#{gameManageController.test}">
+                        <i class="fas fa-th"></i><h:outputText value="Join Game"/>
+                    </p:commandLink>
+
+                    <!--
                     <a href="/secured/testGame.xhtml"><i class="fas fa-info-circle"></i><span>Test Game</span></a>
                     <p:commandLink id="join" action="#{gamePlayController.joinGame}">
                         <i class="fas fa-th"></i><h:outputText value="Join Game"/>
                     </p:commandLink>
+                    -->
 
                 </div>
 
