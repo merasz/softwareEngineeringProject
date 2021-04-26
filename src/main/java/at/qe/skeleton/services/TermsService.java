@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -44,12 +45,33 @@ public class TermsService {
         topicRepository.save(topic);
     }
 
-    public void saveTerm(String name, Topic topic, Term term) throws IllegalArgumentException {
-        validateTerm(name);
-        term.setTermName(name);
-        term.setTopic(topic);
-        termsRepository.save(term);
+    public Term saveTerm(Term term) throws IllegalArgumentException {
+        return termsRepository.save(term);
     }
+
+    public Term demoSaveTerm(Term term) throws IllegalArgumentException {
+        Topic curr = topicRepository.findFirstByTopicName("Geo");
+        term.setTopic(curr);
+        return termsRepository.save(term);
+    }
+
+//---------
+    public Iterable<Term> list() {
+        return termsRepository.findAll();
+    }
+
+    public Iterable<Term> saveTerm(List<Term> terms) {
+        return (Iterable<Term>) termsRepository.save((Term) terms);
+    }
+//---------
+
+
+//    public void saveTerm(String name, Topic topic, Term term) throws IllegalArgumentException {
+//        validateTerm(name);
+//        term.setTermName(name);
+//        term.setTopic(topic);
+//        termsRepository.save(term);
+//    }
 
     public void deleteTopic(Topic topic) throws IllegalArgumentException {
         if (!termsRepository.findAllByTopic(topic).isEmpty()) {
@@ -121,7 +143,7 @@ public class TermsService {
         }
     }
 
-    public List<Term> getAllTermsForTopic(Topic topic) {
+    public List<Term> getTermsForTopic(Topic topic) {
         return termsRepository.findAllByTopic(topic);
     }
 
@@ -131,5 +153,9 @@ public class TermsService {
 
     public TopicRepository getTopicRepository() {
         return topicRepository;
+    }
+
+    public Collection<Term> getAllTerms() {
+        return termsRepository.findAll();
     }
 }

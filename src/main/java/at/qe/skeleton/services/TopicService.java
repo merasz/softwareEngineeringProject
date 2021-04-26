@@ -10,11 +10,12 @@ import org.springframework.security.core.*;
 import org.springframework.security.core.context.*;
 import org.springframework.stereotype.*;
 
+import java.io.Serializable;
 import java.util.*;
 
 @Component
 @Scope("application")
-public class TopicService {
+public class TopicService implements Serializable {
 
     @Autowired
     private TopicRepository topicRepository;

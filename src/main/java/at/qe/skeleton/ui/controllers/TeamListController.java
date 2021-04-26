@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Component
@@ -27,11 +28,11 @@ public class TeamListController {
     @Autowired
     private UserService userService;
 
-    public List<Team> getTeams() {
+    public Collection<Team> getTeams() {
         return teamService.getAllTeams();
     }
 
-    public List<Team> getTeamsByGame() {
+    public Collection<Team> getTeamsByGame() {
         if(game == null) {
             return new ArrayList<Team>();
         }

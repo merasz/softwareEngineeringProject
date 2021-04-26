@@ -6,12 +6,13 @@ import at.qe.skeleton.services.GameStatsService;
 import at.qe.skeleton.services.TermsService;
 import at.qe.skeleton.services.TopicService;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
+import org.primefaces.model.chart.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.*;
 
 @Component
 @Scope("view")
@@ -32,6 +33,34 @@ public class GameController extends Controller implements Serializable {
     private SessionInfoBean sessionInfoBean;
 
     private User user;
+    private DonutChartModel model;
+
+    public GameController(){
+        model = new DonutChartModel();
+        updateChart();
+    }
+
+    public void updateChart() {
+
+        Map<String, Number> circle1 = new LinkedHashMap<String, Number>();
+        circle1.put("Game 1", 24);
+        circle1.put("Game 2", 12);
+        circle1.put("Game 3", 6);
+        circle1.put("Game 4", 4);
+
+        model.addCircle(circle1);
+        model.setTitle("Current Players in each Game");
+        model.setLegendPosition("w");
+    }
+
+    public DonutChartModel getModel() {
+        return model;
+    }
+
+    public void setModel(DonutChartModel model) {
+        this.model = model;
+    }
+
     private List<Game> games;
     private Game game;
 

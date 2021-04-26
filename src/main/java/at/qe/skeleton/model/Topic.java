@@ -1,6 +1,9 @@
 package at.qe.skeleton.model;
 
+import org.hibernate.annotations.*;
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import java.io.Serializable;
 import java.util.*;
 
@@ -93,7 +96,36 @@ public class Topic implements Serializable {
     }
 
     @Override
-    public String toString() {
+    public boolean equals(Object obj)
+    {
+        if (obj == null)
+        {
+            return false;
+        }
+        if (!(obj instanceof Topic))
+        {
+            return false;
+        }
+        final Topic other = (Topic) obj;
+        if (!Objects.equals(this.topicName, other.topicName))
+        {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return (getTopicName() != null) ? (getClass().getSimpleName().hashCode() + getTopicName().hashCode()) : super.hashCode();
+    }
+
+    @Override
+    public String toString()
+    {
         return topicName;
     }
+
+
+
 }

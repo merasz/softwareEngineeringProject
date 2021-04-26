@@ -47,5 +47,4 @@ public class Main extends SpringBootServletInitializer {
             servletRegistrationBean.setLoadOnStartup(1);
             return servletRegistrationBean;
     }
-
 }

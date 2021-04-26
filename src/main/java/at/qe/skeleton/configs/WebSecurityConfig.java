@@ -60,6 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .hasAnyAuthority("ADMIN")
                 //Permit access only for some roles
                 .antMatchers("/secured/**")
+                //TODO set correct user role names
                 .hasAnyAuthority("ADMIN", "GAME_MANAGER", "PLAYER")
                 // Allow only certain roles to use websockets (only logged in users)
                 .antMatchers("/omnifaces.push/**")
@@ -69,6 +70,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/secured/welcome.xhtml")
                 .failureUrl("/login.xhtml?error");
+
+        http.authorizeRequests().antMatchers("/api/apikey").authenticated().and().httpBasic();
  
         http.exceptionHandling().accessDeniedPage("/error/access_denied.xhtml");
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).invalidSessionUrl("/login.xhtml?invalid_session");

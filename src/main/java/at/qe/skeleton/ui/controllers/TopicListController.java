@@ -8,10 +8,12 @@ import org.springframework.stereotype.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.io.Serializable;
+import java.util.Collection;
 
 @Component
 @Scope("view")
-public class TopicListController {
+public class TopicListController implements Serializable {
 
     @Autowired
     private TopicService topicService;

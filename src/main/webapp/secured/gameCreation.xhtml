@@ -13,7 +13,7 @@
             </p:growl>
 
 
-            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('gameCreationDialog').show()" icon="ui-icon-add-box" value ="Create new Game">
+            <p:commandButton style="width: 25%; margin-top: 100px; float: right;" oncomplete="PF('gameCreationDialog').show()" icon="ui-icon-add-box" value ="Create new Game">
                 <f:setPropertyActionListener value="#{game}" target="#{gameController.game}" />
             </p:commandButton>
 
@@ -26,7 +26,8 @@
                     <h:panelGrid columns ="2">
                         <p:outputLabel for="topic" value="Topic: " />
                         <h:selectOneMenu id ="topic" value="#{gameController.game.topic}">
-                            <f:selectItems value="#{topicListController.topics}"/>
+                            <f:selectItems value="#{gameCreationController.topicsList}" var="topic" itemLabel="#{topic.topicName}" itemValue="#{topic.topicName}"/>
+                         <!--   <f:selectItems value="#{topicListController.topics}"/>  -->
                         </h:selectOneMenu>
                     </h:panelGrid>
                     <p:separator />
