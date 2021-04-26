@@ -79,10 +79,10 @@ public class Raspberry implements Serializable {
 
     public void setApiKey(String apiKey) { this.apiKey = apiKey; }
 
-    public Raspberry(int raspberryId, String hostname, User user, boolean inUse, String ipAddress) {
+    public Raspberry(int raspberryId, String hostname, List<User> user, boolean inUse, String ipAddress) {
         this.raspberryId = raspberryId;
         this.hostname = hostname;
-        this.user = user;
+        this.users = user;
         this.inUse = inUse;
         this.ipAddress = ipAddress;
     }
