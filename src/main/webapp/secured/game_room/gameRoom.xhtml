@@ -1,90 +1,30 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
-    <body>
-        <ui:composition>
-            <h:form>
-                <div class="header">
-                    <div class="left_area">
-                     <h1>Gruppe6<span style="color: #0d9dbb">Team1</span></h1>
-                    </div>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/main.xhtml">
+    <ui:define name="content">
 
-                    <div class="right_area">
-                        <h:form id="menubar">
-                            <p:menubar>
-                                <p:menuitem value="PAUSE GAME" rendered="#{!gamePlayController.isPaused}" action="#{gamePlayController.pauseGame}"/>
-                                <p:menuitem value="RESUME GAME" rendered="#{gamePlayController.isPaused}" action="#{gamePlayController.pauseGame}"/>
-                                <p:menuitem value="CANCEL GAME" rendered="#{sessionInfoBean.hasRole('GAME_MANAGER')}" url="/logout"/>
-                            </p:menubar>
-                        </h:form>
-                    </div>
-                </div>
+        <h:form id="scoreBoard">
+            <p:growl id="scoreData" showDetail="false" life="6000">
+                <p:autoUpdate/>
+            </p:growl>
 
-                <div class="main">
-                    <p>REMAINING TIME</p>
-                    <br/>
+            <p:dataTable widgetVar="topicCreationTable" id="topicCreationTable" var="topic"
+                         value="#{topicListController.topics}" style="width: 83%; margin-top: 85px; float: right;">
+                <f:facet name="header">Topic Hub</f:facet>
+                <p:column headerText="Themengebiet">
+                    <h:outputText value="#{topic.topicName}"/>
+                </p:column>
+                <p:column headerText="Anzahl Begriffe">
+                    <h:outputText value="#{topicController.numTermsATopic}"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
 
-                    <br/>
-                    <p>TASK</p>
-                    <br/>
-                    <p><span style="color: #22242a; font-size: 50px">#{gamePlayController.task.requestType}</span></p>
-                </div>
-
-                <div class="scoreboard">
-                    <div style="text-align: center; color: #4682B4">
-                        <h4>CORRECT GUESSES FOR WIN: <span style="color: #0d9dbb"><b>#{gamePlayController.countGuessesForWin}</b></span></h4>
-                    </div>
-                    <h:form id="scoretable">
-                        <p:dataTable  id="userscore" var="userscore" value="#{gamePlayController.playerScore}" style="color: #0d9dbb; width: 70%; margin: auto;">
-                            <p:column headerText="TEAMS">
-                                <h:outputText value="#{userscore.user}"/>
-                            </p:column>
-                            <p:column headerText="SCORE">
-                                <h:outputText value="#{userscore.totalRoundScore}" />
-                            </p:column>
-                            <p:column headerText="RIGHT GUESSES">
-                                <h:outputText value="#{userscore.guessedTerms}" />
-                            </p:column>
-                            <p:column headerText="WRONG GUESSES">
-                                <h:outputText value="#{userscore.notGuessedTerms}" />
-                            </p:column>
-                        </p:dataTable>
-                        <p:dataTable  id="teamscore" var="teamscore" value="#{gamePlayController.scoreboard}" style="color: #4682B4; width: 70%; margin: auto;">
-                            <p:column>
-                                <h:outputText value="#{teamscore.team}"/>
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{teamscore.totalRoundScore}" />
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{teamscore.guessedTerms}" />
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{teamscore.notGuessedTerms}" />
-                            </p:column>
-                        </p:dataTable>
-                    </h:form>
-                </div>
-
-                <p:dialog header="END GAME" id="stopGameDialog" widgetVar="stopGameDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-                    <p:outputPanel id="stopGamePanel" >
-                        <p>Are you sure? The game will be ended and connot be resumed.<br/>
-                            To pause and resume a game press the <em>PAUSE GAME</em> button instead.</p>
-                        <p:separator />
-                        <h:panelGrid columns ="2">
-                            <p:commandButton value="END GAME" actionListener="#{gamePlayController.endGame}"
-                                             action="end_screen.xhtml?faces-redirect=true" oncomplete="PF('stopGameDialog').hide()">
-                            </p:commandButton>
-                            <p:commandButton value="CANCEL" oncomplete="PF('stopGameDialog').hide()" ajax="false">
-                            </p:commandButton>
-                        </h:panelGrid>
-                    </p:outputPanel>
-                </p:dialog>
-            </h:form>
-        </ui:composition>
-    </body>
-</html>
-
+    </ui:define>
+</ui:composition>
