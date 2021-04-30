@@ -3,6 +3,7 @@ package at.qe.skeleton.ui.controllers;
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.UserRole;
 import at.qe.skeleton.services.UserService;
+import at.qe.skeleton.ui.controllers.demo.UserStatusController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -38,6 +39,9 @@ public class UserCreationController extends Controller implements Serializable {
         doCreateNewUser();
     }
 
+    @Autowired
+    UserStatusController userStatusController;
+
     public void doCreateNewUser() {
         user = new User();
         user.setEnabled(true);
@@ -47,13 +51,18 @@ public class UserCreationController extends Controller implements Serializable {
      * Sets the currently displayed user and reloads it form db. This user is
      * targeted by any further calls of
      * {@link #doReloadUser()}, {@link #doSaveUser()} and
-     * {@link #doDeleteUser()}.
+     *
      *
      * @param user
      */
     public void setUser(User user) {
         this.user = user;
         doReloadUser();
+    }
+
+    public void createUser() {
+        System.out.println("hier");
+        user = new User();
     }
 
     /**
@@ -82,6 +91,7 @@ public class UserCreationController extends Controller implements Serializable {
             user.setRoles(val);
             user = userService.saveUser(user);
             displayInfo("Player created", "You have been successfully registered. You can log in now.");
+            userStatusController.addUserStatus(user);
         } catch (IllegalArgumentException e) {
             displayError("Error", e.getMessage());
         }
