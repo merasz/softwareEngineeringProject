@@ -1,6 +1,7 @@
 package at.qe.skeleton.repositories;
 
 import at.qe.skeleton.model.Game;
+import at.qe.skeleton.model.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
