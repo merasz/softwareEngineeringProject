@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:ng="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/main.xhtml">
+    <ui:define name ="content">
+        <p:growl id="growl" showDetail="false" life="6000" >
+            <p:autoUpdate/>
+        </p:growl>
+        <h:panelGroup layout="block" style="margin:0px auto; padding-top: 100px; display: flex; justify-content: center; margin-left: 250px">
+            <h:panelGroup layout="block" style="width: 80%; height: auto; display: flex; flex-wrap: wrap; padding: 40px;box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;">
+                <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: center; width: 100%; font-weight: bold; font-size: 30px">
+                    <i class="far fa-user fa-2x" style="margin: 30px 0px;"></i>
+                </h:panelGroup>
+                <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: center; width: 100%; font-weight: bold; font-size: 30px; margin-bottom: 50px">
+                    <h:outputText id="username" value="#{userScoresController.user.username}" />
+                </h:panelGroup>
+                <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: space-evenly; width: 100%;font-weight: bold; font-size: 20px;">
+                    <h:outputText value="My Best Games"/>
+                </h:panelGroup>
+                <h:panelGroup>
+                    <p:dataTable  id="scoreTable" var="score" value="#{userScoresController.bestScoresForUser}" widgetVar="scoreTable" rows="5" style="width:50%;margin: 0px auto; margin-top:30px">
+                        <p:column headerText="Game Name" style="text-align: center; width: 20%">
+                            <h:outputText value="#{score.game.gameName}"/>
+                        </p:column>
+                        <p:column headerText="Team Name" style="text-align: center; width: 20%">
+                            <h:outputText value="#{score.team.teamName}"/>
+                        </p:column>
+                        <p:column headerText="Score" style="text-align: center; width: 20%">
+                            <h:outputText value="#{score.totalRoundScore}"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:panelGroup>
+                <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: space-evenly; width: 100%;font-weight: bold; font-size: 20px; margin-top: 30px">
+                    <h:outputText value="My Latest Games"/>
+                </h:panelGroup>
+                <h:panelGroup>
+                    <p:dataTable  id="latestScoreTable" var="score" value="#{userScoresController.latestScoresForUser}" widgetVar="latestScoreTable" rows="5" style="width:60%;margin: 0px auto; margin-top:30px">
+                        <p:column headerText="Game Name" style="text-align: center; width: 25%">
+                            <h:outputText value="#{score.game.gameName}"/>
+                        </p:column>
+                        <p:column headerText="Team Name" style="text-align: center; width: 25%">
+                            <h:outputText value="#{score.team.teamName}"/>
+                        </p:column>
+                        <p:column headerText="Score" style="text-align: center; width: 25%">
+                            <h:outputText value="#{score.totalRoundScore}"/>
+                        </p:column>
+                        <p:column headerText="Date/Time" style="text-align: center; width: 25%">
+                            <h:outputText value="#{score.game.startTime}">
+                                <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </h:panelGroup>
+            </h:panelGroup>
+
+
+        </h:panelGroup>
+
+    </ui:define>
+</ui:composition>
