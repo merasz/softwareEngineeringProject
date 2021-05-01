@@ -39,10 +39,9 @@ public class Score implements Serializable {
         this.game = game;
     }
 
-    public Score(int scoreId, int totalRoundScore, User user, Team team, Game game) {
+    public Score(int scoreId, Long totalRoundScore, Team team, Game game) {
         this.scoreId = scoreId;
-        this.totalRoundScore = totalRoundScore;
-        this.user = user;
+        this.totalRoundScore = totalRoundScore.intValue();
         this.team = team;
         this.game = game;
     }

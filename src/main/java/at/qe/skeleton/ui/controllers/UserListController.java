@@ -33,7 +33,7 @@ public class UserListController implements Serializable {
 
     @PostConstruct
     public void init() {
-        setOption("showAll");
+        setOption("all");
         setFilteredList(getUsers());
     }
     /**
@@ -56,7 +56,7 @@ public class UserListController implements Serializable {
     }
 
     public Collection<User> getFilteredList() {
-        if(getOption().equals("showAll")) {
+        if(getOption().equals("all")) {
             return filteredList;
         } else if(getOption().equals("admin")) {
             return filteredList.stream().filter(u -> u.getRoles().contains(UserRole.ADMIN)).collect(Collectors.toList());

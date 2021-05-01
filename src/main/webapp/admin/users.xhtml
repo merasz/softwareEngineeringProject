@@ -58,7 +58,7 @@
                 </p:column>
             </p:dataTable>
 
-            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('userCreationDialog').show()" icon="ui-icon-add-box" value ="Create new User">
+            <p:commandButton action="#{userCreationController.createUser()}" style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('userCreationDialog').show()" icon="ui-icon-add-box" value ="Create new User" update=":userCreationForm:userCreationDialog">
             </p:commandButton>
 
             <p:dialog header="Edit User" id="userEditDialog" widgetVar="userEditDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">

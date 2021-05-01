@@ -1,11 +1,10 @@
 package at.qe.skeleton.ui.controllers;
 
+import at.qe.skeleton.model.GameTopicCount;
 import at.qe.skeleton.model.Score;
+import at.qe.skeleton.model.Team;
 import at.qe.skeleton.model.User;
-import at.qe.skeleton.services.GameService;
-import at.qe.skeleton.services.GameStatsService;
-import at.qe.skeleton.services.UserService;
-import at.qe.skeleton.services.UserStatsService;
+import at.qe.skeleton.services.*;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -35,6 +34,9 @@ public class UserScoresController extends Controller implements Serializable {
     private UserStatsService userStatsService;
 
     @Autowired
+    private TeamService teamService;
+
+    @Autowired
     private SessionInfoBean sessionInfoBean;
 
     /**
@@ -51,7 +53,6 @@ public class UserScoresController extends Controller implements Serializable {
 
     private void setLoggedInUser() {
         user = sessionInfoBean.getCurrentUser();
-        System.out.println(user);
     }
     
     public void setUser(User user) {
@@ -81,8 +82,19 @@ public class UserScoresController extends Controller implements Serializable {
     }
 
     public List<Score> getLatestScoresForUser() {
-        return userStatsService.getBestScoresFromUser(this.user);
+        return userStatsService.getLatestScoresFromUser(this.user);
     }
 
+    public int getGameCountForUser() { return userStatsService.getGameCountByUser(this.user); }
+
+    public int getWonGamesByUser() { return userStatsService.getWonCountByUser(this.user); }
+
+    public int getLostGamesByUser() { return userStatsService.getLostCountByUser(this.user); }
+
+    public List<GameTopicCount> getWonGamesByTopics() {
+        return userStatsService.getWonGamesByTopics(this.user);
+    }
+
+    public List<Team> getTeamsByPlayer() {return teamService.getTeamsByPlayer(this.user); }
 
 }

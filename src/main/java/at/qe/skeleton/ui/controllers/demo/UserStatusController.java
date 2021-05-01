@@ -58,6 +58,12 @@ public class UserStatusController {
                 .forEach(user -> this.userStatus.put(user.getUsername(), new UserStatusInfo(user)));
     }
 
+    public void addUserStatus(User user) {
+        System.out.println(user);
+        this.userStatus.put(user.getUsername(), new UserStatusInfo(user));
+        this.websocketManager.getUserRegistrationChannel().send("connectionUpdate");
+    }
+
     /**
      * Convenience-method. See
      * {@link #afterStatusChange(String, UserStatus, LogEntryType)}

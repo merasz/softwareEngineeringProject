@@ -67,4 +67,8 @@ public class TeamService {
         teamRepository.save(team);
         teamRepository.delete(team);
     }
+
+    public List<Team> getTeamsByPlayer(User user) {
+        return teamRepository.findAllByTeamPlayers(user);
+    }
 }

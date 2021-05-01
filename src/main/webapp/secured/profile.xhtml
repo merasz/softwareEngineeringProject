@@ -19,7 +19,19 @@
                 <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: center; width: 100%; font-weight: bold; font-size: 30px; margin-bottom: 50px">
                     <h:outputText id="username" value="#{userScoresController.user.username}" />
                 </h:panelGroup>
-                <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: space-evenly; width: 100%;font-weight: bold; font-size: 20px;">
+                <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: space-evenly; width: 100%; font-size: 20px;">
+                    <h:outputText value="Played Games: " style="font-weight: bold"/>
+                    <h:outputText value="#{userScoresController.gameCountForUser}"/>
+                </h:panelGroup>
+                <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: space-evenly; width: 100%; font-size: 20px;">
+                    <h:outputText value="Won Games: " style="font-weight: bold"/>
+                    <h:outputText value="#{userScoresController.wonGamesByUser}"/>
+                </h:panelGroup>
+                <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: space-evenly; width: 100%; font-size: 20px;">
+                    <h:outputText value="Lost Games: " style="font-weight: bold"/>
+                    <h:outputText value="#{userScoresController.lostGamesByUser}"/>
+                </h:panelGroup>
+                <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: space-evenly; width: 100%;font-weight: bold; font-size: 20px; margin-top: 30px">
                     <h:outputText value="My Best Games"/>
                 </h:panelGroup>
                 <h:panelGroup>
@@ -53,6 +65,36 @@
                             <h:outputText value="#{score.game.startTime}">
                                 <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
                             </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </h:panelGroup>
+                <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: space-evenly; width: 100%;font-weight: bold; font-size: 20px; margin-top: 30px">
+                    <h:outputText value="Won Games By Topic"/>
+                </h:panelGroup>
+                <h:panelGroup>
+                    <p:dataTable  id="gamesTopicTable" var="game" value="#{userScoresController.wonGamesByTopics}" widgetVar="gamesTopicTable" rows="5" style="width:60%;margin: 0px auto; margin-top:30px">
+                        <p:column headerText="Topic Name" style="text-align: center; width: 25%">
+                            <h:outputText value="#{game.topic.topicName}"/>
+                        </p:column>
+                        <p:column headerText="Wins" style="text-align: center; width: 25%">
+                            <h:outputText value="#{game.gameCount}"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:panelGroup>
+                <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: space-evenly; width: 100%;font-weight: bold; font-size: 20px; margin-top: 30px">
+                    <h:outputText value="My Teams"/>
+                </h:panelGroup>
+                <h:panelGroup>
+                    <p:dataTable  id="teamsTable" var="team" value="#{userScoresController.teamsByPlayer}" widgetVar="teamsTable" rows="5" style="width:60%;margin: 0px auto; margin-top:30px">
+                        <p:column headerText="Topic Name" style="text-align: center; width: 25%">
+                            <h:outputText value="#{team.teamName}"/>
+                        </p:column>
+                        <p:column headerText="player" style="text-align: center; width: 25%">
+                            <p:dataTable  id="teamPlayerTable" styleClass="tableNoHead" var="player" value="#{team.teamPlayers}" widgetVar="teamPlayerTable" rows="5" style="">
+                                <p:column headerText="Player" style="text-align: center; width: 25%">
+                                    <h:outputText value="#{player.username}"/>
+                                </p:column>
+                            </p:dataTable>
                         </p:column>
                     </p:dataTable>
                 </h:panelGroup>
