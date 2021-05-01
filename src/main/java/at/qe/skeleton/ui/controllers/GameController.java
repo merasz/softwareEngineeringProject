@@ -15,7 +15,7 @@ import java.io.Serializable;
 import java.util.*;
 
 @Component
-@Scope("view")
+@Scope("session")
 public class GameController extends Controller implements Serializable {
     @Autowired
     private GameService gameService;

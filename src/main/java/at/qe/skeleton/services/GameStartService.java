@@ -30,6 +30,7 @@ public class GameStartService extends GameService {
     private Team team;
     private int registered = 0;
 
+    //region Player join phase
     public Game startGame(Game game, User user) {
         this.user = user;
         game.setActive(true);
@@ -76,26 +77,29 @@ public class GameStartService extends GameService {
     }
 
     private void addUserToTeam(Team team) {
-        System.out.println("add user to team");
         if (!team.getTeamPlayers().contains(user)) {
             team.getTeamPlayers().add(user);
-            System.out.println(user.getUsername() + " added to " + team.getTeamName());
         }
         this.team = getTeamService().saveTeam(team);
         this.game = getGameRepository().save(game);
     }
 
     public void selectPlayer(User user) {
+        this.game = reloadGame(game);
         this.user = user;
         addUserToTeam(this.team);
         getGameJoinController().onSelect(user);
     }
 
     public boolean teamReady() {
+        this.game = reloadGame(game);
         return game.getTeamSize() == team.getTeamPlayers().size();
     }
+    //endregion
 
+    //region initialize and enter game
     public void enterGame(String teamName) throws IllegalArgumentException {
+        this.game = reloadGame(game);
         if (teamName.isEmpty()) {
             throw new IllegalArgumentException("Give your team a name first.");
         } else if (!teamReady()) {
@@ -103,48 +107,31 @@ public class GameStartService extends GameService {
         }
         this.team.setTeamName(teamName);
         getTeamService().saveTeam(team);
+
+        //initializeGame(game);
         getGameRepository().save(game);
     }
-
-
-
-
-    //region getter & setter
-    public Game getGame() {
-        return game;
-    }
-
-    public String getTeamSizeString() {
-        return team.getTeamPlayers().size() + " of " + game.getTeamSize() + " players assigned.";
-    }
-
-    public Team getTeam() {
-        return team;
-    }
-
-    //endregion
-
-
 
     public void initializeGame(Game game) {
-        //TODO: accept when all players have pressed start
+        this.game = reloadGame(game);
 
-        for (Team t : game.getTeamList()) {
-            for (User u : t.getTeamPlayers()) {
-                Score s = new Score(u, t, game);
-                getScoreRepository().save(s);
+        if (this.game.getStartTime() == null) {
+            for (Team t : this.game.getTeamList()) {
+                for (User u : t.getTeamPlayers()) {
+                    Score s = new Score(u, t, game);
+                    getScoreRepository().save(s);
+                }
+            }
+            createPlayerOrdering(this.game);
+            if (this.game.getStartTime() == null) {
+                this.game.setStartTime(Timestamp.valueOf(LocalDateTime.now()));
+            } else {
+                this.game.setPausedTime(Timestamp.valueOf(LocalDateTime.now()));
             }
         }
-        createPlayerOrdering(game);
-        if (game.getStartTime() == null) {
-            game.setStartTime(Timestamp.valueOf(LocalDateTime.now()));
-        } else {
-            game.setPausedTime(Timestamp.valueOf(LocalDateTime.now()));
-        }
-        game.setActive(true);
-        getGameRepository().save(game);
     }
 
+    //TODO shuffle teams-list & player-lists
     private void createPlayerOrdering(Game game) {
         List<List<TeamPlayer>> tpList = new ArrayList<>();
         for (Team t : game.getTeamList()) {
@@ -164,10 +151,23 @@ public class GameStartService extends GameService {
                 .collect(Collectors.toList()).forEach(getPlayers()::addAll);
     }
 
-    //TODO: validate all Teams same size, add user to team
-    public void joinTeam(Game game, int teamNr) throws IllegalArgumentException {
+    //TODO shuffle terms
+    //endregion
 
+    //region getter & setter
+    public Game getGame() {
+        return game;
     }
+
+    public String getTeamSizeString() {
+        return team.getTeamPlayers().size() + " of " + game.getTeamSize() + " players assigned.";
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    //endregion
 
     public void deleteGame(Game game) {
         getGameRepository().delete(game);

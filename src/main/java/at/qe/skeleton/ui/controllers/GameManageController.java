@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.faces.context.FacesContext;
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -65,6 +67,15 @@ public class GameManageController extends GameController implements Serializable
     public Topic getTopic() {
         return topic;
     }
+
+    public void redirect(boolean redirect) throws IOException {
+        if (redirect) {
+            System.out.println("------  redirect  -------");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/secured/welcome.xhtml");
+            FacesContext.getCurrentInstance().responseComplete();
+        }
+    }
+
     */
 
     public String getTimePlayed() {
@@ -82,4 +93,6 @@ public class GameManageController extends GameController implements Serializable
 
 
     //endregion
+
+
 }

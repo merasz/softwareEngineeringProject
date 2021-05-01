@@ -48,6 +48,10 @@ public class GameService {
         return gameRepository.save(game);
     }
 
+    public Game reloadGame(Game game) {
+        return gameRepository.findByGameId(game.getGameId());
+    }
+
     //region getter & setter
     public GameRepository getGameRepository() {
         return gameRepository;

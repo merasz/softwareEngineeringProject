@@ -6,6 +6,7 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:ng="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name ="content">
         <h:form style="width: 98%; margin-top: 70px;margin-left: 25px; float: right;">
@@ -13,6 +14,7 @@
                 <p:autoUpdate />
             </p:growl>
 
+            <!--
             <p:panel header="Test Gameplay"  style="width: 79%; padding-left: 72px; margin-top: 45px; float: right" >
                 <h:panelGrid columns ="2">
                     <p:outputLabel for="topic" value="Topic: " />
@@ -29,12 +31,21 @@
                 <p:commandButton action="#{}" value="join game" ajax="false" />
             </p:panel>
 
+
             <p:panel id="redirectPanel" header="Test Conditional Redirect"  style="width: 79%; padding-left: 72px; margin-top: 45px; float: right" >
                 <h:panelGrid columns ="2">
-                    <p:commandButton action="#{}" value="set condition" update="condText" />
-                    <h:outputText id="condText" value="#{}" />
+                    <p:commandButton action="#{gameJoinController.doRedirect}" value="set condition" />
+                    <h:outputText id="notice" value="should have redirected" rendered="#{gameJoinController.redirect}" />
                 </h:panelGrid>
             </p:panel>
+
+            <o:socket channel="joinChannel" scope="session" onmessage="function(m){console.log(m);}">
+                <f:ajax event="teamJoin" execute="@all"
+                        listener="#{gameManageController.redirect(gameJoinController.redirect)}"
+                        render="redirectPanel"/>
+            </o:socket>
+
+            -->
 
         </h:form>
     </ui:define>

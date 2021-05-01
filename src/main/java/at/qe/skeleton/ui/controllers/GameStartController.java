@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.faces.context.FacesContext;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.NoSuchElementException;
 
@@ -47,23 +49,21 @@ public class GameStartController extends GameController implements Serializable 
         gameStartService.selectPlayer(player.getUser());
     }
 
-    public String enterGame(boolean allTeamsReady) {
+    public void enterGame(boolean allTeamsReady) {
         try {
-            gameStartService.enterGame(teamName);
             teamComplete = true;
+            System.out.println("-------  " + allTeamsReady + "  -------");
             if (allTeamsReady) {
-                return "/secured/game_room/gameRoom.xhtml?faces-redirect=true";
+                gameStartService.enterGame(teamName);
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/secured/game_room/gameRoom.xhtml");
+                FacesContext.getCurrentInstance().responseComplete();
             }
+        } catch (IOException e) {
+            displayError("Redirect error", e.getMessage());
         } catch (IllegalArgumentException e) {
             displayError("Not so fast", e.getMessage());
         }
-        return "";
     }
-
-
-
-
-
 
     //region getter & setter
     public String getTeamName() {

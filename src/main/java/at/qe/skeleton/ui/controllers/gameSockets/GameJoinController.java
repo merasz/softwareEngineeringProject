@@ -9,11 +9,8 @@ import at.qe.skeleton.utils.CDIAutowired;
 import at.qe.skeleton.utils.CDIContextRelated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -40,12 +37,8 @@ public class GameJoinController {
         playerCircle = userRepository.findAllByRaspberry(game.getRaspberry());
         sendTo = playerCircle.stream().map(User::getUsername).collect(Collectors.toList());
 
-
         List<String> assignedPlayers = game.getTeamList().stream().
                 flatMap(t -> t.getTeamPlayers().stream().map(User::getUsername)).collect(Collectors.toList());
-
-
-        assignedPlayers.forEach(System.out::println);
 
         /*
         playerCircle.forEach(u -> playerAvailability.add(new PlayerAvailability(u)));
@@ -62,7 +55,6 @@ public class GameJoinController {
             }
             playerAvailability.add(pA);
         }
-
 
         this.webSocketManager.getJoinChannel().send("teamJoin", sendTo);
     }
@@ -86,4 +78,5 @@ public class GameJoinController {
     public void setAllTeamsReady() {
         this.allTeamsReady = playerAvailability.stream().allMatch(PlayerAvailability::isAvailable);
     }
+
 }
