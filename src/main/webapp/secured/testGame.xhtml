@@ -12,21 +12,30 @@
             <p:growl id="message" showDetail="true" >
                 <p:autoUpdate />
             </p:growl>
+
             <p:panel header="Test Gameplay"  style="width: 79%; padding-left: 72px; margin-top: 45px; float: right" >
                 <h:panelGrid columns ="2">
                     <p:outputLabel for="topic" value="Topic: " />
-                    <h:selectOneMenu id ="topic" value="#{gameManageController.topic}" converter="omnifaces.SelectItemsConverter">
+                    <h:selectOneMenu id ="topic" value="#{}" converter="omnifaces.SelectItemsConverter">
                         <f:selectItem itemLabel="Select topic" noSelectionOption="true"/>
-                        <f:selectItems value="#{topicListController.topics}" var="topic" itemValue="#{topic}" itemLabel="#{topic.topicName}"/>
+                        <f:selectItems value="#{}" var="topic" itemValue="#{topic}" itemLabel="#{topic.topicName}"/>
                         <f:ajax render="selected_item" />
                     </h:selectOneMenu>
                 </h:panelGrid>
                 <br />
-                <b>Selected topic:</b> <h:outputText id="selected_item" value="#{gameManageController.topic}" />
+                <b>Selected topic:</b> <h:outputText id="selected_item" value="#{}" />
                 <br />
-                <p:commandButton action="#{gameManageController.test}" value="create game" />
-                <p:commandButton action="#{gameManageController.startGame}" value="join game" ajax="false" />
+                <p:commandButton action="#{}" value="create game" />
+                <p:commandButton action="#{}" value="join game" ajax="false" />
             </p:panel>
+
+            <p:panel id="redirectPanel" header="Test Conditional Redirect"  style="width: 79%; padding-left: 72px; margin-top: 45px; float: right" >
+                <h:panelGrid columns ="2">
+                    <p:commandButton action="#{}" value="set condition" update="condText" />
+                    <h:outputText id="condText" value="#{}" />
+                </h:panelGrid>
+            </p:panel>
+
         </h:form>
     </ui:define>
 </ui:composition>

@@ -1,6 +1,5 @@
 package at.qe.skeleton.ui.controllers.gameSockets;
 
-
 import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.demo.PlayerAvailability;
@@ -13,16 +12,17 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 @Controller
 @Scope("application")
 @CDIContextRelated
-public class GameStartController {
+public class GameJoinController {
 
     @CDIAutowired
     private WebSocketManager webSocketManager;
@@ -33,24 +33,57 @@ public class GameStartController {
     private List<User> playerCircle = new CopyOnWriteArrayList<>();
     private List<String> sendTo = new CopyOnWriteArrayList<>();
     private List<PlayerAvailability> playerAvailability = new CopyOnWriteArrayList<>();
-    //private Map<String, Boolean> playerAvailability = new ConcurrentHashMap<>();
+    private boolean allTeamsReady = false;
 
+    // initialize when game creator joins
     public void onJoin(Game game) {
         playerCircle = userRepository.findAllByRaspberry(game.getRaspberry());
         sendTo = playerCircle.stream().map(User::getUsername).collect(Collectors.toList());
 
+
+        List<String> assignedPlayers = game.getTeamList().stream().
+                flatMap(t -> t.getTeamPlayers().stream().map(User::getUsername)).collect(Collectors.toList());
+
+
+        assignedPlayers.forEach(System.out::println);
+
+        /*
         playerCircle.forEach(u -> playerAvailability.add(new PlayerAvailability(u)));
+        playerAvailability.stream().filter(pa -> game.getTeamList().stream().
+                flatMap(t -> t.getTeamPlayers().stream().map(p -> p.getUsername())).
+                collect(Collectors.toList()).contains(pa.getUsername())).
+                forEach(pa -> pa.setAvailable(false));
+        */
+
+        for (User u : playerCircle) {
+            PlayerAvailability pA = new PlayerAvailability(u);
+            if (assignedPlayers.contains(u.getUsername())) {
+                pA.setAvailable(false);
+            }
+            playerAvailability.add(pA);
+        }
+
 
         this.webSocketManager.getJoinChannel().send("teamJoin", sendTo);
     }
 
+    // update when team leaders assign players
     public void onSelect(User user) {
-        playerAvailability.stream().filter(x -> x.getUsername().equals(user.getUsername()))
-                .forEach(x -> x.setAvailable(false));
+        playerAvailability.stream().filter(pa -> pa.getUsername().equals(user.getUsername()))
+                .forEach(pa -> pa.setAvailable(false));
         this.webSocketManager.getJoinChannel().send("teamJoin", sendTo);
     }
 
     public List<PlayerAvailability> getPlayerAvailability() {
         return Collections.unmodifiableList(playerAvailability);
+    }
+
+    public boolean getAllTeamsReady() {
+        setAllTeamsReady();
+        return this.allTeamsReady;
+    }
+
+    public void setAllTeamsReady() {
+        this.allTeamsReady = playerAvailability.stream().allMatch(PlayerAvailability::isAvailable);
     }
 }

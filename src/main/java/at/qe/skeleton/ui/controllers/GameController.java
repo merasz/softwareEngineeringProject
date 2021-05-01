@@ -32,6 +32,8 @@ public class GameController extends Controller implements Serializable {
     @Autowired
     private SessionInfoBean sessionInfoBean;
 
+    private List<Game> games;
+    private Game game;
     private User user;
     private DonutChartModel model;
 
@@ -53,16 +55,13 @@ public class GameController extends Controller implements Serializable {
         model.setLegendPosition("w");
     }
 
-    public DonutChartModel getModel() {
-        return model;
+    public void doSaveGame() {
+        try {
+            game = gameService.saveGame(game);
+        } catch (IllegalArgumentException e){
+            displayError("Error", e.getMessage());
+        }
     }
-
-    public void setModel(DonutChartModel model) {
-        this.model = model;
-    }
-
-    private List<Game> games;
-    private Game game;
 
     public List<Game> getGames() {
         games = gameService.getGameRepository().findAll();
@@ -98,16 +97,16 @@ public class GameController extends Controller implements Serializable {
         this.game = game;
     }
 
-    public void doSaveGame() {
-        try {
-            game = gameService.saveGame(game);
-        } catch (IllegalArgumentException e){
-            displayError("Error", e.getMessage());
-        }
-    }
-
     public Topic getGameTopic() {
         return this.topicService.getTopicByName(game.getTopic());
+    }
+
+    public DonutChartModel getModel() {
+        return model;
+    }
+
+    public void setModel(DonutChartModel model) {
+        this.model = model;
     }
     //endregion
 }

@@ -2,15 +2,16 @@ package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.*;
-import org.primefaces.event.SelectEvent;
+import at.qe.skeleton.ui.beans.SessionInfoBean;
+import org.primefaces.PrimeFaces;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.el.MethodExpression;
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.IntStream;
 
 @Component
 @Scope("view")
@@ -22,35 +23,64 @@ public class GameCreationController extends Controller implements Serializable {
     private TopicService topicService;
 
     @Autowired
+    private TermsService termsService;
+
+    @Autowired
     private UserService userService;
 
-    private String currentTopic;
+    @Autowired
+    private TeamService teamService;
 
+    @Autowired
+    private SessionInfoBean sessionInfoBean;
 
+    private int MIN_WIN_SCORE = 12;
     private Game game;
-    private List<Topic> topicsList;
+    private Topic currentTopic;
 
+    private User user;
     private List<User> userList;
     private List<User> tmp;
+    private int numberTeams;
 
     @PostConstruct
     public void init() {
-        setTopicsList();
         doCreateNewGame();
         setUserList();
     }
 
     public void doCreateNewGame() {
+        user = sessionInfoBean.getCurrentUser();
         game = new Game();
+        game.setRaspberry(user.getRaspberry());
     }
 
     public void doSaveGame() {
-        game.setTopic(topicService.loadTopic(currentTopic));
-        try {
-            game = gameService.saveGame(game);
-        } catch (IllegalArgumentException e){
-            displayError("Error", e.getMessage());
+        if (game.getGameName() == null || currentTopic == null) {
+            displayError("Missing input", "Please enter required game settings.");
+        } else if (game.getScoreToWin() >= MIN_WIN_SCORE) {
+            try {
+                game.setTopic(termsService.setTopic(currentTopic));
+                game = gameService.saveGame(game);
+                IntStream.range(0,numberTeams).forEach(i -> game.getTeamList().add(teamService.saveTeam(new Team(game))));
+                game.setCountPlayers(numberTeams * game.getTeamSize());
+                game = gameService.saveGame(game);
+                PrimeFaces.current().executeScript("PF('gameCreationDialog').hide()");
+            } catch (IllegalArgumentException e) {
+                displayError("Too few terms", e.getMessage());
+            }
+        } else {
+            displayError("Score to win too small", "Score should be at least " + MIN_WIN_SCORE + " points.");
         }
+    }
+
+    public void setUserList() {
+        userList = new ArrayList<>(userService.getAllUsers());
+    }
+
+    //region getter & setter
+    public int getNumberTeams() {
+        return numberTeams;
     }
 
     public Game getGame() {
@@ -61,32 +91,20 @@ public class GameCreationController extends Controller implements Serializable {
         this.game = game;
     }
 
-    public List<Topic> getTopicsList() {
-        return topicsList;
+    public void setNumberTeams(int numberTeams) {
+        this.numberTeams = numberTeams;
     }
 
-    public void setCurrentTopic(String currentTopic) {
-        this.currentTopic = currentTopic;
-    }
-
-    public String getCurrentTopic() {
+    public Topic getCurrentTopic() {
         return currentTopic;
     }
 
-    public void setTopicsList() {
-        List<Topic> arr = new ArrayList<>();
-        arr.addAll(topicService.getAllTopics());
-        topicsList =  arr;
+    public void setCurrentTopic(Topic topic) {
+        this.currentTopic = topic;
     }
 
     public List<User> getUserList() {
         return userList;
-    }
-
-    public void setUserList() {
-        List<User> arr = new ArrayList<>();
-        arr.addAll(userService.getAllUsers());
-        userList = arr;
     }
 
     public List<User> getTmp() {
@@ -96,5 +114,5 @@ public class GameCreationController extends Controller implements Serializable {
     public void setTmp(List<User> tmp) {
         this.tmp = tmp;
     }
-
+    //endregion
 }

@@ -2,17 +2,14 @@ package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.Team;
-import at.qe.skeleton.model.User;
 import at.qe.skeleton.services.TeamService;
 import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Component
 @Scope("view")

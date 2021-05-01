@@ -32,17 +32,18 @@
 
                             <h:panelGrid columns ="2" >
                                 <p:outputLabel for="teamName" value="Team Name: " style="color: white"/>
-                                <p:inputText id="teamName" value="#{gamePlayController.teamName}" style="color: black; background-color: white"/>
+                                <p:inputText id="teamName" value="#{gameStartController.teamName}" placeholder="#{gameStartController.teamName}"
+                                             style="color: black; background-color: white"/>
                             </h:panelGrid>
 
                             <div style="font-size: large; color: white; padding-bottom: 20px">
-                                <h:outputText id="numberAssigned" value="#{gamePlayController.teamSizeString}"/>
+                                <h:outputText id="numberAssigned" value="#{gameStartController.teamSizeString}"/>
                             </div>
 
-                            <p:dataTable id="playerList" var="player" value="#{gameStartController.playerAvailability}" selectionMode="single"
-                                         selection="#{gamePlayController.player}" rowKey="#{player.username}"
-                                         disabledSelection="#{!player.available || gamePlayController.teamReady}">
-                                <p:ajax event="rowSelect" listener="#{gamePlayController.selectPlayer}" />
+                            <p:dataTable id="playerList" var="player" value="#{gameJoinController.playerAvailability}" selectionMode="single"
+                                         selection="#{gameStartController.player}" rowKey="#{player.username}"
+                                         disabledSelection="#{!player.available || gameStartController.teamReady}">
+                                <p:ajax event="rowSelect" listener="#{gameStartController.selectPlayer}" />
                                 <p:column headerText="Player Name">
                                     <h:outputText value="#{player.username}" />
                                 </p:column>
@@ -52,23 +53,21 @@
                             </p:dataTable>
 
                             <h:panelGroup id="confirm">
-                                <p:commandButton id="join" action="#{gamePlayController.startGame}" value="Join Game" update="confirm"
-                                                 rendered="#{!gamePlayController.teamComplete}"
+                                <p:commandButton id="join" action="#{gameStartController.enterGame(gameJoinController.allTeamsReady)}" value="Join Game" update="confirm"
+                                                 rendered="#{!gameStartController.teamComplete}"
                                                  style="height:50px; width:300px; font-size: x-large; border: 2px solid #2ecc71;
                                                  border-radius: 48px; padding: 0; margin-top: 20px; text-align: center" />
 
                                 <div style="font-size: large; color: white; margin-top: 30px">
-                                    <h:outputText value="waiting for the other teams . . ." rendered="#{gamePlayController.teamComplete}"/>
+                                    <h:outputText value="waiting for the other teams . . ." rendered="#{gameStartController.teamComplete}"/>
                                 </div>
                             </h:panelGroup>
-
-                            
 
 
                             <o:socket channel="joinChannel" scope="session" user="#{sessionInfoBean.currentUserName}"
                                       onmessage="function(m){console.log(m);}">
                                 <f:ajax event="teamJoin" execute="@all"
-                                        render="playerList numberAssigned"/>
+                                        render="playerList numberAssigned redirect"/>
                             </o:socket>
 
                         </h:form>

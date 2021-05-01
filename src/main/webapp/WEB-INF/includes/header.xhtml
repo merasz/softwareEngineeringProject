@@ -37,16 +37,15 @@
                     <a href="/secured/availableGames.xhtml"><i class="fab fa-codepen"></i><span>Available Games</span></a>
                     <a href="/admin/admin.xhtml"><i class="far fa-hand-rock"></i><span>Manager Hub</span></a>
                     <a href="/secured/profile.xhtml"><i class="far fa-user"></i><span>My Profile</span></a>
-
-                    <p:commandLink id="join" action="#{gameManageController.test}">
+                    <p:commandLink id="join" action="#{gameStartController.joinGame}">
                         <i class="fas fa-th"></i><h:outputText value="Join Game"/>
                     </p:commandLink>
 
                     <!--
-                    <a href="/secured/testGame.xhtml"><i class="fas fa-info-circle"></i><span>Test Game</span></a>
-                    <p:commandLink id="join" action="#{gamePlayController.joinGame}">
-                        <i class="fas fa-th"></i><h:outputText value="Join Game"/>
+                    <p:commandLink id="test" action="#{gameManageController.test}">
+                        <i class="fas fa-th"></i><h:outputText value="Test Game"/>
                     </p:commandLink>
+                    <a href="/secured/testGame.xhtml"><i class="fas fa-info-circle"></i><span>Test</span></a>
                     -->
 
                 </div>

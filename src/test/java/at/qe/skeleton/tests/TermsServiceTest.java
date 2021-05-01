@@ -90,10 +90,10 @@ public class TermsServiceTest {
     @Test
     public void testSetGameTopic() {
         Topic topic = createTestTopic();
-        Assertions.assertThrows(IllegalArgumentException.class, () -> termsService.setGameTopic(topic));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> termsService.setTopic(topic));
 
         fillTopic(topic);
-        Assertions.assertDoesNotThrow(() -> termsService.setGameTopic(topic));
+        Assertions.assertDoesNotThrow(() -> termsService.setTopic(topic));
     }
 
     @Test

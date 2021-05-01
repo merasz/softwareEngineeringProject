@@ -17,8 +17,7 @@ public class Game implements Serializable {
     private int scoreToWin;
     private int totalScore;
     private int countPlayers;
-    //private int teamSize;
-    private int numberOfTeams;
+    private int teamSize;
     private int nrRound;
     private boolean active;
     @Temporal(TemporalType.TIMESTAMP)
@@ -31,7 +30,7 @@ public class Game implements Serializable {
     @ManyToOne(optional = true)
     private Raspberry raspberry;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, orphanRemoval = true)
     private List<Team> teamList;
 
     @ElementCollection
@@ -40,21 +39,28 @@ public class Game implements Serializable {
     @ManyToOne
     private Topic topic;
 
-    @OneToMany(mappedBy = "game")
+    @OneToMany(mappedBy = "game", orphanRemoval = true)
     private List<Score> scoreList;
 
-    public Game() { }
+    public Game() {
+        this.teamList = new ArrayList<>();
+        this.totalScore = 0;
+        this.nrRound = 1;
+        this.active = false;
+        this.countPlayers = 0;
+        this.teamSize = 0;
+    }
 
-    public Game(int scoreToWin, int countPlayers, int numberOfTeams, Topic topic, Raspberry raspberry) {
+    public Game(int scoreToWin, int countPlayers, int teamSize, Topic topic, Raspberry raspberry) {
         this.scoreToWin = scoreToWin;
         this.totalScore = 0;
         this.countPlayers = countPlayers;
+        this.teamSize = teamSize;
         this.nrRound = 1;
         this.topic = topic;
         this.raspberry = raspberry;
         this.teamList = new ArrayList<>();
         this.active = false;
-        this.numberOfTeams = numberOfTeams;
     }
 
     public int getScoreToWin() {
@@ -178,18 +184,10 @@ public class Game implements Serializable {
     }
 
     public int getTeamSize() {
-        return countPlayers / numberOfTeams;
+        return teamSize;
     }
 
-    public int getNumberOfTeams() {
-        return numberOfTeams;
-    }
-
-    public void setNumberOfTeams(int numberOfTeams) {
-        this.numberOfTeams = numberOfTeams;
-    }
-
-    public int getMaxPlayers() {
-        return getTeamSize() * numberOfTeams;
+    public void setTeamSize(int teamSize) {
+        this.teamSize = teamSize;
     }
 }

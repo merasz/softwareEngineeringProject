@@ -15,7 +15,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.NoSuchElementException;
 
 @Component
-@Scope("application")
+@Scope("view")
 public class GamePlayService extends GameService {
 
     @Autowired
@@ -28,6 +28,7 @@ public class GamePlayService extends GameService {
     private String timerString;
     private boolean guessAccepted = false;
 
+    /*
     public Game joinGame(User user) throws NoSuchElementException {
         this.user = user;
         this.game = getGameRepository().findActiveGameByRaspberry(user.getRaspberry().getRaspberryId());
@@ -45,11 +46,7 @@ public class GamePlayService extends GameService {
         team.getTeamPlayers().add(user);
         this.team = getTeamService().saveTeam(team);
         this.game = getGameRepository().save(game);
-        getGameStartController().onSelect(user);
-    }
-
-    public boolean teamReady() {
-        return game.getTeamSize() == team.getTeamPlayers().size();
+        getGameJoinController().onSelect(user);
     }
 
     public void startGame(String teamName) throws IllegalArgumentException {
@@ -62,6 +59,11 @@ public class GamePlayService extends GameService {
         getTeamService().saveTeam(team);
         getGameRepository().save(game);
     }
+
+    public boolean teamReady() {
+        return game.getTeamSize() == team.getTeamPlayers().size();
+    }
+    */
 
     //region guessing round with timer loop
     //TODO: where task?
@@ -145,10 +147,6 @@ public class GamePlayService extends GameService {
     //region getter & setter
     public Game getGame() {
         return game;
-    }
-
-    public String getTeamSizeString() {
-        return team.getTeamPlayers().size() + " of " + game.getTeamSize() + " players assigned.";
     }
 
     //endregion

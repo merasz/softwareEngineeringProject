@@ -35,7 +35,10 @@ public class Team implements Serializable {
     @OneToMany(mappedBy = "team")
     private List<Score> scores;
 
-    public Team() {
+    public Team() { }
+
+    public Team(Game game) {
+        this.game = game;
         this.teamPlayers = new ArrayList<>();
     }
 

@@ -30,15 +30,14 @@ public class TeamService {
     }
 
     public Team createTeam(Game game) {
-        Team t = new Team();
-        t.setGame(game);
+        Team t = new Team(game);
         teamRepository.save(t);
         return t;
     }
 
     public Team savePlayerToTeam(Team team, User player) {
         List<User> players = team.getTeamPlayers();
-        System.out.println(players);
+
         if(players == null) {
             players = new ArrayList<User>();
             team.setTeamPlayers(players);
@@ -50,7 +49,6 @@ public class TeamService {
 
             players.add(player);
             team.setTeamPlayers(players);
-            System.out.println(players);
             return teamRepository.save(team);
         }
 
