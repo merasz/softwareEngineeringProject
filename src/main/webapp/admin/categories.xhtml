@@ -38,8 +38,8 @@
                         <f:setPropertyActionListener value="#{topic}" target="#{topicController.topic}"/>
                     </p:commandButton>
                     <p:commandButton action="#{topicController.doDeleteTopic()}" icon="ui-icon-trash" title="Delete"
-                                     update=":topicForm:topicCreationTable">
-                        <f:setPropertyActionListener value="#{topic}" target="#{topicListController.topic}"/>
+                                     update=":topicForm:topicData">
+                        <f:setPropertyActionListener value="#{topic}" target="#{topicController.topic}"/>
                         <p:confirm header="Confirmation"
                                    message="Are you sure that you want to delete this topic? You cannot undo this operation."
                                    icon="ui-icon-alert"/>

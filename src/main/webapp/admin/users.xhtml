@@ -12,7 +12,7 @@
             <p:growl id="growl" showDetail="false" life="6000" >
                 <p:autoUpdate/>
             </p:growl>
-            <p:dataTable  id="usersTable" var="user" value="#{userListController.users}" widgetVar="usersTable" paginator="true" rows="10" emptyMessage="Select Role." style="width:85%; margin-top:100px; float:right;">
+            <p:dataTable  id="usersTable" var="user" value="#{userListController.allPlayers}" widgetVar="usersTable" paginator="true" rows="10" emptyMessage="Select Role." style="width:85%; margin-top:100px; float:right;">
                 <f:facet name="header">
                     <p:outputPanel>
                         <p:commandButton id="help" oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
