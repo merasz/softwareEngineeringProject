@@ -2,6 +2,7 @@ package at.qe.skeleton.ui.websockets;
 
 import java.io.Serializable;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -50,6 +51,12 @@ public class WebSocketManager implements Serializable {
     @Inject
     @Push(channel = "joinChannel")
     private PushContext joinChannel;
+    @Inject
+    @Push(channel = "scoreChannel")
+    private PushContext scoreChannel;
+    @Inject
+    @Push(channel = "timeChannel")
+    private PushContext timeChannel;
 
 
     public PushContext getUserRegistrationChannel() {
@@ -62,5 +69,13 @@ public class WebSocketManager implements Serializable {
 
     public PushContext getJoinChannel() {
         return joinChannel;
+    }
+
+    public PushContext getScoreChannel() {
+        return scoreChannel;
+    }
+
+    public PushContext getTimeChannel() {
+        return timeChannel;
     }
 }
