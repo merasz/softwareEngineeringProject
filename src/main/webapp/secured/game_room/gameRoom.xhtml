@@ -18,62 +18,74 @@
     </h:head>
     <h:body>
 
-            <h:form id="scoreBoard">
-                <p:growl id="scoreData" showDetail="false" life="6000">
-                    <p:autoUpdate/>
-                </p:growl>
+        <h:form id="scoreBoard">
+            <p:growl id="scoreData" showDetail="false" life="6000">
+                <p:autoUpdate/>
+            </p:growl>
 
-                <p:dataTable widgetVar="scoreTable" id="scoreTable" var="score"
-                             value="#{scoreManagerController.scores}" style="width: 50%;position: absolute;bottom: 0px; left: 0px">
-                    <f:facet name="header">Scores</f:facet>
-                    <p:column headerText="Team">
-                        <h:outputText value="#{score.team.teamName}"/>
-                    </p:column>
-                    <p:column headerText="Score">
-                        <h:outputText value="#{score.score}"/>
-                    </p:column>
-                </p:dataTable>
+            <p:dataTable widgetVar="scoreTable" id="scoreTable" var="score"
+                         value="#{scoreManagerController.scores}" style="width: 50%;position: absolute;bottom: 0px; left: 0px">
+                <f:facet name="header">Scores</f:facet>
+                <p:column headerText="Team">
+                    <h:outputText value="#{score.team.teamName}"/>
+                </p:column>
+                <p:column headerText="Score">
+                    <h:outputText value="#{score.score}"/>
+                </p:column>
+            </p:dataTable>
 
-                <p:commandButton id="team1Btn" value="Team 1"
-                                 action="#{scoreManagerController.addScore1(3)}" style="position: relative; left:20%">
-                </p:commandButton>
+            <p:commandButton id="team1Btn" value="Team 1"
+                             action="#{scoreManagerController.addScore1(3)}" style="position: relative; left:20%">
+            </p:commandButton>
 
-                <p:commandButton id="team2Btn" value="Team 2"
-                                 action="#{scoreManagerController.addScore2(3)}" style="position: absolute; left:30%">
-                </p:commandButton>
+            <p:commandButton id="team2Btn" value="Team 2"
+                             action="#{scoreManagerController.addScore2(3)}" style="position: absolute; left:30%">
+            </p:commandButton>
 
-                <p:commandButton id="timerBtn" value="Timer 3min"
-                                 action="#{gamePlaySocketController.startTimer(180)}" style="position: absolute; left:50%">
-                </p:commandButton>
+            <p:commandButton id="timerBtn" value="Timer 3min"
+                             action="#{gamePlaySocketController.startTimer(180)}" style="position: absolute; left:50%">
+            </p:commandButton>
 
-                <p:commandButton id="timerBtn2" value="Timer 2min"
-                                 action="#{gamePlaySocketController.startTimer(120)}" style="position: absolute; left:60%">
-                </p:commandButton>
-                <o:socket channel="scoreChannel" scope="application" onmessage="function(m){console.log(m);}">
-                    <f:ajax event="scoreUpdate" render="scoreTable"/>
-                </o:socket>
-            </h:form>
-            <h:form>
-                <h:panelGroup style="position: absolute; bottom: 0px;right: 30px" id="timerOuter">
-                    <pe:timer
-                        id="timer"
-                        visible="false"
-                        ontimerstep="sync(intervalData)"
-                        ontimercomplete="alert('BOOM')"
-                        timeout="#{gamePlaySocketController.time}"/>
-                    <p:knob
-                            min="0"
-                            max="#{gamePlaySocketController.time}"
-                            widgetVar="knob"
-                            disabled="true"
-                            value="#{gamePlaySocketController.time}"/>
-                </h:panelGroup>
+            <p:commandButton id="timerBtn2" value="Timer 2min"
+                             action="#{gamePlaySocketController.startTimer(120)}" style="position: absolute; left:60%">
+            </p:commandButton>
+            <p:commandButton id="termBtn" value="Next Term"
+                             action="#{gamePlaySocketController.nextTerm}" style="position: absolute; left:70%">
+            </p:commandButton>
+            <o:socket channel="scoreChannel" scope="application" onmessage="function(m){console.log(m);}">
+                <f:ajax event="scoreUpdate" render="scoreTable"/>
+            </o:socket>
+        </h:form>
+        <h:form>
+            <h:panelGroup style="position: absolute; bottom: 0px;right: 30px" id="timerOuter">
+                <pe:timer
+                    id="timer"
+                    visible="false"
+                    ontimerstep="sync(intervalData)"
+                    timeout="#{gamePlaySocketController.time}"/>
+                <p:knob
+                        min="0"
+                        max="#{gamePlaySocketController.time}"
+                        widgetVar="knob"
+                        disabled="true"
+                        value="#{gamePlaySocketController.time}"/>
+            </h:panelGroup>
 
-                <o:socket channel="timeChannel" scope="application" onmessage="function(m){console.log(m);}">
-                    <f:ajax event="timeUpdate" render="timerOuter" />
-                </o:socket>
+            <o:socket channel="timeChannel" scope="application" onmessage="function(m){console.log(m);}">
+                <f:ajax event="timeUpdate" render="timerOuter" />
+            </o:socket>
 
-            </h:form>
+        </h:form>
+
+        <h:form>
+            <h:outputText value="#{gamePlaySocketController.nextTerm}" id="termField" style="position: absolute; top: 50%; left: 50%; font-size: 32px; font-weight: bold"/>
+            <h:outputText value="#{gamePlaySocketController.type}" id="typeField" style="position: absolute; top: 54%; left: 50%; font-size: 26px; font-weight: bold"/>
+
+            <o:socket channel="termChannel" scope="application" onmessage="function(m){console.log(m);}">
+                <f:ajax event="termUpdate" render="termField typeField" />
+            </o:socket>
+
+        </h:form>
     </h:body>
     <script type="text/javascript">
         window.sync = function(t){
