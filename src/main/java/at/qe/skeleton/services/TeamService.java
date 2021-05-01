@@ -30,8 +30,7 @@ public class TeamService {
     }
 
     public Team createTeam(Game game) {
-        Team t = new Team();
-        t.setGame(game);
+        Team t = new Team(game);
         teamRepository.save(t);
         return t;
     }

@@ -43,6 +43,16 @@ public class GameManageController extends GameController implements Serializable
         }
     }
 
+    public String startEnterGame() {
+        try {
+            setGame(gameManageService.startGame(getGame(), getUser()));
+            return "/secured/game_room/gameRoom.xhtml?faces-redirect=true";
+        } catch (NullPointerException e) {
+            displayError("No available Game", "Please create a game first.");
+            return "";
+        }
+    }
+
     public void deleteGame() {
         gameManageService.deleteGame(getGame());
         displayInfo("Game deleted", "Game deleted successfully.");
@@ -54,7 +64,7 @@ public class GameManageController extends GameController implements Serializable
 
     public void setTopic(Topic topic) {
         try {
-            this.topic = getTermsService().setGameTopic(topic);
+            this.topic = getTermsService().setTopic(topic);
         } catch (IllegalArgumentException e) {
             displayError("Too few terms", e.getMessage());
         }
@@ -70,7 +80,6 @@ public class GameManageController extends GameController implements Serializable
     }
 
     public String test() {
-        System.out.println("\n-----\ntest\n-----\n");
         scoreToWin = 12;
         countPlayers = 4;
         countTeams = 2;
@@ -82,6 +91,22 @@ public class GameManageController extends GameController implements Serializable
     //region getter & setter
     public Topic getTopic() {
         return topic;
+    }
+
+    private boolean testCond = false;
+    private String condMet;
+    public boolean isTestCond() {
+        return testCond;
+    }
+    public String getCondMet() {
+        return testCond ? "condition met" : "waiting for something to happen...";
+    }
+    public String setTestCond() {
+        this.testCond = true;
+        return "/secured/welcome.xhtml?faces-redirect=true";
+    }
+    public void setCondMet(String condMet) {
+        this.condMet = condMet;
     }
 
     //endregion

@@ -28,12 +28,12 @@
                     <h:outputText value="#{game.topic.topicName}"/>
                 </p:column>
                 <p:column headerText="Teams">
-                    <h:outputText value="#{game.numberOfTeams}" disabled="true"/>
+                    <h:outputText value="#{game.teamList.size()}" disabled="true"/>
                 </p:column>
                 <p:column headerText="current Players/max Players">
                     <h:outputText value="#{game.countPlayers}" disabled="true"/>
                     /
-                    <h:outputText value="#{game.maxPlayers}" disabled="true"/>
+                    <h:outputText value="#{game.countPlayers}" disabled="true"/>
                 </p:column>
                 <p:column headerText="score to win">
                     <h:outputText value="#{game.scoreToWin}" disabled="true"/>

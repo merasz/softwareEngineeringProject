@@ -15,7 +15,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.NoSuchElementException;
 
 @Component
-@Scope("application")
+@Scope("view")
 public class GamePlayService extends GameService {
 
     @Autowired

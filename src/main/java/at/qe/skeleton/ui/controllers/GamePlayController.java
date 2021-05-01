@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Component
-@Scope("session")
+@Scope("view")
 public class GamePlayController extends GameController implements Serializable {
 
     @Autowired
@@ -46,14 +46,17 @@ public class GamePlayController extends GameController implements Serializable {
         return gamePlayService.teamReady();
     }
 
-    public void startGame() {
+    public String startGame(boolean allTeamsReady) {
         try {
             gamePlayService.startGame(teamName);
             teamComplete = true;
+            if (allTeamsReady) {
+                return "/secured/game_room/gameRoom.xhtml?faces-redirect=true";
+            }
         } catch (IllegalArgumentException e) {
             displayError("Not so fast", e.getMessage());
         }
-
+        return "";
     }
 
     //region gaming round

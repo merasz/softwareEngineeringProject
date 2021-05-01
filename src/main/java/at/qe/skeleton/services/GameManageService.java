@@ -23,17 +23,17 @@ public class GameManageService extends GameService {
     private int registered = 0;
 
     //region create Game
-    public Game createGame(int scoreToWin, int countPlayers, Topic topic, Raspberry raspberry, int countTeams) throws IllegalArgumentException {
+    public Game createGame(int scoreToWin, int countPlayers, Topic topic, Raspberry raspberry, int teamSize) throws IllegalArgumentException {
         if (topic == null) {
             throw new IllegalArgumentException("Select a topic.");
-        } else if (countTeams < 2) {
-            throw new IllegalArgumentException("Create at least 2 Teams.");
-        } else if (countPlayers % countTeams != 0) {
-            throw new IllegalArgumentException("Teams need to have same number of players.");
-        } else if (countPlayers / countTeams < 2) {
+        } else if (teamSize < 2) {
             throw new IllegalArgumentException("Teams must have at least 2 players.");
+        } else if (countPlayers % teamSize != 0) {
+            throw new IllegalArgumentException("Teams need to have same number of players.");
+        } else if (countPlayers / teamSize < 2) {
+            throw new IllegalArgumentException("Create at least 2 Teams.");
         } else {
-            Game game = new Game(scoreToWin, countPlayers, countTeams, topic, raspberry);
+            Game game = new Game(scoreToWin, countPlayers, teamSize, topic, raspberry);
             getGameRepository().save(game);
             return game;
         }

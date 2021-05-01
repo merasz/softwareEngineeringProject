@@ -39,7 +39,7 @@
                                 <h:outputText id="numberAssigned" value="#{gamePlayController.teamSizeString}"/>
                             </div>
 
-                            <p:dataTable id="playerList" var="player" value="#{gameStartController.playerAvailability}" selectionMode="single"
+                            <p:dataTable id="playerList" var="player" value="#{gameJoinController.playerAvailability}" selectionMode="single"
                                          selection="#{gamePlayController.player}" rowKey="#{player.username}"
                                          disabledSelection="#{!player.available || gamePlayController.teamReady}">
                                 <p:ajax event="rowSelect" listener="#{gamePlayController.selectPlayer}" />
@@ -52,7 +52,7 @@
                             </p:dataTable>
 
                             <h:panelGroup id="confirm">
-                                <p:commandButton id="join" action="#{gamePlayController.startGame}" value="Join Game" update="confirm"
+                                <p:commandButton id="join" action="#{gamePlayController.startGame(gameJoinController.allTeamsReady)}" value="Join Game" update="confirm"
                                                  rendered="#{!gamePlayController.teamComplete}"
                                                  style="height:50px; width:300px; font-size: x-large; border: 2px solid #2ecc71;
                                                  border-radius: 48px; padding: 0; margin-top: 20px; text-align: center" />
@@ -62,13 +62,11 @@
                                 </div>
                             </h:panelGroup>
 
-                            
-
 
                             <o:socket channel="joinChannel" scope="session" user="#{sessionInfoBean.currentUserName}"
                                       onmessage="function(m){console.log(m);}">
                                 <f:ajax event="teamJoin" execute="@all"
-                                        render="playerList numberAssigned"/>
+                                        render="playerList numberAssigned redirect"/>
                             </o:socket>
 
                         </h:form>

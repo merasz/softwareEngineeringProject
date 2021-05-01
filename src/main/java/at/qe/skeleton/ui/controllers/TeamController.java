@@ -3,24 +3,30 @@ package at.qe.skeleton.ui.controllers;
 import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.Team;
 import at.qe.skeleton.model.User;
+import at.qe.skeleton.services.GameService;
 import at.qe.skeleton.services.TeamService;
-import at.qe.skeleton.services.UserService;
+import org.primefaces.PrimeFaces;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.el.MethodExpression;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Component
 @Scope("view")
 public class TeamController extends Controller implements Serializable {
 
     @Autowired
-    TeamService teamService;
+    private TeamService teamService;
+
+    @Autowired
+    private GameService gameService;
+
+    @Autowired
+    private TeamListController teamListController;
 
     @Autowired
     PlayerListController playerListController;
@@ -38,24 +44,25 @@ public class TeamController extends Controller implements Serializable {
     }
     */
 
-    public void doCreateTeam() {
-        this.team = new Team();
-    }
-
-    public Team getTeam() {
-        return team;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
-    }
-
-    public void doSaveTeam(Game game) {
-        this.team.setGame(game);
+    public void doSetTeam(Game game) {
+        this.game = game;
         try {
+            team = game.getTeamList().stream().filter(t -> t.getTeamName() == null).collect(Collectors.toList()).get(0);
+            PrimeFaces.current().executeScript("PF('teamCreationDialog').show()");
+        } catch (IndexOutOfBoundsException e){
+            displayError("No more teams to set", "All teams are already set.");
+        }
+    }
+
+    public void doSaveTeam() {
+        if (team.getTeamName() == null || team.getTeamName().isEmpty()) {
+            displayError("No team name", "Give this team a name.");
+        } else {
+            team.setGame(game);
             team = teamService.saveTeam(team);
-        } catch (IllegalArgumentException e){
-            displayError("Error", e.getMessage());
+            game = gameService.saveGame(game);
+            teamListController.setGame(game);
+            PrimeFaces.current().executeScript("PF('teamCreationDialog').hide()");
         }
     }
 
@@ -65,7 +72,42 @@ public class TeamController extends Controller implements Serializable {
         } catch (IllegalArgumentException e){
             displayError("Error", e.getMessage());
         }
+    }
 
+    public void doDeletePlayer() {
+        try {
+            team = teamService.deletePlayerFromTeam(team,tmpPlayer);
+            playerListController.setTeam(team);
+        } catch (IllegalArgumentException e){
+            displayError("Error", e.getMessage());
+        }
+    }
+
+    public void doClearTeam() {
+        try {
+            for (Team t : game.getTeamList()) {
+                if (t != null && t.getTeamName() != null) {
+                    if (t.getTeamName().equals(team.getTeamName())) {
+                        t.setTeamPlayers(new ArrayList<>());
+                        t.setTeamName(null);
+                        teamService.saveTeam(t);
+                        game = gameService.saveGame(game);
+                        teamListController.setGame(game);
+                    }
+                }
+            }
+            team = null;
+        } catch(NoSuchElementException e) {
+            displayError("Error", e.getMessage());
+        }
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 
     public User getTmpPlayer() {
@@ -83,24 +125,4 @@ public class TeamController extends Controller implements Serializable {
     public void setGame(Game game) {
         this.game = game;
     }
-
-    public void doDeletePlayer() {
-        try {
-            team = teamService.deletePlayerFromTeam(team,tmpPlayer);
-            playerListController.setTeam(team);
-        } catch (IllegalArgumentException e){
-            displayError("Error", e.getMessage());
-        }
-    }
-
-    public void doDeleteTeam() {
-        try {
-            teamService.deleteTeam(team);
-            team = null;
-        } catch(IllegalArgumentException e) {
-            displayError("Error", e.getMessage());
-        }
-
-    }
-
 }
