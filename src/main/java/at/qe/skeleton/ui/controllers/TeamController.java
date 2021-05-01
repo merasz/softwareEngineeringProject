@@ -67,10 +67,14 @@ public class TeamController extends Controller implements Serializable {
     }
 
     public void doSaveUserToTeam() {
-        try {
-            team = teamService.savePlayerToTeam(team,tmpPlayer);
-        } catch (IllegalArgumentException e){
-            displayError("Error", e.getMessage());
+        if (team.getTeamPlayers().size() == game.getTeamSize()) {
+            displayError("Team full", "There are no more free places in this team.");
+        } else {
+            try {
+                team = teamService.savePlayerToTeam(team, tmpPlayer);
+            } catch (IllegalArgumentException e) {
+                displayError("Error", e.getMessage());
+            }
         }
     }
 

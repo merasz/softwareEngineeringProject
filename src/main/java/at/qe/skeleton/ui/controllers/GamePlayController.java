@@ -26,6 +26,7 @@ public class GamePlayController extends GameController implements Serializable {
     private boolean paused = false;
     private int guessAccepted = 0;
 
+    /*
     public String joinGame() {
         setUser();
         try {
@@ -58,6 +59,7 @@ public class GamePlayController extends GameController implements Serializable {
         }
         return "";
     }
+    */
 
     //region gaming round
     public void startRound() {
@@ -132,6 +134,7 @@ public class GamePlayController extends GameController implements Serializable {
         this.player = player;
     }
 
+    /*
     public String getTeamName() {
         return teamName;
     }
@@ -147,6 +150,8 @@ public class GamePlayController extends GameController implements Serializable {
     public boolean isTeamComplete() {
         return teamComplete;
     }
+     */
+
 
     //endregion
 }

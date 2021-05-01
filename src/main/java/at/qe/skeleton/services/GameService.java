@@ -85,7 +85,7 @@ public class GameService {
         return players;
     }
 
-    public GameJoinController getGameStartController() {
+    public GameJoinController getGameJoinController() {
         return gameJoinController;
     }
 

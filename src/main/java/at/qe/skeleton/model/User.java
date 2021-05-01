@@ -41,7 +41,7 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
     @ManyToOne
     private Device device;
 
-    @ManyToMany(cascade=CascadeType.ALL, mappedBy = "teamPlayers")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "teamPlayers")
     private List<Team> team;
 
     @ManyToOne
@@ -57,6 +57,7 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
 
     public User() { }
 
+    //region getter & setter
     public String getUsername() {
         return username;
     }
@@ -79,6 +80,14 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public List<Team> getTeam() {
+        return team;
+    }
+
+    public void setTeam(List<Team> team) {
+        this.team = team;
     }
 
     public Set<UserRole> getRoles() {
@@ -128,6 +137,7 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }
+    //endregion
 
     @Override
     public int hashCode() {
@@ -145,10 +155,7 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
             return false;
         }
         final User other = (User) obj;
-        if (!Objects.equals(this.username, other.username)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.username, other.username);
     }
 
     @Override
@@ -159,10 +166,6 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
     @Override
     public String getId() {
         return getUsername();
-    }
-
-    public void setId(String id) {
-        setUsername(id);
     }
 
     @Override
