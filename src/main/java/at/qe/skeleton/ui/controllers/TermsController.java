@@ -92,14 +92,14 @@ public class TermsController extends Controller implements Serializable {
 //        }
 //    }
 
-//    public void editTerm(String name, Topic topic) {
-//        try {
-//            termsService.saveTerm(name, topic, term);
-//            displayInfo("Term updated", "Term successfully changed.");
-//        } catch (IllegalArgumentException e) {
-//            displayError("Term not updated", e.getMessage());
-//        }
-//    }
+    public void editTerm(String name, Topic topic) {
+       try {
+          termsService.saveTerm(term);
+          displayInfo("Term updated", "Term successfully changed.");
+      } catch (IllegalArgumentException e) {
+          displayError("Term not updated", e.getMessage());
+       }
+    }
 
 //    public void deleteTerm() {
 //        termsService.getTermsRepository().delete(term);
