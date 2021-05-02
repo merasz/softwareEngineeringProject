@@ -37,9 +37,10 @@
                                      style="width:20px;height:20px">
                         <f:setPropertyActionListener value="#{topic}" target="#{topicController.topic}"/>
                     </p:commandButton>
-                    <p:commandButton action="#{topicController.doDeleteTopic()}" icon="ui-icon-trash" title="Delete"
+
+                    <p:commandButton action="#{topicController.doDeleteTopic}" icon="ui-icon-trash" title="Delete"
                                      update=":topicForm:topicCreationTable">
-                        <f:setPropertyActionListener value="#{topic}" target="#{topicListController.topic}"/>
+                        <f:setPropertyActionListener value="#{topic}" target="#{topicListController.topics}"/>
                         <p:confirm header="Confirmation"
                                    message="Are you sure that you want to delete this topic? You cannot undo this operation."
                                    icon="ui-icon-alert"/>
@@ -84,6 +85,14 @@
                 <p:column headerText="Term name">
                     <h:outputText value="#{term.termName}"/>
                 </p:column>
+
+                <p:column style="width:100px;text-align: center" headerText="edit term">
+
+                <p:commandButton title="Edit" icon="ui-icon-note" update=":termsForm:termsTable" oncomplete="PF('termEditDialog').show()">
+                    <f:setPropertyActionListener value="#{term}" target="#{termsController.term}" />
+                </p:commandButton>
+                </p:column>
+
             </p:dataTable>
             <p:commandButton style="width: 25%; margin-top: 25px; float: right;"
                              oncomplete="PF('termCreationDialog').show()" icon="ui-icon-add-box"
@@ -100,6 +109,7 @@
                     </h:panelGrid>
 
                     <p:separator/>
+
                     <h:panelGrid columns="2">
                         <p:commandButton value="Save" action="#{termsController.doSaveTerm(topicController.topic)}"
                                          oncomplete="PF('termCreationDialog').hide()" update=":termsForm:termsTable"/>
@@ -110,39 +120,26 @@
             </p:dialog>
         </h:form>
 
-        <h:form id="labItemConfirmationForm">
-            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="500"
-                             style="text-align: center;padding-top: 0px;">
-                <h:panelGrid columns="2" style="margin: 0 auto">
-                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
-                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
-                </h:panelGrid>
-            </p:confirmDialog>
-        </h:form>
+<!--        <h:form>-->
+<!--            <p:dialog header="Edit Term" id="termEditDialog" widgetVar="termEditDialog" modal="true" showEffect="fade"-->
+<!--                      hideEffect="fade" resizable="false">-->
+<!--                <p:outputPanel id="termData" rendered="#{not empty termsController.term}">-->
+<!--                    <h:panelGrid columns="2">-->
+<!--                        <p:outputLabel for="newTermName" value="Term Name: "/>-->
+<!--                        <p:inputText id="newTermName" value="#{termsController.term.termName}"/>-->
+<!--                    </h:panelGrid>-->
 
-        <h:form id="manualForm">
-            <p:dialog id="manualInfoDialog" header="Manuals" dynamic="true" widgetVar="manualInfoDialog" modal="true"
-                      showEffect="fade" hideEffect="fade" resizable="false" width="600px">
-                <p:outputPanel id="labItemData" rendered="#{not empty termsController.topic}">
-                    <p:dataTable id="manualTable" var="manual" value="#{termsController.topic.getManuals()}"
-                                 resizableColumns="true">
-                        <p:column>
-                            <h:commandLink value="#{manual.manualName}"
-                                           actionListener="#{fileDownloadView.fileDownload()}">
-                                <f:setPropertyActionListener value="#{manual}" target="#{fileDownloadView.manual}"/>
-                                <p:fileDownload value="#{fileDownloadView.file}"/>
-                            </h:commandLink>
+<!--                    <p:separator/>-->
 
-                        </p:column>
+<!--                    <h:panelGrid columns="2">-->
+<!--                        <p:commandButton value="Save" action="#{termsController.editTerm(term ,topicController.topic)}"-->
+<!--                                         oncomplete="PF('termEditDialog').hide()" update=":termsForm:termsTable"/>-->
+<!--                        <p:commandButton value="Abort" onclick="PF('Dialog').hide()"/>-->
+<!--                    </h:panelGrid>-->
+<!--                </p:outputPanel>-->
+<!--            </p:dialog>-->
+<!--        </h:form>-->
 
-
-                    </p:dataTable>
-                    <p:commandButton value="Abort" onclick="PF('manualInfoDialog').hide()"/>
-
-                </p:outputPanel>
-
-            </p:dialog>
-        </h:form>
 
     </ui:define>
 </ui:composition>

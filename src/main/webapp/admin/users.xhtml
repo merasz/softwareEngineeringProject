@@ -75,20 +75,15 @@
                         <p:selectBooleanCheckbox id="enabled" value="#{userController.user.enabled}"/>
                     </h:panelGrid>
                     <p:separator />
-                <h:panelGrid columns ="2">
-                    <p:outputLabel for="addNewRoll" value="Add Roll: " />
-                    <h:selectOneMenu id ="addNewRoll" >
-                        <f:selectItem itemValue = "1" itemLabel = "Admin" />
-                        <f:selectItem itemValue = "2" itemLabel = "Manager" />
-                        <f:selectItem itemValue = "2" itemLabel = "Player" />
-                    </h:selectOneMenu>
-                    <p:outputLabel for="deleteRoll" value="Delete Roll: " />
-                    <h:selectOneMenu id ="deleteRoll" >
-                        <f:selectItem itemValue = "1" itemLabel = "Admin" />
-                        <f:selectItem itemValue = "2" itemLabel = "Manager" />
-                        <f:selectItem itemValue = "2" itemLabel = "Player" />
-                    </h:selectOneMenu>
-                </h:panelGrid>
+<!--                <h:panelGrid columns ="2">-->
+<!--                    <p:outputLabel value="Roles"/>-->
+<!--                    <p:selectCheckboxMenu id="role" value="#{userCreationController.listRoles}" label="Rollen" multiple="true"-->
+<!--                                          filter="false" filterMatchMode="startsWith" panelStyle="width: 250px" required="true"-->
+<!--                                          requiredMessage="User Role required">-->
+<!--                    <f:selectItems value="#{userCreationController.user.roles}"/>-->
+<!--                    </p:selectCheckboxMenu>-->
+<!--                    <p:outputLabel for="role" value="" />-->
+<!--                </h:panelGrid>-->
                 <p:separator />
                     <h:panelGrid columns="3">
                         <p:commandButton value="Save" action="#{userController.doSaveUser()}" oncomplete="PF('userEditDialog').hide()" update=":userForm:usersTable"/>
