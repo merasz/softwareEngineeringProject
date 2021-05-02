@@ -62,32 +62,29 @@
             </p:commandButton>
 
             <p:dialog header="Edit User" id="userEditDialog" widgetVar="userEditDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-                <p:outputPanel id="userData" rendered="#{not empty userController.user}">
+                <p:outputPanel id="userData" rendered="#{not empty userDetailController.user}">
                     <h:panelGrid columns="2">
                         <p:outputLabel for="username" value="Username: " />
-                        <p:inputText id="username" value="#{userController.user.username}" disabled="true"/>
+                        <p:inputText id="username" value="#{userDetailController.user.username}" disabled="true"/>
                         <p:outputLabel for="password" value="Password: " />
-                        <p:password id="password" value="#{userController.user.password}" disabled="true"/>
+                        <p:password id="password" value="#{userDetailController.user.password}" disabled="true"/>
                     </h:panelGrid>
                     <p:separator />
                     <h:panelGrid columns="2">
                         <p:outputLabel for="enabled" value="Enabled: " />
-                        <p:selectBooleanCheckbox id="enabled" value="#{userController.user.enabled}"/>
+                        <p:selectBooleanCheckbox id="enabled" value="#{userDetailController.user.enabled}"/>
                     </h:panelGrid>
                     <p:separator />
-<!--                <h:panelGrid columns ="2">-->
-<!--                    <p:outputLabel value="Roles"/>-->
-<!--                    <p:selectCheckboxMenu id="role" value="#{userCreationController.listRoles}" label="Rollen" multiple="true"-->
-<!--                                          filter="false" filterMatchMode="startsWith" panelStyle="width: 250px" required="true"-->
-<!--                                          requiredMessage="User Role required">-->
-<!--                    <f:selectItems value="#{userCreationController.user.roles}"/>-->
-<!--                    </p:selectCheckboxMenu>-->
-<!--                    <p:outputLabel for="role" value="" />-->
-<!--                </h:panelGrid>-->
+                <h:panelGrid columns="2">
+                    <p:outputLabel for="newRole" value="Role: "/>
+                    <p:selectManyMenu id="newRole" value="#{userDetailController.user.roles}" collectionType="java.util.LinkedHashSet" showCheckbox="true" required="true" requiredMessage="Role(s) required." style="width: 175px;">
+                        <f:selectItems value="#{userDetailController.listRoles}"/>
+                    </p:selectManyMenu>
+                </h:panelGrid>
                 <p:separator />
                     <h:panelGrid columns="3">
-                        <p:commandButton value="Save" action="#{userController.doSaveUser()}" oncomplete="PF('userEditDialog').hide()" update=":userForm:usersTable"/>
-                        <p:commandButton value="Reload" action="#{userController.doReloadUser()}" update=":userForm:userData"/>
+                        <p:commandButton value="Save" action="#{userDetailController.doSaveUser()}" oncomplete="PF('userEditDialog').hide()" update=":userForm:usersTable"/>
+                        <p:commandButton value="Reload" action="#{userDetailController.doReloadUser()}" update=":userForm:userData"/>
                         <p:commandButton value="Abort" onclick="PF('userEditDialog').hide()"/>
                     </h:panelGrid>
                 </p:outputPanel>

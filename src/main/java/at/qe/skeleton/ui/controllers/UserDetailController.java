@@ -1,6 +1,7 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.User;
+import at.qe.skeleton.model.UserRole;
 import at.qe.skeleton.services.UserService;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Controller for the user view.
@@ -82,7 +85,7 @@ public class UserDetailController extends Controller implements Serializable {
         try {
             if(user.getRoles().size() > 0) {
                 user = userService.saveUser(user);
-                displayInfo("Player created", "You have been successfully registered. You can log in now.");
+                displayInfo("User updated!","");
             }
         } catch (IllegalArgumentException e) {
             displayError("Error", e.getMessage());
@@ -112,5 +115,14 @@ public class UserDetailController extends Controller implements Serializable {
 //            displayError("Password cannot be empty", "Please enter any characters for your password.");
 //        }
 //    }
+
+    public List<UserRole> getListRoles(){
+        List<UserRole> list = new ArrayList<>();
+        list.add(UserRole.ADMIN);
+        list.add(UserRole.GAME_MANAGER);
+        list.add(UserRole.PLAYER);
+        return list;
+    }
+
 
 }

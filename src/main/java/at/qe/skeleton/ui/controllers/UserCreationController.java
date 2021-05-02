@@ -10,10 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Controller for the user view.
@@ -61,7 +58,6 @@ public class UserCreationController extends Controller implements Serializable {
     }
 
     public void createUser() {
-        System.out.println("hier");
         user = new User();
     }
 
@@ -86,11 +82,10 @@ public class UserCreationController extends Controller implements Serializable {
      */
     public void doSaveUser() {
         try {
-            Set<UserRole> val = new HashSet<>();
-            val.add(UserRole.PLAYER);
-            user.setRoles(val);
+            if(user.getRoles().isEmpty())
+                user.setRoles(Collections.singleton(UserRole.PLAYER));
             user = userService.saveUser(user);
-            displayInfo("Player created", "You have been successfully registered. You can log in now.");
+            displayInfo("User created", "");
             userStatusController.addUserStatus(user);
         } catch (IllegalArgumentException e) {
             displayError("Error", e.getMessage());
