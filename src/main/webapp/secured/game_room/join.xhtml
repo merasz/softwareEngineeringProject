@@ -53,21 +53,26 @@
                             </p:dataTable>
 
                             <h:panelGroup id="confirm">
-                                <p:commandButton id="join" action="#{gameStartController.enterGame(gameJoinController.allTeamsReady)}" value="Join Game" update="confirm"
-                                                 rendered="#{!gameStartController.teamComplete}"
+                                <p:commandButton id="join" action="#{gameStartController.finishTeamAssign(gameJoinController.getAllTeamsReady())}" value="Join Game"
+                                                 update="confirm" disabled="#{gameStartController.teamComplete}" oncomplete="callRemote()"
                                                  style="height:50px; width:300px; font-size: x-large; border: 2px solid #2ecc71;
                                                  border-radius: 48px; padding: 0; margin-top: 20px; text-align: center" />
+                                <p:remoteCommand name="callRemote" partialSubmit="true" process="@this" action="#{gameJoinController.setAllTeamsReady()}" />
 
                                 <div style="font-size: large; color: white; margin-top: 30px">
                                     <h:outputText value="waiting for the other teams . . ." rendered="#{gameStartController.teamComplete}"/>
                                 </div>
                             </h:panelGroup>
 
+                            <!--
+                            disabled="#{gameStartController.teamComplete}"
+                            rendered="#{!gameStartController.teamComplete}"
+                            -->
 
                             <o:socket channel="joinChannel" scope="session" user="#{sessionInfoBean.currentUserName}"
                                       onmessage="function(m){console.log(m);}">
                                 <f:ajax event="teamJoin" execute="@all"
-                                        listener="#{gameStartController.enterGame(gameJoinController.allTeamsReady)}"
+                                        listener="#{gameStartController.enterGame(gameJoinController.getAllTeamsReady())}"
                                         render="playerList numberAssigned"/>
                             </o:socket>
 

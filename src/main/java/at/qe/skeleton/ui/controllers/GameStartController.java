@@ -1,7 +1,6 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.Game;
-import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.demo.PlayerAvailability;
 import at.qe.skeleton.services.GameStartService;
 import org.primefaces.event.SelectEvent;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.faces.context.FacesContext;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.NoSuchElementException;
@@ -49,19 +47,23 @@ public class GameStartController extends GameController implements Serializable 
         gameStartService.selectPlayer(player.getUser());
     }
 
-    public void enterGame(boolean allTeamsReady) {
+    public void finishTeamAssign(boolean allTeamsReady) {
         try {
+            gameStartService.finishTeamAssign(teamName, allTeamsReady);
+            System.out.println("-------  team complete: " + allTeamsReady + "  -------");
             teamComplete = true;
-            System.out.println("-------  " + allTeamsReady + "  -------");
-            if (allTeamsReady) {
-                gameStartService.enterGame(teamName);
-                FacesContext.getCurrentInstance().getExternalContext().redirect("/secured/game_room/gameRoom.xhtml");
-                FacesContext.getCurrentInstance().responseComplete();
-            }
         } catch (IOException e) {
             displayError("Redirect error", e.getMessage());
         } catch (IllegalArgumentException e) {
             displayError("Not so fast", e.getMessage());
+        }
+    }
+
+    public void enterGame(boolean allTeamsReady) {
+        try {
+            gameStartService.enterGame(allTeamsReady);
+        } catch (IOException e) {
+            displayError("Redirect error", e.getMessage());
         }
     }
 

@@ -57,6 +57,9 @@ public class TeamController extends Controller implements Serializable {
     public void doSaveTeam() {
         if (team.getTeamName() == null || team.getTeamName().isEmpty()) {
             displayError("No team name", "Give this team a name.");
+        } else if (game.getTeamList().stream().filter(t -> t.getTeamName() != null).
+                filter(t -> t.getTeamName().equals(team.getTeamName())).count() > 1) {
+            displayError("Team name already taken", "Teams in a game should have distinct names.");
         } else {
             team.setGame(game);
             team = teamService.saveTeam(team);

@@ -71,12 +71,15 @@ public class GameJoinController {
     }
 
     public boolean getAllTeamsReady() {
-        setAllTeamsReady();
+        System.out.println("-------  return: " + allTeamsReady + "  -------");
         return this.allTeamsReady;
     }
 
     public void setAllTeamsReady() {
-        this.allTeamsReady = playerAvailability.stream().allMatch(PlayerAvailability::isAvailable);
+        this.allTeamsReady = playerAvailability.stream().noneMatch(PlayerAvailability::isAvailable);
+        System.out.println("-------  set: " + allTeamsReady + "  -------");
+        playerAvailability.forEach(p -> System.out.println(p.getUsername() + " -- " + p.isAvailable()));
+        this.webSocketManager.getJoinChannel().send("teamJoin", sendTo);
     }
 
 }

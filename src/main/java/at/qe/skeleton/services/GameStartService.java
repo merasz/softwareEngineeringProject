@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.faces.context.FacesContext;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,7 +15,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 @Component
 @Scope("session")
@@ -92,25 +93,41 @@ public class GameStartService extends GameService {
     }
 
     public boolean teamReady() {
-        this.game = reloadGame(game);
         return game.getTeamSize() == team.getTeamPlayers().size();
     }
     //endregion
 
     //region initialize and enter game
-    public void enterGame(String teamName) throws IllegalArgumentException {
+    public void finishTeamAssign(String teamName, boolean allTeamsReady) throws IllegalArgumentException, IOException {
         this.game = reloadGame(game);
         if (teamName.isEmpty()) {
             throw new IllegalArgumentException("Give your team a name first.");
+        } else if (game.getTeamList().stream().filter(t -> t.getTeamName() != null).
+                filter(t -> t.getTeamName().equals(team.getTeamName())).count() > 1) {
+            throw new IllegalArgumentException("Sorry, another team already took this name.");
         } else if (!teamReady()) {
             throw new IllegalArgumentException("You haven't assigned enough team mates yet.");
         }
         this.team.setTeamName(teamName);
         getTeamService().saveTeam(team);
 
-        //initializeGame(game);
+        enterGame(allTeamsReady);
+    }
+
+    public void enterGame(boolean allTeamsReady) throws IOException {
+        if (allTeamsReady) {
+            System.out.println("-------  trying to initialize\n"
+                    + game.getTeamList().get(0).getTeamId() + " -- " + team.getTeamId() + "\n-------");
+            if (game.getTeamList().get(0).getTeamId().equals(team.getTeamId())) {
+                //initializeGame(game);
+                System.out.println("-------  initialized  -------");
+            }
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/secured/game_room/gameRoom.xhtml");
+            FacesContext.getCurrentInstance().responseComplete();
+        }
         getGameRepository().save(game);
     }
+
 
     public void initializeGame(Game game) {
         this.game = reloadGame(game);
