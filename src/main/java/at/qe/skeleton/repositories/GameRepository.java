@@ -11,6 +11,8 @@ import java.util.List;
 
 public interface GameRepository extends AbstractRepository<Game, Integer> {
 
+    Game findByGameId(Integer integer);
+
     @Query("SELECT g FROM Game g WHERE g.active = true AND :r = g.raspberry.raspberryId ORDER BY g.gameId DESC")
     List<Game> internalFindActiveGameByRaspberry(@Param("r") int raspberryId, Pageable page);
 

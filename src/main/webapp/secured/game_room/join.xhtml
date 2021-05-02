@@ -67,7 +67,8 @@
                             <o:socket channel="joinChannel" scope="session" user="#{sessionInfoBean.currentUserName}"
                                       onmessage="function(m){console.log(m);}">
                                 <f:ajax event="teamJoin" execute="@all"
-                                        render="playerList numberAssigned redirect"/>
+                                        listener="#{gameStartController.enterGame(gameJoinController.allTeamsReady)}"
+                                        render="playerList numberAssigned"/>
                             </o:socket>
 
                         </h:form>
