@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
@@ -61,16 +62,22 @@ public class TeamController extends Controller implements Serializable {
                 filter(t -> t.getTeamName().equals(team.getTeamName())).count() > 1) {
             displayError("Team name already taken", "Teams in a game should have distinct names.");
         } else {
-            team.setGame(game);
-            team = teamService.saveTeam(team);
-            game = gameService.saveGame(game);
-            teamListController.setGame(game);
+            List<Team> allTeamsForGame = teamService.getTeamsByGame(game);
+            if(!allTeamsForGame.contains(team)) {
+                team.setGame(game);
+                team = teamService.saveTeam(team);
+                game = gameService.saveGame(game);
+                teamListController.setGame(game);
+            }
             PrimeFaces.current().executeScript("PF('teamCreationDialog').hide()");
         }
     }
 
     public void doSaveUserToTeam() {
-        if (team.getTeamPlayers().size() == game.getTeamSize()) {
+        if (teamService.isPlayerAssignedToEnemyTeam(game, tmpPlayer)) {
+            displayError("User is already assigned to a team in this game", "Please select someone else.");
+        }
+        else if (team.getTeamPlayers().size() == game.getTeamSize()) {
             displayError("Team full", "There are no more free places in this team.");
         } else {
             try {

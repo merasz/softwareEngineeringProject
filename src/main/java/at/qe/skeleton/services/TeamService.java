@@ -25,6 +25,10 @@ public class TeamService {
         return teamRepository.findByGame(game.getGameId());
     }
 
+//    public List<User> getUsersByTeam(Team team) {
+//        return teamRepository.
+//    }
+
     public Team saveTeam(Team team){
         return teamRepository.save(team);
     }
@@ -70,5 +74,16 @@ public class TeamService {
 
     public List<Team> getTeamsByPlayer(User user) {
         return teamRepository.findAllByTeamPlayers(user);
+    }
+
+    public boolean isPlayerAssignedToEnemyTeam(Game game, User tmpPlayer) {
+        List<Team> allTeamsInGame = getTeamsByGame(game);
+        List<User> allGameParticipants = new ArrayList<>();
+        for (int i = 0; i < allTeamsInGame.size(); i++)
+            allGameParticipants.addAll(allTeamsInGame.get(i).getTeamPlayers());
+        if(allGameParticipants.contains(tmpPlayer))
+            return true;
+        else
+            return false;
     }
 }
