@@ -30,6 +30,11 @@ public class Term implements Serializable {
         this.scoresNotGuessedTerms = scoresNotGuessedTerms;
     }
 
+    public Term(String termName, Topic topic) {
+        this.termName = termName;
+        this.topic = topic;
+    }
+
     public String getTermName() {
         return termName;
     }

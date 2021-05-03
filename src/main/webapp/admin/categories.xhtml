@@ -14,7 +14,6 @@
             <p:commandButton value="Submit" ajax="false" action="#{topicParserController.upload}"
                              styleClass="p-mt-3 ui-button-outlined p-d-block"/>
         </h:form>
-
         <h:form id="topicForm">
             <p:growl id="topicData" showDetail="false" life="6000">
                 <p:autoUpdate/>
@@ -47,11 +46,21 @@
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
+           <p:commandButton style="width: 25%; margin-top: 25px; float: right;"
+                            oncomplete="PF('topicCreationDialog').show()" icon="ui-icon-add-box"
+                            action="#{topicController.doCreateNewTopic()}" value="Create new Topic">
+               <f:setPropertyActionListener value="#{topic}" target="#{topicController.topic}"/>
+           </p:commandButton>
+            <!---  test functions
             <p:commandButton style="width: 25%; margin-top: 25px; float: right;"
-                             oncomplete="PF('topicCreationDialog').show()" icon="ui-icon-add-box"
-                             action="#{topicController.doCreateNewTopic()}" value="Create new Topic">
-                <f:setPropertyActionListener value="#{topic}" target="#{topicController.topic}"/>
-            </p:commandButton>
+                          action="#{}" value="Import terms">
+                </p:commandButton>
+            -->
+            <!---
+            <p:fileUpload value="#{PrimefacesFileUpload.uploadedFile}" mode="simple" sizeLimit="50000"
+                                allowTypes="/(\\\\\\\\./\\\\\\\\/)(gif|jpe?g|png|txt|json)$/"/>
+                  <p:growl id="messages" showDetail="true"/>
+                  <p:commandButton value="Submit" actionListener="#{PrimefacesFileUpload.upload}" ajax="false"/> -->
         </h:form>
 
         <h:form id="createTopicForm">
