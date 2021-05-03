@@ -23,7 +23,7 @@
                     <div class="col-xs-12">
                         <h:form id="form">
                             <p:growl id="message" showDetail="true" >
-                                <p:autoUpdate />
+                                <!--<p:autoUpdate />-->
                             </p:growl>
 
                             <div style="font-size: xx-large; color: white; padding-bottom: 10px">
@@ -40,8 +40,8 @@
                                 <h:outputText id="numberAssigned" value="#{gameStartController.teamSizeString}"/>
                             </div>
 
-                            <p:dataTable id="playerList" var="player" value="#{gameJoinController.playerAvailability}" selectionMode="single"
-                                         selection="#{gameStartController.player}" rowKey="#{player.username}"
+                            <p:dataTable id="playerList" var="player" value="#{gameStartController.playerAvailability}"
+                                         selectionMode="single" selection="#{gameStartController.player}" rowKey="#{player.username}"
                                          disabledSelection="#{!player.available || gameStartController.teamReady}">
                                 <p:ajax event="rowSelect" listener="#{gameStartController.selectPlayer}" />
                                 <p:column headerText="Player Name">
@@ -53,26 +53,23 @@
                             </p:dataTable>
 
                             <h:panelGroup id="confirm">
-                                <p:commandButton id="join" action="#{gameStartController.finishTeamAssign(gameJoinController.getAllTeamsReady())}" value="Join Game"
-                                                 update="confirm" disabled="#{gameStartController.teamComplete}" oncomplete="callRemote()"
+                                <p:commandButton id="join" action="#{gameStartController.finishTeamAssign}" value="Join Game"
+                                                 update="confirm message" disabled="#{gameStartController.teamComplete}" oncomplete="callRemote()"
                                                  style="height:50px; width:300px; font-size: x-large; border: 2px solid #2ecc71;
                                                  border-radius: 48px; padding: 0; margin-top: 20px; text-align: center" />
-                                <p:remoteCommand name="callRemote" partialSubmit="true" process="@this" action="#{gameJoinController.setAllTeamsReady()}" />
+                                <p:remoteCommand name="callRemote" partialSubmit="true" process="@this"
+                                                 action="#{gameStartController.setAllTeamsReady}" />
 
                                 <div style="font-size: large; color: white; margin-top: 30px">
                                     <h:outputText value="waiting for the other teams . . ." rendered="#{gameStartController.teamComplete}"/>
                                 </div>
                             </h:panelGroup>
 
-                            <!--
-                            disabled="#{gameStartController.teamComplete}"
-                            rendered="#{!gameStartController.teamComplete}"
-                            -->
 
                             <o:socket channel="joinChannel" scope="session" user="#{sessionInfoBean.currentUserName}"
                                       onmessage="function(m){console.log(m);}">
                                 <f:ajax event="teamJoin" execute="@all"
-                                        listener="#{gameStartController.enterGame(gameJoinController.getAllTeamsReady())}"
+                                        listener="#{gameStartController.enterGame}"
                                         render="playerList numberAssigned"/>
                             </o:socket>
 

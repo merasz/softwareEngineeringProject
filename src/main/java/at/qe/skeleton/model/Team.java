@@ -5,10 +5,7 @@ import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Entity
 public class Team implements Serializable {
@@ -102,5 +99,20 @@ public class Team implements Serializable {
 
     public void setDeviceIdsFromTeam(Map<User, String> deviceIdsFromTeam) {
         this.deviceIdsFromTeam = deviceIdsFromTeam;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Team team = (Team) o;
+        return teamId.equals(team.teamId);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + Objects.hashCode(this.teamId);
+        return hash;
     }
 }

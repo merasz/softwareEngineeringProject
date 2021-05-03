@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Component
@@ -24,48 +25,72 @@ public class GameStartController extends GameController implements Serializable 
     private boolean teamComplete = false;
 
     public String startGame(Game game) {
-        setUser();
-        setGame(gameStartService.startGame(game, getUser()));
-        return "/secured/game_room/join.xhtml?faces-redirect=true";
-    }
-
-    public String joinGame() {
-        setUser();
-        try {
-            setGame(gameStartService.joinGame(getUser()));
-            return "/secured/game_room/join.xhtml";
-        } catch (NoSuchElementException e) {
-            displayError("No games", e.getMessage());
-        } catch (IndexOutOfBoundsException e) {
-            displayError("All teams already logged in", "You've been probably already assigned to a team.");
+        if (game.isActive()) {
+            displayError("Game already started", "Please use JOIN GAME to join this game.");
+        } else if (game.getTeamList().stream().map(t -> t.getTeamPlayers().size()).reduce(0, Integer::sum) == game.getCountPlayers()) {
+            displayError("All teams full", "You cannot join this game because all teams are full and you are not assigned to any of them.");
+        } else {
+            try {
+                setUser();
+                setGame(gameStartService.startGame(game, getUser()));
+                return "/secured/game_room/join.xhtml?faces-redirect=true";
+            } catch (IllegalArgumentException e) {
+                displayError("All teams already have a team leader", e.getMessage());
+            }
         }
         return "";
     }
 
-    public void selectPlayer(SelectEvent<PlayerAvailability> event) {
-        this.player = event.getObject();
-        gameStartService.selectPlayer(player.getUser());
+    public String joinGame() {
+        setUser();
+        teamComplete = false;
+        try {
+            setGame(gameStartService.joinGame(getUser()));
+            return "/secured/game_room/join.xhtml?faces-redirect=true";
+        } catch (NoSuchElementException e) {
+            displayError("No games", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            displayError("All teams already full", e.getMessage());
+        }
+        return "";
     }
 
-    public void finishTeamAssign(boolean allTeamsReady) {
+    public List<PlayerAvailability> getPlayerAvailability() {
+        return gameStartService.getGameJoinController().getPlayerAvailability(getGame());
+    }
+
+    public void setAllTeamsReady() {
+        gameStartService.getGameJoinController().setAllTeamsReady(getGame(), getUser());
+    }
+
+    public void selectPlayer(SelectEvent<PlayerAvailability> event) {
+        this.player = event.getObject();
+        setGame(gameStartService.selectPlayer(player.getUser()));
+    }
+
+    public void finishTeamAssign() {
         try {
-            gameStartService.finishTeamAssign(teamName, allTeamsReady);
-            System.out.println("-------  team complete: " + allTeamsReady + "  -------");
+            setGame(gameStartService.finishTeamAssign(teamName));
             teamComplete = true;
         } catch (IOException e) {
             displayError("Redirect error", e.getMessage());
         } catch (IllegalArgumentException e) {
+            System.out.println("-------  finish team error  -------");
             displayError("Not so fast", e.getMessage());
         }
     }
 
-    public void enterGame(boolean allTeamsReady) {
-        try {
-            gameStartService.enterGame(allTeamsReady);
-        } catch (IOException e) {
-            displayError("Redirect error", e.getMessage());
+    public void enterGame() {
+        if (teamComplete) {
+            try {
+                setGame(gameStartService.enterGame());
+            } catch (IOException e) {
+                displayError("Redirect error", e.getMessage());
+            }
         }
     }
+
+
 
     //region getter & setter
     public String getTeamName() {
