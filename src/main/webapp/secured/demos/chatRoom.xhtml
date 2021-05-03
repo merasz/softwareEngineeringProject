@@ -1,92 +1,142 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--suppress ALL -->
 <ui:composition xmlns="http://www.w3c.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:ng="http://xmlns.jcp.org/jsf/passthrough"
-	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
-	xmlns:demo="http://java.sun.com/jsf/composite/demo"
-	template="/WEB-INF/templates/main.xhtml">
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:ng="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+                xmlns:demo="http://java.sun.com/jsf/composite/demo"
+                template="/WEB-INF/templates/main.xhtml">
     <ui:define name="content">
         <!-- see chat.js -->
-        <h:outputScript>			
-            pfContext=PF
+        <h:outputScript>
+            pfContext = PF
         </h:outputScript>
+
+        <!--        <p:chart style="color: #00a7d0; " type="pie" model="#{userScoresController.model}" />-->
 
         <h:form style="width: 83%; padding-left: 72px; margin-top: 75px; float: right" id="chatRoomForm">
             <div class="chatRoomContent">
-                <h1>Chatroom</h1>
+                <h1 class="box-title"><i class="fa fa-users"></i> Lobby</h1>
 
                 <p:panelGrid columns="2" style="width: 100%;"
-                        columnClasses="chatRoomDescriptionPanel,chatRoomPanel">
+                             columnClasses="chatRoomDescriptionPanel,chatRoomPanel">
 
-                    <p:panel header="Tutorial" style="border: none;">
-                            <ui:include src="/resources/includes/websocketsDescription.xhtml" />
+                    <p:panel id="panelL" header="All Time Top Scores">
+                        <p>Here you can find all Data for the <span
+                                style="color: #2ecc71; font-weight: bold"> Highscores</span></p>
+
+                        <h:panelGroup layout="block"
+                                      style="display: flex; align-items: center; justify-content: space-evenly; width: 100%;font-weight: bold; color: #0d9dbb; font-size: 35px; margin-top: 30px">
+                            <h:outputText value="Highest Score by a Player in a Topic"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:dataTable id="scoreTableByTopic" var="score"
+                                         value="#{userScoresController.wonGamesByTopics}"
+                                         widgetVar="scoreTableByTopic" rows="5"
+                                         style="width:80%;margin: 0px auto; margin-top:30px">
+                                <p:column headerText="Topic Name" style="text-align: center; width: 30%">
+                                    <h:outputText value="#{score.game.gameName}"/>
+                                </p:column>
+                                <p:column headerText="Username" style="text-align: center; width: 30%">
+                                    <h:outputText value="#{score.user.username}"/>
+                                </p:column>
+                                <p:column headerText="Score" style="text-align: center; width: 30%">
+                                    <h:outputText value="#{score.totalRoundScore}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </h:panelGroup>
+
+
+                        <h:panelGroup layout="block"
+                                      style="display: flex; align-items: center; justify-content: space-evenly; width: 100%;font-weight: bold; color: #0d9dbb; font-size: 35px; margin-top: 30px">
+                            <h:outputText value="Highest Score by a Player in a Game"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:dataTable id="scoreTableByGames" value="#{userScoresController.wonGamesByUser}"
+                                         widgetVar="scoreTableByGames" rows="5"
+                                         style="width:80%;margin: 0px auto; margin-top:30px">
+                                <p:column headerText="Game Name" style="text-align: center; width: 30%">
+                                    <h:outputText value="#{score.game.gameName}"/>
+                                </p:column>
+                                <p:column headerText="Username" style="text-align: center; width: 30%">
+                                    <h:outputText value="#{score.user.username}"/>
+                                </p:column>
+                                <p:column headerText="Score" style="text-align: center; width: 30%">
+                                    <h:outputText value="#{score.totalRoundScore}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </h:panelGroup>
+
+
                     </p:panel>
 
                     <p:panel header="Chat" style=" border: none;">
-                            <h3>Who's online?</h3>
+                        <h3>Who's online?</h3>
                         <p:scrollPanel id="onlineInfo"
-                                styleClass="chatRoomPanelContent onlineInfoBox"
-                                widgetVar="onlineInfoWidget">
+                                       styleClass="chatRoomPanelContent onlineInfoBox"
+                                       widgetVar="onlineInfoWidget">
                             <ui:repeat var="userStatusEntry"
-                                value="#{userStatusController.userStatusInfos}">
-                                <demo:userStatusOutput userStatusInfo="#{userStatusEntry}" />
+                                       value="#{userStatusController.userStatusInfos}">
+                                <demo:userStatusOutput userStatusInfo="#{userStatusEntry}"/>
                             </ui:repeat>
                         </p:scrollPanel>
                         <h3>What's going on?</h3>
                         <p:scrollPanel id="actionLog"
-                                styleClass="chatRoomPanelContent actionLogBox"
-                                widgetVar="eventLogwWidget">
+                                       styleClass="chatRoomPanelContent actionLogBox"
+                                       widgetVar="eventLogwWidget">
                             <ui:repeat var="logEntry"
-                                value="#{userStatusController.actionLogs}">
-                                <demo:logOutput logEntry="#{logEntry}" />
+                                       value="#{userStatusController.actionLogs}">
+                                <demo:logOutput logEntry="#{logEntry}"/>
                             </ui:repeat>
                         </p:scrollPanel>
                         <h3>Messages</h3>
                         <p:scrollPanel id="chatContentWindow"
-                                styleClass="chatRoomPanelContent chatBox"
-                                widgetVar="chatWindowWidget">
+                                       styleClass="chatRoomPanelContent chatBox"
+                                       widgetVar="chatWindowWidget">
                             <ui:repeat var="msg" value="#{userChatController.chatContent}">
-                                <demo:msgOutput message="#{msg}" />
+                                <demo:msgOutput message="#{msg}"/>
                             </ui:repeat>
                         </p:scrollPanel>
                         <h:panelGrid id="recipientsSelection" columns="2"
-                                style="height: 50px;">
-                            <h:outputText value="Send to" />
+                                     style="height: 50px;">
+                            <h:outputText value="Send to"/>
                             <p:selectManyButton
-                                value="#{userChatController.currentMessage.to}">
-                                <f:selectItems value="#{userChatController.possibleRecipients}" />
-                                <f:ajax execute="@this" render="sendBtn" />
+                                    value="#{userChatController.currentMessage.to}">
+                                <f:selectItems value="#{userChatController.possibleRecipients}"/>
+                                <f:ajax execute="@this" render="sendBtn"/>
                             </p:selectManyButton>
                         </h:panelGrid>
                         <p:inputTextarea id="msgBox" rows="3"
-                                value="#{userChatController.currentMessage.text}"
-                                style="padding: 0px;" styleClass="chatRoomPanelContent" />
+                                         value="#{userChatController.currentMessage.text}"
+                                         style="padding: 0px;" styleClass="chatRoomPanelContent"/>
                         <h:commandButton id="sendBtn" value="Send"
-                                action="#{userChatController.sendMessage()}"
-                                disabled="#{empty userChatController.currentMessage.to}">
-                            <f:ajax execute="@form" render="msgBox" />
+                                         action="#{userChatController.sendMessage()}"
+                                         disabled="#{empty userChatController.currentMessage.to}">
+                            <f:ajax execute="@form" render="msgBox"/>
                         </h:commandButton>
                     </p:panel>
                 </p:panelGrid>
             </div>
 
             <o:socket channel="userRegistrationChannel" scope="application"
-                onmessage="function(m){console.log(m);}">
+                      onmessage="function(m){console.log(m);}">
                 <f:ajax event="connectionUpdate"
-                    render="onlineInfo recipientsSelection actionLog sendBtn"
-                    listener="#{userChatController.synchronizeRecipients()}"
-                    onevent="scrollToEventLogAndOnlineInfoBottom" />
+                        render="onlineInfo recipientsSelection actionLog sendBtn"
+                        listener="#{userChatController.synchronizeRecipients()}"
+                        onevent="scrollToEventLogAndOnlineInfoBottom"/>
             </o:socket>
 
             <o:socket channel="messageChannel" scope="session"
-                user="#{sessionInfoBean.currentUserName}"
-                onmessage="function(m){console.log(m);}">
+                      user="#{sessionInfoBean.currentUserName}"
+                      onmessage="function(m){console.log(m);}">
                 <f:ajax event="msgRecieved" execute="@all"
-                    render="chatContentWindow" onevent="scrollToChatBottom" />
+                        render="chatContentWindow" onevent="scrollToChatBottom"/>
             </o:socket>
         </h:form>
     </ui:define>
