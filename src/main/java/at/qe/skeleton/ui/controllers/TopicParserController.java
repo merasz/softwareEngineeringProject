@@ -9,6 +9,9 @@ import com.fasterxml.jackson.core.JsonParser;
 //import javax.json.stream;
 //import com.sun.faces.util.Json;
 //import org.apache.tomcat.util.json.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import org.json.simple.JSONObject;
 //import org.json.simple.parser.ParseException;
 import org.primefaces.event.*;
@@ -28,7 +31,12 @@ import javax.faces.application.*;
 import javax.faces.context.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 @Controller
 public class TopicParserController {
@@ -49,6 +57,7 @@ public class TopicParserController {
 
     public void upload() throws IOException, ParseException {
       if (file != null) {
+          parseAndSave();
             FacesMessage message = new FacesMessage("Successful", file.getFileName() + " is uploaded.");
             FacesContext.getCurrentInstance().addMessage(null, message);
             //parseAndSave();
@@ -57,17 +66,18 @@ public class TopicParserController {
         System.out.println("Schauen obs funktioniert --> es funktioniert!!!");
     }
 
-    public void parseAndSave() throws ParseException {
-        //TODO Datei wurde hochgeladen, du kannst hier den Content von der Datei einlesen;
+    public void parseAndSave() {
+        try {
+            InputStream inputStream = file.getInputStream();
+            JSONParser jsonParser = new JSONParser();
+            JSONObject jsonObject = (JSONObject)jsonParser.parse(new InputStreamReader(inputStream, "UTF-8"));
+            String topicName = jsonObject.get("topic").toString();
 
-        String jsonString = new String(file.getContent());
-
-        // use with json tomcat
-
-        //JSONParser jsonParser = new JSONParser(jsonString);
-
-        //System.out.println(jsonParser.parse());
-
+            Topic topic = topicService.saveTopic(new Topic(topicName));
+            termsService.importTerms(jsonObject, topic);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void handleFileUpload(FileUploadEvent event) {
@@ -107,6 +117,11 @@ public class TopicParserController {
     }
 
     public void setFile(UploadedFile file) {
+        for (int i = 0; i < 50; i++) {
+            System.out.println("in set file");
+        }
+        if(file == null)
+            System.out.println("file is null");
         this.file = file;
     }
 

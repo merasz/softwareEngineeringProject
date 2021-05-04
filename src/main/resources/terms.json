@@ -1,7 +1,7 @@
-[ {
+{
   "topic" : "Animals",
-  "termName" : "Chicken"
-}, {
-  "topic" : "Plants",
-  "termName" : "Willow"
-} ]
+  "terms" : [
+      "Chicken",
+      "Fisch"
+    ]
+}

@@ -7,18 +7,15 @@ import at.qe.skeleton.repositories.TermsRepository;
 import at.qe.skeleton.repositories.TopicRepository;
 import at.qe.skeleton.utils.JsonImport;
 import org.apache.tomcat.util.json.ParseException;
+import org.json.simple.JSONObject;
 import org.primefaces.shaded.json.JSONArray;
-import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Component
 @Scope("application")
@@ -53,12 +50,6 @@ public class TermsService {
     }
 
     public Term saveTerm(Term term) throws IllegalArgumentException {
-        return termsRepository.save(term);
-    }
-
-    public Term demoSaveTerm(Term term) throws IllegalArgumentException {
-        Topic curr = topicRepository.findFirstByTopicName("Geo");
-        term.setTopic(curr);
         return termsRepository.save(term);
     }
 
@@ -105,32 +96,20 @@ public class TermsService {
         }
     }
 
-    public void importTerms() throws FileNotFoundException, ParseException {
-        JSONArray json = JsonImport.readJson("terms");
-        System.out.println(json);
-        for (Object o : json) {
-            JSONObject jsonObject = (JSONObject) o;
+    public void importTerms(JSONObject jsonObject, Topic topic) {
+        String allTermsAsStringJson = jsonObject.get("terms").toString();
 
-            String topicName = jsonObject.keys().next();
-                    //(String) jsonObject.get("Term");
-            Topic topic = topicRepository.findFirstByTopicName(topicName);
-            if (topic == null) {
-                topic = new Topic(topicName);
-            }
-
-            String termName = (String) jsonObject.names().get(0);
-            Term term = termsRepository.findFirstByTermName(termName);
-            if (term == null || term.getTopic().getTopicName() != topicName) {
-                term = new Term(termName, topic);
-            }
-
-            topicRepository.save(topic);
-            termsRepository.save(term);
-
-            System.out.println(topicName);
-            System.out.println(termName);
-            System.out.println("-----");
+        List<String> allTerms = new ArrayList<>();
+        allTerms.addAll(Arrays.asList(allTermsAsStringJson.split("[\"]")));
+        Set<String> newTerms = new HashSet<>();
+        for (String v: allTerms) {
+            if(v.contains("[") || v.contains(",") || v.contains("]"))
+                continue;
+            Term tmp = new Term(v, topic);
+            if(!termsRepository.doesTermExits(tmp.getTermName(), topic.getTopicName()))
+                termsRepository.save(tmp);
         }
+
     }
 
     public List<Term> getTermsForTopic(Topic topic) {

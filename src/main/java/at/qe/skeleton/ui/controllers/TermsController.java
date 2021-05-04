@@ -62,15 +62,13 @@ public class TermsController extends Controller implements Serializable {
     }
 
     public void doSaveTerm(Topic topic) {
-        if(topic == null)
-            System.out.println("topic null");
-        else
-            System.out.println("topicname " + topic.getTopicName());
-        System.out.println("term string " + term.getTermName());
+        if(topic == null) {
+            displayInfo("Cant save Term", "");
+            return;
+        }
         term.setTopic(topic);
         try {
-            term = termsService.demoSaveTerm(term);
-//            term = termsService.saveTerm(term);
+            term = termsService.saveTerm(term);
         } catch (IllegalArgumentException e){
             displayError("Error", e.getMessage());
         }
@@ -110,13 +108,5 @@ public class TermsController extends Controller implements Serializable {
 //        displayInfo("Term deleted", "Term successfully deleted.");
 //    }
 
-    public void importTerms() {
-        try {
-            termsService.importTerms();
-        } catch (FileNotFoundException e) {
-            displayError("File not found", "Error: File not found.");
-        } catch (ParseException e) {
-            displayError("Parse error", "Error: File could not be read.");
-        }
-    }
+
 }
