@@ -1,10 +1,8 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.*;
-import at.qe.skeleton.services.GameService;
-import at.qe.skeleton.services.TeamService;
-import at.qe.skeleton.services.UserService;
-import at.qe.skeleton.services.UserStatsService;
+import at.qe.skeleton.repositories.ScoreRepository;
+import at.qe.skeleton.services.*;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
 import org.primefaces.model.chart.DonutChartModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +10,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -45,15 +41,42 @@ public class LobbyScoresController extends Controller implements Serializable {
     @Autowired
     private SessionInfoBean sessionInfoBean;
 
+    @Autowired
+    private ScoreService scoreService;
+
     private Collection<Topic> mostPopularTopics;
+    private Collection<User> mostValuedUsers;
+    private Collection<Integer> mostValuedUsersScores;
+    private Map<User, Integer> mostValuedUsersWithScore;
 
     @PostConstruct
     public void init(){
         mostPopularTopics = gameService.getMostPopularTopics();
+        mostValuedUsers = scoreService.getMostValuedUsers();
+        mostValuedUsersScores = scoreService.getMostValuedUserScores();
+        mostValuedUsersWithScore = scoreService.getUsersWithScores();
     }
 
     public Collection<Topic> getMostPopularTopics() {
         return mostPopularTopics.stream().limit(3).collect(Collectors.toList());
+    }
+
+    public Collection<User> getMostValuedUsers() {
+        return mostValuedUsers.stream().limit(10).collect(Collectors.toList());
+    }
+
+    public Collection<Integer> getMostValuedUsersScores() {
+        return mostValuedUsersScores.stream().limit(10).collect(Collectors.toList());
+    }
+
+    public Map<User, Integer> getMostValuedUsersWithScore() {
+        return mostValuedUsersWithScore;
+    }
+
+
+    public List<Map.Entry<User, Integer>> getHighscores() {
+        Set<Map.Entry<User, Integer>> productSet = mostValuedUsersWithScore.entrySet();
+        return new ArrayList<Map.Entry<User, Integer>>(productSet);
     }
 
 }

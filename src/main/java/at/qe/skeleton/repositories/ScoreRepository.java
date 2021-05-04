@@ -5,6 +5,7 @@ import org.omnifaces.cdi.Param;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ScoreRepository extends AbstractRepository<Score, Integer> {
 
@@ -28,5 +29,9 @@ public interface ScoreRepository extends AbstractRepository<Score, Integer> {
     @Query("SELECT count(distinct s.game) from Score s WHERE s.team in :teams GROUP BY s.game.gameId HAVING SUM(s.totalRoundScore) < s.game.scoreToWin")
     Integer countLostGamesByUser(@Param(name = "teams") List<Team> teams);
 
+    @Query("select s.user from Score s group by s.user order by sum(s.totalRoundScore) desc")
+    List<User> getTopPlayersUsernames();
 
+    @Query("select sum(s.totalRoundScore) from Score s group by s.user order by sum(s.totalRoundScore) desc")
+    List<Integer> getTopPlayersScores();
 }
