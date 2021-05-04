@@ -55,20 +55,6 @@ public class UserListController implements Serializable {
         }
     }
 
-    public Collection<User> getFilteredList() {
-        if(getOption().equals("all")) {
-            return filteredList;
-        } else if(getOption().equals("admin")) {
-            return filteredList.stream().filter(u -> u.getRoles().contains(UserRole.ADMIN)).collect(Collectors.toList());
-        } else if(getOption().equals("manager")) {
-            return filteredList.stream().filter(u -> u.getRoles().contains(UserRole.GAME_MANAGER)).collect(Collectors.toList());
-        } else if (getOption().equals("player")) {
-            return filteredList.stream().filter(u -> u.getRoles().contains(UserRole.PLAYER)).collect(Collectors.toList());
-        } else {
-            return null;
-        }
-    }
-
     public Collection<User> getAllPlayers(){
         return userService.getAllPlayers();
     }
