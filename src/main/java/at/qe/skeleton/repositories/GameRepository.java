@@ -1,6 +1,7 @@
 package at.qe.skeleton.repositories;
 
 import at.qe.skeleton.model.Game;
+import at.qe.skeleton.model.Topic;
 import at.qe.skeleton.model.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,5 +25,8 @@ public interface GameRepository extends AbstractRepository<Game, Integer> {
             return games.get(0);
         }
     }
+
+    @Query("select g.topic from Game g group by g.topic order by count(*) desc")
+    List<Topic> getMostPopularTopics();
 
 }

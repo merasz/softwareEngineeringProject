@@ -31,9 +31,9 @@
 
                         <h:panelGroup layout="block"
                                       style="display: flex; align-items: center; justify-content: space-evenly; width: 100%;font-weight: bold; color: #0d9dbb; font-size: 35px; margin-top: 30px">
-                            <h:outputText value="Highest Score by a Player in a Topic"/>
-                        </h:panelGroup>
+                            <h:outputText value="Highest Scores by User over all ever Played Games"/>
 
+                        </h:panelGroup>
                         <h:panelGroup>
                             <p:dataTable id="scoreTableByTopic" var="score"
                                          value="#{userScoresController.wonGamesByTopics}"
@@ -69,6 +69,21 @@
                                 </p:column>
                                 <p:column headerText="Score" style="text-align: center; width: 30%">
                                     <h:outputText value="#{score.totalRoundScore}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </h:panelGroup>
+
+                        <h:panelGroup layout="block"
+                                      style="display: flex; align-items: center; justify-content: space-evenly; width: 100%;font-weight: bold; color: #0d9dbb; font-size: 35px; margin-top: 30px">
+                            <h:outputText value="TOP 3 Topics"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:dataTable id="scoreTableByGamesss" value="#{lobbyScoresController.mostPopularTopics}"
+                                         var="topic" widgetVar="scoreTableByGames" rows="5"
+                                         style="width:80%;margin: 0px auto; margin-top:30px">
+                                <p:column headerText="Game Name" style="text-align: center; width: 30%">
+                                    <h:outputText value="#{topic.topicName}"/>
                                 </p:column>
                             </p:dataTable>
                         </h:panelGroup>

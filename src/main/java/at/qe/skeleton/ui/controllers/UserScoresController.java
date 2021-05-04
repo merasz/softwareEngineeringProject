@@ -40,6 +40,7 @@ public class UserScoresController extends Controller implements Serializable {
     @Autowired
     private SessionInfoBean sessionInfoBean;
 
+
     private DonutChartModel model;
 
     public UserScoresController(){

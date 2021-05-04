@@ -96,5 +96,9 @@ public class GameService {
     public Collection<Game> getAllGames() {
         return gameRepository.findAll();
     }
+
+    public Collection<Topic> getMostPopularTopics() {
+        return gameRepository.getMostPopularTopics();
+    }
     //endregion
 }
