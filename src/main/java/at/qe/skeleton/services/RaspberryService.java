@@ -22,7 +22,7 @@ public class RaspberryService {
      *
      * @return
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
+
     public Collection<Raspberry> getAllRaspberries() {
         return raspberryRepository.findAll();
     }
