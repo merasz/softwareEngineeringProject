@@ -34,4 +34,10 @@ public interface ScoreRepository extends AbstractRepository<Score, Integer> {
 
     @Query("select sum(s.totalRoundScore) from Score s group by s.user order by sum(s.totalRoundScore) desc")
     List<Integer> getTopPlayersScores();
+
+    @Query("select s.user from Score s group by s.game.gameId, s.user.username order by sum(s.totalRoundScore) desc")
+    List<User> getTopPlayersInAGame();
+
+    @Query("select sum(s.totalRoundScore) from Score s group by s.game.gameId, s.user.username order by sum(s.totalRoundScore) desc")
+    List<Integer> getTopPlayersInAGameScore();
 }

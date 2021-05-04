@@ -54,17 +54,14 @@
                         </h:panelGroup>
 
                         <h:panelGroup>
-                            <p:dataTable id="scoreTableByGames" value="#{userScoresController.wonGamesByUser}"
-                                         widgetVar="scoreTableByGames" rows="5"
+                            <p:dataTable id="highScoreTableAGame" value="#{lobbyScoresController.highscoresAGame}"
+                                         var="agame" widgetVar="scoreTableByGames" rows="3"
                                          style="width:80%;margin: 0px auto; margin-top:30px">
-                                <p:column headerText="Game Name" style="text-align: center; width: 30%">
-                                    <h:outputText value="#{score.game.gameName}"/>
+                                <p:column headerText="User" style="text-align: center; width: 30%">
+                                    <h:outputText value="#{agame.key.username}"/>
                                 </p:column>
-                                <p:column headerText="Username" style="text-align: center; width: 30%">
-                                    <h:outputText value="#{score.user.username}"/>
-                                </p:column>
-                                <p:column headerText="Score" style="text-align: center; width: 30%">
-                                    <h:outputText value="#{score.totalRoundScore}"/>
+                                <p:column headerText="Points" style="text-align: center; width: 30%">
+                                    <h:outputText value="#{agame.value}"/>
                                 </p:column>
                             </p:dataTable>
                         </h:panelGroup>

@@ -48,6 +48,7 @@ public class LobbyScoresController extends Controller implements Serializable {
     private Collection<User> mostValuedUsers;
     private Collection<Integer> mostValuedUsersScores;
     private Map<User, Integer> mostValuedUsersWithScore;
+    private Map<User, Integer> mostValuedUsersWithScoreAGame;
 
     @PostConstruct
     public void init(){
@@ -55,6 +56,7 @@ public class LobbyScoresController extends Controller implements Serializable {
         mostValuedUsers = scoreService.getMostValuedUsers();
         mostValuedUsersScores = scoreService.getMostValuedUserScores();
         mostValuedUsersWithScore = scoreService.getUsersWithScores();
+        mostValuedUsersWithScoreAGame = scoreService.getUsersWithScoreAGame();
     }
 
     public Collection<Topic> getMostPopularTopics() {
@@ -73,8 +75,16 @@ public class LobbyScoresController extends Controller implements Serializable {
         return mostValuedUsersWithScore;
     }
 
+    public Map<User, Integer> getMostValuedUsersWithScoreAGame() {
+        return mostValuedUsersWithScoreAGame;
+    }
 
     public List<Map.Entry<User, Integer>> getHighscores() {
+        Set<Map.Entry<User, Integer>> productSet = mostValuedUsersWithScore.entrySet();
+        return new ArrayList<Map.Entry<User, Integer>>(productSet);
+    }
+
+    public List<Map.Entry<User, Integer>> getHighscoresAGame() {
         Set<Map.Entry<User, Integer>> productSet = mostValuedUsersWithScore.entrySet();
         return new ArrayList<Map.Entry<User, Integer>>(productSet);
     }
