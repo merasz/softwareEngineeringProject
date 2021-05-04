@@ -168,4 +168,8 @@ public class UserService {
     public List<User> getUserByTeam(Team team) {
         return userRepository.findAllPlayersByTeam(team);
     }
+
+    public boolean isUsernameAlreadyTaken(User user) {
+        return userRepository.findAll().contains(user);
+    }
 }
