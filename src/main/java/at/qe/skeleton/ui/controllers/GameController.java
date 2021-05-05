@@ -1,12 +1,10 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.*;
-import at.qe.skeleton.services.GameService;
-import at.qe.skeleton.services.GameStatsService;
-import at.qe.skeleton.services.TermsService;
-import at.qe.skeleton.services.TopicService;
+import at.qe.skeleton.services.*;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
 import org.primefaces.model.chart.*;
+import org.primefaces.model.chart.LineChartModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -30,30 +28,18 @@ public class GameController extends Controller implements Serializable {
     private TermsService termsService;
 
     @Autowired
+    private GameListController gameListController;
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
     private SessionInfoBean sessionInfoBean;
 
     private List<Game> games;
     private Game game;
     private User user;
-    private DonutChartModel model;
 
-    public GameController(){
-        model = new DonutChartModel();
-        updateChart();
-    }
-
-    public void updateChart() {
-
-        Map<String, Number> circle1 = new LinkedHashMap<String, Number>();
-        circle1.put("Game 1", 24);
-        circle1.put("Game 2", 12);
-        circle1.put("Game 3", 6);
-        circle1.put("Game 4", 4);
-
-        model.addCircle(circle1);
-        model.setTitle("Current Players in each Game");
-        model.setLegendPosition("w");
-    }
 
     public void doSaveGame() {
         try {
@@ -101,12 +87,23 @@ public class GameController extends Controller implements Serializable {
         return this.topicService.getTopicByName(game.getTopic());
     }
 
-    public DonutChartModel getModel() {
-        return model;
+
+    public GameListController getGameListController() {
+        return gameListController;
     }
 
-    public void setModel(DonutChartModel model) {
-        this.model = model;
+    public void setGameListController(GameListController gameListController) {
+        this.gameListController = gameListController;
     }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+
     //endregion
 }

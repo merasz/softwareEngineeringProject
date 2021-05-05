@@ -13,7 +13,7 @@
                 <p:autoUpdate/>
             </p:growl>
 
-            <p:chart style="color: #00a7d0; width: 83%; margin-top: 80px; float: right;" type="donut" model="#{gameController.model}" />
+            <p:chart style="color: #00a7d0; width: 83%; margin-top: 80px; float: right;" type="line" model="#{currentGamesController.model}" />
 
             <p:dataTable widgetVar="adminTable" id="adminTable" var="game" value="#{gameListController.activegGames}"
                          style="width: 83%; margin-top: 30px; float: right;">
