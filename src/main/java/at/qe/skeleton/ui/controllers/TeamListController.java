@@ -56,7 +56,6 @@ public class TeamListController {
 
     public void doSetGame(Game game) {
         this.game = game;
-        teamsWithItsTotalScoreAGame = scoreService.getScoresForTeamByGame(game);
     }
 
     public Game getGame() {

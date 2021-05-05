@@ -41,7 +41,7 @@
 
                 <p:column style="width:100px;text-align: center" headerText="Teams">
                     <p:commandButton title="Teams" icon="ui-icon-note"
-                                     action="#{teamListController.doSetGame(gameCreationController.game)}"
+                                     action="#{teamListController.setGame(gameCreationController.game)}"
                                      update=":teamsForm" oncomplete="$('#adminForm').hide();$('#teamsForm').show();"
                                      style="width:20px;height:20px">
                         <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}"/>
