@@ -64,7 +64,7 @@ public class TermsServiceTest {
         Term term = new Term();
         term.setTermName("TestTerm");
         term.setTopic(topic);
-        termsService.getTermsRepository().save(term);
+        //termsService.getTermsRepository().save(term);
         Assertions.assertThrows(IllegalArgumentException.class, () -> termsService.deleteTopic(topic));
     }
 
