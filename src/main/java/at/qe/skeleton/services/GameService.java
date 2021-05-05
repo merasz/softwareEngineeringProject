@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.*;
 
 @Component
@@ -31,6 +32,10 @@ public class GameService {
     private Team currentTeam;
     private User currentPlayer;
     private List<TeamPlayer> players;
+
+    public Collection<Game> getAllActiveGames() {
+        return gameRepository.findAllActive();
+    }
 
     public class TeamPlayer {
         User player;

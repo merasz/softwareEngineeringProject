@@ -29,4 +29,8 @@ public interface GameRepository extends AbstractRepository<Game, Integer> {
     @Query("select g.topic from Game g group by g.topic order by count(*) desc")
     List<Topic> getMostPopularTopics();
 
+    @Query("Select g from Game g where g.active = 1 and g.startTime is not NULL and g.endTime is NULL")
+    List<Game> findAllActive();
+
+
 }

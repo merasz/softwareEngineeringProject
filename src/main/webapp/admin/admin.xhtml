@@ -15,7 +15,7 @@
 
             <p:chart style="color: #00a7d0; width: 83%; margin-top: 80px; float: right;" type="donut" model="#{gameController.model}" />
 
-            <p:dataTable widgetVar="adminTable" id="adminTable" var="game" value="#{gameListController.games}"
+            <p:dataTable widgetVar="adminTable" id="adminTable" var="game" value="#{gameListController.activegGames}"
                          style="width: 83%; margin-top: 30px; float: right;">
                 <f:facet name="header">Ongoing Games</f:facet>
                 <p:column headerText="Game ID">
@@ -53,21 +53,14 @@
         </h:form>
 
         <h:form id="teamsForm" style="display: none">
-            <p:dataTable widgetVar="teamsTable" id="teamsTable" var="team" value="#{teamListController.teamsByGame}"
+            <p:dataTable widgetVar="teamsTable" id="teamsTable" var="scores" value="#{teamListController.teamScores}"
                          style="width: 83%; margin-top: 110px; float: right;">
                 <f:facet name="header">Teams - #{teamListController.game.gameName}</f:facet>
                 <p:column headerText="Team name">
-                    <h:outputText value="#{team.teamName}"/>
+                    <h:outputText value="#{scores.team.teamName}"/>
                 </p:column>
                 <p:column style="width:100px;text-align: center" headerText="Player">
-                    <p:commandButton title="Player" icon="ui-icon-note"
-                                     action="#{teamController.doSaveTeam(teamListController.game)}"
-                                     update=":playerForm:playerTable"
-                                     oncomplete="$('#teamsForm').hide();$('#playerForm').show();"
-                                     style="width:20px;height:20px">
-                        <f:setPropertyActionListener value="#{team}" target="#{playerListController.team}"/>
-                        <f:setPropertyActionListener value="#{team}" target="#{teamController.team}"/>
-                    </p:commandButton>
+                    <h:outputText value="#{scores.totalRoundScore}" disabled="true"/>
                 </p:column>
             </p:dataTable>
             <p:commandButton style="width: 200px; margin-top: 25px; float: left; margin-left: 290px"
@@ -75,7 +68,8 @@
                              value="Back to Games">
             </p:commandButton>
         </h:form>
+    <h:form>
 
-
+    </h:form>
     </ui:define>
 </ui:composition>

@@ -40,4 +40,22 @@ public interface ScoreRepository extends AbstractRepository<Score, Integer> {
 
     @Query("select sum(s.totalRoundScore) from Score s group by s.game.gameId, s.user.username order by sum(s.totalRoundScore) desc")
     List<Integer> getTopPlayersInAGameScore();
+
+    @Query("select sum(s.totalRoundScore) from Score as s  group by s.game.gameId, s.team.teamId order by sum(s.totalRoundScore) desc")
+    List<Integer> getTeamScoreForGame();
+
+    @Query("select s.game.gameId from Score as s  group by s.game.gameId, s.team.teamId order by sum(s.totalRoundScore) desc")
+    List<Integer> getAllGameIdsForTeamScoreForGame();
+
+    @Query("select s.team.teamId from Score as s  group by s.game.gameId, s.team.teamId order by sum(s.totalRoundScore) desc")
+    List<Integer> getAllTeamIdsForTeamScoreForGame();
+
+    @Query("select Distinct s.team from Score as s where s.game.gameId = :game")
+    List<Team> getTeamsForGame(Integer game);
+
+    @Query("select sum(s.totalRoundScore) from Score as s where s.game.gameId = :gameId group by :teams")
+    List<Integer> getForTeamsByGameScore(Integer gameId, List<Team> teams);
+
+    @Query("SELECT new at.qe.skeleton.model.Score (MAX(s.scoreId),SUM(s.totalRoundScore),s.team,s.game) from Score s WHERE s.game = :game GROUP BY s.team.teamId")
+    List<Score> getScoresForTeamsByGame(@Param(name = "game") Game game);
 }

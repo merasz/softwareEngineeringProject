@@ -21,5 +21,11 @@ public class GameListController {
         return gameService.getAllGames();
     }
 
+    public Collection<Game> getactivegGames() {
+        return gameService.getAllActiveGames();
+    }
+
+
+
 
 }

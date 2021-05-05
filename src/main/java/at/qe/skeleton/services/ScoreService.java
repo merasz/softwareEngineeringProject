@@ -58,5 +58,17 @@ public class ScoreService extends GameService {
         return val;
     }
 
+    public Map<Team, Integer> getScoresForTeamByGame(Game game) {
+        List<Team> teams = scoreRepository.getTeamsForGame(game.getGameId());
+        List<Integer> scores = scoreRepository.getForTeamsByGameScore(game.getGameId(), teams);
+        Map<Team, Integer> val = new LinkedHashMap<>();
+        for (int i = 0; i < teams.size(); i++) {
+            val.put(teams.get(i), scores.get(i));
+        }
+        return val;
+    }
 
+    public List<Score> getScoresForTeams(Game game) {
+        return scoreRepository.getScoresForTeamsByGame(game);
+    }
 }
