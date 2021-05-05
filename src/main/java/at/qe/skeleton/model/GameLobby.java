@@ -29,9 +29,8 @@ public class GameLobby implements Serializable {
     public GameLobby() {
     }
 
-    public GameLobby(int gameLobbyId, int userDeviceId, List<Integer> lastPlayedGameStats,
+    public GameLobby(int userDeviceId, List<Integer> lastPlayedGameStats,
                      List<User> activeUsers, List<Integer> activeVirtualRooms, User user) {
-        this.gameLobbyId = gameLobbyId;
         this.userDeviceId = userDeviceId;
         this.activeUsers = activeUsers;
         this.user = user;

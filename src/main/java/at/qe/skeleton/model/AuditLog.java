@@ -75,7 +75,6 @@ public class AuditLog implements Persistable<Long> {
         return (message == null);
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

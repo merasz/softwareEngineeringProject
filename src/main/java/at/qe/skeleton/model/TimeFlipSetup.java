@@ -21,8 +21,7 @@ public class TimeFlipSetup implements Serializable {
     public TimeFlipSetup() {
     }
 
-    public TimeFlipSetup(int timeFlipSetupId, int setupTime, int facetId, List<TimeFlip> timeFlipList) {
-        this.timeFlipSetupId = timeFlipSetupId;
+    public TimeFlipSetup(int setupTime, int facetId, List<TimeFlip> timeFlipList) {
         this.setupTime = setupTime;
         this.facetId = facetId;
         this.timeFlipList = timeFlipList;
