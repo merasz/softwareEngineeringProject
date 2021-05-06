@@ -23,8 +23,7 @@ public class Device implements Serializable {
     public Device() {
     }
 
-    public Device(int deviceId, String deviceIdIp, List<User> userDevice, Game game) {
-        this.deviceId = deviceId;
+    public Device(String deviceIdIp, List<User> userDevice, Game game) {
         this.deviceIdIp = deviceIdIp;
         this.userDevice = userDevice;
         this.game = game;

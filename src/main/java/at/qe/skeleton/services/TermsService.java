@@ -7,13 +7,12 @@ import at.qe.skeleton.repositories.TermsRepository;
 import at.qe.skeleton.repositories.TopicRepository;
 import at.qe.skeleton.utils.JsonImport;
 import org.apache.tomcat.util.json.ParseException;
+import org.json.simple.JSONObject;
 import org.primefaces.shaded.json.JSONArray;
-import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.security.access.prepost.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -37,41 +36,22 @@ public class TermsService {
         return (Topic) topicRepository.findFirstByTopicName(topicName);
     }
 
-
-
     public void saveTopic(String name, Topic topic) throws IllegalArgumentException {
         validateTopic(name);
         topic.setTopicName(name);
         topicRepository.save(topic);
     }
 
+    public void saveTerm(String name, Topic topic, Term term) throws IllegalArgumentException {
+        validateTerm(name);
+        term.setTermName(name);
+        term.setTopic(topic);
+        termsRepository.save(term);
+    }
+
     public Term saveTerm(Term term) throws IllegalArgumentException {
         return termsRepository.save(term);
     }
-
-    public Term demoSaveTerm(Term term) throws IllegalArgumentException {
-        Topic curr = topicRepository.findFirstByTopicName("Geo");
-        term.setTopic(curr);
-        return termsRepository.save(term);
-    }
-
-//---------
-    public Iterable<Term> list() {
-        return termsRepository.findAll();
-    }
-
-    public Iterable<Term> saveTerm(List<Term> terms) {
-        return (Iterable<Term>) termsRepository.save((Term) terms);
-    }
-//---------
-
-
-//    public void saveTerm(String name, Topic topic, Term term) throws IllegalArgumentException {
-//        validateTerm(name);
-//        term.setTermName(name);
-//        term.setTopic(topic);
-//        termsRepository.save(term);
-//    }
 
     public void deleteTopic(Topic topic) throws IllegalArgumentException {
         if (!termsRepository.findAllByTopic(topic).isEmpty()) {
@@ -116,31 +96,20 @@ public class TermsService {
         }
     }
 
-    public void importTerms() throws FileNotFoundException, ParseException {
-        JSONArray json = JsonImport.readJson("terms");
+    public void importTerms(JSONObject jsonObject, Topic topic) {
+        String allTermsAsStringJson = jsonObject.get("terms").toString();
 
-        for (Object o : json) {
-            JSONObject jsonObject = (JSONObject) o;
-
-            String topicName = jsonObject.keys().next();
-//            Topic topic = topicRepository.findFirstByName(topicName);
-//            if (topic == null) {
-//                topic = new Topic(topicName);
-//            }
-
-            String termName = (String) jsonObject.names().get(0);
-//            Term term = termsRepository.findFirstByName(termName);
-//            if (term == null || term.getTopic().getName() != topicName) {
-//                term = new Term(termName, topic);
-//            }
-//
-//            topicRepository.save(topic);
-//            termsRepository.save(term);
-
-            System.out.println(topicName);
-            System.out.println(termName);
-            System.out.println("-----");
+        List<String> allTerms = new ArrayList<>();
+        allTerms.addAll(Arrays.asList(allTermsAsStringJson.split("[\"]")));
+        Set<String> newTerms = new HashSet<>();
+        for (String v: allTerms) {
+            if(v.contains("[") || v.contains(",") || v.contains("]"))
+                continue;
+            Term tmp = new Term(v, topic);
+            if(!termsRepository.doesTermExits(tmp.getTermName(), topic.getTopicName()))
+                termsRepository.save(tmp);
         }
+
     }
 
     public List<Term> getTermsForTopic(Topic topic) {

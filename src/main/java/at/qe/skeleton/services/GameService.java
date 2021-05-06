@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.*;
 
 @Component
@@ -32,6 +33,10 @@ public class GameService {
     private User currentPlayer;
     private List<TeamPlayer> players;
 
+    public Collection<Game> getAllActiveGames() {
+        return gameRepository.findAllActive();
+    }
+
     public class TeamPlayer {
         User player;
         Team team;
@@ -50,6 +55,10 @@ public class GameService {
 
     public Game reloadGame(Game game) {
         return gameRepository.findByGameId(game.getGameId());
+    }
+
+    public Game getRunningGameByRaspberry(Integer raspiId) {
+        return gameRepository.findActiveGameByRaspberry(raspiId);
     }
 
     //region getter & setter
@@ -95,6 +104,10 @@ public class GameService {
 
     public Collection<Game> getAllGames() {
         return gameRepository.findAll();
+    }
+
+    public Collection<Topic> getMostPopularTopics() {
+        return gameRepository.getMostPopularTopics();
     }
     //endregion
 }

@@ -20,12 +20,6 @@ public class Score implements Serializable {
     @ManyToOne
     private Team team;
 
-    @ManyToMany
-    private List<Term> guessedTerms;
-
-    @ManyToMany
-    private List<Term> notGuessedTerms;
-
     @ManyToOne
     private Game game;
 
@@ -76,22 +70,6 @@ public class Score implements Serializable {
 
     public void setTeam(Team team) {
         this.team = team;
-    }
-
-    public List<Term> getGuessedTerms() {
-        return guessedTerms;
-    }
-
-    public void setGuessedTerms(List<Term> guessedTerms) {
-        this.guessedTerms = guessedTerms;
-    }
-
-    public List<Term> getNotGuessedTerms() {
-        return notGuessedTerms;
-    }
-
-    public void setNotGuessedTerms(List<Term> notGuessedTerms) {
-        this.notGuessedTerms = notGuessedTerms;
     }
 
     public static long getSerialVersionUID() {

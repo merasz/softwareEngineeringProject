@@ -23,12 +23,8 @@ public class GameStatsService extends GameService {
         //int guessedRight: -1 -> foul, 1 -> guessed right, else -> not guessed
         if (guessAccepted == 1) {
             score.setTotalRoundScore(currentPoints + task.getPointsForTask());
-            score.getGuessedTerms().add(term);
         } else if (guessAccepted == -1) {
             score.setTotalRoundScore(currentPoints + PENALTY_POINTS);
-            score.getNotGuessedTerms().add(term);
-        } else {
-            score.getNotGuessedTerms().add(term);
         }
         getGameRepository().save(game);
         return game;
@@ -74,13 +70,9 @@ public class GameStatsService extends GameService {
 
         for (Score s : scores) {
             totalScore += s.getTotalRoundScore();
-            guessedTerms.addAll(s.getGuessedTerms());
-            notGuessedTerms.addAll(s.getNotGuessedTerms());
         }
 
         score.setTotalRoundScore(totalScore);
-        score.setGuessedTerms(guessedTerms);
-        score.setNotGuessedTerms(notGuessedTerms);
         return score;
     }
 }

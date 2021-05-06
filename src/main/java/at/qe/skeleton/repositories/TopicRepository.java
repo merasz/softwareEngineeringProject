@@ -9,7 +9,6 @@ import java.util.*;
 public interface TopicRepository extends AbstractRepository<Topic, String> {
 
     Topic findFirstByTopicName(String name);
-
     List<Topic> findByTopicNameContaining(String topicName);
 
     //@Query("SELECT t FROM Topic t where t.topicName =: topicName")

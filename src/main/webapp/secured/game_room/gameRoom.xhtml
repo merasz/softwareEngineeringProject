@@ -49,9 +49,6 @@
             <p:commandButton id="timerBtn2" value="Timer 2min"
                              action="#{gamePlaySocketController.startTimer(120)}" style="position: absolute; left:60%">
             </p:commandButton>
-            <p:commandButton id="termBtn" value="Next Term"
-                             action="#{gamePlaySocketController.nextTerm}" style="position: absolute; left:70%">
-            </p:commandButton>
             <o:socket channel="scoreChannel" scope="application" onmessage="function(m){console.log(m);}">
                 <f:ajax event="scoreUpdate" render="scoreTable"/>
             </o:socket>
@@ -80,9 +77,12 @@
         <h:form>
             <h:outputText value="#{gamePlaySocketController.nextTerm}" id="termField" style="position: absolute; top: 50%; left: 50%; font-size: 32px; font-weight: bold"/>
             <h:outputText value="#{gamePlaySocketController.type}" id="typeField" style="position: absolute; top: 54%; left: 50%; font-size: 26px; font-weight: bold"/>
+            <h:outputText value="#{gamePlaySocketController.points} Point(s)" id="pointsField" style="position: absolute; top: 58%; left: 50%; font-size: 26px; font-weight: bold"/>
+
+            <h:outputText value="#{gamePlaySocketController.nextPlayer} " id="playerField" style="position: absolute; top: 62%; left: 50%; font-size: 26px; font-weight: bold"/>
 
             <o:socket channel="termChannel" scope="application" onmessage="function(m){console.log(m);}">
-                <f:ajax event="termUpdate" render="termField typeField" />
+                <f:ajax event="termUpdate" render="termField typeField pointsField playerField" />
             </o:socket>
 
         </h:form>

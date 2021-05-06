@@ -39,9 +39,8 @@ public class Team implements Serializable {
         this.teamPlayers = new ArrayList<>();
     }
 
-    public Team(Long teamId, List<User> teamPlayers, String teamName, Game game, List<Score> scores,
+    public Team(List<User> teamPlayers, String teamName, Game game, List<Score> scores,
                 Map<User,String> deviceIdsFromTeam) {
-        this.teamId = teamId;
         this.teamPlayers = teamPlayers;
         this.teamName = teamName;
         this.game = game;

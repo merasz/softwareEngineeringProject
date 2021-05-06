@@ -84,9 +84,13 @@ public class UserCreationController extends Controller implements Serializable {
         try {
             if(user.getRoles().isEmpty())
                 user.setRoles(Collections.singleton(UserRole.PLAYER));
-            user = userService.saveUser(user);
-            displayInfo("User created", "");
-            userStatusController.addUserStatus(user);
+            if(!userService.isUsernameAlreadyTaken(user)) {
+                user = userService.saveUser(user);
+                displayInfo("User created", "");
+                userStatusController.addUserStatus(user);
+            }
+            else
+                displayInfo("User not created, username already exists", "");
         } catch (IllegalArgumentException e) {
             displayError("Error", e.getMessage());
         }

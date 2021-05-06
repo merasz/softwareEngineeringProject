@@ -63,7 +63,7 @@ public class UserService {
      * @param user the user to save
      * @return the updated user
      */
-    @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #username")
+    @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #user.username")
     public User saveUser(User user) {
         if (user.isNew()) {
             user.setCreateDate(new Date());
@@ -81,7 +81,7 @@ public class UserService {
      *
      * @param user the user to delete
      */
-    @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #username")
+    @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #user.username")
     public void deleteUser(User user) throws IllegalArgumentException {
         // Last Admin can't be deleted
         if (user.getRoles().contains(UserRole.ADMIN) && userRepository.findByRole(UserRole.ADMIN).size() < 2) {
@@ -114,7 +114,7 @@ public class UserService {
         return saveUser(user);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #username")
+    @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #user.username")
     public User updatePassword(User user, String password, String confirm) throws IllegalArgumentException {
         if (password.trim().isEmpty()) {
             throw new IllegalArgumentException("Password cannot be empty.");
@@ -167,5 +167,9 @@ public class UserService {
 
     public List<User> getUserByTeam(Team team) {
         return userRepository.findAllPlayersByTeam(team);
+    }
+
+    public boolean isUsernameAlreadyTaken(User user) {
+        return userRepository.findAll().contains(user);
     }
 }

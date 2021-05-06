@@ -5,21 +5,26 @@ import at.qe.skeleton.model.Term;
 import at.qe.skeleton.model.Topic;
 import at.qe.skeleton.services.TermsService;
 import at.qe.skeleton.services.TopicService;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.apache.tomcat.util.json.ParseException;
+import org.primefaces.event.FileUploadEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.util.FileCopyUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Component
 @Scope("view")
-@RequestMapping("/terms")
 public class TermsController extends Controller implements Serializable {
     @Autowired
     private TermsService termsService;
@@ -29,6 +34,7 @@ public class TermsController extends Controller implements Serializable {
 
     private List<Topic> topics;
     private List<Term> terms;
+    private String name;
     private Term term;
 
     @PostConstruct
@@ -37,12 +43,10 @@ public class TermsController extends Controller implements Serializable {
         doCreateNewTerm();
     }
 
-//--------
-    @GetMapping("/list")
-    public Iterable<Term> list() {
-        return termsService.list();
-    }
-//--------
+//    @GetMapping("/list")
+//    public Iterable<Term> list() {
+//        return termsService.list();
+//    }
 
     public void doCreateNewTerm() {
         System.out.println("doCreateNewTerm:");
@@ -58,15 +62,13 @@ public class TermsController extends Controller implements Serializable {
     }
 
     public void doSaveTerm(Topic topic) {
-        if(topic == null)
-            System.out.println("topic null");
-        else
-            System.out.println("topicname " + topic.getTopicName());
-        System.out.println("term string " + term.getTermName());
+        if(topic == null) {
+            displayInfo("Cant save Term", "");
+            return;
+        }
         term.setTopic(topic);
         try {
             term = termsService.saveTerm(term);
-//            term = termsService.saveTerm(term);
         } catch (IllegalArgumentException e){
             displayError("Error", e.getMessage());
         }
@@ -106,14 +108,5 @@ public class TermsController extends Controller implements Serializable {
 //        displayInfo("Term deleted", "Term successfully deleted.");
 //    }
 
-    public void importTerms() {
-        try {
-            termsService.importTerms();
-        } catch (FileNotFoundException e) {
-            displayError("File not found", "Error: File not found.");
-        } catch (ParseException e) {
-            displayError("Parse error", "Error: File could not be read.");
-        }
-    }
 
 }

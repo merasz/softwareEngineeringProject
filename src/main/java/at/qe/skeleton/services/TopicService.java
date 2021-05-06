@@ -44,7 +44,11 @@ public class TopicService implements Serializable {
     public Topic saveTopic(Topic topic) {
 //        AuditLog auditLog = new AuditLog();
 //        auditLog.setTime(new Date());
-        if (topic.isNew()) {
+        if (!topicRepository.findByTopicNameContaining(topic.getTopicName()).isEmpty()) {
+            messageBean.alertInformation("Topic already exists.", "");
+            return topicRepository.findFirstByTopicName(topic.getTopicName());
+        }
+        else if (topic.isNew()) {
             topic.setCreateDate(new Date());
 //            auditLog.setMessage("Topic" + topic.getTopicName() + "was created.");
         } else {

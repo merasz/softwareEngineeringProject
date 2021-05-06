@@ -6,6 +6,7 @@ import at.qe.skeleton.model.Team;
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.services.*;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
+import org.primefaces.model.chart.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.Authentication;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
-import java.util.List;
+import java.util.*;
 
 /**
  * Controller for the user view.
@@ -38,6 +39,35 @@ public class UserScoresController extends Controller implements Serializable {
 
     @Autowired
     private SessionInfoBean sessionInfoBean;
+
+
+    private DonutChartModel model;
+
+    public UserScoresController(){
+        model = new DonutChartModel();
+        updateChart();
+    }
+
+    public void updateChart() {
+
+        Map<String, Number> circle1 = new LinkedHashMap<String, Number>();
+        circle1.put("Game 1", 24);
+        circle1.put("Game 2", 12);
+        circle1.put("Game 3", 6);
+        circle1.put("Game 4", 4);
+
+        model.addCircle(circle1);
+        model.setTitle("Current Players in each Game");
+        model.setLegendPosition("w");
+    }
+
+    public DonutChartModel getModel() {
+        return model;
+    }
+
+    public void setModel(DonutChartModel model) {
+        this.model = model;
+    }
 
     /**
      * Attribute to cache the currently displayed user

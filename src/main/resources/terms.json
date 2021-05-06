@@ -1,15 +1,7 @@
-/*
 {
-  "Animals": "chicken",
-  "Plants": "cactus",
-  "Activities": "lawn-mowing"
-}
-*/
-{
-  "term": [
-    {
-      "term_name": "chicken",
-      "topic_name": "Animals"
-    }
-  ]
+  "topic" : "Animals",
+  "terms" : [
+      "Chicken",
+      "Fisch"
+    ]
 }

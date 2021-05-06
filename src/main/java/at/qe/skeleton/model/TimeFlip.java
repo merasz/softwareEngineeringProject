@@ -40,10 +40,9 @@ public class TimeFlip implements Serializable {
     public TimeFlip() {
     }
 
-    public TimeFlip(int timeFlipId, String timeFlipName, Date lastSynchronization, int batteryPercentage,
+    public TimeFlip(String timeFlipName, Date lastSynchronization, int batteryPercentage,
                     int calibrationNumber, Raspberry raspberry, TimeFlipSetup timeFlipSetup, boolean inUse,
                     Set<TimeFlipSetupStatus> timeFlipSetupStatuses, List<Task> tasks) {
-        this.timeFlipId = timeFlipId;
         this.timeFlipName = timeFlipName;
         this.lastSynchronization = lastSynchronization;
         this.batteryPercentage = batteryPercentage;

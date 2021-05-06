@@ -25,8 +25,7 @@ public class AuditLogEntry implements Serializable {
     public AuditLogEntry() {
     }
 
-    public AuditLogEntry(int auditLogId, int auditLogEntryId, String message, Date modificationDate) {
-        this.auditLogId = auditLogId;
+    public AuditLogEntry(int auditLogEntryId, String message, Date modificationDate) {
         this.auditLogEntryId = auditLogEntryId;
         this.message = message;
         this.modificationDate = modificationDate;
