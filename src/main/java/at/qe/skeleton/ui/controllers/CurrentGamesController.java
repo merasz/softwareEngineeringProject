@@ -15,7 +15,7 @@ import java.util.*;
 @Scope("view")
 public class CurrentGamesController implements Serializable {
 
-    private LineChartModel model;
+    private BarChartModel model;
 
     @Autowired
     private GameService gameService;
@@ -26,9 +26,15 @@ public class CurrentGamesController implements Serializable {
     }
 
     public void createLineModel() {
-        model = new LineChartModel();
+        model = new BarChartModel();
         List<Game> activeGames = new ArrayList<>(gameService.getAllActiveGames());
-        model.setTitle("Game ID / Current Players in each Game");
+        model.setTitle("Admin View");
+
+        Axis y = model.getAxis(AxisType.Y);
+        y.setLabel("Current Players in each Game");
+
+        Axis x = model.getAxis(AxisType.X);
+        x.setLabel("Game ID");
 
         for (Game activeGame : activeGames) {
             ChartSeries chartSeries = new ChartSeries();
@@ -38,11 +44,11 @@ public class CurrentGamesController implements Serializable {
         }
     }
 
-    public LineChartModel getModel() {
+    public BarChartModel getModel() {
         return model;
     }
 
-    public void setModel(LineChartModel model) {
+    public void setModel(BarChartModel model) {
         this.model = model;
     }
 }
