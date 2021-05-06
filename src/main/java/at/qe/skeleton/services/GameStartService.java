@@ -13,18 +13,12 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Component
 @Scope("session")
 public class GameStartService extends GameService {
 
-    @Autowired
-    private GamePlayService gamePlayService;
-
-    @Autowired
-    private UserService userService;
-
-    private List<PlayerAvailability> playerAvailabilities;
     private User user;
     private Game game;
     private Team team;
@@ -55,7 +49,6 @@ public class GameStartService extends GameService {
         // see if player is assigned to one of the teams
         Team team;
         Optional<Team> optTeam = game.getTeamList().stream().filter(t -> t.getTeamPlayers().contains(user)).findFirst();
-        final Optional<Team> finalOptTeam = optTeam;
 
         if (optTeam.isPresent()) {
             // if player is already assigned to a team
@@ -100,8 +93,8 @@ public class GameStartService extends GameService {
         this.game = reloadGame(game);
         if (teamName.isEmpty()) {
             throw new IllegalArgumentException("Give your team a name first.");
-        } else if (game.getTeamList().stream().filter(t -> t.getTeamName() != null).
-                filter(t -> t.getTeamName().equals(team.getTeamName())).count() > 1) {
+        } else if (game.getTeamList().stream().filter(t -> t.getTeamName() != null)
+                .anyMatch(t -> t.getTeamName().equals(teamName) && !t.getTeamId().equals(team.getTeamId()))) {
             throw new IllegalArgumentException("Sorry, another team already took this name.");
         } else if (!teamReady()) {
             throw new IllegalArgumentException("You haven't assigned enough team mates yet.");
@@ -113,8 +106,7 @@ public class GameStartService extends GameService {
     }
 
     public Game enterGame() throws IOException {
-        System.out.println("-------  enter game  -------");
-        if (getGameJoinController().getAllTeamsReady(game)) {
+        if (getGameJoinController().getAllTeamsReady(game, user)) {
             if (game.getStartTime() == null && game.getTeamList().get(0).getTeamId().equals(team.getTeamId())) {
                 initializeGame(game);
                 System.out.println("-------  initialized  -------");
@@ -161,7 +153,6 @@ public class GameStartService extends GameService {
                 .map(i -> tpList.stream().map(t -> t.get(i)).collect(Collectors.toList()))
                 .collect(Collectors.toList()).forEach(getPlayers()::addAll);
     }
-
     //endregion
 
     //region getter & setter
@@ -176,6 +167,5 @@ public class GameStartService extends GameService {
     public Team getTeam() {
         return team;
     }
-
     //endregion
 }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @Scope("view")
@@ -51,7 +52,7 @@ public class TeamListController {
         if(game == null) {
             return new ArrayList<Team>();
         }
-        return teamService.getTeamsByGame(this.game);
+        return teamService.getTeamsByGame(this.game).stream().filter(t -> t.getTeamName() != null).collect(Collectors.toList());
     }
 
     public void doSetGame(Game game) {

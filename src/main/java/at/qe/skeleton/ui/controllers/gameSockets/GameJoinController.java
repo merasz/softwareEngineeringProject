@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -71,19 +70,15 @@ public class GameJoinController {
         return Collections.unmodifiableList(getGamePlayerAvailabilities(game));
     }
 
-    public boolean getAllTeamsReady(Game game) {
+    public boolean getAllTeamsReady(Game game, User user) {
         updateTeamsReady(game);
-        System.out.println("-------  all teams ready: " + allTeamsReady.get(game.getGameId())
-                + " -- " + teamAccepted.get(game.getGameId()).size() + "  -------");
+        teamAccepted.get(game.getGameId()).add(game.getTeamList().stream()
+                .filter(t -> t.getTeamPlayers().contains(user)).findFirst().get());
         return this.allTeamsReady.get(game.getGameId())
                 && teamAccepted.get(game.getGameId()).size() == game.getTeamList().size();
     }
 
-    public void setAllTeamsReady(Game game, User user) {
-        updateTeamsReady(game);
-        System.out.println("-------  set ready  -------");
-        teamAccepted.get(game.getGameId())
-                .add(game.getTeamList().stream().filter(t -> t.getTeamPlayers().contains(user)).findFirst().get());
+    public void setAllTeamsReady() {
         this.webSocketManager.getJoinChannel().send("teamJoin", sendTo);
     }
 
@@ -98,7 +93,6 @@ public class GameJoinController {
 
     public boolean teamAvailable(Game game, Team team) {
         teamTaken.computeIfAbsent(game.getGameId(), k -> ConcurrentHashMap.newKeySet());
-        System.out.println("-------  teamAvailable: " + teamTaken.get(game.getGameId()) + "  -------");
         return !teamTaken.get(game.getGameId()).contains(team);
     }
 

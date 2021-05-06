@@ -27,7 +27,8 @@ public class GameStartController extends GameController implements Serializable 
     public String startGame(Game game) {
         if (game.isActive()) {
             displayError("Game already started", "Please use JOIN GAME to join this game.");
-        } else if (game.getTeamList().stream().map(t -> t.getTeamPlayers().size()).reduce(0, Integer::sum) == game.getCountPlayers()) {
+        } else if (game.getTeamList().stream().map(t -> t.getTeamPlayers().size()).reduce(0, Integer::sum) == game.getCountPlayers()
+                && game.getTeamList().stream().noneMatch(t -> t.getTeamPlayers().contains(getUser()))) {
             displayError("All teams full", "You cannot join this game because all teams are full and you are not assigned to any of them.");
         } else {
             try {
@@ -42,17 +43,30 @@ public class GameStartController extends GameController implements Serializable 
     }
 
     public String joinGame() {
-        setUser();
-        teamComplete = false;
+        // check for rejoin: if game was already entered before
+        boolean allTeamsEntered;
         try {
-            setGame(gameStartService.joinGame(getUser()));
-            return "/secured/game_room/join.xhtml?faces-redirect=true";
-        } catch (NoSuchElementException e) {
-            displayError("No games", e.getMessage());
-        } catch (IllegalArgumentException e) {
-            displayError("All teams already full", e.getMessage());
+            allTeamsEntered = gameStartService.getGameJoinController().getAllTeamsReady(getGame(), getUser());
+        } catch (NullPointerException e) {
+            allTeamsEntered = false;
         }
-        return "";
+
+        // redirect to appropriate page
+        if (allTeamsEntered) {
+            return "/secured/game_room/gameRoom.xhtml?faces-redirect=true";
+        } else {
+            setUser();
+            teamComplete = false;
+            try {
+                setGame(gameStartService.joinGame(getUser()));
+                return "/secured/game_room/join.xhtml?faces-redirect=true";
+            } catch (NoSuchElementException e) {
+                displayError("No games", e.getMessage());
+            } catch (IllegalArgumentException e) {
+                displayError("All teams already full", e.getMessage());
+            }
+            return "";
+        }
     }
 
     public List<PlayerAvailability> getPlayerAvailability() {
@@ -60,7 +74,7 @@ public class GameStartController extends GameController implements Serializable 
     }
 
     public void setAllTeamsReady() {
-        gameStartService.getGameJoinController().setAllTeamsReady(getGame(), getUser());
+        gameStartService.getGameJoinController().setAllTeamsReady();
     }
 
     public void selectPlayer(SelectEvent<PlayerAvailability> event) {
@@ -75,7 +89,6 @@ public class GameStartController extends GameController implements Serializable 
         } catch (IOException e) {
             displayError("Redirect error", e.getMessage());
         } catch (IllegalArgumentException e) {
-            System.out.println("-------  finish team error  -------");
             displayError("Not so fast", e.getMessage());
         }
     }
@@ -89,8 +102,6 @@ public class GameStartController extends GameController implements Serializable 
             }
         }
     }
-
-
 
     //region getter & setter
     public String getTeamName() {
@@ -121,6 +132,5 @@ public class GameStartController extends GameController implements Serializable 
     public boolean isTeamComplete() {
         return teamComplete;
     }
-
     //endregion
 }

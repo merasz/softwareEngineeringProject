@@ -36,6 +36,8 @@
                     <p:commandButton title="Teams" icon="ui-icon-note" action="#{teamListController.doSetGame(gameCreationController.game)}" update=":teamsForm" oncomplete="$('#gamesForm').hide();$('#teamsForm').show();"  style="width:20px;height:20px">
                         <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}" />
                     </p:commandButton>
+                </p:column>
+                <p:column style="width:100px;text-align: center" headerText="Start">
                     <p:commandButton title="Start" icon="ui-icon-play" action="#{gameStartController.startGame(gameCreationController.game)}" style="width:20px;height:20px">
                         <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}" />
                     </p:commandButton>
