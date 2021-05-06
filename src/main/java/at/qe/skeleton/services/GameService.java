@@ -57,6 +57,10 @@ public class GameService {
         return gameRepository.findByGameId(game.getGameId());
     }
 
+    public Game getRunningGameByRaspberry(Integer raspiId) {
+        return gameRepository.findActiveGameByRaspberry(raspiId);
+    }
+
     //region getter & setter
     public GameRepository getGameRepository() {
         return gameRepository;

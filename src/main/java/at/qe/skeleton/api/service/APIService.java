@@ -2,9 +2,17 @@ package at.qe.skeleton.api.service;
 
 import at.qe.skeleton.api.controller.APIController;
 import at.qe.skeleton.api.model.PiRequest;
+import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.Raspberry;
 import at.qe.skeleton.repositories.RaspberryRepository;
+import at.qe.skeleton.services.GameService;
+import at.qe.skeleton.services.RaspberryService;
+import at.qe.skeleton.ui.controllers.gameSockets.GamePlaySocketController;
+import at.qe.skeleton.utils.CDIAutowired;
+import at.qe.skeleton.utils.CDIContextRelated;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
@@ -15,6 +23,15 @@ public class APIService {
 
     @Autowired
     RaspberryRepository raspberryRepository;
+
+    @Autowired
+    RaspberryService raspberryService;
+
+    @Autowired
+    GameService gameService;
+
+    @Autowired
+    GamePlaySocketController gamePlaySocketController;
 
 
     public String generateApiKeyForRaspberry(Raspberry raspberry) {
@@ -45,6 +62,11 @@ public class APIService {
         PiRequest newRequest = new PiRequest();
         newRequest.setIpAddress(piRequest.getIpAddress());
         newRequest.setFacetId(piRequest.getFacetId());
+
+        Integer raspiId = raspberryService.loadRaspberryByIp(piRequest.getIpAddress()).getRaspberryId();
+        Game activeGame = gameService.getRunningGameByRaspberry(raspiId);
+        gamePlaySocketController.nextTerm(activeGame,piRequest.getFacetId());
+
 
     }
 }

@@ -1,8 +1,6 @@
 package at.qe.skeleton.ui.controllers.gameSockets;
 
-import at.qe.skeleton.model.Game;
-import at.qe.skeleton.model.Term;
-import at.qe.skeleton.model.Topic;
+import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.demo.LogEntry;
 import at.qe.skeleton.model.demo.TeamScoreInfo;
 
@@ -20,14 +18,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-/**
- * This controller holds and manages all user's status-information (i.e. their
- * online-status)
- *
- * This class is part of the skeleton project provided for students of the
- * courses "Software Architecture" and "Software Engineering" offered by the
- * University of Innsbruck.
- */
+
 @Controller
 @Scope("application")
 @CDIContextRelated
@@ -42,53 +33,58 @@ public class GamePlaySocketController {
 
     @CDIAutowired
     private WebSocketManager websocketManager;
-    private Integer time;
     private List<LogEntry> actionLogs = new CopyOnWriteArrayList<>();
     private Game game;
-    private Topic topic;
-    private List<Term> terms;
-    private Queue<Term> nextTerms;
+    private Map<Game,Topic> topicMap = new ConcurrentHashMap<>();
     private Map<Game,Queue<Term>> termMap = new ConcurrentHashMap<>();
     private Map<Game,String> typeMap = new ConcurrentHashMap<>();
-    private String type;
+    private Map<Game,Integer> timeMap = new ConcurrentHashMap<>();
+    private Map<Game,Integer> pointsMap = new ConcurrentHashMap<>();
+    private Map<Game,Team> teamMap = new ConcurrentHashMap<>();
+    private Map<Game,Queue<User>> playerMap = new ConcurrentHashMap<>();
 
-    private int running = 0;
+    private Map<Game,Integer> runningMap = new ConcurrentHashMap<>();
 
 
     @PostConstruct
     public void init(){
         game = gameRepository.findAll().get(1);
-        topic = game.getTopic();
-        terms = topic.getTerms();
+        Topic topic = game.getTopic();
+        List<Term> terms = topic.getTerms();
         Collections.shuffle(terms);
-        nextTerms = new LinkedList<>(terms);
-        if(!termMap.containsKey(game)) {
-            termMap.put(game,nextTerms);
+        termMap.put(game,new LinkedList<>(terms));
+
+        List<Team> teams = game.getTeamList();
+        List<User> player = new ArrayList<User>();
+        for(Team team : teams) {
+            player.addAll(team.getTeamPlayers());
         }
-        time = 0;
-        if(!typeMap.containsKey(game)) {
-            typeMap.put(game,"");
-        }
+        playerMap.put(game,new LinkedList<>(player));
+        runningMap.put(game,0);
+        typeMap.put(game,"");
+        timeMap.put(game,0);
+
     }
 
     public void startTimer(int time){
-        this.time = time;
+        timeMap.put(game,time);
         this.websocketManager.getTimeChannel().send("timeUpdate");
     }
 
-    public void nextTerm(){
-        running = 1;
-        Random rn = new Random();
-        int answer = rn.nextInt(12) + 1;
-        int time = timeFlipConfRepository.findByFacetId(answer).getTime();
+    public void nextTerm(Game activeGame, int facetId) {
+        runningMap.put(game,1);
 
-        typeMap.put(game,timeFlipConfRepository.findByFacetId(answer).getRequestType().toString());
+        TimeFlipConf timeFlipConf = timeFlipConfRepository.findByFacetId(facetId);
+
+        int time = timeFlipConf.getTime();
+        typeMap.put(game,timeFlipConf.getRequestType().toString());
+        pointsMap.put(game,timeFlipConf.getFacetPoint());
         startTimer(time);
         this.websocketManager.getTermChannel().send("termUpdate");
     }
 
     public String getNextTerm() {
-        if (running == 0) {return null;}
+        if (runningMap.get(game) == 0) {return null;}
         while(termMap.get(game) == null ){}
         if(termMap.get(game).size() > 0) {
             return termMap.get(game).poll().getTermName();
@@ -98,8 +94,19 @@ public class GamePlaySocketController {
 
     }
 
+    public String getNextPlayer() {
+        if (runningMap.get(game) == 0) {return null;}
+        while(playerMap.get(game) == null ){}
+        if(playerMap.get(game).size() > 0) {
+            return playerMap.get(game).poll().getUsername();
+        } else {
+            return null;
+        }
+
+    }
+
     public String getType() {
-        if (running == 0) {return null;}
+        if (runningMap.get(game) == 0) {return null;}
         while(typeMap.get(game) == null ){}
         return typeMap.get(game);
     }
@@ -114,11 +121,24 @@ public class GamePlaySocketController {
     }
 
     public Integer getTime() {
-        return time;
+        if (runningMap.get(game) == 0) {return null;}
+        while(timeMap.get(game) == null ){}
+        return timeMap.get(game);
     }
 
     public void setTime(Integer time) {
-        this.time = time;
+        timeMap.put(this.game, time);
+        System.out.println(time);
+    }
+
+    public Integer getPoints() {
+        if (runningMap.get(game) == 0) {return null;}
+        while(pointsMap.get(game) == null ){}
+        return pointsMap.get(game);
+    }
+
+    public void setPoints(Integer points) {
+        pointsMap.put(this.game,points);
     }
 
     public Game getGame() {
@@ -130,15 +150,35 @@ public class GamePlaySocketController {
     }
 
     public Topic getTopic() {
-        return topic;
+        if (runningMap.get(game) == 0) {return null;}
+        while(topicMap.get(game) == null ){}
+        return topicMap.get(game);
     }
 
     public void setTopic(Topic topic) {
-        this.topic = topic;
+        topicMap.put(game,topic);
     }
 
     public String getTopicName() {
-        return topic.getTopicName();
+        if (runningMap.get(game) == 0) {return null;}
+        while(topicMap.get(game) == null ){}
+        return topicMap.get(game).getTopicName();
+    }
+
+    public void setTeam(Team Team) {
+        teamMap.put(game,Team);
+    }
+
+    public Team getTeam() {
+        if (runningMap.get(game) == 0) {return null;}
+        while(teamMap.get(game) == null ){}
+        return teamMap.get(game);
+    }
+
+    public String getTeamName() {
+        if (runningMap.get(game) == 0) {return null;}
+        while(teamMap.get(game) == null ){}
+        return teamMap.get(game).getTeamName();
     }
 
     public List<LogEntry> getActionLogs() {
@@ -148,4 +188,6 @@ public class GamePlaySocketController {
     public void setActionLogs(List<LogEntry> actionLogs) {
         this.actionLogs = actionLogs;
     }
+
+
 }

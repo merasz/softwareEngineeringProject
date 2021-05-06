@@ -11,24 +11,12 @@ public class Term implements Serializable {
     @Id
     private String termName;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Topic topic;
-
-    @ManyToMany
-    private List<Score> scoresGuessedTerms;
-
-    @ManyToMany
-    private List<Score> scoresNotGuessedTerms;
 
     public Term() {
     }
 
-    public Term(String termName, Topic topic, List<Score> scoresGuessedTerms, List<Score> scoresNotGuessedTerms) {
-        this.termName = termName;
-        this.topic = topic;
-        this.scoresGuessedTerms = scoresGuessedTerms;
-        this.scoresNotGuessedTerms = scoresNotGuessedTerms;
-    }
 
     public Term(String termName, Topic topic) {
         this.termName = termName;
@@ -51,21 +39,6 @@ public class Term implements Serializable {
         this.topic = topic;
     }
 
-    public List<Score> getScoresGuessedTerms() {
-        return scoresGuessedTerms;
-    }
-
-    public void setScoresGuessedTerms(List<Score> scoresGuessedTerms) {
-        this.scoresGuessedTerms = scoresGuessedTerms;
-    }
-
-    public List<Score> getScoresNotGuessedTerms() {
-        return scoresNotGuessedTerms;
-    }
-
-    public void setScoresNotGuessedTerms(List<Score> scoresNotGuessedTerms) {
-        this.scoresNotGuessedTerms = scoresNotGuessedTerms;
-    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
