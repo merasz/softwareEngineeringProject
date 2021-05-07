@@ -1,5 +1,6 @@
 package at.qe.skeleton.services;
 
+import at.qe.skeleton.model.Raspberry;
 import at.qe.skeleton.model.Team;
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.UserRole;
@@ -171,5 +172,9 @@ public class UserService {
 
     public boolean isUsernameAlreadyTaken(User user) {
         return userRepository.findAll().contains(user);
+    }
+
+    public List<User> getUserByRaspberry(Raspberry raspberry) {
+        return userRepository.findAllByRaspberry(raspberry);
     }
 }

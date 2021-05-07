@@ -1,6 +1,7 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.Game;
+import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.demo.PlayerAvailability;
 import at.qe.skeleton.services.GameStartService;
 import org.primefaces.event.SelectEvent;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Component
 @Scope("session")
@@ -25,14 +27,20 @@ public class GameStartController extends GameController implements Serializable 
     private boolean teamComplete = false;
 
     public String startGame(Game game) {
+        setUser();
+        System.out.println(game.getGameName());
         if (game.isActive()) {
             displayError("Game already started", "Please use JOIN GAME to join this game.");
         } else if (game.getTeamList().stream().map(t -> t.getTeamPlayers().size()).reduce(0, Integer::sum) == game.getCountPlayers()
                 && game.getTeamList().stream().noneMatch(t -> t.getTeamPlayers().contains(getUser()))) {
+            System.out.println(game.getTeamList().stream().map(t -> t.getTeamPlayers().size()).reduce(0, Integer::sum));
+            System.out.println(game.getCountPlayers());
+            System.out.println(getUser().getUsername());
+            System.out.println(game.getTeamList().stream().flatMap(t -> t.getTeamPlayers().stream())
+                    .map(User::getUsername).collect(Collectors.toList()));
             displayError("All teams full", "You cannot join this game because all teams are full and you are not assigned to any of them.");
         } else {
             try {
-                setUser();
                 setGame(gameStartService.startGame(game, getUser()));
                 return "/secured/game_room/join.xhtml?faces-redirect=true";
             } catch (IllegalArgumentException e) {

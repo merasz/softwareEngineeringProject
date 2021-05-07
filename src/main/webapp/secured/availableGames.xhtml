@@ -33,13 +33,14 @@
                     <h:outputText value="#{game.scoreToWin}" disabled="true"/>
                 </p:column>
                 <p:column style="width:100px;text-align: center" headerText="Teams">
-                    <p:commandButton title="Teams" icon="ui-icon-note" action="#{teamListController.doSetGame(gameCreationController.game)}" update=":teamsForm" oncomplete="$('#gamesForm').hide();$('#teamsForm').show();"  style="width:20px;height:20px">
+                    <p:commandButton title="Teams" icon="ui-icon-note" action="#{teamListController.doSetGame(gameCreationController.game)}"
+                                     update=":teamsForm" oncomplete="$('#gamesForm').hide();$('#teamsForm').show();"  style="width:20px;height:20px">
                         <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}" />
                     </p:commandButton>
                 </p:column>
                 <p:column style="width:100px;text-align: center" headerText="Start">
-                    <p:commandButton title="Start" icon="ui-icon-play" action="#{gameStartController.startGame(gameCreationController.game)}" style="width:20px;height:20px">
-                        <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}" />
+                    <p:commandButton title="Start" icon="ui-icon-play" action="#{gameStartController.startGame(game)}" style="width:20px;height:20px">
+                        <!--<f:setPropertyActionListener value="#{game}" target="#{gameStartController.game}" />-->
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
@@ -136,7 +137,7 @@
                     <h:outputText value="#{team.teamName}"/>
                 </p:column>
                 <p:column style="width:100px;text-align: center" headerText="Player">
-                    <p:commandButton title="Player" icon="ui-icon-note" action="#{teamController.doSaveTeam()}" update=":playerForm:playerTable" oncomplete="$('#teamsForm').hide();$('#playerForm').show();"  style="width:20px;height:20px">
+                    <p:commandButton title="Player" icon="ui-icon-note" update=":playerForm:playerTable" oncomplete="$('#teamsForm').hide();$('#playerForm').show();"  style="width:20px;height:20px">
                         <f:setPropertyActionListener value="#{team}" target="#{playerListController.team}" />
                         <f:setPropertyActionListener value="#{team}" target="#{teamController.team}" />
                     </p:commandButton>
@@ -169,8 +170,6 @@
 
                 </p:outputPanel>
             </p:dialog>
-
-
         </h:form>
 
         <h:form id="playerForm" style="display: none">
@@ -185,7 +184,8 @@
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
-            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('playerAddDialog').show()" icon="ui-icon-plusthick" value ="Add Player" >
+            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" action="#{teamController.addPlayerDialog()}"
+                             icon="ui-icon-plusthick" value ="Add Player" update=":playerForm:playerAddDialog" >
                 <f:setPropertyActionListener value="#{playerListController.team}" target="#{teamController.team}" />
             </p:commandButton>
 
@@ -193,11 +193,11 @@
             <p:dialog header="Add new Player" id="playerAddDialog" widgetVar="playerAddDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                 <p:outputPanel id="playerAddData" >
                     <p:selectOneListbox id="basic" value="#{teamController.tmpPlayer}" converter="omnifaces.SelectItemsConverter">
-                        <f:selectItems value="#{userListController.getAllPlayers()}" var="player" itemLabel="#{player.username}" itemValue="#{player}" />
+                        <f:selectItems value="#{teamController.getAssignablePlayers()}" var="player" itemLabel="#{player.username}" itemValue="#{player}" />
                     </p:selectOneListbox>
                     <h:panelGrid columns ="2">
                         <p:commandButton value="Save" action="#{teamController.doSaveUserToTeam()}" oncomplete="PF('playerAddDialog').hide()" update=":playerForm:playerTable"/>
-                        <p:commandButton value="Abort" onclick="PF('Dialog').hide()"/>
+                        <p:commandButton value="Abort" onclick="PF('playerAddDialog').hide();$('#playerForm').show();"/>
                     </h:panelGrid>
                 </p:outputPanel>
             </p:dialog>

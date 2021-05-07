@@ -63,6 +63,7 @@ public class GameJoinController {
     }
 
     public void takeTeam(Game game, Team team) {
+        teamTaken.computeIfAbsent(game.getGameId(), k -> ConcurrentHashMap.newKeySet());
         teamTaken.get(game.getGameId()).add(team);
     }
 
@@ -74,6 +75,8 @@ public class GameJoinController {
         updateTeamsReady(game);
         teamAccepted.get(game.getGameId()).add(game.getTeamList().stream()
                 .filter(t -> t.getTeamPlayers().contains(user)).findFirst().get());
+        System.out.println(teamAccepted.get(game.getGameId()).stream().map(Team::getTeamName).collect(Collectors.toList()));
+        System.out.println(allTeamsReady.get(game.getGameId()));
         return this.allTeamsReady.get(game.getGameId())
                 && teamAccepted.get(game.getGameId()).size() == game.getTeamList().size();
     }
@@ -84,7 +87,7 @@ public class GameJoinController {
 
     private void updateTeamsReady(Game game) {
         this.allTeamsReady.put(game.getGameId(),
-                getGamePlayerAvailabilities(game).stream().noneMatch(PlayerAvailability::isAvailable));
+                getGamePlayerAvailabilities(game).stream().filter(pa -> !pa.isAvailable()).count() == game.getCountPlayers());
     }
 
     private List<PlayerAvailability> getGamePlayerAvailabilities(Game game) {

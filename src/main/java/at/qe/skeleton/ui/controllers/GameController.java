@@ -103,7 +103,5 @@ public class GameController extends Controller implements Serializable {
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
-
-
     //endregion
 }

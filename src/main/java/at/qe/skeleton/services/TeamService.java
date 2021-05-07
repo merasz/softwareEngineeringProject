@@ -25,38 +25,36 @@ public class TeamService {
         return teamRepository.findByGame(game.getGameId());
     }
 
-//    public List<User> getUsersByTeam(Team team) {
-//        return teamRepository.
-//    }
-
     public Team saveTeam(Team team){
         return teamRepository.save(team);
-    }
-
-    public Team createTeam(Game game) {
-        Team t = new Team(game);
-        teamRepository.save(t);
-        return t;
     }
 
     public Team savePlayerToTeam(Team team, User player) {
         List<User> players = team.getTeamPlayers();
 
         if(players == null) {
-            players = new ArrayList<User>();
+            players = new ArrayList<>();
+            players.add(player);
             team.setTeamPlayers(players);
             return teamRepository.save(team);
         } else if(!players.contains(player)){
+            /*
             List<User> emptyList = new ArrayList<User>();
             team.setTeamPlayers(emptyList);
             teamRepository.save(team);
+             */
 
+            team = reloadTeam(team);
             players.add(player);
             team.setTeamPlayers(players);
             return teamRepository.save(team);
         }
 
         return team;
+    }
+
+    public Team reloadTeam(Team team) {
+        return teamRepository.findByTeamId(team.getTeamId());
     }
 
     public Team deletePlayerFromTeam(Team team, User tmpPlayer) {
@@ -67,7 +65,7 @@ public class TeamService {
     }
 
     public void deleteTeam(Team team) {
-        team.setTeamPlayers(new ArrayList<User>());
+        team.setTeamPlayers(new ArrayList<>());
         teamRepository.save(team);
         teamRepository.delete(team);
     }
@@ -76,14 +74,4 @@ public class TeamService {
         return teamRepository.findAllByTeamPlayers(user);
     }
 
-    public boolean isPlayerAssignedToEnemyTeam(Game game, User tmpPlayer) {
-        List<Team> allTeamsInGame = getTeamsByGame(game);
-        List<User> allGameParticipants = new ArrayList<>();
-        for (int i = 0; i < allTeamsInGame.size(); i++)
-            allGameParticipants.addAll(allTeamsInGame.get(i).getTeamPlayers());
-        if(allGameParticipants.contains(tmpPlayer))
-            return true;
-        else
-            return false;
-    }
 }

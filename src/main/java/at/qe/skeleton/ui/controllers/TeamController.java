@@ -38,12 +38,8 @@ public class TeamController extends Controller implements Serializable {
 
     private User tmpPlayer;
 
-    /*
-    @PostConstruct
-    public void init() {
-        doCreateTeam();
-    }
-    */
+    private List<User> assignablePlayers;
+
 
     public void doSetTeam(Game game) {
         this.game = game;
@@ -71,24 +67,33 @@ public class TeamController extends Controller implements Serializable {
     }
 
     public void doSaveUserToTeam() {
-        if (teamService.isPlayerAssignedToEnemyTeam(game, tmpPlayer)) {
-            displayError("User is already assigned to a team in this game", "Please select someone else.");
+        try {
+            team = teamService.savePlayerToTeam(team, tmpPlayer);
+            playerListController.setTeam(team);
+            game = gameService.reloadGame(game);
+        } catch (IllegalArgumentException e) {
+            displayError("Error", e.getMessage());
         }
-        else if (team.getTeamPlayers().size() == game.getTeamSize()) {
+    }
+
+    public void addPlayerDialog() {
+        assignablePlayers = getAssignablePlayers();
+        if (team.getTeamPlayers().size() == game.getTeamSize()) {
             displayError("Team full", "There are no more free places in this team.");
         } else {
-            try {
-                team = teamService.savePlayerToTeam(team, tmpPlayer);
-            } catch (IllegalArgumentException e) {
-                displayError("Error", e.getMessage());
-            }
+            PrimeFaces.current().executeScript("PF('playerAddDialog').show()");
         }
+    }
+
+    public List<User> getAssignablePlayers() {
+        return assignablePlayers = playerListController.getAssignablePlayers(game);
     }
 
     public void doDeletePlayer() {
         try {
             team = teamService.deletePlayerFromTeam(team,tmpPlayer);
             playerListController.setTeam(team);
+            game = gameService.reloadGame(game);
         } catch (IllegalArgumentException e){
             displayError("Error", e.getMessage());
         }
@@ -113,6 +118,7 @@ public class TeamController extends Controller implements Serializable {
         }
     }
 
+    //region getter & setter
     public Team getTeam() {
         return team;
     }
@@ -136,4 +142,5 @@ public class TeamController extends Controller implements Serializable {
     public void setGame(Game game) {
         this.game = game;
     }
+    //endregion
 }

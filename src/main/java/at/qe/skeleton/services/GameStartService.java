@@ -62,7 +62,6 @@ public class GameStartService extends GameService {
                 throw new IllegalArgumentException("Get together with another team or ask the game manager to redistribute.");
             }
         }
-
         addUserToTeam(team);
     }
 

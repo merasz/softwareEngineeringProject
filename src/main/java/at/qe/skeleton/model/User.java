@@ -155,7 +155,7 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
             return false;
         }
         final User other = (User) obj;
-        return Objects.equals(this.username, other.username);
+        return this.username.equals(other.username);
     }
 
     @Override

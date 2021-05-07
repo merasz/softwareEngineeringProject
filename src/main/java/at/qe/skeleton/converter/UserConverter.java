@@ -1,6 +1,5 @@
 package at.qe.skeleton.converter;
 
-import at.qe.skeleton.model.Topic;
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
