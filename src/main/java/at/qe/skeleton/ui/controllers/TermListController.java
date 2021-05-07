@@ -27,8 +27,6 @@ public class TermListController extends Controller implements Serializable {
     @Autowired
     private TopicService topicService;
 
-
-
     private Collection<Topic> topics;
     private List<Term> terms;
     private Topic topic;

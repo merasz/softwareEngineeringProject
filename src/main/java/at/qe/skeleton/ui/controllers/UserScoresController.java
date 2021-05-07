@@ -125,6 +125,14 @@ public class UserScoresController extends Controller implements Serializable {
         return userStatsService.getWonGamesByTopics(this.user);
     }
 
-    public List<Team> getTeamsByPlayer() {return teamService.getTeamsByPlayer(this.user); }
+    public List<Team> getTeamsByPlayer() {
+        Set<Team> tmp = new HashSet<>();
+        tmp.addAll(teamService.getTeamsByPlayer(this.user));
+        List<Team> myTeams = new ArrayList<>();
+        for (Team t: tmp) {
+            myTeams.add(t);
+        }
+        return myTeams;
+    }
 
 }

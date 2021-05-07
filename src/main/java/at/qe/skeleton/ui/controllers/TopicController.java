@@ -9,6 +9,7 @@ import org.springframework.stereotype.*;
 import javax.annotation.PostConstruct;
 import java.io.*;
 import java.util.Collection;
+import java.util.List;
 
 @Component
 @Scope("view")
@@ -22,6 +23,8 @@ public class TopicController extends Controller implements Serializable {
 
     public Topic topic;
 
+    public GameTopicCount gameTopicCount;
+
     private Collection<Topic> topicList;
 
     @PostConstruct
@@ -32,6 +35,7 @@ public class TopicController extends Controller implements Serializable {
     public void doCreateNewTopic() {
         setTopicList();
         topic = new Topic();
+        gameTopicCount = new GameTopicCount();
     }
 
     public void setTopicList() {
@@ -39,7 +43,18 @@ public class TopicController extends Controller implements Serializable {
     }
 
     public void setTopic(Topic topic) {
-        this.topic = topic;
+        if(gameTopicCount != null)
+            this.topic = gameTopicCount.getTopic();
+        else
+            this.topic = topic;
+    }
+
+    public GameTopicCount getGameTopicCount() {
+        return gameTopicCount;
+    }
+
+    public void setGameTopicCount(GameTopicCount gameTopicCount) {
+        this.gameTopicCount = gameTopicCount;
     }
 
     private void doReloadTopic() {
@@ -48,7 +63,6 @@ public class TopicController extends Controller implements Serializable {
 
     public void doDeleteTopic() {
         try {
-            System.out.println("inside dodeletetopic");
             this.topicService.deleteTopic(topic);
             topic = null;
             displayInfo("Topic deleted", "Topic successfully deleted");
@@ -63,6 +77,7 @@ public class TopicController extends Controller implements Serializable {
         try{
             topic = topicService.saveTopic(topic);
             displayInfo("Topic created", "Successfully created");
+            topic = new Topic();
         } catch (IllegalArgumentException e) {
             displayError("Error", e.getMessage());
         }
@@ -72,22 +87,9 @@ public class TopicController extends Controller implements Serializable {
         return topicService.getAllTopics();
     }
 
-    /*update fx to get the num size of a specific topic
-    * */
-    public int getNumTermsATopic() {
-        return 1;
-    }
-
     public Topic getTopic() {
         return topic;
     }
 
 
-    public Collection<Topic> getTopicList() {
-        return topicList;
-    }
-
-    public void setTopicList(Collection<Topic> topicList) {
-        this.topicList = topicList;
-    }
 }

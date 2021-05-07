@@ -10,6 +10,7 @@ import org.springframework.security.core.*;
 import org.springframework.security.core.context.*;
 import org.springframework.stereotype.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.io.Serializable;
 import java.util.*;
 
@@ -33,6 +34,11 @@ public class TopicService implements Serializable {
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('GAME_MANAGER')")
     public Collection<Topic> getAllTopics() {
         return topicRepository.findAll();
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('GAME_MANAGER')")
+    public Collection<Topic> getAllTopicsAsc() {
+        return topicRepository.findAllAsc();
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -91,4 +97,22 @@ public class TopicService implements Serializable {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return (Topic) topicRepository.findFirstByTopicName(auth.getName());
     }
+
+    public List<GameTopicCount> getTopicTermsAmount() {
+        List<GameTopicCount> in = termsRepository.getAmountOfTerms();
+
+        Set<Topic> all = new HashSet<Topic>(topicRepository.findAll());
+        Set<Topic> terms = new HashSet<Topic>(termsRepository.getAmountOfTermsJustTerms());
+        all.removeAll(terms);
+
+        List<GameTopicCount> notIncluded = new ArrayList<>();
+        for (Topic v: all) {
+            notIncluded.add(new GameTopicCount(v, 0L));
+        }
+
+        in.addAll(notIncluded);
+        return in;
+    }
+
+
 }

@@ -20,21 +20,21 @@
             </p:growl>
 
             <p:dataTable widgetVar="topicCreationTable" id="topicCreationTable" var="topic"
-                         value="#{topicListController.topics}" style="width: 83%; margin-top: 85px; float: right;">
+                         value="#{topicListController.topicAmount}" style="width: 83%; margin-top: 85px; float: right;">
                 <f:facet name="header">Topic Hub</f:facet>
                 <p:column headerText="Themengebiet">
-                    <h:outputText value="#{topic.topicName}"/>
+                    <h:outputText value="#{topic.topic.topicName}"/>
                 </p:column>
                 <p:column headerText="Anzahl Begriffe">
-                    <h:outputText value="#{topicController.numTermsATopic}"/>
+                    <h:outputText value="#{topic.gameCount}"/>
                 </p:column>
 
                 <p:column style="width:100px;text-align: center" headerText="create term">
                     <p:commandButton title="Terms" icon="ui-icon-note"
-                                     action="#{termListController.doSetTopic(topicController.topic)}"
+                                     action="#{termListController.doSetTopic(topicController.gameTopicCount.topic)}"
                                      update=":termsForm" oncomplete="$('#topicForm').hide();$('#termsForm').show();"
                                      style="width:20px;height:20px">
-                        <f:setPropertyActionListener value="#{topic}" target="#{topicController.topic}"/>
+                        <f:setPropertyActionListener value="#{topic}" target="#{topicController.gameTopicCount}"/>
                     </p:commandButton>
 
                     <p:commandButton action="#{topicController.doDeleteTopic}" icon="ui-icon-trash" title="Delete"
@@ -67,7 +67,7 @@
             <p:growl id="growl" showDetail="false" life="6000">
                 <p:autoUpdate/>
             </p:growl>
-            <p:dialog header="Create new Game" id="topicCreationDialog" widgetVar="topicCreationDialog" modal="true"
+            <p:dialog header="Create new Topic" id="topicCreationDialog" widgetVar="topicCreationDialog" modal="true"
                       showEffect="fade" hideEffect="fade" resizable="false">
                 <p:outputPanel id="topicCreateData">
                     <h:panelGrid columns="2">
@@ -77,7 +77,7 @@
                     <h:panelGrid columns="2">
                         <p:commandButton value="Save" action="#{topicController.doSaveTopic()}"
                                          oncomplete="PF('topicCreationDialog').hide()"
-                                         update=":topicForm:topicCreationTable"/>
+                                         update=":topicForm:topicCreationTable :createTopicForm"/>
                         <p:commandButton value="Abort" onclick="PF('Dialog').hide()"/>
                     </h:panelGrid>
                 </p:outputPanel>
@@ -120,7 +120,7 @@
                     <p:separator/>
 
                     <h:panelGrid columns="2">
-                        <p:commandButton value="Save" action="#{termsController.doSaveTerm(topicController.topic)}"
+                        <p:commandButton value="Save" action="#{termsController.doSaveTerm(topicController.gameTopicCount.topic)}"
                                          oncomplete="PF('termCreationDialog').hide()" update=":termsForm:termsTable"/>
                         <p:commandButton value="Abort" onclick="PF('Dialog').hide()"/>
                     </h:panelGrid>

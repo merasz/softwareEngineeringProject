@@ -61,7 +61,12 @@ public class Team implements Serializable {
     }
 
     public List<User> getTeamPlayers() {
-        return teamPlayers;
+        Set<User> myUsers = new HashSet<>(teamPlayers);
+        List<User> tmp = new ArrayList<>();
+        for (User u: myUsers) {
+            tmp.add(u);
+        }
+        return tmp;
     }
 
     public void setTeamPlayers(List<User> teamPlayers) {
