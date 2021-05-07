@@ -24,6 +24,7 @@ public class Score implements Serializable {
     private Game game;
 
     public Score() {
+        this.totalRoundScore = 0;
     }
 
     //TODO: add new parameters to constructor

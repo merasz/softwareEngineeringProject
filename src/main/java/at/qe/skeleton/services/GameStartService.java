@@ -33,15 +33,19 @@ public class GameStartService extends GameService {
         return this.game;
     }
 
-    public Game joinGame(User user) throws NoSuchElementException, IllegalArgumentException {
+    public Game joinGame(Game game, User user) throws NoSuchElementException, IllegalArgumentException {
         this.user = user;
-        this.game = getGameRepository().findActiveGameByRaspberry(user.getRaspberry().getRaspberryId());
+        this.game = game;
         if (game == null ) {
             throw new NoSuchElementException("No active game found. Ask a game manager to create a new game.");
         }
         joinTeam();
         getGameJoinController().onSelect(user, game);
         return game;
+    }
+
+    public Game getActiveGame(User user) {
+        return getGameRepository().findActiveGameByRaspberry(user.getRaspberry().getRaspberryId());
     }
 
     // when joining the game: get assigned to a team or get your team, when already assigned somewhere
@@ -67,10 +71,18 @@ public class GameStartService extends GameService {
 
     private void addUserToTeam(Team team) {
         if (!team.getTeamPlayers().contains(user)) {
-            team.getTeamPlayers().add(user);
+            List<User> players = team.getTeamPlayers();
+            players.add(user);
+            team.setTeamPlayers(players);
+            System.out.println("user: " + user.getUsername() + " -- team: " + team.getTeamId());
+            System.out.println("team: " + team.getTeamPlayers().stream().map(User::getUsername).collect(Collectors.toList()));
         }
         this.team = getTeamService().saveTeam(team);
         this.game = saveGame(game);
+        //this.game = reloadGame(game);
+        System.out.println("game: " + game.getTeamList().stream().flatMap(t -> t.getTeamPlayers().stream()
+                .map(User::getUsername)).collect(Collectors.toList()));
+        System.out.println("team: " + team.getTeamPlayers().stream().map(User::getUsername).collect(Collectors.toList()));
         getGameJoinController().takeTeam(game, team);
     }
 

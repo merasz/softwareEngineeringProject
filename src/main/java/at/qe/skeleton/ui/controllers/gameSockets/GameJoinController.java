@@ -40,16 +40,17 @@ public class GameJoinController {
         sendTo.addAll(playerCircle.stream().map(User::getUsername).collect(Collectors.toList()));
         teamAccepted.put(game.getGameId(), ConcurrentHashMap.newKeySet());
 
-        List<String> assignedPlayers = game.getTeamList().stream().
-                flatMap(t -> t.getTeamPlayers().stream().map(User::getUsername)).collect(Collectors.toList());
-
+        List<User> assignedPlayers = game.getTeamList().stream()
+                .flatMap(t -> t.getTeamPlayers().stream()).collect(Collectors.toList());
+        System.out.println("assigned: " + assignedPlayers);
         for (User u : playerCircle) {
             PlayerAvailability pA = new PlayerAvailability(u, game);
-            if (assignedPlayers.contains(u.getUsername())) {
+            if (assignedPlayers.contains(u)) {
                 pA.setAvailable(false);
             }
             playerAvailability.add(pA);
         }
+        //playerAvailability.
 
         this.webSocketManager.getJoinChannel().send("teamJoin", sendTo);
     }
