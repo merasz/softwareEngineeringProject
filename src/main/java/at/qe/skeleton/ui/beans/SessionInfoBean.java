@@ -1,5 +1,6 @@
 package at.qe.skeleton.ui.beans;
 
+import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.UserRole;
 import at.qe.skeleton.services.UserService;
@@ -29,6 +30,7 @@ public class SessionInfoBean implements Serializable {
      * Attribute to cache the current user.
      */
     private User currentUser;
+    private Game currentGame;
 
     /**
      * Returns the currently logged on user, null if no user is authenticated
@@ -58,8 +60,7 @@ public class SessionInfoBean implements Serializable {
             return "";
         }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String name = auth.getName(); //get logged in username
-        return name;
+        return auth.getName(); //return logged in username
     }
 
     /**
@@ -117,4 +118,11 @@ public class SessionInfoBean implements Serializable {
         return false;
     }
 
+    public Game getCurrentGame() {
+        return currentGame;
+    }
+
+    public void setCurrentGame(Game currentGame) {
+        this.currentGame = currentGame;
+    }
 }

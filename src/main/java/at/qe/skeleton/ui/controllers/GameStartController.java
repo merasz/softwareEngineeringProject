@@ -4,6 +4,7 @@ import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.demo.PlayerAvailability;
 import at.qe.skeleton.services.GameStartService;
+import at.qe.skeleton.ui.beans.SessionInfoBean;
 import org.primefaces.event.SelectEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -21,6 +22,9 @@ public class GameStartController extends GameController implements Serializable 
 
     @Autowired
     private GameStartService gameStartService;
+
+    @Autowired
+    private SessionInfoBean sessionInfoBean;
 
     private PlayerAvailability player;
     private String teamName;
@@ -86,6 +90,7 @@ public class GameStartController extends GameController implements Serializable 
     }
 
     public void finishTeamAssign() {
+        sessionInfoBean.setCurrentGame(getGame());
         try {
             setGame(gameStartService.finishTeamAssign(teamName));
             teamComplete = true;

@@ -42,7 +42,7 @@ public class GameJoinController {
 
         List<User> assignedPlayers = game.getTeamList().stream()
                 .flatMap(t -> t.getTeamPlayers().stream()).collect(Collectors.toList());
-        System.out.println("assigned: " + assignedPlayers);
+        //System.out.println("assigned: " + assignedPlayers);
         for (User u : playerCircle) {
             PlayerAvailability pA = new PlayerAvailability(u, game);
             if (assignedPlayers.contains(u)) {
@@ -50,7 +50,20 @@ public class GameJoinController {
             }
             playerAvailability.add(pA);
         }
-        //playerAvailability.
+
+        /*
+        userRepository.findAllByRaspberry(game.getRaspberry()).stream()
+                .map(u -> new PlayerAvailability(u, game))
+                .collect(Collectors.toList())
+                .forEach(pa -> {
+                    if (game.getTeamList().stream()
+                            .flatMap(t -> t.getTeamPlayers().stream())
+                            .collect(Collectors.toList()).contains(pa.getUser())) {
+                        pa.setAvailable(false);
+                    }
+                    playerAvailability.add(pa);
+                });
+        */
 
         this.webSocketManager.getJoinChannel().send("teamJoin", sendTo);
     }
@@ -76,8 +89,8 @@ public class GameJoinController {
         updateTeamsReady(game);
         teamAccepted.get(game.getGameId()).add(game.getTeamList().stream()
                 .filter(t -> t.getTeamPlayers().contains(user)).findFirst().get());
-        System.out.println(teamAccepted.get(game.getGameId()).stream().map(Team::getTeamName).collect(Collectors.toList()));
-        System.out.println(allTeamsReady.get(game.getGameId()));
+        //System.out.println(teamAccepted.get(game.getGameId()).stream().map(Team::getTeamName).collect(Collectors.toList()));
+        //System.out.println(allTeamsReady.get(game.getGameId()));
         return this.allTeamsReady.get(game.getGameId())
                 && teamAccepted.get(game.getGameId()).size() == game.getTeamList().size();
     }
