@@ -43,11 +43,6 @@ public class TermsController extends Controller implements Serializable {
         doCreateNewTerm();
     }
 
-//    @GetMapping("/list")
-//    public Iterable<Term> list() {
-//        return termsService.list();
-//    }
-
     public void doCreateNewTerm() {
         System.out.println("doCreateNewTerm:");
         term = new Term();
@@ -107,6 +102,4 @@ public class TermsController extends Controller implements Serializable {
 //        termsService.getTermsRepository().delete(term);
 //        displayInfo("Term deleted", "Term successfully deleted.");
 //    }
-
-
 }
