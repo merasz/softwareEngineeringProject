@@ -1,7 +1,8 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.*;
-import at.qe.skeleton.model.demo.PlayerAvailability;
+import at.qe.skeleton.model.demo.TeamPlayer;
+import at.qe.skeleton.ui.controllers.gameSockets.GamePlaySocketController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -13,11 +14,13 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 @Component
 @Scope("session")
 public class GameStartService extends GameService {
+
+    @Autowired
+    private GamePlaySocketController gamePlaySocketController;
 
     private User user;
     private Game game;
@@ -143,26 +146,22 @@ public class GameStartService extends GameService {
         } else {
             this.game.setPausedTime(start);
         }
+
+        gamePlaySocketController.putTeamPlayerMap(game, createPlayerOrdering(game));
     }
 
-    //TODO shuffle teams-list & player-lists
-    private void createPlayerOrdering(Game game) {
-        List<List<TeamPlayer>> tpList = new ArrayList<>();
-        for (Team t : game.getTeamList()) {
-            List<TeamPlayer> tP = new ArrayList<>();
-            incrementNumPlayers(t.getTeamPlayers().size());
+    private Queue<TeamPlayer> createPlayerOrdering(Game game) {
+        Queue<TeamPlayer> orderedPlayerList = new LinkedList<>();
 
-            for (User p : t.getTeamPlayers()) {
-                tP.add(new TeamPlayer(p, t));
-            }
-
-            Collections.shuffle(tP);
-            tpList.add(tP);
-        }
-        Collections.shuffle(tpList);
-        IntStream.range(0, tpList.get(0).size()).boxed().collect(Collectors.toList()).stream()
-                .map(i -> tpList.stream().map(t -> t.get(i)).collect(Collectors.toList()))
-                .collect(Collectors.toList()).forEach(getPlayers()::addAll);
+        List<Team> teams = game.getTeamList();
+        Collections.shuffle(teams);
+        teams.forEach(t -> Collections.shuffle(t.getTeamPlayers()));
+        IntStream.range(0, game.getTeamSize()).boxed().collect(Collectors.toList())
+                .forEach(i ->
+                        teams.forEach(t ->
+                                orderedPlayerList.add(
+                                        new TeamPlayer(t.getTeamPlayers().get(i), t))));
+        return orderedPlayerList;
     }
     //endregion
 

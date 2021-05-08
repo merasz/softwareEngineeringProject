@@ -2,6 +2,7 @@ package at.qe.skeleton.ui.controllers.gameSockets;
 
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.demo.LogEntry;
+import at.qe.skeleton.model.demo.TeamPlayer;
 import at.qe.skeleton.model.demo.TeamScoreInfo;
 
 import at.qe.skeleton.repositories.GameRepository;
@@ -42,7 +43,7 @@ public class GamePlaySocketController {
     private Map<Game,Integer> pointsMap = new ConcurrentHashMap<>();
     private Map<Game,Team> teamMap = new ConcurrentHashMap<>();
     private Map<Game,Queue<User>> playerMap = new ConcurrentHashMap<>();
-
+    private Map<Game,Queue<TeamPlayer>> teamPlayerMap = new ConcurrentHashMap<>();
     private Map<Game,Integer> runningMap = new ConcurrentHashMap<>();
 
 
@@ -189,5 +190,11 @@ public class GamePlaySocketController {
         this.actionLogs = actionLogs;
     }
 
+    public Map<Game, Queue<TeamPlayer>> getTeamPlayerMap() {
+        return teamPlayerMap;
+    }
 
+    public void putTeamPlayerMap(Game game, Queue<TeamPlayer> orderedPlayerList) {
+        this.teamPlayerMap.put(game, orderedPlayerList);
+    }
 }

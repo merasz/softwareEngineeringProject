@@ -4,6 +4,7 @@ import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.Task;
 import at.qe.skeleton.model.Team;
 import at.qe.skeleton.model.User;
+import at.qe.skeleton.model.demo.TeamPlayer;
 import at.qe.skeleton.repositories.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Component;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.NoSuchElementException;
 
 @Component
 @Scope("view")
@@ -102,8 +102,8 @@ public class GamePlayService extends GameService {
     //TODO
     public Game nextTurn(Game game) {
         TeamPlayer tp = selectNextPlayer(game);
-        setCurrentTeam(tp.team);
-        setCurrentPlayer(tp.player);
+        setCurrentTeam(tp.getTeam());
+        setCurrentPlayer(tp.getPlayer());
         //selectNextTerm();
         game.incrementNrRound();
         getGameRepository().save(game);

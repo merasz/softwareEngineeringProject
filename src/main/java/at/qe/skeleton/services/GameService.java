@@ -1,6 +1,7 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.*;
+import at.qe.skeleton.model.demo.TeamPlayer;
 import at.qe.skeleton.repositories.GameRepository;
 import at.qe.skeleton.repositories.ScoreRepository;
 import at.qe.skeleton.ui.controllers.gameSockets.GameJoinController;
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.*;
 
 @Component
@@ -35,16 +35,6 @@ public class GameService {
 
     public Collection<Game> getAllActiveGames() {
         return gameRepository.findAllActive();
-    }
-
-    public class TeamPlayer {
-        User player;
-        Team team;
-
-        TeamPlayer(User player, Team team) {
-            this.player = player;
-            this.team = team;
-        }
     }
 
     public Game saveGame(Game game) {
