@@ -122,10 +122,7 @@ public class GameStartService extends GameService {
     }
 
     public Game enterGame() throws IOException {
-
         if (getGameJoinController().updateReadyToStart(game, user)) {
-
-
             if (game.getStartTime() == null && !getGameJoinController().isInitialized(game)) {
                 //System.out.println("-------  initialized  -------");
                 initializeGame(game);
@@ -133,14 +130,11 @@ public class GameStartService extends GameService {
                 this.game = saveGame(game);
                 gamePlaySocketController.initGame(game);
             }
-
-
-
             FacesContext.getCurrentInstance().getExternalContext().redirect("/secured/game_room/gameRoom.xhtml");
             FacesContext.getCurrentInstance().responseComplete();
         }
         //System.out.println("teams: " + game.getTeamList().stream().map(Team::getTeamName).collect(Collectors.toList()));
-        this.game = saveGame(game);
+        //this.game = saveGame(game);
         //gamePlaySocketController.enterGame(game);
         return game;
     }
