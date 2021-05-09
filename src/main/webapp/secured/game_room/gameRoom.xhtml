@@ -24,7 +24,7 @@
             </p:growl>
 
             <p:dataTable widgetVar="scoreTable" id="scoreTable" var="score"
-                         value="#{scoreManagerController.scores}" style="width: 50%;position: absolute;bottom: 0px; left: 0px">
+                         value="#{scoreManagerController.getScores(sessionInfoBean.currentGame)}" style="width: 50%;position: absolute;bottom: 0px; left: 0px">
                 <f:facet name="header">Scores</f:facet>
                 <p:column headerText="Team">
                     <h:outputText value="#{score.team.teamName}"/>
@@ -34,22 +34,19 @@
                 </p:column>
             </p:dataTable>
 
-            <p:commandButton id="team1Btn" value="Team 1"
-                             action="#{scoreManagerController.addScore1(3)}" style="position: relative; left:20%">
+            <p:commandButton id="termYesBtn" value="Guessed Correctly"
+                             action="#{gamePlaySocketController.termGuessed(sessionInfoBean.currentGame)}" style="position: relative; left:20%">
             </p:commandButton>
 
-            <p:commandButton id="team2Btn" value="Team 2"
-                             action="#{scoreManagerController.addScore2(3)}" style="position: absolute; left:30%">
+            <p:commandButton id="termNoBtn" value="Not Guessed Correctly"
+                             action="#{gamePlaySocketController.termNotGuessed(sessionInfoBean.currentGame)}" style="position: relative; left:30%">
             </p:commandButton>
 
-            <p:commandButton id="timerBtn" value="Timer 3min"
-                             action="#{gamePlaySocketController.startTimer(180)}" style="position: absolute; left:50%">
+            <p:commandButton id="ruleBreakerBtn" value="Rulebreak"
+                             action="#{gamePlaySocketController.termGuessedWithRulebreak(sessionInfoBean.currentGame)}" style="position: relative; left:30%">
             </p:commandButton>
 
-            <p:commandButton id="timerBtn2" value="Timer 2min"
-                             action="#{gamePlaySocketController.startTimer(120)}" style="position: absolute; left:60%">
-            </p:commandButton>
-            <o:socket channel="scoreChannel" scope="application" onmessage="function(m){console.log(m);}">
+            <o:socket channel="scoreChannel" user="#{sessionInfoBean.currentUserName}" onmessage="function(m){console.log(m);}">
                 <f:ajax event="scoreUpdate" render="scoreTable"/>
             </o:socket>
         </h:form>
@@ -57,31 +54,36 @@
             <h:panelGroup style="position: absolute; bottom: 0px;right: 30px" id="timerOuter">
                 <pe:timer
                     id="timer"
+                    widgetVar="timer"
                     visible="false"
+                    singleRun="true"
+                    listener="#{gamePlaySocketController.onTimerOver(sessionInfoBean.currentGame)}"
                     ontimerstep="sync(intervalData)"
-                    timeout="#{gamePlaySocketController.time}"/>
+                    timeout="#{gamePlaySocketController.getTime(sessionInfoBean.currentGame)}"/>
                 <p:knob
                         min="0"
-                        max="#{gamePlaySocketController.time}"
+                        max="#{gamePlaySocketController.getTime(sessionInfoBean.currentGame)}"
                         widgetVar="knob"
                         disabled="true"
-                        value="#{gamePlaySocketController.time}"/>
+                        value="#{gamePlaySocketController.getTime(sessionInfoBean.currentGame)}"/>
             </h:panelGroup>
 
-            <o:socket channel="timeChannel" scope="application" onmessage="function(m){console.log(m);}">
+            <o:socket channel="timeChannel" user="#{sessionInfoBean.currentUserName}" onmessage="function(m){console.log(m);}">
                 <f:ajax event="timeUpdate" render="timerOuter" />
+                <f:ajax event="stopTimer" onevent="PF('timer').pause()" />
             </o:socket>
 
         </h:form>
 
         <h:form>
-            <h:outputText value="#{gamePlaySocketController.nextTerm}" id="termField" style="position: absolute; top: 50%; left: 50%; font-size: 32px; font-weight: bold"/>
-            <h:outputText value="#{gamePlaySocketController.type}" id="typeField" style="position: absolute; top: 54%; left: 50%; font-size: 26px; font-weight: bold"/>
-            <h:outputText value="#{gamePlaySocketController.points} Point(s)" id="pointsField" style="position: absolute; top: 58%; left: 50%; font-size: 26px; font-weight: bold"/>
 
-            <h:outputText value="#{gamePlaySocketController.nextPlayer} " id="playerField" style="position: absolute; top: 62%; left: 50%; font-size: 26px; font-weight: bold"/>
+            <h:outputText value="#{gamePlaySocketController.getNextTerm(sessionInfoBean.currentGame)}" id="termField" widgetVar="termField" style="position: absolute; top: 50%; left: 50%; font-size: 32px; font-weight: bold"/>
+            <h:outputText value="#{gamePlaySocketController.getType(sessionInfoBean.currentGame)}" id="typeField" widgetVar="typeField" style="position: absolute; top: 54%; left: 50%; font-size: 26px; font-weight: bold"/>
+            <h:outputText value="#{gamePlaySocketController.getPoints(sessionInfoBean.currentGame)} Point(s)" id="pointsField" widgetVar="pointsField" style="position: absolute; top: 58%; left: 50%; font-size: 26px; font-weight: bold"/>
 
-            <o:socket channel="termChannel" scope="application" onmessage="function(m){console.log(m);}">
+            <h:outputText value="#{gamePlaySocketController.getNextPlayer(sessionInfoBean.currentGame)} " id="playerField" widgetVar="playerField" style="position: absolute; top: 62%; left: 50%; font-size: 26px; font-weight: bold"/>
+
+            <o:socket channel="termChannel" user="#{sessionInfoBean.currentUserName}" onmessage="function(m){console.log(m);}">
                 <f:ajax event="termUpdate" render="termField typeField pointsField playerField" />
             </o:socket>
 
@@ -90,6 +92,13 @@
     <script type="text/javascript">
         window.sync = function(t){
             PF('knob').setValue(t.current);
+        }
+
+        function emptyFields() {
+            PF('termField').html("");
+            PF('typeField').html("");
+            PF('pointsField').html("");
+            PF('playerField').html("");
         }
     </script>
 </html>

@@ -6,7 +6,10 @@ import at.qe.skeleton.model.demo.TeamPlayer;
 import at.qe.skeleton.model.demo.TeamScoreInfo;
 
 import at.qe.skeleton.repositories.GameRepository;
+import at.qe.skeleton.repositories.TeamRepository;
 import at.qe.skeleton.repositories.TimeFlipConfRepository;
+import at.qe.skeleton.services.GameStartService;
+import at.qe.skeleton.services.TeamService;
 import at.qe.skeleton.ui.websockets.WebSocketManager;
 import at.qe.skeleton.utils.CDIAutowired;
 import at.qe.skeleton.utils.CDIContextRelated;
@@ -15,9 +18,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.PostConstruct;
+import javax.el.MethodExpression;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 @Controller
@@ -31,170 +37,241 @@ public class GamePlaySocketController {
     @Autowired
     TimeFlipConfRepository timeFlipConfRepository;
 
+    @Autowired
+    ScoreManagerController scoreManagerController;
+
+    @Autowired
+    TeamRepository teamRepository;
+
 
     @CDIAutowired
     private WebSocketManager websocketManager;
     private List<LogEntry> actionLogs = new CopyOnWriteArrayList<>();
-    private Game game;
-    private Map<Game,Topic> topicMap = new ConcurrentHashMap<>();
-    private Map<Game,Queue<Term>> termMap = new ConcurrentHashMap<>();
-    private Map<Game,String> typeMap = new ConcurrentHashMap<>();
-    private Map<Game,Integer> timeMap = new ConcurrentHashMap<>();
-    private Map<Game,Integer> pointsMap = new ConcurrentHashMap<>();
-    private Map<Game,Team> teamMap = new ConcurrentHashMap<>();
-    private Map<Game,Queue<User>> playerMap = new ConcurrentHashMap<>();
-    private Map<Game,Queue<TeamPlayer>> teamPlayerMap = new ConcurrentHashMap<>();
-    private Map<Game,Integer> runningMap = new ConcurrentHashMap<>();
+    private Map<Integer,Topic> topicMap = new ConcurrentHashMap<>();
+    private Map<Integer,Queue<Term>> termQueueMap = new ConcurrentHashMap<>();
+    private Map<Integer,Term> currentTermMap = new ConcurrentHashMap<>();
+    private Map<Integer,Queue<TeamPlayer>> teamPlayerMap = new ConcurrentHashMap<>();
+    private Map<Integer,String> typeMap = new ConcurrentHashMap<>();
+    private Map<Integer,Integer> timeMap = new ConcurrentHashMap<>();
+    private Map<Integer,Integer> pointsMap = new ConcurrentHashMap<>();
+    private Map<Integer,Team> teamMap = new ConcurrentHashMap<>();
+    private Map<Integer,User> currentPlayerMap = new ConcurrentHashMap<>();
+    //private Map<Integer,Queue<User>> playerQueueMap = new ConcurrentHashMap<>();
 
+    private Map<Integer,Integer> runningMap = new ConcurrentHashMap<>();
+    private Map<Integer, Integer> currentRoundRunning = new ConcurrentHashMap<>();
 
-    @PostConstruct
-    public void init(){
-        game = gameRepository.findAll().get(1);
+    public void initGame(Game game) {
+
+        //teamPlayerMap.put(game.getGameId(),createPlayerOrdering(game));
+
         Topic topic = game.getTopic();
         List<Term> terms = topic.getTerms();
         Collections.shuffle(terms);
-        termMap.put(game,new LinkedList<>(terms));
+        termQueueMap.put(game.getGameId(),new LinkedList<>(terms));
+        System.out.println("init game: " + game);
+        scoreManagerController.setupScores(game);
 
-        List<Team> teams = game.getTeamList();
-        List<User> player = new ArrayList<User>();
-        for(Team team : teams) {
-            player.addAll(team.getTeamPlayers());
-        }
-        playerMap.put(game,new LinkedList<>(player));
-        runningMap.put(game,0);
-        typeMap.put(game,"");
-        timeMap.put(game,0);
-
+        runningMap.put(game.getGameId(),0);
+        typeMap.put(game.getGameId(),"");
+        timeMap.put(game.getGameId(),0);
     }
 
-    public void startTimer(int time){
-        timeMap.put(game,time);
-        this.websocketManager.getTimeChannel().send("timeUpdate");
+    public void startTimer(Game game,int time){
+        timeMap.put(game.getGameId(),time);
+        this.websocketManager.getTimeChannel().send("timeUpdate",getAllRecipients(game));
+    }
+
+    public void timeFlipUpdate(Game activeGame, int facetID) {
+        if(runningMap.get(activeGame.getGameId()) == 0 || (runningMap.get(activeGame.getGameId()) == 1 && currentRoundRunning.get(activeGame.getGameId()) == 0)) {
+            nextTerm(activeGame, facetID);
+        } else if(currentRoundRunning.get(activeGame.getGameId()) == 1) {
+            stopRound(activeGame);
+        }
     }
 
     public void nextTerm(Game activeGame, int facetId) {
-        runningMap.put(game,1);
+        runningMap.put(activeGame.getGameId(),1);
+        currentRoundRunning.put(activeGame.getGameId(),1);
 
         TimeFlipConf timeFlipConf = timeFlipConfRepository.findByFacetId(facetId);
 
+
+        typeMap.put(activeGame.getGameId(),timeFlipConf.getRequestType().toString());
+        pointsMap.put(activeGame.getGameId(),timeFlipConf.getFacetPoint());
+
+        //User user = playerQueueMap.get(activeGame.getGameId()).poll();
+        TeamPlayer teamPlayer = teamPlayerMap.get(activeGame.getGameId()).poll();
+        User user = teamPlayer.getPlayer();
+        currentPlayerMap.put(activeGame.getGameId(),user);
+
+        Term term = termQueueMap.get(activeGame.getGameId()).poll();
+        currentTermMap.put(activeGame.getGameId(),term);
+
         int time = timeFlipConf.getTime();
-        typeMap.put(game,timeFlipConf.getRequestType().toString());
-        pointsMap.put(game,timeFlipConf.getFacetPoint());
-        startTimer(time);
-        this.websocketManager.getTermChannel().send("termUpdate");
+        startTimer(activeGame, time);
+
+        List<List<String>> recipients = getSeperatedRecipients(activeGame, user);
+        List<String> currentUser = recipients.get(0);
+        List<String> otherUser = recipients.get(1);
+
+        //this.websocketManager.getTermChannel().send("termUpdate",currentUser);
+        this.websocketManager.getTermChannel().send("termUpdate",otherUser);
+
     }
 
-    public String getNextTerm() {
-        if (runningMap.get(game) == 0) {return null;}
-        while(termMap.get(game) == null ){}
-        if(termMap.get(game).size() > 0) {
-            return termMap.get(game).poll().getTermName();
-        } else {
-            return null;
+    public String getNextTerm(Game game) {
+        if (runningMap.get(game.getGameId()) == 0) {return null;}
+        while(currentTermMap.get(game.getGameId()) == null ){}
+        return currentTermMap.get(game.getGameId()).getTermName();
+
+    }
+
+    public void termGuessed(Game game) {
+        if(currentRoundRunning.get(game.getGameId()) == 1) {
+            scoreManagerController.addScoreToTeam(game, currentPlayerMap.get(game.getGameId()),pointsMap.get(game.getGameId()));
+            currentRoundRunning.put(game.getGameId(),0);
+            setTime(game,0);
+            System.out.println(getAllRecipients(game));
+            websocketManager.getScoreChannel().send("scoreUpdate",getAllRecipients(game));
+        }
+    }
+
+    public void termGuessedWithRulebreak(Game game) {
+        if(currentRoundRunning.get(game.getGameId()) == 1) {
+            scoreManagerController.addScoreToTeam(game, currentPlayerMap.get(game.getGameId()),pointsMap.get(game.getGameId())-1);
+            currentRoundRunning.put(game.getGameId(),0);
+            setTime(game,0);
+            websocketManager.getScoreChannel().send("scoreUpdate",getAllRecipients(game));
+        }
+    }
+
+    public void termNotGuessed(Game game) {
+        if(currentRoundRunning.get(game.getGameId()) == 1) {
+            currentRoundRunning.put(game.getGameId(),0);
+            setTime(game,0);
+        }
+    }
+
+    public String getNextPlayer(Game game) {
+        if (runningMap.get(game.getGameId()) == 0) {return null;}
+        while(currentPlayerMap.get(game.getGameId()) == null ){}
+        return currentPlayerMap.get(game.getGameId()).getUsername();
+
+    }
+
+    public void onTimerOver(Game game) {
+        if(game!=null && currentRoundRunning.get(game.getGameId()) != null && currentPlayerMap.get(game.getGameId()) != null && pointsMap.get(game.getGameId()) != null && currentRoundRunning.get(game.getGameId()) == 1) {
+            currentRoundRunning.put(game.getGameId(),0);
+        }
+    }
+
+    public void stopRound(Game game) {
+        websocketManager.getTimeChannel().send("stopTimer",getAllRecipients(game));
+    }
+
+    public List<List<String>> getSeperatedRecipients(Game game, User user) {
+        List<Team> allTeams = teamRepository.findByGame(game.getGameId());
+        Team userTeam = teamRepository.findByTeamPlayersAndGame(user,game);
+        List<String> otherTeams = new ArrayList<>();
+        List<String> currentTeam = new ArrayList<>();
+        for(Team t : allTeams) {
+            if(t.getTeamId().equals(userTeam.getTeamId())) {
+                Set <User> s = new HashSet<>(t.getTeamPlayers());
+                s.forEach(r -> currentTeam.add(r.getUsername()));
+            } else {
+                Set <User> s = new HashSet<>(t.getTeamPlayers());
+                s.forEach(r -> otherTeams.add(r.getUsername()));
+            }
         }
 
+        List<List<String>> concatRecipients = new ArrayList<>();
+        concatRecipients.add(currentTeam);
+        concatRecipients.add(otherTeams);
+
+        return concatRecipients;
     }
 
-    public String getNextPlayer() {
-        if (runningMap.get(game) == 0) {return null;}
-        while(playerMap.get(game) == null ){}
-        if(playerMap.get(game).size() > 0) {
-            return playerMap.get(game).poll().getUsername();
-        } else {
-            return null;
+    public List<String> getAllRecipients(Game game) {
+        List<Team> allTeams = teamRepository.findByGame(game.getGameId());
+
+        List<String> recipients = new ArrayList<>();
+        for(Team t : allTeams) {
+            Set<User> removeDupl = new HashSet<>(t.getTeamPlayers());
+            removeDupl.forEach(r -> recipients.add(r.getUsername()));
         }
-
+        System.out.println(recipients);
+        return recipients;
     }
 
-    public String getType() {
-        if (runningMap.get(game) == 0) {return null;}
-        while(typeMap.get(game) == null ){}
-        return typeMap.get(game);
+    public String getType(Game game) {
+        if (runningMap.get(game.getGameId()) == 0) {return null;}
+        while(typeMap.get(game.getGameId()) == null ){}
+        return typeMap.get(game.getGameId());
+    }
+
+    public Integer getTime(Game game) {
+        if (runningMap.get(game.getGameId()) == 0) {return null;}
+        while(timeMap.get(game.getGameId()) == null ){}
+        return timeMap.get(game.getGameId());
+    }
+
+    public void setTime(Game game,Integer time) {
+        timeMap.put(game.getGameId(), time);
+    }
+
+    public Integer getPoints(Game game) {
+        if (runningMap.get(game.getGameId()) == 0) {return null;}
+        while(pointsMap.get(game.getGameId()) == null ){}
+        return pointsMap.get(game.getGameId());
+    }
+
+    public void setPoints(Game game, Integer points) {
+        pointsMap.put(game.getGameId(),points);
     }
 
 
-    public WebSocketManager getWebsocketManager() {
-        return websocketManager;
+    public Topic getTopic(Game game) {
+        if (runningMap.get(game.getGameId()) == 0) {return null;}
+        while(topicMap.get(game.getGameId()) == null ){}
+        return topicMap.get(game.getGameId());
     }
 
-    public void setWebsocketManager(WebSocketManager websocketManager) {
-        this.websocketManager = websocketManager;
+    public void setTopic(Game game, Topic topic) {
+        topicMap.put(game.getGameId(),topic);
     }
 
-    public Integer getTime() {
-        if (runningMap.get(game) == 0) {return null;}
-        while(timeMap.get(game) == null ){}
-        return timeMap.get(game);
+    public String getTopicName(Game game) {
+        if (runningMap.get(game.getGameId()) == 0) {return null;}
+        while(topicMap.get(game.getGameId()) == null ){}
+        return topicMap.get(game.getGameId()).getTopicName();
     }
 
-    public void setTime(Integer time) {
-        timeMap.put(this.game, time);
-        System.out.println(time);
+    public void setTeam(Game game, Team Team) {
+        teamMap.put(game.getGameId(),Team);
     }
 
-    public Integer getPoints() {
-        if (runningMap.get(game) == 0) {return null;}
-        while(pointsMap.get(game) == null ){}
-        return pointsMap.get(game);
+    public Team getTeam(Game game) {
+        if (runningMap.get(game.getGameId()) == 0) {return null;}
+        while(teamMap.get(game.getGameId()) == null ){}
+        return teamMap.get(game.getGameId());
     }
 
-    public void setPoints(Integer points) {
-        pointsMap.put(this.game,points);
-    }
-
-    public Game getGame() {
-        return game;
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
-
-    public Topic getTopic() {
-        if (runningMap.get(game) == 0) {return null;}
-        while(topicMap.get(game) == null ){}
-        return topicMap.get(game);
-    }
-
-    public void setTopic(Topic topic) {
-        topicMap.put(game,topic);
-    }
-
-    public String getTopicName() {
-        if (runningMap.get(game) == 0) {return null;}
-        while(topicMap.get(game) == null ){}
-        return topicMap.get(game).getTopicName();
-    }
-
-    public void setTeam(Team Team) {
-        teamMap.put(game,Team);
-    }
-
-    public Team getTeam() {
-        if (runningMap.get(game) == 0) {return null;}
-        while(teamMap.get(game) == null ){}
-        return teamMap.get(game);
-    }
-
-    public String getTeamName() {
-        if (runningMap.get(game) == 0) {return null;}
-        while(teamMap.get(game) == null ){}
-        return teamMap.get(game).getTeamName();
-    }
-
-    public List<LogEntry> getActionLogs() {
-        return actionLogs;
+    public String getTeamName(Game game) {
+        if (runningMap.get(game.getGameId()) == 0) {return null;}
+        while(teamMap.get(game.getGameId()) == null ){}
+        return teamMap.get(game.getGameId()).getTeamName();
     }
 
     public void setActionLogs(List<LogEntry> actionLogs) {
         this.actionLogs = actionLogs;
     }
 
-    public Map<Game, Queue<TeamPlayer>> getTeamPlayerMap() {
+    public Map<Integer, Queue<TeamPlayer>> getTeamPlayerMap() {
         return teamPlayerMap;
     }
 
     public void putTeamPlayerMap(Game game, Queue<TeamPlayer> orderedPlayerList) {
-        this.teamPlayerMap.put(game, orderedPlayerList);
+        this.teamPlayerMap.put(game.getGameId(), orderedPlayerList);
     }
 }

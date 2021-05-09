@@ -19,4 +19,8 @@ public interface TeamRepository extends AbstractRepository<Team,Integer>{
 
     @Query("SELECT t from Team t WHERE t.teamId = :id")
     Team findByTeamId(@Param("id") Long id);
+
+    Team findByTeamPlayersAndGame(User user, Game game);
+
+
 }

@@ -152,6 +152,7 @@ public class GameStartService extends GameService {
         }
 
         gamePlaySocketController.putTeamPlayerMap(game, createPlayerOrdering(game));
+        gamePlaySocketController.initGame(game);
     }
 
     private Queue<TeamPlayer> createPlayerOrdering(Game game) {

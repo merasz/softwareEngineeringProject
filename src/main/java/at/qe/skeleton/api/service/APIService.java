@@ -63,10 +63,15 @@ public class APIService {
         newRequest.setIpAddress(piRequest.getIpAddress());
         newRequest.setFacetId(piRequest.getFacetId());
 
-        Integer raspiId = raspberryService.loadRaspberryByIp(piRequest.getIpAddress()).getRaspberryId();
-        Game activeGame = gameService.getRunningGameByRaspberry(raspiId);
-        gamePlaySocketController.nextTerm(activeGame,piRequest.getFacetId());
-
+        Raspberry  raspi = raspberryService.loadRaspberryByIp(piRequest.getIpAddress());
+        if(raspi != null) {
+            Integer raspiId = raspi.getRaspberryId();
+            Game activeGame = gameService.getRunningGameByRaspberry(raspiId);
+            if (activeGame != null) {
+                System.out.println(activeGame.getGameId());
+                gamePlaySocketController.timeFlipUpdate(activeGame, piRequest.getFacetId());
+            }
+        }
 
     }
 }

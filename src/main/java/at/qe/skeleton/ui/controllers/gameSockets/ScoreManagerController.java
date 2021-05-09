@@ -3,6 +3,7 @@ package at.qe.skeleton.ui.controllers.gameSockets;
 import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.Score;
 import at.qe.skeleton.model.Team;
+import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.demo.*;
 import at.qe.skeleton.repositories.GameRepository;
 import at.qe.skeleton.repositories.ScoreRepository;
@@ -48,55 +49,30 @@ public class ScoreManagerController {
 
     @CDIAutowired
     private WebSocketManager websocketManager;
-    private Map<String, TeamScoreInfo> scores = new ConcurrentHashMap<>();
-    private List<LogEntry> actionLogs = new CopyOnWriteArrayList<>();
+    private Map<Integer,Map<String, TeamScoreInfo>> scores = new ConcurrentHashMap<>();
 
-    private Game game;
 
-    @PostConstruct
-    public void init(){
-        game = gameRepository.findAll().get(1);
-
-        System.out.println(game.getGameId());
-        setupScores();
+    public void setupScores(Game game) {
+        Map<String, TeamScoreInfo> tmp = new ConcurrentHashMap<>();
+        System.out.println(game);
+        this.scoreRepository.findGameScoresByGame(game)
+              .forEach(score -> tmp.put(score.getTeam().getTeamName(), new TeamScoreInfo(score.getTeam(),score.getTotalRoundScore())));
+        scores.put(game.getGameId(), tmp);
     }
 
-    public void setupScores() {
-        this.scoreRepository.findGameScoresByGame(this.game)
-              .forEach(score -> this.scores.put(score.getTeam().getTeamName(), new TeamScoreInfo(score.getTeam(),score.getTotalRoundScore())));
+    public Collection<TeamScoreInfo> getScores(Game game) {
+        if(this.scores.get(game.getGameId()) == null) {return null;}
+        return Collections.unmodifiableCollection(this.scores.get(game.getGameId()).values());
     }
 
-    public Collection<TeamScoreInfo> getScores() {
-        return Collections.unmodifiableCollection(this.scores.values());
-    }
-
-    public Game getGame() {
-        return game;
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
-
-    public void addScore1(int roundScore) {
-        Team team = teamRepository.findByTeamId(Long.valueOf(3));
+    public void addScoreToTeam(Game game, User user, int roundScore) {
+        Team team = teamRepository.findByTeamPlayersAndGame(user,game);
         Score tmp = new Score();
-        tmp.setGame(this.game);
+        tmp.setGame(game);
         tmp.setTotalRoundScore(roundScore);
         tmp.setTeam(team);
+        tmp.setUser(user);
         scoreRepository.save(tmp);
-        setupScores();
-        this.websocketManager.getScoreChannel().send("scoreUpdate");
-    }
-
-    public void addScore2(int roundScore) {
-        Team team = teamRepository.findByTeamId(Long.valueOf(4));
-        Score tmp = new Score();
-        tmp.setGame(this.game);
-        tmp.setTotalRoundScore(roundScore);
-        tmp.setTeam(team);
-        scoreRepository.save(tmp);
-        setupScores();
-        this.websocketManager.getScoreChannel().send("scoreUpdate");
+        setupScores(game);
     }
 }
