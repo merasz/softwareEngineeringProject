@@ -94,6 +94,4 @@ public class Raspberry implements Serializable {
     public void setTimeFlip(TimeFlip timeFlip) {
         this.timeFlip = timeFlip;
     }
-
-
 }
