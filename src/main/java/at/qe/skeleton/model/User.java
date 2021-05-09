@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.util.List;
 
 import org.springframework.data.domain.Persistable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * Entity representing users.
@@ -71,7 +72,9 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
+        String encodedPW = enc.encode(password);
+        this.password = encodedPW;
     }
 
     public boolean isEnabled() {

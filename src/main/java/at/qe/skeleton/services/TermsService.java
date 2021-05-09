@@ -5,16 +5,12 @@ import at.qe.skeleton.model.Term;
 import at.qe.skeleton.model.Topic;
 import at.qe.skeleton.repositories.TermsRepository;
 import at.qe.skeleton.repositories.TopicRepository;
-import at.qe.skeleton.utils.JsonImport;
-import org.apache.tomcat.util.json.ParseException;
 import org.json.simple.JSONObject;
-import org.primefaces.shaded.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import java.io.FileNotFoundException;
 import java.util.*;
 
 @Component
