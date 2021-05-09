@@ -108,6 +108,10 @@
                              action="#{termsController.doCreateNewTerm()}" value="Create new Term">
                 <f:setPropertyActionListener value="#{term}" target="#{termsController.term}"/>
             </p:commandButton>
+            <p:commandButton style="width: 200px; margin-top: 25px; float: left; margin-left: 290px"
+                             oncomplete="$('#termsForm').hide();$('#topicForm').show();"
+                             icon="ui-icon-arrowthick-1-w" value ="Back to Topics">
+            </p:commandButton>
 
             <p:dialog header="Create new Term" id="termCreationDialog" widgetVar="termCreationDialog" modal="true"
                       showEffect="fade" hideEffect="fade" resizable="false">

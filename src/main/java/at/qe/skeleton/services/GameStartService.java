@@ -77,15 +77,15 @@ public class GameStartService extends GameService {
             List<User> players = team.getTeamPlayers();
             players.add(user);
             team.setTeamPlayers(players);
-            System.out.println("user: " + user.getUsername() + " -- team: " + team.getTeamId());
-            System.out.println("team: " + team.getTeamPlayers().stream().map(User::getUsername).collect(Collectors.toList()));
+            //System.out.println("user: " + user.getUsername() + " -- team: " + team.getTeamId());
+            //System.out.println("team: " + team.getTeamPlayers().stream().map(User::getUsername).collect(Collectors.toList()));
         }
         this.team = getTeamService().saveTeam(team);
         this.game = saveGame(game);
         //this.game = reloadGame(game);
-        System.out.println("game: " + game.getTeamList().stream().flatMap(t -> t.getTeamPlayers().stream()
-                .map(User::getUsername)).collect(Collectors.toList()));
-        System.out.println("team: " + team.getTeamPlayers().stream().map(User::getUsername).collect(Collectors.toList()));
+        //System.out.println("game: " + game.getTeamList().stream().flatMap(t -> t.getTeamPlayers().stream()
+        //        .map(User::getUsername)).collect(Collectors.toList()));
+        //System.out.println("team: " + team.getTeamPlayers().stream().map(User::getUsername).collect(Collectors.toList()));
         getGameJoinController().takeTeam(game, team);
     }
 
@@ -104,7 +104,7 @@ public class GameStartService extends GameService {
 
     //region initialize and enter game
     public Game finishTeamAssign(String teamName) throws IllegalArgumentException, IOException {
-        this.game = reloadGame(game);
+        //this.game = reloadGame(game);
         if (teamName.isEmpty()) {
             throw new IllegalArgumentException("Give your team a name first.");
         } else if (game.getTeamList().stream().filter(t -> t.getTeamName() != null)
@@ -113,22 +113,26 @@ public class GameStartService extends GameService {
         } else if (!teamReady()) {
             throw new IllegalArgumentException("You haven't assigned enough team mates yet.");
         }
+        //System.out.println("save team: " + this.team.getTeamId() + " -- " + teamName);
         this.team.setTeamName(teamName);
-        getTeamService().saveTeam(team);
+        this.team = getTeamService().saveTeam(team);
+        getGameJoinController().updateTeamsReady(game);
 
         return enterGame();
     }
 
     public Game enterGame() throws IOException {
         if (getGameJoinController().getAllTeamsReady(game, user)) {
-            if (game.getStartTime() == null && game.getTeamList().get(0).getTeamId().equals(team.getTeamId())) {
+            if (game.getStartTime() == null && game.getTeamList().get(game.getTeamSize() - 1).getTeamId().equals(team.getTeamId())) {
+                //System.out.println("-------  initialized  -------");
                 initializeGame(game);
-                System.out.println("-------  initialized  -------");
+                this.game = saveGame(game);
             }
             FacesContext.getCurrentInstance().getExternalContext().redirect("/secured/game_room/gameRoom.xhtml");
             FacesContext.getCurrentInstance().responseComplete();
         }
-        this.game = saveGame(game);
+        //System.out.println("teams: " + game.getTeamList().stream().map(Team::getTeamName).collect(Collectors.toList()));
+        //this.game = saveGame(game);
         return game;
     }
 
@@ -152,6 +156,9 @@ public class GameStartService extends GameService {
 
     private Queue<TeamPlayer> createPlayerOrdering(Game game) {
         Queue<TeamPlayer> orderedPlayerList = new LinkedList<>();
+
+        //System.out.println("initialize: " + game.getTeamList().stream().flatMap(t -> t.getTeamPlayers().stream()
+        //        .map(User::getUsername)).collect(Collectors.toList()));
 
         List<Team> teams = game.getTeamList();
         Collections.shuffle(teams);

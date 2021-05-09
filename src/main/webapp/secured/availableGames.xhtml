@@ -152,7 +152,9 @@
             <p:commandButton id="createTeamButton" style="width: 25%; margin-top: 25px; float: right;" icon="ui-icon-plusthick"
                              action="#{teamController.doSetTeam(teamListController.game)}" value ="Create new Team" update=":teamsForm:teamCreationDialog" >
             </p:commandButton>
-            <p:commandButton style="width: 200px; margin-top: 25px; float: left; margin-left: 290px" oncomplete="$('#teamsForm').hide();$('#gamesForm').show();" icon="ui-icon-arrowthick-1-w" value ="Back to Games">
+            <p:commandButton style="width: 200px; margin-top: 25px; float: left; margin-left: 290px"
+                             oncomplete="$('#teamsForm').hide();$('#gamesForm').show();"
+                             icon="ui-icon-arrowthick-1-w" value ="Back to Games">
             </p:commandButton>
 
             <p:dialog header="Create new Team" id="teamCreationDialog" widgetVar="teamCreationDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
@@ -165,7 +167,7 @@
                     <h:panelGrid columns ="2">
                         <p:commandButton value="Save" action="#{teamController.doSaveTeam}" update=":teamsForm:teamsTable">
                         </p:commandButton>
-                        <p:commandButton value="Abort" onclick="PF('Dialog').hide()"/>
+                        <p:commandButton value="Abort" onclick="PF('Dialog').hide();$('#teamsForm').show();"/>
                     </h:panelGrid>
 
                 </p:outputPanel>

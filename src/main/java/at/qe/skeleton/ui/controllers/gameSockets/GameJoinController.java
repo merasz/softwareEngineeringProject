@@ -86,7 +86,7 @@ public class GameJoinController {
     }
 
     public boolean getAllTeamsReady(Game game, User user) {
-        updateTeamsReady(game);
+        //updateTeamsReady(game);
         teamAccepted.get(game).add(game.getTeamList().stream()
                 .filter(t -> t.getTeamPlayers().contains(user)).findFirst().get());
         //System.out.println(teamAccepted.get(game.getGameId()).stream().map(Team::getTeamName).collect(Collectors.toList()));
@@ -99,7 +99,7 @@ public class GameJoinController {
         this.webSocketManager.getJoinChannel().send("teamJoin", sendTo);
     }
 
-    private void updateTeamsReady(Game game) {
+    public void updateTeamsReady(Game game) {
         this.allTeamsReady.put(game,
                 getGamePlayerAvailabilities(game).stream().filter(pa -> !pa.isAvailable()).count() == game.getCountPlayers());
     }

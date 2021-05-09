@@ -32,6 +32,7 @@ public class GameStartController extends GameController implements Serializable 
 
     public String startGame(Game game) {
         setUser();
+        teamComplete = false;
         if (game.isActive()) {
             displayError("Game already started", "Please use JOIN GAME to join this game.");
         } else if (game.getTeamList().stream().map(t -> t.getTeamPlayers().size()).reduce(0, Integer::sum) == game.getCountPlayers()
@@ -51,6 +52,7 @@ public class GameStartController extends GameController implements Serializable 
     public String joinGame() {
         setUser();
         setGame(gameStartService.getActiveGame(getUser()));
+
         // check for rejoin: if game was already entered before
         boolean allTeamsEntered;
         try {
@@ -60,7 +62,7 @@ public class GameStartController extends GameController implements Serializable 
         }
 
         // redirect to appropriate page
-        if (allTeamsEntered) {
+        if (allTeamsEntered && teamComplete) {
             return "/secured/game_room/gameRoom.xhtml?faces-redirect=true";
         } else {
             teamComplete = false;
