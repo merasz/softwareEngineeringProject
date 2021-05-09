@@ -22,10 +22,24 @@
             <div class="chatRoomContent">
                 <h1 class="box-title"><i class="fa fa-users"></i> Lobby</h1>
 
+                <p:commandButton style="width: 10%; margin-top: 9px;margin-right: 9px; float: left;" id="help"
+                                 oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
+                <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
+                    <h:panelGrid columns="1">
+                        <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Highscores</h2>
+                        <h:outputText value="Here you can see the current Highscores"/>
+                        <h2 style="color: #0d9dbb; font-weight: bold;">Chat</h2>
+                        <h:outputText value="Here you can chat with the members in the Lobby"/>
+                    </h:panelGrid>
+                </p:dialog>
+
                 <p:panelGrid columns="2" style="width: 100%;"
                              columnClasses="chatRoomDescriptionPanel,chatRoomPanel">
 
                     <p:panel id="panelL" header="All Time Top Scores">
+
+
+
                         <p>Here you can find all Data for the <span
                                 style="color: #2ecc71; font-weight: bold"> Highscores</span></p>
 
