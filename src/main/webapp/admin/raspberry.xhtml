@@ -7,6 +7,20 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name ="content">
+
+        <p:commandButton style="width: 10%; margin-top: 9px;margin-right: 80px; float: right;" id="help"
+                         oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
+        <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
+            <h:panelGrid columns="1">
+                <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Edit Raspberry</h2>
+                <h:outputText value="Here you can edit the Raspberry"/>
+                <h2 style="color: #0d9dbb; font-weight: bold;">Invalidate API Key</h2>
+                <h:outputText value="Here you can invalidate API kEY"/>
+                <h2 style="color: #0d9dbb; font-weight: bold;">Delete Raspberry</h2>
+                <h:outputText value="Here you can delete the Raspberry"/>
+            </h:panelGrid>
+        </p:dialog>
+
         <h:form id="raspberryForm" style="width: 98%; margin-top: 15px;margin-left: 25px; float: right;">
             <p:dataTable id="raspberryTable" var="raspberry" value="#{raspberryListController.raspberries}" style="width:85%; margin-top:100px; float:right;">
                 <p:column headerText="ID" style="width: 100px">

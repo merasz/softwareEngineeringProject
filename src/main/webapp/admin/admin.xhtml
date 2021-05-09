@@ -13,7 +13,19 @@
                 <p:autoUpdate/>
             </p:growl>
 
-            <p:chart style="color: #00a7d0; width: 83%; margin-top: 80px; float: right;" type="bar" model="#{currentGamesController.model}" />
+            <p:commandButton style="width: 10%; margin-top: 9px;margin-right: 80px; float: right;" id="help"
+                             oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
+
+            <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
+                <h:panelGrid columns="1">
+                    <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Admin view / Chart</h2>
+                    <h:outputText value="Here the admin sees the current Players in each Game."/>
+                    <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Ongoing Games</h2>
+                    <h:outputText value="Here the admin sees the current ongoing Games and the Teams from each Games."/>
+                </h:panelGrid>
+            </p:dialog>
+
+            <p:chart style="color: #00a7d0; width: 50%; margin-top: 80px; float: right;" type="bar" model="#{currentGamesController.model}" />
 
             <p:dataTable widgetVar="adminTable" id="adminTable" var="game" value="#{gameListController.activegGames}"
                          style="width: 83%; margin-top: 30px; float: right;">
@@ -68,8 +80,8 @@
                              value="Back to Games">
             </p:commandButton>
         </h:form>
-    <h:form>
+        <h:form>
 
-    </h:form>
+        </h:form>
     </ui:define>
 </ui:composition>
