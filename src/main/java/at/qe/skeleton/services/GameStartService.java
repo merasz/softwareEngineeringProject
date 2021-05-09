@@ -122,45 +122,45 @@ public class GameStartService extends GameService {
     }
 
     public Game enterGame() throws IOException {
+
         if (getGameJoinController().updateReadyToStart(game, user)) {
-            if (game.getStartTime() == null && game.getTeamList().get(game.getTeamSize() - 1).getTeamId().equals(team.getTeamId())) {
+
+
+            if (game.getStartTime() == null && !getGameJoinController().isInitialized(game)) {
                 //System.out.println("-------  initialized  -------");
                 initializeGame(game);
+                getGameJoinController().setInitialized(game);
                 this.game = saveGame(game);
+                gamePlaySocketController.initGame(game);
             }
+
+
+
             FacesContext.getCurrentInstance().getExternalContext().redirect("/secured/game_room/gameRoom.xhtml");
             FacesContext.getCurrentInstance().responseComplete();
         }
         //System.out.println("teams: " + game.getTeamList().stream().map(Team::getTeamName).collect(Collectors.toList()));
-        //this.game = saveGame(game);
+        this.game = saveGame(game);
+        //gamePlaySocketController.enterGame(game);
         return game;
     }
 
     private void initializeGame(Game game) {
+        // initialize scores
         for (Team t : game.getTeamList()) {
-            for (User u : t.getTeamPlayers()) {
-                Score s = new Score(u, t, this.game);
-                getScoreRepository().save(s);
-            }
+            t.getTeamPlayers().forEach(u -> getScoreRepository().save(new Score(u, t, game)));
         }
 
+        // set start time
         Date start = Timestamp.valueOf(LocalDateTime.now());
-        if (this.game.getStartTime() == null) {
-            this.game.setStartTime(start);
+        if (game.getStartTime() == null) {
+            game.setStartTime(start);
         } else {
-            this.game.setPausedTime(start);
+            game.setPausedTime(start);
         }
 
-        gamePlaySocketController.putTeamPlayerMap(game, createPlayerOrdering(game));
-        gamePlaySocketController.initGame(game);
-    }
-
-    private Queue<TeamPlayer> createPlayerOrdering(Game game) {
+        // create flat ordered list of players
         Queue<TeamPlayer> orderedPlayerList = new LinkedList<>();
-
-        //System.out.println("initialize: " + game.getTeamList().stream().flatMap(t -> t.getTeamPlayers().stream()
-        //        .map(User::getUsername)).collect(Collectors.toList()));
-
         List<Team> teams = game.getTeamList();
         Collections.shuffle(teams);
         teams.forEach(t -> Collections.shuffle(t.getTeamPlayers()));
@@ -169,7 +169,7 @@ public class GameStartService extends GameService {
                         teams.forEach(t ->
                                 orderedPlayerList.add(
                                         new TeamPlayer(t.getTeamPlayers().get(i), t))));
-        return orderedPlayerList;
+        gamePlaySocketController.putTeamPlayerMap(game, orderedPlayerList);
     }
     //endregion
 

@@ -33,12 +33,14 @@ public class GameJoinController {
     private Map<Game, Boolean> allTeamsReady = new ConcurrentHashMap<>();
     private Map<Game, Set<Team>> teamTaken = new ConcurrentHashMap<>();
     private Map<Game, Set<Team>> teamAccepted = new ConcurrentHashMap<>();
+    private Map<Game, Boolean> gameInitialized = new ConcurrentHashMap<>();
 
     // initialize when game creator joins
     public void onJoin(Game game) {
         List<User> playerCircle = userRepository.findAllByRaspberry(game.getRaspberry());
         sendTo.addAll(playerCircle.stream().map(User::getUsername).collect(Collectors.toList()));
         teamAccepted.put(game, ConcurrentHashMap.newKeySet());
+        gameInitialized.put(game, false);
 
         List<User> assignedPlayers = game.getTeamList().stream()
                 .flatMap(t -> t.getTeamPlayers().stream()).collect(Collectors.toList());
@@ -117,4 +119,11 @@ public class GameJoinController {
         return !teamTaken.get(game).contains(team);
     }
 
+    public boolean isInitialized(Game game) {
+        return gameInitialized.get(game);
+    }
+
+    public void setInitialized(Game game) {
+        gameInitialized.put(game, true);
+    }
 }

@@ -6,6 +6,7 @@ import at.qe.skeleton.model.demo.TeamPlayer;
 import at.qe.skeleton.model.demo.TeamScoreInfo;
 
 import at.qe.skeleton.repositories.GameRepository;
+import at.qe.skeleton.repositories.ScoreRepository;
 import at.qe.skeleton.repositories.TeamRepository;
 import at.qe.skeleton.repositories.TimeFlipConfRepository;
 import at.qe.skeleton.services.GameStartService;
@@ -19,6 +20,8 @@ import org.springframework.stereotype.Controller;
 
 import javax.annotation.PostConstruct;
 import javax.el.MethodExpression;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -43,6 +46,8 @@ public class GamePlaySocketController {
     @Autowired
     TeamRepository teamRepository;
 
+    @Autowired
+    private ScoreRepository scoreRepository;
 
     @CDIAutowired
     private WebSocketManager websocketManager;
@@ -62,7 +67,6 @@ public class GamePlaySocketController {
     private Map<Integer, Integer> currentRoundRunning = new ConcurrentHashMap<>();
 
     public void initGame(Game game) {
-
         //teamPlayerMap.put(game.getGameId(),createPlayerOrdering(game));
 
         Topic topic = game.getTopic();
