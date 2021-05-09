@@ -76,6 +76,10 @@ public class GameJoinController {
         this.webSocketManager.getJoinChannel().send("teamJoin", sendTo);
     }
 
+    public void updateJoinChannel() {
+        this.webSocketManager.getJoinChannel().send("teamJoin", sendTo);
+    }
+
     public void takeTeam(Game game, Team team) {
         teamTaken.computeIfAbsent(game, k -> ConcurrentHashMap.newKeySet());
         teamTaken.get(game).add(team);
@@ -85,18 +89,18 @@ public class GameJoinController {
         return Collections.unmodifiableList(getGamePlayerAvailabilities(game));
     }
 
-    public boolean getAllTeamsReady(Game game, User user) {
+    public boolean updateReadyToStart(Game game, User user) {
         //updateTeamsReady(game);
         teamAccepted.get(game).add(game.getTeamList().stream()
                 .filter(t -> t.getTeamPlayers().contains(user)).findFirst().get());
-        //System.out.println(teamAccepted.get(game.getGameId()).stream().map(Team::getTeamName).collect(Collectors.toList()));
-        //System.out.println(allTeamsReady.get(game.getGameId()));
-        return this.allTeamsReady.get(game)
-                && teamAccepted.get(game).size() == game.getTeamList().size();
+        //System.out.println(teamAccepted.get(game).stream().map(Team::getTeamName).collect(Collectors.toList()));
+        //System.out.println(allTeamsReady.get(game));
+        return allReadyToStart(game);
     }
 
-    public void setAllTeamsReady() {
-        this.webSocketManager.getJoinChannel().send("teamJoin", sendTo);
+    public boolean allReadyToStart(Game game) {
+        return this.allTeamsReady.get(game)
+                && teamAccepted.get(game).size() == game.getTeamList().size();
     }
 
     public void updateTeamsReady(Game game) {

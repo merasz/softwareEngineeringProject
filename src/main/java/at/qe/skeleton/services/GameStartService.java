@@ -122,7 +122,7 @@ public class GameStartService extends GameService {
     }
 
     public Game enterGame() throws IOException {
-        if (getGameJoinController().getAllTeamsReady(game, user)) {
+        if (getGameJoinController().updateReadyToStart(game, user)) {
             if (game.getStartTime() == null && game.getTeamList().get(game.getTeamSize() - 1).getTeamId().equals(team.getTeamId())) {
                 //System.out.println("-------  initialized  -------");
                 initializeGame(game);

@@ -1,7 +1,6 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.Game;
-import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.demo.PlayerAvailability;
 import at.qe.skeleton.services.GameStartService;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
@@ -14,7 +13,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Component
 @Scope("session")
@@ -56,7 +54,7 @@ public class GameStartController extends GameController implements Serializable 
         // check for rejoin: if game was already entered before
         boolean allTeamsEntered;
         try {
-            allTeamsEntered = gameStartService.getGameJoinController().getAllTeamsReady(getGame(), getUser());
+            allTeamsEntered = gameStartService.getGameJoinController().allReadyToStart(getGame());
         } catch (NullPointerException | NoSuchElementException e) {
             allTeamsEntered = false;
         }
@@ -83,7 +81,7 @@ public class GameStartController extends GameController implements Serializable 
     }
 
     public void setAllTeamsReady() {
-        gameStartService.getGameJoinController().setAllTeamsReady();
+        gameStartService.getGameJoinController().updateJoinChannel();
     }
 
     public void selectPlayer(SelectEvent<PlayerAvailability> event) {
