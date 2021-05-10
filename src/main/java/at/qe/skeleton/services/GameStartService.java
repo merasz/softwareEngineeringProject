@@ -33,18 +33,20 @@ public class GameStartService extends GameService {
         this.game = game;
         joinTeam();
         getGameJoinController().onJoin(this.game);
-        return this.game;
+        //return getGameJoinController().getGame(game);
+        return game;
     }
 
     public Game joinGame(Game game, User user) throws NoSuchElementException, IllegalArgumentException {
         this.user = user;
-        this.game = game;
-        if (game == null ) {
+        this.game = reloadGame(game);
+        //this.game = getGameJoinController().getGame(game);
+        if (this.game == null ) {
             throw new NoSuchElementException("No active game found. Ask a game manager to create a new game.");
         }
         joinTeam();
-        getGameJoinController().onSelect(user, game);
-        return game;
+        getGameJoinController().onSelect(user, this.game);
+        return this.game;
     }
 
     public Game getActiveGame(User user) {
@@ -81,8 +83,8 @@ public class GameStartService extends GameService {
             //System.out.println("team: " + team.getTeamPlayers().stream().map(User::getUsername).collect(Collectors.toList()));
         }
         this.team = getTeamService().saveTeam(team);
-        this.game = saveGame(game);
-        //this.game = reloadGame(game);
+        //this.game = saveGame(game);
+        this.game = reloadGame(game);
         //System.out.println("game: " + game.getTeamList().stream().flatMap(t -> t.getTeamPlayers().stream()
         //        .map(User::getUsername)).collect(Collectors.toList()));
         //System.out.println("team: " + team.getTeamPlayers().stream().map(User::getUsername).collect(Collectors.toList()));
@@ -90,6 +92,7 @@ public class GameStartService extends GameService {
     }
 
     public Game selectPlayer(User user) {
+        //this.game = getGameJoinController().getGame(game);
         this.game = reloadGame(game);
         this.user = user;
         addUserToTeam(this.team);
@@ -98,6 +101,7 @@ public class GameStartService extends GameService {
     }
 
     public boolean teamReady() {
+        //this.game = getGameJoinController().getGame(game);
         return game.getTeamSize() == team.getTeamPlayers().size();
     }
     //endregion
@@ -116,13 +120,16 @@ public class GameStartService extends GameService {
         //System.out.println("save team: " + this.team.getTeamId() + " -- " + teamName);
         this.team.setTeamName(teamName);
         this.team = getTeamService().saveTeam(team);
+        this.game = reloadGame(game);
         getGameJoinController().updateTeamsReady(game);
 
         return enterGame();
     }
 
     public Game enterGame() throws IOException {
+        this.game = reloadGame(game);
         if (getGameJoinController().updateReadyToStart(game, user)) {
+            //System.out.println("teams: " + game.getTeamList().stream().map(Team::getTeamName).collect(Collectors.toList()));
             if (game.getStartTime() == null && !getGameJoinController().isInitialized(game)) {
                 //System.out.println("-------  initialized  -------");
                 initializeGame(game);

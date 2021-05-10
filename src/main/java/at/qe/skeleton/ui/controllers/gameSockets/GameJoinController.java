@@ -33,6 +33,8 @@ public class GameJoinController {
     private Map<Game, Boolean> allTeamsReady = new ConcurrentHashMap<>();
     private Map<Game, Set<Team>> teamTaken = new ConcurrentHashMap<>();
     private Map<Game, Set<Team>> teamAccepted = new ConcurrentHashMap<>();
+
+    //private List<Game> games = new CopyOnWriteArrayList<>();
     private Map<Game, Boolean> gameInitialized = new ConcurrentHashMap<>();
 
     // initialize when game creator joins
@@ -40,7 +42,9 @@ public class GameJoinController {
         List<User> playerCircle = userRepository.findAllByRaspberry(game.getRaspberry());
         sendTo.addAll(playerCircle.stream().map(User::getUsername).collect(Collectors.toList()));
         teamAccepted.put(game, ConcurrentHashMap.newKeySet());
+
         gameInitialized.put(game, false);
+        //games.add(game);
 
         List<User> assignedPlayers = game.getTeamList().stream()
                 .flatMap(t -> t.getTeamPlayers().stream()).collect(Collectors.toList());
@@ -72,11 +76,20 @@ public class GameJoinController {
 
     // update when team leaders assign players
     public void onSelect(User user, Game game) {
+        //updateGames(game);
         playerAvailability.stream()
                 .filter(pa -> pa.getUsername().equals(user.getUsername()) && pa.getGame().equals(game))
                 .forEach(pa -> pa.setAvailable(false));
         this.webSocketManager.getJoinChannel().send("teamJoin", sendTo);
     }
+
+    /*
+    private void updateGames(Game game) {
+        if (!games.remove(game)) {
+            games.add(game);
+        }
+    }
+    */
 
     public void updateJoinChannel() {
         this.webSocketManager.getJoinChannel().send("teamJoin", sendTo);
@@ -126,4 +139,15 @@ public class GameJoinController {
     public void setInitialized(Game game) {
         gameInitialized.put(game, true);
     }
+
+    /*
+    public Game getGame(Game game) {
+        int i = games.indexOf(game);
+        if (i == -1) {
+            return game;
+        } else {
+            return games.get(i);
+        }
+    }
+    */
 }

@@ -40,6 +40,20 @@ public class GameService {
     public Game saveGame(Game game) {
         game.setNrRound(0);
         game.setTotalScore(0);
+
+        //if teams are already set but null use their teamid as name
+        /*
+        teamService.getTeamsByGame(game).stream().filter(t -> t.getTeamName() == null)
+                .forEach(t -> t.setTeamName(t.getTeamId().toString()));
+        */
+        /*
+        List<Team> allTeamsInGame = teamService.getTeamsByGame(game);
+        for (Team t: allTeamsInGame) {
+            if(t.getTeamName() == null)
+                t.setTeamName(t.getTeamId().toString());
+        }
+         */
+
         return gameRepository.save(game);
     }
 
