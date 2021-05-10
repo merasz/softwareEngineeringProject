@@ -106,6 +106,7 @@ public class GamePlaySocketController {
 
         //User user = playerQueueMap.get(activeGame.getGameId()).poll();
         TeamPlayer teamPlayer = teamPlayerMap.get(activeGame.getGameId()).poll();
+        teamPlayerMap.get(activeGame.getGameId()).add(teamPlayer);
         User user = teamPlayer.getPlayer();
         currentPlayerMap.put(activeGame.getGameId(),user);
 
@@ -135,7 +136,7 @@ public class GamePlaySocketController {
         if(currentRoundRunning.get(game.getGameId()) == 1) {
             scoreManagerController.addScoreToTeam(game, currentPlayerMap.get(game.getGameId()),pointsMap.get(game.getGameId()));
             currentRoundRunning.put(game.getGameId(),0);
-            setTime(game,0);
+            setTimeInternal(game,0);
             System.out.println(getAllRecipients(game));
             websocketManager.getScoreChannel().send("scoreUpdate",getAllRecipients(game));
         }
@@ -145,7 +146,7 @@ public class GamePlaySocketController {
         if(currentRoundRunning.get(game.getGameId()) == 1) {
             scoreManagerController.addScoreToTeam(game, currentPlayerMap.get(game.getGameId()),pointsMap.get(game.getGameId())-1);
             currentRoundRunning.put(game.getGameId(),0);
-            setTime(game,0);
+            setTimeInternal(game,0);
             websocketManager.getScoreChannel().send("scoreUpdate",getAllRecipients(game));
         }
     }
@@ -153,7 +154,7 @@ public class GamePlaySocketController {
     public void termNotGuessed(Game game) {
         if(currentRoundRunning.get(game.getGameId()) == 1) {
             currentRoundRunning.put(game.getGameId(),0);
-            setTime(game,0);
+            setTimeInternal(game,0);
         }
     }
 
@@ -213,16 +214,30 @@ public class GamePlaySocketController {
         while(typeMap.get(game.getGameId()) == null ){}
         return typeMap.get(game.getGameId());
     }
-
+    /*
     public Integer getTime(Game game) {
         if (runningMap.get(game.getGameId()) == 0) {return null;}
         while(timeMap.get(game.getGameId()) == null ){}
         return timeMap.get(game.getGameId());
     }
 
-    public void setTime(Game game,Integer time) {
+    public void setGetTime(Game game) {}
+
+     */
+
+    public Map<Integer, Integer> getTimeMap() {
+        return timeMap;
+    }
+
+    public void setTimeMap(Map<Integer, Integer> timeMap) {
+        this.timeMap = timeMap;
+    }
+
+    public void setTimeInternal(Game game, Integer time) {
         timeMap.put(game.getGameId(), time);
     }
+
+
 
     public Integer getPoints(Game game) {
         if (runningMap.get(game.getGameId()) == 0) {return null;}
