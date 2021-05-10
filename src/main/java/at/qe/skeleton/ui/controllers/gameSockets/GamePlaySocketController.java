@@ -120,7 +120,7 @@ public class GamePlaySocketController {
         List<String> currentUser = recipients.get(0);
         List<String> otherUser = recipients.get(1);
 
-        //this.websocketManager.getTermChannel().send("termUpdate",currentUser);
+        this.websocketManager.getTermChannel().send("termUpdateCurrent",currentUser);
         this.websocketManager.getTermChannel().send("termUpdate",otherUser);
 
     }
@@ -137,7 +137,6 @@ public class GamePlaySocketController {
             scoreManagerController.addScoreToTeam(game, currentPlayerMap.get(game.getGameId()),pointsMap.get(game.getGameId()));
             currentRoundRunning.put(game.getGameId(),0);
             setTimeInternal(game,0);
-            System.out.println(getAllRecipients(game));
             websocketManager.getScoreChannel().send("scoreUpdate",getAllRecipients(game));
         }
     }
@@ -146,7 +145,7 @@ public class GamePlaySocketController {
         if(currentRoundRunning.get(game.getGameId()) == 1) {
             scoreManagerController.addScoreToTeam(game, currentPlayerMap.get(game.getGameId()),pointsMap.get(game.getGameId())-1);
             currentRoundRunning.put(game.getGameId(),0);
-            setTimeInternal(game,0);
+
             websocketManager.getScoreChannel().send("scoreUpdate",getAllRecipients(game));
         }
     }

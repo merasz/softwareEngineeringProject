@@ -74,4 +74,6 @@ public class TeamService {
         return teamRepository.findAllByTeamPlayers(user);
     }
 
+    public Team getTeamByPlayerAndGame(User user, Game game) {return teamRepository.findByTeamPlayersAndGame(user, game);}
+
 }

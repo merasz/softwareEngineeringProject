@@ -118,6 +118,8 @@ public class TeamController extends Controller implements Serializable {
         }
     }
 
+    public Team getTeamByPlayerAndGame(User user, Game game) {return teamService.getTeamByPlayerAndGame(user,game);}
+
     //region getter & setter
     public Team getTeam() {
         return team;
