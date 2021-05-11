@@ -26,41 +26,6 @@ public class GamePlayController extends GameController implements Serializable {
     private boolean paused = false;
     private int guessAccepted = 0;
 
-    /*
-    public String joinGame() {
-        setUser();
-        try {
-            setGame(gamePlayService.joinGame(getUser()));
-            return "/secured/game_room/join.xhtml";
-        } catch (NoSuchElementException e) {
-            displayError("No games", e.getMessage());
-        }
-        return "";
-    }
-
-    public void selectPlayer(SelectEvent<PlayerAvailability> event) {
-        this.player = event.getObject();
-        gamePlayService.selectPlayer(player.getUser());
-    }
-
-    public boolean getTeamReady() {
-        return gamePlayService.teamReady();
-    }
-
-    public String startGame(boolean allTeamsReady) {
-        try {
-            gamePlayService.startGame(teamName);
-            teamComplete = true;
-            if (allTeamsReady) {
-                return "/secured/game_room/gameRoom.xhtml?faces-redirect=true";
-            }
-        } catch (IllegalArgumentException e) {
-            displayError("Not so fast", e.getMessage());
-        }
-        return "";
-    }
-    */
-
     //region gaming round
     public void startRound() {
         Thread timerThread = new Thread(){
@@ -78,7 +43,6 @@ public class GamePlayController extends GameController implements Serializable {
     }
 
     public void acceptAnswer(int guessAccepted) {
-        //int guessedRight: -1 -> foul, 1 -> guessed right
         this.guessAccepted = guessAccepted;
         gamePlayService.setGuessAccepted(true);
     }
@@ -133,25 +97,5 @@ public class GamePlayController extends GameController implements Serializable {
     public void setPlayer(PlayerAvailability player) {
         this.player = player;
     }
-
-    /*
-    public String getTeamName() {
-        return teamName;
-    }
-
-    public void setTeamName(String name) {
-        this.teamName = name;
-    }
-
-    public String getTeamSizeString() {
-        return gamePlayService.getTeamSizeString();
-    }
-
-    public boolean isTeamComplete() {
-        return teamComplete;
-    }
-     */
-
-
     //endregion
 }

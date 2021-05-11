@@ -20,7 +20,6 @@ public class GameStatsService extends GameService {
         int currentPoints = score.getTotalRoundScore();
         Task task = new Task();
 
-        //int guessedRight: -1 -> foul, 1 -> guessed right, else -> not guessed
         if (guessAccepted == 1) {
             score.setTotalRoundScore(currentPoints + task.getPointsForTask());
         } else if (guessAccepted == -1) {

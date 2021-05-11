@@ -83,28 +83,4 @@ public class UserController extends Controller implements Serializable {
         }
     }
 
-//    /**
-//     * Action to change a user's password.
-//     */
-//    public void doUpdatePassword() {
-//        try {
-//            user = userService.updatePassword(user, password, confirmPass);
-//            displayInfo("Password changed" ,"Password successfully changed.");
-//        } catch (IllegalArgumentException e){
-//            displayError("Password cannot be empty", "Please enter any characters for your password.");
-//        }
-//    }
-
-//    /**
-//     * Action to change a user's roles.
-//     */
-//    public void doUpdateRoles() {
-//        try {
-//            user = userService.updateRoles(user, roles);
-//            displayInfo("User rolle changed" ,"Roll successfully changed.");
-//        } catch (IllegalArgumentException e){
-//            displayError("Password cannot be empty", "Please enter any characters for your password.");
-//        }
-//    }
-
 }

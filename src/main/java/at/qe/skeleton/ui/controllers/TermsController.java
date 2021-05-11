@@ -39,12 +39,10 @@ public class TermsController extends Controller implements Serializable {
 
     @PostConstruct
     public void init() {
-        System.out.println("init Terms");
         doCreateNewTerm();
     }
 
     public void doCreateNewTerm() {
-        System.out.println("doCreateNewTerm:");
         term = new Term();
     }
 
@@ -79,15 +77,6 @@ public class TermsController extends Controller implements Serializable {
         terms = termsService.getTermsRepository().findAllByTopic(term.getTopic());
         return terms;
     }
-
-//    public void addTerm(String name) {
-//        try {
-//            termsService.saveTerm(name, this.topic, new Term());
-//            displayInfo("Term created", "New term successfully created.");
-//        } catch (IllegalArgumentException e) {
-//            displayError("Term not created", e.getMessage());
-//        }
-//    }
 
     public void editTerm(String name, Topic topic) {
        try {

@@ -110,14 +110,6 @@ json File could contain several Terms. "/>
                 <p:column headerText="Term name">
                     <h:outputText value="#{term.termName}"/>
                 </p:column>
-
-                <!--                <p:column style="width:100px;text-align: center" headerText="edit term">-->
-
-                <!--                <p:commandButton title="Edit" icon="ui-icon-note" update=":termsForm:termsTable" oncomplete="PF('termEditDialog').show()">-->
-                <!--                    <f:setPropertyActionListener value="#{term}" target="#{termsController.term}" />-->
-                <!--                </p:commandButton>-->
-                <!--                </p:column>-->
-
             </p:dataTable>
             <p:commandButton style="width: 25%; margin-top: 25px; float: right;"
                              oncomplete="PF('termCreationDialog').show()" icon="ui-icon-add-box"
@@ -145,27 +137,6 @@ json File could contain several Terms. "/>
                 </p:outputPanel>
             </p:dialog>
         </h:form>
-
-        <!--        <h:form>-->
-        <!--            <p:dialog header="Edit Term" id="termEditDialog" widgetVar="termEditDialog" modal="true" showEffect="fade"-->
-        <!--                      hideEffect="fade" resizable="false">-->
-        <!--                <p:outputPanel id="termData" rendered="#{not empty termsController.term}">-->
-        <!--                    <h:panelGrid columns="2">-->
-        <!--                        <p:outputLabel for="newTermName" value="Term Name: "/>-->
-        <!--                        <p:inputText id="newTermName" value="#{termsController.term.termName}"/>-->
-        <!--                    </h:panelGrid>-->
-
-        <!--                    <p:separator/>-->
-
-        <!--                    <h:panelGrid columns="2">-->
-        <!--                        <p:commandButton value="Save" action="#{termsController.editTerm(term ,topicController.topic)}"-->
-        <!--                                         oncomplete="PF('termEditDialog').hide()" update=":termsForm:termsTable"/>-->
-        <!--                        <p:commandButton value="Abort" onclick="PF('Dialog').hide()"/>-->
-        <!--                    </h:panelGrid>-->
-        <!--                </p:outputPanel>-->
-        <!--            </p:dialog>-->
-        <!--        </h:form>-->
-
 
     </ui:define>
 </ui:composition>

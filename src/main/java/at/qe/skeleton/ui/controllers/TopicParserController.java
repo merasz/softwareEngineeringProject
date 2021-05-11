@@ -34,18 +34,12 @@ public class TopicParserController {
 
     private UploadedFile file;
 
-//    public void handleFileUpload(FileUploadEvent event) {
-//        file = event.getFile();
-//    }
-
     public void upload() throws IOException, ParseException {
       if (file != null) {
           parseAndSave();
             FacesMessage message = new FacesMessage("Successful", file.getFileName() + " is uploaded.");
             FacesContext.getCurrentInstance().addMessage(null, message);
       }
-
-        System.out.println("Schauen obs funktioniert --> es funktioniert!!!");
     }
 
     public void parseAndSave() {
@@ -99,11 +93,6 @@ public class TopicParserController {
     }
 
     public void setFile(UploadedFile file) {
-        for (int i = 0; i < 50; i++) {
-            System.out.println("in set file");
-        }
-        if(file == null)
-            System.out.println("file is null");
         this.file = file;
     }
 
