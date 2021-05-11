@@ -1,9 +1,6 @@
 package at.qe.skeleton.services;
 
-import at.qe.skeleton.model.GameTopicCount;
-import at.qe.skeleton.model.Score;
-import at.qe.skeleton.model.Team;
-import at.qe.skeleton.model.User;
+import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.ScoreRepository;
 import at.qe.skeleton.repositories.TopicGamesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,4 +74,8 @@ public class UserStatsService {
             return s1.getGame().getEndTime().compareTo(s2.getGame().getEndTime());
         }
     };
+
+    public Team getTopTeamForGame(Game game) {
+        return scoreRepository.getTopTeamInAGame(game).get(0);
+    }
 }

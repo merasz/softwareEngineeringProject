@@ -61,7 +61,8 @@ public class GamePlaySocketController {
     private Map<Integer,Integer> pointsMap = new ConcurrentHashMap<>();
     private Map<Integer,Team> teamMap = new ConcurrentHashMap<>();
     private Map<Integer,User> currentPlayerMap = new ConcurrentHashMap<>();
-    //private Map<Integer,Queue<User>> playerQueueMap = new ConcurrentHashMap<>();
+    private Map<Integer,Integer> gameFinishedMap = new ConcurrentHashMap<>();
+    private Map<Integer,Team> gameWinnerMap = new ConcurrentHashMap<>();
 
     private Map<Integer,Integer> runningMap = new ConcurrentHashMap<>();
     private Map<Integer, Integer> currentRoundRunning = new ConcurrentHashMap<>();
@@ -79,6 +80,7 @@ public class GamePlaySocketController {
         runningMap.put(game.getGameId(),0);
         typeMap.put(game.getGameId(),"");
         timeMap.put(game.getGameId(),0);
+        gameFinishedMap.put(game.getGameId(),0);
     }
 
     public void startTimer(Game game,int time){
@@ -87,9 +89,9 @@ public class GamePlaySocketController {
     }
 
     public void timeFlipUpdate(Game activeGame, int facetID) {
-        if(runningMap.get(activeGame.getGameId()) == 0 || (runningMap.get(activeGame.getGameId()) == 1 && currentRoundRunning.get(activeGame.getGameId()) == 0)) {
+        if( ( runningMap.get(activeGame.getGameId()) == 0 && gameFinishedMap.get(activeGame.getGameId()) != 1 ) || (runningMap.get(activeGame.getGameId()) == 1 && currentRoundRunning.get(activeGame.getGameId()) == 0) && gameFinishedMap.get(activeGame.getGameId()) != 1) {
             nextTerm(activeGame, facetID);
-        } else if(currentRoundRunning.get(activeGame.getGameId()) == 1) {
+        } else if(currentRoundRunning.get(activeGame.getGameId()) == 1 && gameFinishedMap.get(activeGame.getGameId()) != 1) {
             stopRound(activeGame);
         }
     }
@@ -100,6 +102,7 @@ public class GamePlaySocketController {
 
         TimeFlipConf timeFlipConf = timeFlipConfRepository.findByFacetId(facetId);
 
+        System.out.println(new Date());
 
         typeMap.put(activeGame.getGameId(),timeFlipConf.getRequestType().toString());
         pointsMap.put(activeGame.getGameId(),timeFlipConf.getFacetPoint());
@@ -134,19 +137,32 @@ public class GamePlaySocketController {
 
     public void termGuessed(Game game) {
         if(currentRoundRunning.get(game.getGameId()) == 1) {
-            scoreManagerController.addScoreToTeam(game, currentPlayerMap.get(game.getGameId()),pointsMap.get(game.getGameId()));
+            boolean finished = scoreManagerController.addScoreToTeam(game, currentPlayerMap.get(game.getGameId()),pointsMap.get(game.getGameId()));
             currentRoundRunning.put(game.getGameId(),0);
             setTimeInternal(game,0);
             websocketManager.getScoreChannel().send("scoreUpdate",getAllRecipients(game));
+
+            if(finished) {
+                List<String> recipients = getAllRecipients(game);
+                gameFinishedMap.put(game.getGameId(),1);
+                scoreManagerController.setGameEnd(game);
+                websocketManager.getGameChannel().send("gameFinished", recipients);
+            }
+
         }
     }
 
     public void termGuessedWithRulebreak(Game game) {
         if(currentRoundRunning.get(game.getGameId()) == 1) {
-            scoreManagerController.addScoreToTeam(game, currentPlayerMap.get(game.getGameId()),pointsMap.get(game.getGameId())-1);
+            boolean finished = scoreManagerController.addScoreToTeam(game, currentPlayerMap.get(game.getGameId()),pointsMap.get(game.getGameId())-1);
             currentRoundRunning.put(game.getGameId(),0);
-
             websocketManager.getScoreChannel().send("scoreUpdate",getAllRecipients(game));
+            if(finished) {
+                List<String> recipients = getAllRecipients(game);
+                gameFinishedMap.put(game.getGameId(),1);
+                scoreManagerController.setGameEnd(game);
+                websocketManager.getGameChannel().send("gameFinished", recipients);
+            }
         }
     }
 
@@ -287,6 +303,22 @@ public class GamePlaySocketController {
 
     public Map<Integer, Queue<TeamPlayer>> getTeamPlayerMap() {
         return teamPlayerMap;
+    }
+
+    public Map<Integer, Integer> getGameFinishedMap() {
+        return gameFinishedMap;
+    }
+
+    public void setGameFinishedMap(Map<Integer, Integer> gameFinishedMap) {
+        this.gameFinishedMap = gameFinishedMap;
+    }
+
+    public Map<Integer, Team> getGameWinnerMap() {
+        return gameWinnerMap;
+    }
+
+    public void setGameWinnerMap(Map<Integer, Team> gameWinnerMap) {
+        this.gameWinnerMap = gameWinnerMap;
     }
 
     public void putTeamPlayerMap(Game game, Queue<TeamPlayer> orderedPlayerList) {

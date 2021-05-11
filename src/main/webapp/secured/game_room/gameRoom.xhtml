@@ -104,30 +104,9 @@
                 </o:socket>
 
             </h:form>
-            <h:form>
-                <h:panelGroup layout="block" style="" id="nextOuter">
-                    <pe:timer
-                            id="timer1"
-                            widgetVar="timer1"
-                            visible="false"
-                            singleRun="true"
-                            listener="#{gamePlaySocketController.onTimerOver(sessionInfoBean.currentGame)}"
-                            ontimerstep="sync(intervalData)"
-                            timeout="#{gamePlaySocketController.timeMap[sessionInfoBean.currentGame.gameId]}"/>
-                    <p:knob
-                            min="0"
-                            max="#{gamePlaySocketController.timeMap[sessionInfoBean.currentGame.gameId]}"
-                            widgetVar="knob"
-                            disabled="true"
-                            value="#{gamePlaySocketController.timeMap[sessionInfoBean.currentGame.gameId]}"/>
-                </h:panelGroup>
-
-                <o:socket channel="timeChannel" user="#{sessionInfoBean.currentUserName}" onmessage="function(m){console.log(m);}">
-                    <f:ajax event="timeUpdate" render="timerOuter" />
-                    <f:ajax event="stopTimer" onevent="PF('timer1').pause()" />
-                </o:socket>
-
-            </h:form>
+            <o:socket channel="gameChannel" user="#{sessionInfoBean.currentUserName}" onmessage="function(m){console.log(m);}">
+                <f:ajax event="gameFinished" onevent="redirectToEndScreen()" />
+            </o:socket>
         </h:panelGroup>
     </h:body>
     <script type="text/javascript">
@@ -147,5 +126,10 @@
             PF('ruleBtn').enable();
             PF('noBtn').enable();
         }
+
+        function redirectToEndScreen() {
+            window.location.replace("/secured/game_room/end.xhtml");
+        }
+
     </script>
 </html>

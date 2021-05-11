@@ -1,9 +1,6 @@
 package at.qe.skeleton.ui.controllers;
 
-import at.qe.skeleton.model.GameTopicCount;
-import at.qe.skeleton.model.Score;
-import at.qe.skeleton.model.Team;
-import at.qe.skeleton.model.User;
+import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.*;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
 import org.primefaces.model.chart.*;
@@ -133,6 +130,10 @@ public class UserScoresController extends Controller implements Serializable {
             myTeams.add(t);
         }
         return myTeams;
+    }
+
+    public Team getTopTeamFromGame(Game game) {
+        return userStatsService.getTopTeamForGame(game);
     }
 
 }
