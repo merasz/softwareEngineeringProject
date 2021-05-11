@@ -81,7 +81,13 @@
                         <f:selectItems value="#{userDetailController.listRoles}"/>
                     </p:selectManyMenu>
                 </h:panelGrid>
-                <p:separator />
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="editRasp" value="Raspberry: "/>
+                        <p:selectOneListbox id="editRasp"  value="#{userDetailController.user.raspberry}" converter="#{raspberryConverter}" style="width:300px">
+                            <f:selectItems value="#{raspberryListController.getRaspberries()}" var="raspberry" itemLabel="#{raspberry.raspberryId} - #{raspberry.ipAddress}" itemValue="#{raspberry}"/>
+                        </p:selectOneListbox>
+                    </h:panelGrid>
+                    <p:separator />
                     <h:panelGrid columns="3">
                         <p:commandButton value="Save" action="#{userDetailController.doSaveUser()}" oncomplete="PF('userEditDialog').hide()" update=":userForm:usersTable"/>
                         <p:commandButton value="Reload" action="#{userDetailController.doReloadUser()}" update=":userForm:userData"/>
@@ -114,6 +120,12 @@
                         <p:selectManyMenu id="newRole" value="#{userCreationController.user.roles}" collectionType="java.util.LinkedHashSet" showCheckbox="true" required="true" requiredMessage="Role(s) required." style="width: 175px;">
                             <f:selectItems value="#{userCreationController.listRoles}"/>
                         </p:selectManyMenu>
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="newRasp" value="Raspberry: "/>
+                        <p:selectOneListbox id="newRasp"  value="#{userCreationController.user.raspberry}" converter="#{raspberryConverter}" style="width:300px">
+                            <f:selectItems value="#{raspberryListController.getRaspberries()}" var="raspberry" itemLabel="#{raspberry.raspberryId} - #{raspberry.ipAddress}" itemValue="#{raspberry}"/>
+                        </p:selectOneListbox>
                     </h:panelGrid>
                     <p:separator />
 
