@@ -33,7 +33,11 @@ public class APIService {
     @Autowired
     GamePlaySocketController gamePlaySocketController;
 
-
+    /**
+     * Method to get an API Key from the DB or generate a new one if no one is present
+     * @param raspberry Raspberry Pi for which the API Key is requested
+     * @return the API Key
+     */
     public String generateApiKeyForRaspberry(Raspberry raspberry) {
 
         int leftLimit = 48; // numeral '0'
@@ -54,22 +58,26 @@ public class APIService {
         return generatedString;
     }
 
-    public void updateTimeFlip(PiRequest piRequest, String authToken) {
+
+    /**
+     * Method to send Time Flip Updates to the Main program
+     * @param piRequest Request from the Raspberry Pi
+     */
+    public void updateTimeFlip(PiRequest piRequest) {
 
         System.out.println("IP: " + piRequest.getIpAddress());
         System.out.println("Facet: " + piRequest.getFacetId());
 
-        PiRequest newRequest = new PiRequest();
-        newRequest.setIpAddress(piRequest.getIpAddress());
-        newRequest.setFacetId(piRequest.getFacetId());
-
-        Raspberry  raspi = raspberryService.loadRaspberryByIp(piRequest.getIpAddress());
-        if(raspi != null) {
-            Integer raspiId = raspi.getRaspberryId();
-            Game activeGame = gameService.getRunningGameByRaspberry(raspiId);
-            if (activeGame != null) {
-                System.out.println(activeGame.getGameId());
-                gamePlaySocketController.timeFlipUpdate(activeGame, piRequest.getFacetId());
+        int facet = piRequest.getFacetId();
+        if(0 < facet && facet < 12) {
+            Raspberry raspi = raspberryService.loadRaspberryByIp(piRequest.getIpAddress());
+            if (raspi != null) {
+                Integer raspiId = raspi.getRaspberryId();
+                Game activeGame = gameService.getRunningGameByRaspberry(raspiId);
+                if (activeGame != null) {
+                    System.out.println(activeGame.getGameId());
+                    gamePlaySocketController.timeFlipUpdate(activeGame, piRequest.getFacetId());
+                }
             }
         }
 

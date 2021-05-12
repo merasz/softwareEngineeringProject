@@ -53,7 +53,10 @@ public class ScoreManagerController {
     private WebSocketManager websocketManager;
     private Map<Integer,Map<String, TeamScoreInfo>> scores = new ConcurrentHashMap<>();
 
-
+    /**
+     * Action which sets up the List of scores for the game to be shown in the frontend
+     * @param game Game
+     */
     public void setupScores(Game game) {
         Map<String, TeamScoreInfo> tmp = new ConcurrentHashMap<>();
         System.out.println(game);
@@ -62,11 +65,23 @@ public class ScoreManagerController {
         scores.put(game.getGameId(), tmp);
     }
 
+    /**
+     * Action to get the List of TeamScores for a Game
+     * @param game Game
+     * @return Collection of TeamScores
+     */
     public Collection<TeamScoreInfo> getScores(Game game) {
         if(this.scores.get(game.getGameId()) == null) {return null;}
         return Collections.unmodifiableCollection(this.scores.get(game.getGameId()).values());
     }
 
+    /**
+     * Action to add scores to a team in a game and check if winning score is reached
+     * @param game Game playing
+     * @param user User who played
+     * @param roundScore Score to add
+     * @return true if game is won, else false
+     */
     public boolean addScoreToTeam(Game game, User user, int roundScore) {
         Team team = teamRepository.findByTeamPlayersAndGame(user,game);
         Score tmp = new Score();
@@ -87,6 +102,10 @@ public class ScoreManagerController {
         return gameWon.get();
     }
 
+    /**
+     * Action to set a game as finished
+     * @param game
+     */
     public void setGameEnd(Game game) {
         Date end = Timestamp.valueOf(LocalDateTime.now());
         game.setEndTime(end);
