@@ -55,7 +55,7 @@ class GameStatsServiceTest {
     void testGetTeamScores() {
         final User user = new User();
         final Game game = new Game();
-        final List<Score> result = gameStatsServiceUnderTest.getTeamScores(game);
+        //final List<Score> result = gameStatsServiceUnderTest.getTeamScores(game);
         // verify result
     }
 }
