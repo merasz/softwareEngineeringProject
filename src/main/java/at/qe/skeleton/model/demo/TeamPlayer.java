@@ -13,6 +13,9 @@ public class TeamPlayer {
         this.team = team;
     }
 
+    public TeamPlayer() {
+    }
+
     public Team getTeam() {
         return team;
     }
