@@ -23,30 +23,35 @@ public class TermsService {
     private TopicRepository topicRepository;
 
     private final int MIN_NUMBER_TERMS = 10;
-    //private Term currentTerm;
-    //private List<Term> termsInGame;
-    //private Iterator<Term> iterateTerms;
 
+    /**
+     * returns a topic from a given string
+     * @param topicName
+     * @return topic object
+     */
     @PreAuthorize("hasAuthority('ADMIN')")
     public Topic loadTopic(String topicName) {
         return topicRepository.findFirstByTopicName(topicName);
     }
 
+    /**
+     * saves a topic with a given name
+     * @param name
+     * @param topic
+     * @throws IllegalArgumentException
+     */
     public void saveTopic(String name, Topic topic) throws IllegalArgumentException {
         validateTopic(name);
         topic.setTopicName(name);
         topicRepository.save(topic);
     }
 
-    /*
-    public void saveTerm(String name, Topic topic, Term term) throws IllegalArgumentException {
-        validateTerm(name);
-        term.setTermName(name);
-        term.setTopic(topic);
-        termsRepository.save(term);
-    }
-    */
-
+    /**
+     * returns and saves a given term
+     * @param term
+     * @return term object
+     * @throws IllegalArgumentException
+     */
     public Term saveTerm(Term term) throws IllegalArgumentException {
         if (termsRepository.findAll().stream().anyMatch(t -> t.getTermName().equals(term.getTermName()))) {
             throw new IllegalArgumentException("Term already exists.");
@@ -54,6 +59,11 @@ public class TermsService {
         return termsRepository.save(term);
     }
 
+    /**
+     * deletes a given topic
+     * @param topic
+     * @throws IllegalArgumentException
+     */
     public void deleteTopic(Topic topic) throws IllegalArgumentException {
         if (!termsRepository.findAllByTopic(topic).isEmpty()) {
             throw new IllegalArgumentException("Topic contains terms and therefore cannot be deleted.");
@@ -62,37 +72,27 @@ public class TermsService {
         }
     }
 
+    /**
+     * sets a topic
+     * used for json fileupload
+     * @param topic
+     * @return
+     * @throws IllegalArgumentException
+     */
     public Topic setTopic(Topic topic) throws IllegalArgumentException {
         List<Term> terms = termsRepository.findAllByTopic(topic);
         if (terms.size() < MIN_NUMBER_TERMS) {
             throw new IllegalArgumentException("Topic has less than " + MIN_NUMBER_TERMS + " terms. Please choose another topic.");
         } else {
-            //termsInGame = terms;
-            //Collections.shuffle(termsInGame);
-            //iterateTerms = termsInGame.iterator();
             return topic;
         }
     }
 
-    /*
-    public Term getNextTerm(Game game) {
-        if (!iterateTerms.hasNext()) {
-            Collections.shuffle(termsInGame);
-            iterateTerms = termsInGame.iterator();
-        }
-        currentTerm = iterateTerms.next();
-        return currentTerm;
-    }
-
-
-    private void validateTerm(String name) throws IllegalArgumentException {
-        Term t = termsRepository.findFirstByTermName(name);
-        if (t != null) {
-            throw new IllegalArgumentException("Term already exists.");
-        }
-    }
-    */
-
+    /**
+     * validate a topics name
+     * @param name
+     * @throws IllegalArgumentException
+     */
     private void validateTopic(String name) throws IllegalArgumentException {
         Topic t = topicRepository.findFirstByTopicName(name);
         if (t != null) {
@@ -100,6 +100,12 @@ public class TermsService {
         }
     }
 
+    /**
+     * imports for a given topic its terms
+     * used for json fileupload
+     * @param jsonObject
+     * @param topic
+     */
     public void importTerms(JSONObject jsonObject, Topic topic) {
         String allTermsAsStringJson = jsonObject.get("terms").toString();
 

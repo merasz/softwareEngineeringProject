@@ -27,33 +27,43 @@ public class GameService {
     private GameJoinController gameJoinController;
 
     protected final int PENALTY_POINTS = -1;
-    /*
-    protected final int SUCCESS_POINTS = 3;
-    private int numPlayers = 0;
-    private Team currentTeam;
-    private User currentPlayer;
-    private List<TeamPlayer> players;
-    */
 
+    /**
+     * Function returns all active games.
+     * @return collection of games
+     */
     public Collection<Game> getAllActiveGames() {
         return gameRepository.findAllActive();
     }
 
+    /**
+     * creates a new game and returns it
+     * @return Game object
+     */
     public Game saveGame(Game game) {
         game.setNrRound(0);
         game.setTotalScore(0);
         return gameRepository.save(game);
     }
 
+    /**
+     * Returns a given game actualized.
+     * @param game
+     * @return game object
+     */
     public Game reloadGame(Game game) {
         return gameRepository.findByGameId(game.getGameId());
     }
 
+    /**
+     * Returns the current played game by the given Raspberry Id
+     * @param raspiId
+     * @return game object
+     */
     public Game getRunningGameByRaspberry(Integer raspiId) {
         return gameRepository.findActiveGameByRaspberry(raspiId);
     }
 
-    //region getter & setter
     public GameRepository getGameRepository() {
         return gameRepository;
     }
@@ -66,43 +76,23 @@ public class GameService {
         return teamService;
     }
 
-    /*
-    public int getNumPlayers() {
-        return numPlayers;
-    }
-
-    public void incrementNumPlayers(int numPlayers) {
-        this.numPlayers += numPlayers;
-    }
-
-    public void setCurrentTeam(Team currentTeam) {
-        this.currentTeam = currentTeam;
-    }
-
-    public void setCurrentPlayer(User currentPlayer) {
-        this.currentPlayer = currentPlayer;
-    }
-
-
-    public User getCurrentPlayer() {
-        return currentPlayer;
-    }
-
-    public List<TeamPlayer> getPlayers() {
-        return players;
-    }
-    */
-
     public GameJoinController getGameJoinController() {
         return gameJoinController;
     }
 
+    /**
+     * returns all games
+     * @return collection of games
+     */
     public Collection<Game> getAllGames() {
         return gameRepository.findAll();
     }
 
+    /**
+     * returns the most popular topics
+     * @return collection of topics
+     */
     public Collection<Topic> getMostPopularTopics() {
         return gameRepository.getMostPopularTopics();
     }
-    //endregion
 }
