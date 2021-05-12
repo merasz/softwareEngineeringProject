@@ -34,12 +34,23 @@
                         <h:outputText value="#{gamePlaySocketController.getType(sessionInfoBean.currentGame)}" id="typeField" style=" font-size: 26px; font-weight: bold; margin-bottom: 10px"/>
 
                         <h:outputText value="#{gamePlaySocketController.getPoints(sessionInfoBean.currentGame)} Point(s)" id="pointsField" style="font-size: 26px; font-weight: bold; "/>
+                        <h:outputText value="Next Up: #{gamePlaySocketController.getNextRoundPlayer(sessionInfoBean.currentGame).username}" id="nextField" style="font-size: 18px; margin-top:15px "/>
                 </h:panelGroup>
                 <o:socket channel="termChannel" user="#{sessionInfoBean.currentUserName}" onmessage="function(m){console.log(m);}">
-                    <f:ajax event="termUpdate" render="termField typeField pointsField playerField" onevent="updateOtherScreen()" />
-                    <f:ajax event="termUpdateCurrent" render="typeField pointsField playerField" onevent="updatePlayerScreen()" />
+                    <f:ajax event="termUpdate" render="termField typeField pointsField playerField nextField" onevent="updateOtherScreen()" />
+                    <f:ajax event="termUpdateCurrent" render="typeField pointsField playerField nextField" onevent="updatePlayerScreen()" />
                 </o:socket>
 
+            </h:form>
+
+            <h:form style="width: 90%" id="infoForm">
+                <h:panelGroup layout="block" style="display: flex; flex-direction: column; box-sizing:border-box; width: 100%;background: #ffffff; align-items: center; padding: 20px; min-height:70px;  border-radius: 5px;  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;">
+                    <h:outputText value="#{gameInfoSocketController.messageMap[sessionInfoBean.currentGame.gameId]}" id="infoField" style="font-size: 26px;"/>
+                 </h:panelGroup>
+                <o:socket channel="infoChannel" user="#{sessionInfoBean.currentUserName}" onmessage="function(m){console.log(m);}">
+                    <f:ajax event="infoUpdate" render="infoField" />
+
+                </o:socket>
             </h:form>
 
 
