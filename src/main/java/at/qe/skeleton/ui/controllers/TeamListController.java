@@ -35,11 +35,6 @@ public class TeamListController {
 
     private Map<Team, Integer> teamsWithItsTotalScoreAGame;
 
-//    @PostConstruct
-//    public void init(){
-//        teamsWithItsTotalScoreAGame = scoreService.getScoresForTeamByGame();
-//    }
-
     public Collection<Team> getTeams() {
         return teamService.getAllTeams();
     }
@@ -67,12 +62,4 @@ public class TeamListController {
         this.game = game;
     }
 
-    public Map<Team, Integer> getTeamsWithItsTotalScoreAGame() {
-        return teamsWithItsTotalScoreAGame;
-    }
-
-    public List<Map.Entry<Team, Integer>> getTeamScoresForManager() {
-        Set<Map.Entry<Team, Integer>> productSet = teamsWithItsTotalScoreAGame.entrySet();
-        return new ArrayList<Map.Entry<Team, Integer>>(productSet);
-    }
 }

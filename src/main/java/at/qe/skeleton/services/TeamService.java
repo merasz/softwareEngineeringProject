@@ -38,12 +38,6 @@ public class TeamService {
             team.setTeamPlayers(players);
             return teamRepository.save(team);
         } else if(!players.contains(player)){
-            /*
-            List<User> emptyList = new ArrayList<User>();
-            team.setTeamPlayers(emptyList);
-            teamRepository.save(team);
-             */
-
             team = reloadTeam(team);
             players.add(player);
             team.setTeamPlayers(players);
