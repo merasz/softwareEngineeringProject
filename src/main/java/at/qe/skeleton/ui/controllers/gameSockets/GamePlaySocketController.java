@@ -1,16 +1,12 @@
 package at.qe.skeleton.ui.controllers.gameSockets;
 
 import at.qe.skeleton.model.*;
-import at.qe.skeleton.model.demo.LogEntry;
 import at.qe.skeleton.model.demo.TeamPlayer;
-import at.qe.skeleton.model.demo.TeamScoreInfo;
 
 import at.qe.skeleton.repositories.GameRepository;
-import at.qe.skeleton.repositories.ScoreRepository;
 import at.qe.skeleton.repositories.TeamRepository;
 import at.qe.skeleton.repositories.TimeFlipConfRepository;
-import at.qe.skeleton.services.GameStartService;
-import at.qe.skeleton.services.TeamService;
+
 import at.qe.skeleton.ui.websockets.WebSocketManager;
 import at.qe.skeleton.utils.CDIAutowired;
 import at.qe.skeleton.utils.CDIContextRelated;
@@ -18,15 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import javax.annotation.PostConstruct;
-import javax.el.MethodExpression;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+
 
 
 @Controller
@@ -44,6 +34,9 @@ public class GamePlaySocketController {
     ScoreManagerController scoreManagerController;
 
     @Autowired
+    GameInfoSocketController gameInfoSocketController;
+
+    @Autowired
     TeamRepository teamRepository;
 
 
@@ -58,8 +51,8 @@ public class GamePlaySocketController {
     private Map<Integer,Integer> pointsMap = new ConcurrentHashMap<>();
     private Map<Integer,Team> teamMap = new ConcurrentHashMap<>();
     private Map<Integer,User> currentPlayerMap = new ConcurrentHashMap<>();
+    private Map<Integer,User> nextPlayerMap = new ConcurrentHashMap<>();
     private Map<Integer,Integer> gameFinishedMap = new ConcurrentHashMap<>();
-    private Map<Integer,Team> gameWinnerMap = new ConcurrentHashMap<>();
 
     private Map<Integer,Integer> runningMap = new ConcurrentHashMap<>();
     private Map<Integer, Integer> currentRoundRunning = new ConcurrentHashMap<>();
@@ -78,10 +71,14 @@ public class GamePlaySocketController {
         System.out.println("init game: " + game);
         scoreManagerController.setupScores(game);
 
+        nextPlayerMap.put(game.getGameId(),teamPlayerMap.get(game.getGameId()).peek().getPlayer());
+
         runningMap.put(game.getGameId(),0);
         typeMap.put(game.getGameId(),"");
         timeMap.put(game.getGameId(),0);
         gameFinishedMap.put(game.getGameId(),0);
+
+        gameInfoSocketController.setGameMessageToGame(game,"Roll the dice to start the game!");
     }
 
     /**
@@ -130,6 +127,8 @@ public class GamePlaySocketController {
         teamPlayerMap.get(activeGame.getGameId()).add(teamPlayer);
         User user = teamPlayer.getPlayer();
         currentPlayerMap.put(activeGame.getGameId(),user);
+        //peek at next player and write into map
+        nextPlayerMap.put(activeGame.getGameId(),teamPlayerMap.get(activeGame.getGameId()).peek().getPlayer());
 
         Term term = termQueueMap.get(activeGame.getGameId()).poll();
         currentTermMap.put(activeGame.getGameId(),term);
@@ -143,6 +142,9 @@ public class GamePlaySocketController {
 
         this.websocketManager.getTermChannel().send("termUpdateCurrent",currentUser);
         this.websocketManager.getTermChannel().send("termUpdate",otherUser);
+
+        gameInfoSocketController.setGameMessageToGame(activeGame,"Let's guess. The clock is ticking");
+        websocketManager.getInfoChannel().send("infoUpdate",getAllRecipients(activeGame));
 
     }
 
@@ -174,6 +176,9 @@ public class GamePlaySocketController {
                 gameFinishedMap.put(game.getGameId(),1);
                 scoreManagerController.setGameEnd(game);
                 websocketManager.getGameChannel().send("gameFinished", recipients);
+            } else {
+                gameInfoSocketController.setGameMessageToGame(game,"Term guessed correctly! Roll the dice to start the next round");
+                websocketManager.getInfoChannel().send("infoUpdate",getAllRecipients(game));
             }
 
         }
@@ -193,6 +198,9 @@ public class GamePlaySocketController {
                 gameFinishedMap.put(game.getGameId(),1);
                 scoreManagerController.setGameEnd(game);
                 websocketManager.getGameChannel().send("gameFinished", recipients);
+            } else {
+                gameInfoSocketController.setGameMessageToGame(game,"Term guessed correctly, but with a rulebreak! Roll the dice to start the next round");
+                websocketManager.getInfoChannel().send("infoUpdate",getAllRecipients(game));
             }
         }
     }
@@ -205,6 +213,8 @@ public class GamePlaySocketController {
         if(currentRoundRunning.get(game.getGameId()) == 1) {
             currentRoundRunning.put(game.getGameId(),0);
             setTimeInternal(game,0);
+            gameInfoSocketController.setGameMessageToGame(game,"Term not guessed correctly! Roll the dice to start the next round");
+            websocketManager.getInfoChannel().send("infoUpdate",getAllRecipients(game));
         }
     }
 
@@ -236,6 +246,8 @@ public class GamePlaySocketController {
      */
     public void stopRound(Game game) {
         websocketManager.getTimeChannel().send("stopTimer",getAllRecipients(game));
+        gameInfoSocketController.setGameMessageToGame(game,"Was the term guessed correctly? Rate below!");
+        websocketManager.getInfoChannel().send("infoUpdate",getAllRecipients(game));
     }
 
     /**
@@ -307,7 +319,7 @@ public class GamePlaySocketController {
 
     /**
      * Setter for the timeMap
-     * @param timeMap
+     * @param timeMap TimeMap
      */
     public void setTimeMap(Map<Integer, Integer> timeMap) {
         this.timeMap = timeMap;
@@ -411,5 +423,13 @@ public class GamePlaySocketController {
      */
     public void putTeamPlayerMap(Game game, Queue<TeamPlayer> orderedPlayerList) {
         this.teamPlayerMap.put(game.getGameId(), orderedPlayerList);
+    }
+
+    /**
+     * returns the player for the next round
+     * @return
+     */
+    public User getNextRoundPlayer(Game game) {
+        return nextPlayerMap.get(game.getGameId());
     }
 }
