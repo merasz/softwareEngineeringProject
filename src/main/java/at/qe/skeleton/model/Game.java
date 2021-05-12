@@ -34,8 +34,8 @@ public class Game implements Serializable {
     @OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, orphanRemoval = true)
     private List<Team> teamList;
 
-    @ElementCollection
-    private List<Integer> deviceTeamIdList;
+    //@ElementCollection
+    //private List<Integer> deviceTeamIdList;
 
     @ManyToOne
     private Topic topic;
@@ -154,14 +154,6 @@ public class Game implements Serializable {
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
-    }
-
-    public List<Integer> getDeviceTeamIdList() {
-        return deviceTeamIdList;
-    }
-
-    public void setDeviceTeamIdList(List<Integer> deviceTeamIdList) {
-        this.deviceTeamIdList = deviceTeamIdList;
     }
 
     public Integer getGameId() { return gameId; }

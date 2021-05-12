@@ -25,7 +25,4 @@ public class GameListController {
         return gameService.getAllActiveGames();
     }
 
-
-
-
 }

@@ -17,9 +17,8 @@ public class RaspberryListController implements Serializable {
     private RaspberryService raspberryService;
 
     /**
-     * Returns a list of all users.
-     *
-     * @return
+     * Returns a list of all raspberries.
+     * @return Collection of Raspberry Objects
      */
     public Collection<Raspberry> getRaspberries() {
         return raspberryService.getAllRaspberries();

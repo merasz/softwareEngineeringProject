@@ -5,9 +5,9 @@ import at.qe.skeleton.model.Term;
 import at.qe.skeleton.model.Topic;
 import at.qe.skeleton.services.TermsService;
 import at.qe.skeleton.services.TopicService;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+//import org.json.simple.JSONArray;
+//import org.json.simple.JSONObject;
+//import org.json.simple.parser.JSONParser;
 import org.apache.tomcat.util.json.ParseException;
 import org.primefaces.event.FileUploadEvent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,22 +29,23 @@ public class TermsController extends Controller implements Serializable {
     @Autowired
     private TermsService termsService;
 
+    /*
     @Autowired
     private TopicService topicService;
 
     private List<Topic> topics;
     private List<Term> terms;
     private String name;
+    */
+
     private Term term;
 
     @PostConstruct
     public void init() {
-        System.out.println("init Terms");
         doCreateNewTerm();
     }
 
     public void doCreateNewTerm() {
-        System.out.println("doCreateNewTerm:");
         term = new Term();
     }
 
@@ -58,17 +59,18 @@ public class TermsController extends Controller implements Serializable {
 
     public void doSaveTerm(Topic topic) {
         if(topic == null) {
-            displayInfo("Cant save Term", "");
+            displayInfo("Term not created", "No term was entered.");
             return;
         }
         term.setTopic(topic);
         try {
             term = termsService.saveTerm(term);
         } catch (IllegalArgumentException e){
-            displayError("Error", e.getMessage());
+            displayError("Term not created.", e.getMessage());
         }
     }
 
+    /*
     public List<Topic> getAllTopics() {
         topics = termsService.getTopicRepository().findAll();
         return topics;
@@ -80,15 +82,6 @@ public class TermsController extends Controller implements Serializable {
         return terms;
     }
 
-//    public void addTerm(String name) {
-//        try {
-//            termsService.saveTerm(name, this.topic, new Term());
-//            displayInfo("Term created", "New term successfully created.");
-//        } catch (IllegalArgumentException e) {
-//            displayError("Term not created", e.getMessage());
-//        }
-//    }
-
     public void editTerm(String name, Topic topic) {
        try {
           termsService.saveTerm(term);
@@ -97,9 +90,10 @@ public class TermsController extends Controller implements Serializable {
           displayError("Term not updated", e.getMessage());
        }
     }
+    */
 
-//    public void deleteTerm() {
-//        termsService.getTermsRepository().delete(term);
-//        displayInfo("Term deleted", "Term successfully deleted.");
-//    }
+    public void deleteTerm() {
+        termsService.getTermsRepository().delete(term);
+        displayInfo("Term deleted", "Term deleted successfully.");
+    }
 }

@@ -9,9 +9,6 @@
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name ="content">
         <h:form id="userForm" style="width: 98%; margin-top: 15px;margin-left: 25px; float: right;">
-            <p:growl id="growl" showDetail="false" life="6000" >
-                <p:autoUpdate/>
-            </p:growl>
             <p:dataTable  id="usersTable" var="user" value="#{userListController.users}" widgetVar="usersTable" paginator="true" rows="10" emptyMessage="Select Role." style="width:85%; margin-top:100px; float:right;">
                 <f:facet name="header">
                     <p:outputPanel>
@@ -19,11 +16,11 @@
                         <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="400">
                             <h:panelGrid columns="1">
                                 <h3>Create User</h3>
-                                <h:outputText value="Create a new User!"/>
+                                <h:outputText value="Click on 'Create new User' to create a new User and assign roles/raspberry."/>
                                 <h3>Edit user</h3>
-                                <h:outputText value="Edit a User's data!"/>
+                                <h:outputText value="Click on 'Edit' to change the role/raspberry."/>
                                 <h3>Delete user</h3>
-                                <h:outputText value="Delete a User!"/>
+                                <h:outputText value="Click on 'Delete' to delete the user."/>
                             </h:panelGrid>
                         </p:dialog>
                         <div align="right">
@@ -81,7 +78,13 @@
                         <f:selectItems value="#{userDetailController.listRoles}"/>
                     </p:selectManyMenu>
                 </h:panelGrid>
-                <p:separator />
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="editRasp" value="Raspberry: "/>
+                        <p:selectOneListbox id="editRasp"  value="#{userDetailController.user.raspberry}" converter="#{raspberryConverter}" style="width:300px">
+                            <f:selectItems value="#{raspberryListController.getRaspberries()}" var="raspberry" itemLabel="#{raspberry.raspberryId} - #{raspberry.ipAddress}" itemValue="#{raspberry}"/>
+                        </p:selectOneListbox>
+                    </h:panelGrid>
+                    <p:separator />
                     <h:panelGrid columns="3">
                         <p:commandButton value="Save" action="#{userDetailController.doSaveUser()}" oncomplete="PF('userEditDialog').hide()" update=":userForm:usersTable"/>
                         <p:commandButton value="Reload" action="#{userDetailController.doReloadUser()}" update=":userForm:userData"/>
@@ -114,6 +117,12 @@
                         <p:selectManyMenu id="newRole" value="#{userCreationController.user.roles}" collectionType="java.util.LinkedHashSet" showCheckbox="true" required="true" requiredMessage="Role(s) required." style="width: 175px;">
                             <f:selectItems value="#{userCreationController.listRoles}"/>
                         </p:selectManyMenu>
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="newRasp" value="Raspberry: "/>
+                        <p:selectOneListbox id="newRasp"  value="#{userCreationController.user.raspberry}" converter="#{raspberryConverter}" style="width:300px">
+                            <f:selectItems value="#{raspberryListController.getRaspberries()}" var="raspberry" itemLabel="#{raspberry.raspberryId} - #{raspberry.ipAddress}" itemValue="#{raspberry}"/>
+                        </p:selectOneListbox>
                     </h:panelGrid>
                     <p:separator />
 

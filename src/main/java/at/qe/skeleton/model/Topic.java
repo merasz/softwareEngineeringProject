@@ -17,7 +17,7 @@ public class Topic implements Serializable {
     @OneToMany(mappedBy = "topic")
     private List<Game> games;
 
-    @OneToMany(mappedBy = "topic",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "topic")
     private List<Term> terms;
 
     @Temporal(TemporalType.TIMESTAMP)

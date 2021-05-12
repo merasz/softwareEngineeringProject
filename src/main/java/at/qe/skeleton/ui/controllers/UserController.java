@@ -56,9 +56,11 @@ public class UserController extends Controller implements Serializable {
         user = userService.loadUser(user.getUsername());
     }
 
+
     /**
      * Action to delete the currently displayed user.
      */
+    /*
     public void doDeleteUser() {
         try {
             this.userService.deleteUser(user);
@@ -70,6 +72,7 @@ public class UserController extends Controller implements Serializable {
             displayError("Error", "Account could not be deleted.");
         }
     }
+    */
 
     /**
      * Action to save the currently displayed user.
@@ -82,29 +85,5 @@ public class UserController extends Controller implements Serializable {
             displayError("Error", e.getMessage());
         }
     }
-
-//    /**
-//     * Action to change a user's password.
-//     */
-//    public void doUpdatePassword() {
-//        try {
-//            user = userService.updatePassword(user, password, confirmPass);
-//            displayInfo("Password changed" ,"Password successfully changed.");
-//        } catch (IllegalArgumentException e){
-//            displayError("Password cannot be empty", "Please enter any characters for your password.");
-//        }
-//    }
-
-//    /**
-//     * Action to change a user's roles.
-//     */
-//    public void doUpdateRoles() {
-//        try {
-//            user = userService.updateRoles(user, roles);
-//            displayInfo("User rolle changed" ,"Roll successfully changed.");
-//        } catch (IllegalArgumentException e){
-//            displayError("Password cannot be empty", "Please enter any characters for your password.");
-//        }
-//    }
 
 }

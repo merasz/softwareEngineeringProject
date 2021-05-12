@@ -17,88 +17,130 @@
         <link rel="stylesheet" href="/resources/css/style.css"/>
     </h:head>
     <h:body>
-
-        <h:form id="scoreBoard">
-            <p:growl id="scoreData" showDetail="false" life="6000">
-                <p:autoUpdate/>
-            </p:growl>
-
-            <p:dataTable widgetVar="scoreTable" id="scoreTable" var="score"
-                         value="#{scoreManagerController.getScores(sessionInfoBean.currentGame)}" style="width: 50%;position: absolute;bottom: 0px; left: 0px">
-                <f:facet name="header">Scores</f:facet>
-                <p:column headerText="Team">
-                    <h:outputText value="#{score.team.teamName}"/>
-                </p:column>
-                <p:column headerText="Score">
-                    <h:outputText value="#{score.score}"/>
-                </p:column>
-            </p:dataTable>
-
-            <p:commandButton id="termYesBtn" value="Guessed Correctly"
-                             action="#{gamePlaySocketController.termGuessed(sessionInfoBean.currentGame)}" style="position: relative; left:20%">
-            </p:commandButton>
-
-            <p:commandButton id="termNoBtn" value="Not Guessed Correctly"
-                             action="#{gamePlaySocketController.termNotGuessed(sessionInfoBean.currentGame)}" style="position: relative; left:30%">
-            </p:commandButton>
-
-            <p:commandButton id="ruleBreakerBtn" value="Rulebreak"
-                             action="#{gamePlaySocketController.termGuessedWithRulebreak(sessionInfoBean.currentGame)}" style="position: relative; left:30%">
-            </p:commandButton>
-
-            <o:socket channel="scoreChannel" user="#{sessionInfoBean.currentUserName}" onmessage="function(m){console.log(m);}">
-                <f:ajax event="scoreUpdate" render="scoreTable"/>
-            </o:socket>
-        </h:form>
-        <h:form>
-            <h:panelGroup style="position: absolute; bottom: 0px;right: 30px" id="timerOuter">
-                <pe:timer
-                    id="timer"
-                    widgetVar="timer"
-                    visible="false"
-                    singleRun="true"
-                    listener="#{gamePlaySocketController.onTimerOver(sessionInfoBean.currentGame)}"
-                    ontimerstep="sync(intervalData)"
-                    timeout="#{gamePlaySocketController.getTime(sessionInfoBean.currentGame)}"/>
-                <p:knob
-                        min="0"
-                        max="#{gamePlaySocketController.getTime(sessionInfoBean.currentGame)}"
-                        widgetVar="knob"
-                        disabled="true"
-                        value="#{gamePlaySocketController.getTime(sessionInfoBean.currentGame)}"/>
+        <h:panelGroup layout="block" style="display: flex; flex-direction: column;align-items: center; justify-content: space-around; min-height: 100vh">
+            <h:panelGroup layout="block" style="font-size: 54px; font-weight: bold; color: #ffffff; display: flex; flex-direction: column; align-items: center">
+                <h:outputText style="text-shadow: 2px 7px 5px rgba(0,0,0,0.3),
+    0px -4px 10px rgba(255,255,255,0.3);" value="#{sessionInfoBean.currentGame.gameName}" />
+                <h:outputText style="font-size:34px; margin-top: 20px" value="#{teamController.getTeamByPlayerAndGame(sessionInfoBean.currentUser,sessionInfoBean.currentGame).teamName}" />
             </h:panelGroup>
 
-            <o:socket channel="timeChannel" user="#{sessionInfoBean.currentUserName}" onmessage="function(m){console.log(m);}">
-                <f:ajax event="timeUpdate" render="timerOuter" />
-                <f:ajax event="stopTimer" onevent="PF('timer').pause()" />
+            <h:form style="width: 90%" id="gameForm">
+                <h:panelGroup layout="block" style="display: flex; flex-direction: column; box-sizing:border-box; width: 100%;background: #ffffff; align-items: center; padding: 20px; border-radius: 5px;  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;">
+                        <h:outputText value="Term: " style=" font-size: 32px; "/>
+                        <h:outputText value="#{gamePlaySocketController.getNextTerm(sessionInfoBean.currentGame)}" id="termField" styleClass="term" style="font-size: 32px; font-weight: bold; margin-bottom: 25px"/>
+
+                        <h:outputText value="Player: " style=" font-size: 32px;"/>
+                        <h:outputText value="#{gamePlaySocketController.getNextPlayer(sessionInfoBean.currentGame)} " id="playerField" style="font-size: 26px; font-weight: bold; margin-bottom: 20px"/>
+                        <h:outputText value="#{gamePlaySocketController.getType(sessionInfoBean.currentGame)}" id="typeField" style=" font-size: 26px; font-weight: bold; margin-bottom: 10px"/>
+
+                        <h:outputText value="#{gamePlaySocketController.getPoints(sessionInfoBean.currentGame)} Point(s)" id="pointsField" style="font-size: 26px; font-weight: bold; "/>
+                        <h:outputText value="Next Up: #{gamePlaySocketController.getNextRoundPlayer(sessionInfoBean.currentGame).username}" id="nextField" style="font-size: 18px; margin-top:15px "/>
+                </h:panelGroup>
+                <o:socket channel="termChannel" user="#{sessionInfoBean.currentUserName}" onmessage="function(m){console.log(m);}">
+                    <f:ajax event="termUpdate" render="termField typeField pointsField playerField nextField" onevent="updateOtherScreen()" />
+                    <f:ajax event="termUpdateCurrent" render="typeField pointsField playerField nextField" onevent="updatePlayerScreen()" />
+                </o:socket>
+
+            </h:form>
+
+            <h:form style="width: 90%" id="infoForm">
+                <h:panelGroup layout="block" style="display: flex; flex-direction: column; box-sizing:border-box; width: 100%;background: #ffffff; align-items: center; padding: 20px; min-height:70px;  border-radius: 5px;  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;">
+                    <h:outputText value="#{gameInfoSocketController.messageMap[sessionInfoBean.currentGame.gameId]}" id="infoField" style="font-size: 26px;"/>
+                 </h:panelGroup>
+                <o:socket channel="infoChannel" user="#{sessionInfoBean.currentUserName}" onmessage="function(m){console.log(m);}">
+                    <f:ajax event="infoUpdate" render="infoField" />
+
+                </o:socket>
+            </h:form>
+
+
+            <h:form id="scoreBoard" style="width: 90%">
+                <p:growl id="scoreData" showDetail="false" life="6000">
+                    <p:autoUpdate/>
+                </p:growl>
+                <h:panelGroup layout="block" style="display: flex; flex-direction: column;align-items: center">
+                    <h:panelGroup layout="block" style="display: flex; width: 100%; justify-content: space-between; margin-bottom: 35px">
+                        <p:commandButton id="termYesBtn" widgetVar="yesBtn" value="Guessed Correctly" styleClass="gameButton" style="background:#009a00"
+                                         action="#{gamePlaySocketController.termGuessed(sessionInfoBean.currentGame)}" >
+                        </p:commandButton>
+
+                        <p:commandButton id="ruleBreakerBtn" widgetVar="ruleBtn" value="Rulebreak" styleClass="gameButton" style="background:#e67200"
+                                         action="#{gamePlaySocketController.termGuessedWithRulebreak(sessionInfoBean.currentGame)}" >
+                        </p:commandButton>
+
+                        <p:commandButton id="termNoBtn" widgetVar="noBtn" value="Not Guessed Correctly" styleClass="gameButton" style="background:#9a0000"
+                                         action="#{gamePlaySocketController.termNotGuessed(sessionInfoBean.currentGame)}" >
+                        </p:commandButton>
+
+
+                    </h:panelGroup>
+                    <p:dataTable widgetVar="scoreTable" id="scoreTable" var="score"
+                                 value="#{scoreManagerController.getScores(sessionInfoBean.currentGame)}" >
+                        <f:facet name="header">Scores</f:facet>
+                        <p:column headerText="Team">
+                            <h:outputText value="#{score.team.teamName}"/>
+                        </p:column>
+                        <p:column headerText="Score">
+                            <h:outputText value="#{score.score}"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:panelGroup>
+
+
+                <o:socket channel="scoreChannel" user="#{sessionInfoBean.currentUserName}" onmessage="function(m){console.log(m);}">
+                    <f:ajax event="scoreUpdate" render="scoreTable"/>
+                </o:socket>
+            </h:form>
+            <h:form>
+                <h:panelGroup layout="block" style="" id="timerOuter">
+                    <pe:timer
+                        id="timer1"
+                        widgetVar="timer1"
+                        visible="false"
+                        singleRun="true"
+                        listener="#{gamePlaySocketController.onTimerOver(sessionInfoBean.currentGame)}"
+                        ontimerstep="sync(intervalData)"
+                        timeout="#{gamePlaySocketController.timeMap[sessionInfoBean.currentGame.gameId]}"/>
+                    <p:knob
+                            min="0"
+                            max="#{gamePlaySocketController.timeMap[sessionInfoBean.currentGame.gameId]}"
+                            widgetVar="knob"
+                            disabled="true"
+                            value="#{gamePlaySocketController.timeMap[sessionInfoBean.currentGame.gameId]}"/>
+                </h:panelGroup>
+
+                <o:socket channel="timeChannel" user="#{sessionInfoBean.currentUserName}" onmessage="function(m){console.log(m);}">
+                    <f:ajax event="timeUpdate" render="timerOuter" />
+                    <f:ajax event="stopTimer" onevent="PF('timer1').pause()" />
+                </o:socket>
+
+            </h:form>
+            <o:socket channel="gameChannel" user="#{sessionInfoBean.currentUserName}" onmessage="function(m){console.log(m);}">
+                <f:ajax event="gameFinished" onevent="redirectToEndScreen()" />
             </o:socket>
-
-        </h:form>
-
-        <h:form>
-
-            <h:outputText value="#{gamePlaySocketController.getNextTerm(sessionInfoBean.currentGame)}" id="termField" widgetVar="termField" style="position: absolute; top: 50%; left: 50%; font-size: 32px; font-weight: bold"/>
-            <h:outputText value="#{gamePlaySocketController.getType(sessionInfoBean.currentGame)}" id="typeField" widgetVar="typeField" style="position: absolute; top: 54%; left: 50%; font-size: 26px; font-weight: bold"/>
-            <h:outputText value="#{gamePlaySocketController.getPoints(sessionInfoBean.currentGame)} Point(s)" id="pointsField" widgetVar="pointsField" style="position: absolute; top: 58%; left: 50%; font-size: 26px; font-weight: bold"/>
-
-            <h:outputText value="#{gamePlaySocketController.getNextPlayer(sessionInfoBean.currentGame)} " id="playerField" widgetVar="playerField" style="position: absolute; top: 62%; left: 50%; font-size: 26px; font-weight: bold"/>
-
-            <o:socket channel="termChannel" user="#{sessionInfoBean.currentUserName}" onmessage="function(m){console.log(m);}">
-                <f:ajax event="termUpdate" render="termField typeField pointsField playerField" />
-            </o:socket>
-
-        </h:form>
+        </h:panelGroup>
     </h:body>
     <script type="text/javascript">
         window.sync = function(t){
             PF('knob').setValue(t.current);
         }
 
-        function emptyFields() {
-            PF('termField').html("");
-            PF('typeField').html("");
-            PF('pointsField').html("");
-            PF('playerField').html("");
+        function updatePlayerScreen() {
+            $('#gameForm .term').html("");
+            PF('yesBtn').disable()
+            PF('ruleBtn').disable();
+            PF('noBtn').disable();
         }
+
+        function updateOtherScreen() {
+            PF('yesBtn').enable();
+            PF('ruleBtn').enable();
+            PF('noBtn').enable();
+        }
+
+        function redirectToEndScreen() {
+            window.location.replace("/secured/game_room/end.xhtml");
+        }
+
     </script>
 </html>

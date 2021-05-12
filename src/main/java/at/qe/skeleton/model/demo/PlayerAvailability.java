@@ -3,6 +3,8 @@ package at.qe.skeleton.model.demo;
 import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.User;
 
+// wrapper class used in GameJoinController
+// carrying info if users are selectable for or assigned to a team
 public class PlayerAvailability {
 
     Game game;

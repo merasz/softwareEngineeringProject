@@ -19,23 +19,62 @@ import org.springframework.data.repository.query.Param;
  */
 public interface UserRepository extends AbstractRepository<User, String> {
 
+    /**
+     * Returns the first user with the given name.
+     *
+     * @param username
+     * @return user
+     */
     User findFirstByUsername(String username);
 
-    List<User> findByUsernameContaining(String username);
-
+    /**
+     * Returns a list of users with the given role
+     * ADMIN
+     * MANAGER
+     * USER
+     * @param role
+     * @return list of users
+     */
     @Query("SELECT u FROM User u WHERE :role MEMBER OF u.roles")
     List<User> findByRole(@Param("role") UserRole role);
 
+    /**
+     * Returns a list of all admins.
+     *
+     * @return list of users
+     */
     @Query("SELECT u FROM User u join u.roles r WHERE r = at.qe.skeleton.model.UserRole.ADMIN")
     List<User> findAllAdmins();
 
+    /**
+     * Returns a list of all managers.
+     *
+     * @return list of users
+     */
     @Query("SELECT u FROM User u join u.roles r WHERE r = at.qe.skeleton.model.UserRole.GAME_MANAGER")
     List<User> findAllManagers();
 
+    /**
+     * Return all users with its given role Player.
+     *
+     * @return list of users
+     */
     @Query("SELECT u FROM User u join u.roles r WHERE r = at.qe.skeleton.model.UserRole.PLAYER")
     List<User> findAllPlayers();
 
+    /**
+     * Returns a list of all Users in a team.
+     * @param team
+     * @return
+     */
     List<User> findAllPlayersByTeam(Team team);
 
+    /**
+     * Find all Users who have added this specified raspberry to their profile,
+     * its used to see who is available for this game.
+     *
+     * @param raspberry
+     * @return List of users
+     */
     List<User> findAllByRaspberry(Raspberry raspberry);
 }

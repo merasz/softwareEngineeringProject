@@ -11,9 +11,22 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface GameRepository extends AbstractRepository<Game, Integer> {
-
+    /**
+     * Function searchs in Repo if game exists with specified ID.
+     *
+     * @param integer
+     * @return the game by its ID
+     */
     Game findByGameId(Integer integer);
 
+    /**
+     * Function takes the ID of a raspberry and returns a list of games,
+     * which are currently played on this raspberry.
+     *
+     * @param raspberryId
+     * @param page
+     * @return
+     */
     @Query("SELECT g FROM Game g WHERE g.active = true AND :r = g.raspberry.raspberryId ORDER BY g.gameId DESC")
     List<Game> internalFindActiveGameByRaspberry(@Param("r") int raspberryId, Pageable page);
 
@@ -26,9 +39,19 @@ public interface GameRepository extends AbstractRepository<Game, Integer> {
         }
     }
 
+    /**
+     * Function for game statistics, which returns a list of the most choosen topics in all ever played games
+     *
+     * @return list of Topics asc sorted by there count
+     */
     @Query("select g.topic from Game g group by g.topic order by count(*) desc")
     List<Topic> getMostPopularTopics();
 
+    /**
+     * Function which returns all active games - all games which are played at the moment.
+     *
+     * @return list of games
+     */
     @Query("Select g from Game g where g.active = 1 and g.startTime is not NULL and g.endTime is NULL")
     List<Game> findAllActive();
 

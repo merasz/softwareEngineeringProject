@@ -26,32 +26,55 @@ public class GameStartService extends GameService {
     private Game game;
     private Team team;
 
-    //region Player join phase
+    /**
+     * returns the game which got selected to start
+     * game gets initialized
+     * @param game
+     * @param user
+     * @return
+     * @throws IllegalArgumentException
+     */
     public Game startGame(Game game, User user) throws IllegalArgumentException {
         game.setActive(true);
         this.user = user;
         this.game = game;
         joinTeam();
         getGameJoinController().onJoin(this.game);
-        return this.game;
-    }
-
-    public Game joinGame(Game game, User user) throws NoSuchElementException, IllegalArgumentException {
-        this.user = user;
-        this.game = game;
-        if (game == null ) {
-            throw new NoSuchElementException("No active game found. Ask a game manager to create a new game.");
-        }
-        joinTeam();
-        getGameJoinController().onSelect(user, game);
         return game;
     }
 
+    /**
+     * returns a game if it got selected
+     * @param game
+     * @param user
+     * @return
+     * @throws NoSuchElementException
+     * @throws IllegalArgumentException
+     */
+    public Game joinGame(Game game, User user) throws NoSuchElementException, IllegalArgumentException {
+        this.user = user;
+        this.game = reloadGame(game);
+        if (this.game == null ) {
+            throw new NoSuchElementException("No active game found. Ask a game manager to create a new game.");
+        }
+        joinTeam();
+        getGameJoinController().onSelect(user, this.game);
+        return this.game;
+    }
+
+    /**
+     * returns the active game where the user is assigned
+     * @param user
+     * @return game object
+     */
     public Game getActiveGame(User user) {
         return getGameRepository().findActiveGameByRaspberry(user.getRaspberry().getRaspberryId());
     }
 
-    // when joining the game: get assigned to a team or get your team, when already assigned somewhere
+    /**
+     * when joining the game: get assigned to a team or get your team, when already assigned somewhere
+     * @throws IllegalArgumentException
+     */
     private void joinTeam() throws IllegalArgumentException {
         // see if player is assigned to one of the teams
         Team team;
@@ -72,23 +95,26 @@ public class GameStartService extends GameService {
         addUserToTeam(team);
     }
 
+    /**
+     * assign a user to a team for a game
+     * @param team
+     */
     private void addUserToTeam(Team team) {
         if (!team.getTeamPlayers().contains(user)) {
             List<User> players = team.getTeamPlayers();
             players.add(user);
             team.setTeamPlayers(players);
-            //System.out.println("user: " + user.getUsername() + " -- team: " + team.getTeamId());
-            //System.out.println("team: " + team.getTeamPlayers().stream().map(User::getUsername).collect(Collectors.toList()));
         }
         this.team = getTeamService().saveTeam(team);
-        this.game = saveGame(game);
-        //this.game = reloadGame(game);
-        //System.out.println("game: " + game.getTeamList().stream().flatMap(t -> t.getTeamPlayers().stream()
-        //        .map(User::getUsername)).collect(Collectors.toList()));
-        //System.out.println("team: " + team.getTeamPlayers().stream().map(User::getUsername).collect(Collectors.toList()));
+        this.game = reloadGame(game);
         getGameJoinController().takeTeam(game, team);
     }
 
+    /**
+     * returns a game for the selected user
+     * @param user
+     * @return game object
+     */
     public Game selectPlayer(User user) {
         this.game = reloadGame(game);
         this.user = user;
@@ -97,14 +123,22 @@ public class GameStartService extends GameService {
         return game;
     }
 
+    /**
+     * checks if all conditions are success to start the game and wipe to the gameroom
+     * @return boolean
+     */
     public boolean teamReady() {
         return game.getTeamSize() == team.getTeamPlayers().size();
     }
-    //endregion
 
-    //region initialize and enter game
+    /**
+     * returns a playable game
+     * @param teamName
+     * @return game object
+     * @throws IllegalArgumentException
+     * @throws IOException
+     */
     public Game finishTeamAssign(String teamName) throws IllegalArgumentException, IOException {
-        //this.game = reloadGame(game);
         if (teamName.isEmpty()) {
             throw new IllegalArgumentException("Give your team a name first.");
         } else if (game.getTeamList().stream().filter(t -> t.getTeamName() != null)
@@ -113,15 +147,21 @@ public class GameStartService extends GameService {
         } else if (!teamReady()) {
             throw new IllegalArgumentException("You haven't assigned enough team mates yet.");
         }
-        //System.out.println("save team: " + this.team.getTeamId() + " -- " + teamName);
         this.team.setTeamName(teamName);
         this.team = getTeamService().saveTeam(team);
+        this.game = reloadGame(game);
         getGameJoinController().updateTeamsReady(game);
 
         return enterGame();
     }
 
+    /**
+     * enter a game
+     * @return game
+     * @throws IOException
+     */
     public Game enterGame() throws IOException {
+        this.game = reloadGame(game);
         if (getGameJoinController().updateReadyToStart(game, user)) {
             if (game.getStartTime() == null && !getGameJoinController().isInitialized(game)) {
                 //System.out.println("-------  initialized  -------");
@@ -133,12 +173,13 @@ public class GameStartService extends GameService {
             FacesContext.getCurrentInstance().getExternalContext().redirect("/secured/game_room/gameRoom.xhtml");
             FacesContext.getCurrentInstance().responseComplete();
         }
-        //System.out.println("teams: " + game.getTeamList().stream().map(Team::getTeamName).collect(Collectors.toList()));
-        //this.game = saveGame(game);
-        //gamePlaySocketController.enterGame(game);
         return game;
     }
 
+    /**
+     * initializes a game
+     * @param game
+     */
     private void initializeGame(Game game) {
         // initialize scores
         for (Team t : game.getTeamList()) {
@@ -165,7 +206,6 @@ public class GameStartService extends GameService {
                                         new TeamPlayer(t.getTeamPlayers().get(i), t))));
         gamePlaySocketController.putTeamPlayerMap(game, orderedPlayerList);
     }
-    //endregion
 
     //region getter & setter
     public Game getGame() {

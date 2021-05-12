@@ -17,18 +17,38 @@ public class TeamService {
     @Autowired
     TeamRepository teamRepository;
 
+    /**
+     * return all teams
+     * @return list of teams
+     */
     public List<Team> getAllTeams() {
         return teamRepository.findAll();
     }
 
+    /**
+     * return all teams in a game
+     * @param game
+     * @return list of teams
+     */
     public List<Team> getTeamsByGame(Game game) {
         return teamRepository.findByGame(game.getGameId());
     }
 
+    /**
+     * saves a given team to the repo and returns it
+     * @param team
+     * @return
+     */
     public Team saveTeam(Team team){
         return teamRepository.save(team);
     }
 
+    /**
+     * saves a player to a given team
+     * @param team
+     * @param player
+     * @return Team obejct
+     */
     public Team savePlayerToTeam(Team team, User player) {
         List<User> players = team.getTeamPlayers();
 
@@ -38,12 +58,6 @@ public class TeamService {
             team.setTeamPlayers(players);
             return teamRepository.save(team);
         } else if(!players.contains(player)){
-            /*
-            List<User> emptyList = new ArrayList<User>();
-            team.setTeamPlayers(emptyList);
-            teamRepository.save(team);
-             */
-
             team = reloadTeam(team);
             players.add(player);
             team.setTeamPlayers(players);
@@ -53,10 +67,21 @@ public class TeamService {
         return team;
     }
 
+    /**
+     * reloads a given team
+     * @param team
+     * @return team object
+     */
     public Team reloadTeam(Team team) {
         return teamRepository.findByTeamId(team.getTeamId());
     }
 
+    /**
+     * deletes a player from a team and saves the team again
+     * @param team
+     * @param tmpPlayer
+     * @return team object
+     */
     public Team deletePlayerFromTeam(Team team, User tmpPlayer) {
         List<User> players = team.getTeamPlayers();
         players.remove(tmpPlayer);
@@ -64,14 +89,31 @@ public class TeamService {
         return teamRepository.save(team);
     }
 
+    /**
+     * deletes a given team
+     * @param team
+     */
     public void deleteTeam(Team team) {
         team.setTeamPlayers(new ArrayList<>());
         teamRepository.save(team);
         teamRepository.delete(team);
     }
 
+    /**
+     * returns for a given user the teams he is assigned
+     * @param user
+     * @return
+     */
     public List<Team> getTeamsByPlayer(User user) {
         return teamRepository.findAllByTeamPlayers(user);
     }
+
+    /**
+     * return team for a user and for the given game
+     * @param user
+     * @param game
+     * @return team object
+     */
+    public Team getTeamByPlayerAndGame(User user, Game game) {return teamRepository.findByTeamPlayersAndGame(user, game);}
 
 }

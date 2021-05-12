@@ -71,12 +71,16 @@ public class TermsServiceTest {
         String existingName = "TestTerm";
         termsService.getTopicRepository().save(new Topic(topicName));
 
-        Topic topic = termsService.getTopicRepository().findFirstByTopicName(topicName);
-        termsService.saveTerm(newName, topic, new Term());
+        Term term = new Term();
+        term.setTermName(newName);
+        termsService.saveTerm(term);
 
-        Term newTerm = termsService.getTermsRepository().findFirstByTermName(newName);
-        Assertions.assertNotNull(newTerm, "New term not found in database");
-        Assertions.assertThrows(IllegalArgumentException.class, () -> termsService.saveTerm(existingName, topic, new Term()));
+        term = termsService.getTermsRepository().findFirstByTermName(newName);
+        Assertions.assertNotNull(term, "New term not found in database");
+
+        Term existingTerm = new Term();
+        existingTerm.setTermName(existingName);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> termsService.saveTerm(existingTerm));
 
         List<Term> terms = termsService.getTermsRepository().findAll().stream()
                             .filter(x -> x.getTermName().equals(existingName))

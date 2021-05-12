@@ -84,3 +84,14 @@ body{
     color: white;
 }
 
+.gameButton {
+    box-sizing: border-box;
+    padding: 10px 30px;
+    font-size: 1.2em;
+    color: #ffffff;
+    width: 350px;
+    max-width: 25%;
+}
+
+
+

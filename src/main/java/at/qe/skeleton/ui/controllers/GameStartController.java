@@ -14,6 +14,9 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+// handles the GUI for the player selection phase (join.xhtml)
+// after starting a game and before entering the game room
+// team-leaders get to select their players (if not already set beforehand)
 @Component
 @Scope("session")
 public class GameStartController extends GameController implements Serializable {
@@ -28,6 +31,7 @@ public class GameStartController extends GameController implements Serializable 
     private String teamName;
     private boolean teamComplete = false;
 
+    // starts the game by the game creator
     public String startGame(Game game) {
         setUser();
         teamComplete = false;
@@ -47,6 +51,7 @@ public class GameStartController extends GameController implements Serializable 
         return "";
     }
 
+    // let all other team representatives join an active game
     public String joinGame() {
         setUser();
         setGame(gameStartService.getActiveGame(getUser()));
@@ -76,19 +81,24 @@ public class GameStartController extends GameController implements Serializable 
         }
     }
 
+    // get list of player availabilities (player free to select or already assigned to a team)
     public List<PlayerAvailability> getPlayerAvailability() {
         return gameStartService.getGameJoinController().getPlayerAvailability(getGame());
     }
 
+    // socket-channel update, used to query if all teams ready to join
     public void setAllTeamsReady() {
         gameStartService.getGameJoinController().updateJoinChannel();
     }
 
+    // select a player in the GUI to add to current team
     public void selectPlayer(SelectEvent<PlayerAvailability> event) {
         this.player = event.getObject();
         setGame(gameStartService.selectPlayer(player.getUser()));
     }
 
+    // announce team ready to play, try to join if other teams ready too
+    // triggered by "join game" button
     public void finishTeamAssign() {
         sessionInfoBean.setCurrentGame(getGame());
         try {
@@ -101,6 +111,8 @@ public class GameStartController extends GameController implements Serializable 
         }
     }
 
+    // enter game room if all teams ready to play
+    // triggered by socket update
     public void enterGame() {
         if (teamComplete) {
             try {
