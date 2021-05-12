@@ -56,9 +56,11 @@ public class UserController extends Controller implements Serializable {
         user = userService.loadUser(user.getUsername());
     }
 
+
     /**
      * Action to delete the currently displayed user.
      */
+    /*
     public void doDeleteUser() {
         try {
             this.userService.deleteUser(user);
@@ -70,6 +72,7 @@ public class UserController extends Controller implements Serializable {
             displayError("Error", "Account could not be deleted.");
         }
     }
+    */
 
     /**
      * Action to save the currently displayed user.

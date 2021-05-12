@@ -17,25 +17,16 @@ public class GameLobby implements Serializable {
     @ElementCollection
     private List<Integer> lastPlayedGameStats;
 
-    @OneToMany(mappedBy = "gameLobby")
-    private List<User> activeUsers;
+    //@OneToMany(mappedBy = "gameLobby")
+    //private List<User> activeUsers;
 
     @ElementCollection
     private List<Integer> activeVirtualRooms;
 
-    @OneToOne
-    private User user;
+    //@OneToOne
+    //private User user;
 
     public GameLobby() {
-    }
-
-    public GameLobby(int userDeviceId, List<Integer> lastPlayedGameStats,
-                     List<User> activeUsers, List<Integer> activeVirtualRooms, User user) {
-        this.userDeviceId = userDeviceId;
-        this.activeUsers = activeUsers;
-        this.user = user;
-        this.lastPlayedGameStats = lastPlayedGameStats;
-        this.activeVirtualRooms = activeVirtualRooms;
     }
 
     public int getGameLobbyId() {
@@ -52,22 +43,6 @@ public class GameLobby implements Serializable {
 
     public void setUserDeviceId(int userDeviceId) {
         this.userDeviceId = userDeviceId;
-    }
-
-    public List<User> getActiveUsers() {
-        return activeUsers;
-    }
-
-    public void setActiveUsers(List<User> activeUsers) {
-        this.activeUsers = activeUsers;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public List<Integer> getLastPlayedGameStats() {

@@ -128,13 +128,19 @@
         </h:form>
 
         <h:form id="changeRaspberryForm" >
-            <p:dialog header="Change Raspberry" id="changeRaspberryDialog" widgetVar="changeRaspberryDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" style="display: none">
+            <p:dialog header="Change Raspberry" id="changeRaspberryDialog" widgetVar="changeRaspberryDialog" modal="true"
+                      showEffect="fade" hideEffect="fade" resizable="false" style="display: none">
                 <p:outputPanel id="raspberryData" >
-                    <p:selectOneListbox id="basic"  value="#{userDetailController.user.raspberry}" converter="#{raspberryConverter}" style="width:300px">
-                        <f:selectItems value="#{raspberryListController.getRaspberries()}" var="raspberry" itemLabel="#{raspberry.raspberryId} - #{raspberry.ipAddress}" itemValue="#{raspberry}"/>
+                    <p:selectOneListbox id="basic"  value="#{userDetailController.user.raspberry}"
+                                        converter="#{raspberryConverter}" style="width:300px">
+                        <f:selectItems value="#{raspberryListController.getRaspberries()}" var="raspberry"
+                                       itemLabel="#{raspberry.raspberryId} - #{raspberry.hostname} - #{raspberry.ipAddress}"
+                                       itemValue="#{raspberry}"/>
                     </p:selectOneListbox>
                     <h:panelGrid columns="2">
-                        <p:commandButton value="Save" action="#{userDetailController.doSaveUser()}" oncomplete="PF('changeRaspberryDialog').hide()" actionListener="#{userScoresController.doReloadUser()}" update=":userForm"/>
+                        <p:commandButton value="Save" action="#{userDetailController.doSaveUser()}"
+                                         oncomplete="PF('changeRaspberryDialog').hide()"
+                                         actionListener="#{userScoresController.doReloadUser()}" update=":userForm"/>
                         <p:commandButton value="Abort" onclick="PF('changeRaspberryDialog').hide()"/>
                     </h:panelGrid>
                 </p:outputPanel>

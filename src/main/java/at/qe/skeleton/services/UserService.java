@@ -5,9 +5,11 @@ import at.qe.skeleton.model.Team;
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.UserRole;
 import at.qe.skeleton.repositories.ScoreRepository;
+import at.qe.skeleton.repositories.TeamRepository;
 import at.qe.skeleton.repositories.UserRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ public class UserService {
 
     @Autowired
     private ScoreRepository scoreRepository;
+
+    @Autowired
+    private TeamRepository teamRepository;
 
     /**
      * Returns a collection of all users.
@@ -84,17 +89,27 @@ public class UserService {
      */
     @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #user.username")
     public void deleteUser(User user) throws IllegalArgumentException {
-        // Last Admin can't be deleted
+        if (user.isEnabled()) {
+            throw new IllegalArgumentException("User must be disabled before deleting.");
+        }
+
+        // Last Admin must not be deleted
         if (user.getRoles().contains(UserRole.ADMIN) && userRepository.findByRole(UserRole.ADMIN).size() < 2) {
             throw new IllegalArgumentException("Only existing admin cannot be deleted.");
         }
 
-        //TODO: delete scores
         this.scoreRepository.findAllByUser(user).forEach(score -> this.scoreRepository.delete(score));
 
+        for (Team t : user.getTeam()) {
+            List<User> players = t.getTeamPlayers();
+            players.remove(user);
+            t.setTeamPlayers(players);
+            teamRepository.save(t);
+        }
         userRepository.delete(user);
     }
 
+    /*
     public User createUser(User user, String username, String password) throws IllegalArgumentException, NullPointerException {
         validateInput(username, password);
         validateUsername(username);
@@ -134,6 +149,7 @@ public class UserService {
 
         return userRepository.save(user);
     }
+    */
 
     public Collection<User> getAllAdmins() {
         return userRepository.findAllAdmins();

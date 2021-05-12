@@ -57,6 +57,7 @@ public class TopicParserController {
         }
     }
 
+    /*
     public void handleFileUpload(FileUploadEvent event) {
         if(event.getFile() != null) {
             // use with json simple
@@ -92,6 +93,7 @@ public class TopicParserController {
             }
         }
     }
+    */
 
     public void setFile(UploadedFile file) {
         this.file = file;

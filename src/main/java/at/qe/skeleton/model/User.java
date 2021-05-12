@@ -39,14 +39,14 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
 
     boolean enabled;
 
-    @ManyToOne
-    private Device device;
+    //@ManyToOne
+    //private Device device;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "teamPlayers")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "teamPlayers", cascade = CascadeType.ALL)
     private List<Team> team;
 
-    @ManyToOne
-    private GameLobby gameLobby;
+    //@ManyToOne
+    //private GameLobby gameLobby;
 
     @ManyToOne
     private Raspberry raspberry;
@@ -73,8 +73,7 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
 
     public void setPassword(String password) {
         BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
-        String encodedPW = enc.encode(password);
-        this.password = encodedPW;
+        this.password = enc.encode(password);
     }
 
     public boolean isEnabled() {
