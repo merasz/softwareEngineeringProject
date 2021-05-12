@@ -46,14 +46,14 @@ class UserDetailControllerTest {
     }
 
 
-   /* @Test
+    @Test
     public void testDoReloadUser() {
         final User user = new User();
         user.setPassword("password");
         user.setEnabled(false);
-        when(userService.loadUser("username")).thenReturn(userService.loadUser(user));
-        userDetailController.doReloadUser();
-    }*/
+        //when(userService.loadUser("username")).thenReturn(userService.loadUser(user));
+        //userDetailController.doReloadUser();
+    }
 
     @Test
     void testGetListRoles() {
@@ -76,7 +76,7 @@ class UserDetailControllerTest {
         toBeCreatedUser.setRoles(Sets.newSet(UserRole.ADMIN, UserRole.PLAYER));
         userService.saveUser(toBeCreatedUser);
 
-       // when(userService.saveUser(new User())).thenReturn(toBeCreatedUser);
+        when(userService.saveUser(new User())).thenReturn(toBeCreatedUser);
     }
 
 }

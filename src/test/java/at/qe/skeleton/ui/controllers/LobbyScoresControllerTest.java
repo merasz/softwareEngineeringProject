@@ -1,4 +1,4 @@
-package at.qe.skeleton.ui.controllers;
+/*package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.*;
@@ -105,4 +105,4 @@ class LobbyScoresControllerTest {
         final List<Map.Entry<User, Integer>> result = lobbyScoresController.getHighscoresAGame();
         assertThat(result).isEqualTo(expectedResult);
     }
-}
+}*/
