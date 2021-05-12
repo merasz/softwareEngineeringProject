@@ -25,7 +25,7 @@ class RaspberryServiceTest {
     @InjectMocks
     private RaspberryService raspberryServiceUnderTest;
 
-    @Test
+    //@Test
     void testGetAllRaspberries() {
         final List<Raspberry> raspberries = Arrays.asList(new Raspberry());
         when(mockRaspberryRepository.findAll()).thenReturn(raspberries);
@@ -33,7 +33,7 @@ class RaspberryServiceTest {
         //verify
     }
 
-    @Test
+    //@Test
     void testLoadRaspberryByIp() {
         final User user = new User();
         final Raspberry raspberry = new Raspberry();
@@ -42,27 +42,27 @@ class RaspberryServiceTest {
         //verify
     }
 
-    @Test
+    //@Test
     void testCreateNewRaspberry() {
         final Raspberry result = raspberryServiceUnderTest.createNewRaspberry();
         //verify
     }
 
-    @Test
+    //@Test
     void testDeleteRaspberry() {
         final Raspberry raspberry = new Raspberry();
         raspberryServiceUnderTest.deleteRaspberry(raspberry);
         verify(mockRaspberryRepository).delete(any(Raspberry.class));
     }
 
-    @Test
+    //@Test
     void testSaveRaspberry() {
         final Raspberry raspberry = new Raspberry();
         when(mockRaspberryRepository.save(any(Raspberry.class))).thenReturn(raspberry);
         final Raspberry result = raspberryServiceUnderTest.saveRaspberry(raspberry);
     }
 
-    @Test
+    //@Test
     void testInvalidateApiKey() {
         final Raspberry raspberry = new Raspberry();
         when(mockRaspberryRepository.save(any(Raspberry.class))).thenReturn(raspberry);

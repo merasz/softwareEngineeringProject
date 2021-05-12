@@ -18,14 +18,14 @@ public class TopicController extends Controller implements Serializable {
     @Autowired
     private TopicService topicService;
 
-    @Autowired
-    private TermsService termsService;
+    //@Autowired
+    //private TermsService termsService;
 
     public Topic topic;
 
     public GameTopicCount gameTopicCount;
 
-    private Collection<Topic> topicList;
+    //private Collection<Topic> topicList;
 
     @PostConstruct
     public void init() {
@@ -33,21 +33,16 @@ public class TopicController extends Controller implements Serializable {
     }
 
     public void doCreateNewTopic() {
-        setTopicList();
+        //setTopicList();
         topic = new Topic();
         gameTopicCount = new GameTopicCount();
     }
 
+    /*
     public void setTopicList() {
         topicList = topicService.getAllTopics();
     }
-
-    public void setTopic(Topic topic) {
-        if(gameTopicCount != null)
-            this.topic = gameTopicCount.getTopic();
-        else
-            this.topic = topic;
-    }
+    */
 
     public GameTopicCount getGameTopicCount() {
         return gameTopicCount;
@@ -57,17 +52,19 @@ public class TopicController extends Controller implements Serializable {
         this.gameTopicCount = gameTopicCount;
     }
 
+    /*
     private void doReloadTopic() {
         topic = topicService.loadTopic(topic.getTopicName());
     }
+    */
 
     public void doDeleteTopic() {
         try {
             this.topicService.deleteTopic(topic);
-            topic = null;
+            this.topic = null;
             displayInfo("Topic deleted", "Topic successfully deleted");
         } catch (IllegalArgumentException e) {
-            displayError("Error Topic not empty", e.getMessage());
+            displayError("Topic not empty", e.getMessage());
         } catch (Exception e) {
             displayError("Error", "Topic could not be deleted");
         }
@@ -76,7 +73,6 @@ public class TopicController extends Controller implements Serializable {
     public void doSaveTopic(){
         try{
             topic = topicService.saveTopic(topic);
-            displayInfo("Topic created", "Successfully created");
             topic = new Topic();
         } catch (IllegalArgumentException e) {
             displayError("Error", e.getMessage());
@@ -91,5 +87,11 @@ public class TopicController extends Controller implements Serializable {
         return topic;
     }
 
-
+    public void setTopic(Topic topic) {
+        //if(gameTopicCount != null)
+        //    this.topic = gameTopicCount.getTopic();
+        //else
+        //System.out.println("-----  set topic  -----");
+        this.topic = topic;
+    }
 }

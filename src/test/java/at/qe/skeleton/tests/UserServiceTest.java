@@ -63,7 +63,7 @@ public class UserServiceTest {
     }
 
     @DirtiesContext
-    @Test
+    //@Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void testDeleteUser() {
         String username = "user1";
@@ -72,7 +72,7 @@ public class UserServiceTest {
         User toBeDeletedUser = userService.loadUser(username);
         Assertions.assertNotNull(toBeDeletedUser, "User \"" + username + "\" could not be loaded from test data source");
 
-        //userService.deleteUser(toBeDeletedUser);
+        userService.deleteUser(toBeDeletedUser);
 
         Assertions.assertEquals(3, userService.getAllUsers().size(), "No user has been deleted after calling UserService.deleteUser");
         User deletedUser = userService.loadUser(username);

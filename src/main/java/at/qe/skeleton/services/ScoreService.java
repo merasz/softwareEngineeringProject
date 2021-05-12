@@ -28,16 +28,26 @@ public class ScoreService extends GameService {
     @Autowired
     ScoreRepository scoreRepository;
 
-
+    /**
+     * Returns the overall top players
+     * @return List of User
+     */
     public List<User> getMostValuedUsers() {
         return scoreRepository.getTopPlayersUsernames();
     }
 
+    /**
+     * Returns the Scores of the top players
+     * @return List of scores
+     */
     public List<Integer> getMostValuedUserScores() {
         return scoreRepository.getTopPlayersScores();
     }
 
-
+    /**
+     * Returns Map of the top players consisting of the players and their scores
+     * @return Map of User and their scores
+     */
     public Map<User, Integer> getUsersWithScores() {
         List<User> users = getMostValuedUsers();
         List<Integer> scores = getMostValuedUserScores();
@@ -48,6 +58,10 @@ public class ScoreService extends GameService {
         return val;
     }
 
+    /**
+     * Returns Map of Players and their Score per Game
+     * @return Map of User and their Score
+     */
     public Map<User, Integer> getUsersWithScoreAGame() {
         List<User> users = scoreRepository.getTopPlayersInAGame();
         List<Integer> scores = scoreRepository.getTopPlayersInAGameScore();
@@ -58,16 +72,11 @@ public class ScoreService extends GameService {
         return val;
     }
 
-    public Map<Team, Integer> getScoresForTeamByGame(Game game) {
-        List<Team> teams = scoreRepository.getTeamsForGame(game.getGameId());
-        List<Integer> scores = scoreRepository.getForTeamsByGameScore(game.getGameId(), teams);
-        Map<Team, Integer> val = new LinkedHashMap<>();
-        for (int i = 0; i < teams.size(); i++) {
-            val.put(teams.get(i), scores.get(i));
-        }
-        return val;
-    }
-
+    /**
+     * Returns Scores per team for a game
+     * @param game Game to get the scores for
+     * @return
+     */
     public List<Score> getScoresForTeams(Game game) {
         return scoreRepository.getScoresForTeamsByGame(game);
     }

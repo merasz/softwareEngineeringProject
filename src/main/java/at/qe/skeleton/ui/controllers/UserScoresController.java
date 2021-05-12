@@ -1,9 +1,6 @@
 package at.qe.skeleton.ui.controllers;
 
-import at.qe.skeleton.model.GameTopicCount;
-import at.qe.skeleton.model.Score;
-import at.qe.skeleton.model.Team;
-import at.qe.skeleton.model.User;
+import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.*;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
 import org.primefaces.model.chart.*;
@@ -40,35 +37,6 @@ public class UserScoresController extends Controller implements Serializable {
     @Autowired
     private SessionInfoBean sessionInfoBean;
 
-
-    private DonutChartModel model;
-
-    public UserScoresController(){
-        model = new DonutChartModel();
-        updateChart();
-    }
-
-    public void updateChart() {
-
-        Map<String, Number> circle1 = new LinkedHashMap<String, Number>();
-        circle1.put("Game 1", 24);
-        circle1.put("Game 2", 12);
-        circle1.put("Game 3", 6);
-        circle1.put("Game 4", 4);
-
-        model.addCircle(circle1);
-        model.setTitle("Current Players in each Game");
-        model.setLegendPosition("w");
-    }
-
-    public DonutChartModel getModel() {
-        return model;
-    }
-
-    public void setModel(DonutChartModel model) {
-        this.model = model;
-    }
-
     /**
      * Attribute to cache the currently displayed user
      */
@@ -81,10 +49,17 @@ public class UserScoresController extends Controller implements Serializable {
         }
     }
 
+    /**
+     * sets the currently logged in user to the classes attribute
+     */
     private void setLoggedInUser() {
         user = sessionInfoBean.getCurrentUser();
     }
-    
+
+    /**
+     * Sets the user to the class attribute
+     * @param user User to set
+     */
     public void setUser(User user) {
         this.user = user;
         doReloadUser();
@@ -92,7 +67,6 @@ public class UserScoresController extends Controller implements Serializable {
 
     /**
      * Returns the currently displayed user.
-     *
      * @return User
      */
     public User getUser() {
@@ -107,24 +81,52 @@ public class UserScoresController extends Controller implements Serializable {
         user = userService.loadUser(user.getUsername());
     }
 
+    /**
+     * Action to get the best scores for the current user
+     * @return List of Scores
+     */
     public List<Score> getBestScoresForUser() {
         return userStatsService.getBestScoresFromUser(this.user);
     }
 
+    /**
+     * Action to get the latest scores of the current user
+     * @return List of Scores
+     */
     public List<Score> getLatestScoresForUser() {
         return userStatsService.getLatestScoresFromUser(this.user);
     }
 
+    /**
+     * Action to get the count of played games for the current user
+     * @return Number of games
+     */
     public int getGameCountForUser() { return userStatsService.getGameCountByUser(this.user); }
 
+    /**
+     * Action to get the count of won games for the current user
+     * @return Number of won games
+     */
     public int getWonGamesByUser() { return userStatsService.getWonCountByUser(this.user); }
 
+    /**
+     * Action to get the count of lost games for the current user
+     * @return Number of lost games
+     */
     public int getLostGamesByUser() { return userStatsService.getLostCountByUser(this.user); }
 
+    /**
+     * Action to get the count of won games per topic for the current user
+     * @return List of Topics with Counts
+     */
     public List<GameTopicCount> getWonGamesByTopics() {
         return userStatsService.getWonGamesByTopics(this.user);
     }
 
+    /**
+     * Action to get all teams a players has played ith
+     * @return List of teams
+     */
     public List<Team> getTeamsByPlayer() {
         Set<Team> tmp = new HashSet<>();
         tmp.addAll(teamService.getTeamsByPlayer(this.user));
@@ -133,6 +135,15 @@ public class UserScoresController extends Controller implements Serializable {
             myTeams.add(t);
         }
         return myTeams;
+    }
+
+    /**
+     * Action to get the top team for a game
+     * @param game Game
+     * @return Team with highest Score
+     */
+    public Team getTopTeamFromGame(Game game) {
+        return userStatsService.getTopTeamForGame(game);
     }
 
 }

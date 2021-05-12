@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.util.List;
 
 import org.springframework.data.domain.Persistable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * Entity representing users.
@@ -38,14 +39,14 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
 
     boolean enabled;
 
-    @ManyToOne
-    private Device device;
+    //@ManyToOne
+    //private Device device;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "teamPlayers")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "teamPlayers", cascade = CascadeType.ALL)
     private List<Team> team;
 
-    @ManyToOne
-    private GameLobby gameLobby;
+    //@ManyToOne
+    //private GameLobby gameLobby;
 
     @ManyToOne
     private Raspberry raspberry;
@@ -71,7 +72,8 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
+        this.password = enc.encode(password);
     }
 
     public boolean isEnabled() {

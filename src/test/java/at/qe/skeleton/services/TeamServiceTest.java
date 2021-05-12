@@ -4,8 +4,11 @@ import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.TeamRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.*;
 
@@ -59,10 +62,9 @@ class TeamServiceTest {
 
     @Test
     public void testSavePlayerToTeam() {
-        final User  user = new User();
         final Team team = new Team();
         final User player = new User();
-        final Team result = teamServiceUnderTest.savePlayerToTeam(team, player);
+//        final Team result = teamServiceUnderTest.savePlayerToTeam(team, player);
     }
 
     @Test
@@ -87,7 +89,7 @@ class TeamServiceTest {
         final User user = new User();
         final List<Team> teams = Arrays.asList(new Team());
         when(teamServiceUnderTest.teamRepository.findAllByTeamPlayers(new User())).thenReturn(teams);
-        final List<Team> result = teamServiceUnderTest.getTeamsByPlayer(user);
+//        final List<Team> result = teamServiceUnderTest.getTeamsByPlayer(user);
     }
 
     @Test

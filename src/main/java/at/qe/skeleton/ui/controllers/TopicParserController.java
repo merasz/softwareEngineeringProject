@@ -4,16 +4,7 @@ import at.qe.skeleton.model.Term;
 import at.qe.skeleton.model.Topic;
 import at.qe.skeleton.services.TermsService;
 import at.qe.skeleton.services.TopicService;
-import at.qe.skeleton.utils.*;
-import com.fasterxml.jackson.core.JsonParser;
-//import javax.json.stream;
-//import com.sun.faces.util.Json;
-//import org.apache.tomcat.util.json.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import org.json.simple.JSONObject;
-//import org.json.simple.parser.ParseException;
 import org.primefaces.event.*;
 import org.primefaces.model.file.*;
 import org.primefaces.shaded.json.*;
@@ -22,21 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import org.json.simple.parser.JSONParser;
-//import org.apache.tomcat.util.json.JSONParser;
 import org.apache.tomcat.util.json.ParseException;
-//import org.primefaces.shaded.json.JSONArray;
 import org.springframework.util.FileCopyUtils;
 
 import javax.faces.application.*;
 import javax.faces.context.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 @Controller
 public class TopicParserController {
@@ -51,19 +34,12 @@ public class TopicParserController {
 
     private UploadedFile file;
 
-//    public void handleFileUpload(FileUploadEvent event) {
-//        file = event.getFile();
-//    }
-
     public void upload() throws IOException, ParseException {
       if (file != null) {
           parseAndSave();
             FacesMessage message = new FacesMessage("Successful", file.getFileName() + " is uploaded.");
             FacesContext.getCurrentInstance().addMessage(null, message);
-            //parseAndSave();
       }
-
-        System.out.println("Schauen obs funktioniert --> es funktioniert!!!");
     }
 
     public void parseAndSave() {
@@ -73,13 +49,15 @@ public class TopicParserController {
             JSONObject jsonObject = (JSONObject)jsonParser.parse(new InputStreamReader(inputStream, "UTF-8"));
             String topicName = jsonObject.get("topic").toString();
 
-            Topic topic = topicService.saveTopic(new Topic(topicName));
+            Topic topic = new Topic(topicName);
+            if (!topicService.topicExists(topic)) topicService.saveTopic(topic);
             termsService.importTerms(jsonObject, topic);
         }catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /*
     public void handleFileUpload(FileUploadEvent event) {
         if(event.getFile() != null) {
             // use with json simple
@@ -115,13 +93,9 @@ public class TopicParserController {
             }
         }
     }
+    */
 
     public void setFile(UploadedFile file) {
-        for (int i = 0; i < 50; i++) {
-            System.out.println("in set file");
-        }
-        if(file == null)
-            System.out.println("file is null");
         this.file = file;
     }
 
@@ -129,38 +103,6 @@ public class TopicParserController {
         return file;
     }
 }
-
-/*
-Json examples
-
-{
-  "term": [
-    {
-      "term_name": "Chicken",
-      "topic_name": "Animals"
-    }
-  ]
-}
-----------------
-{
-  "Animals": "chicken",
-  "Plants": "cactus",
-  "Activities": "lawn-mowing"
-}
-----------------
-{
-  "topic":{
-    "Animals":[
-      {
-        "termName": "Chicken"
-      },
-      {
-        "termName": "Whale"
-      }
-    ]
-  }
-}
- */
 
 
 

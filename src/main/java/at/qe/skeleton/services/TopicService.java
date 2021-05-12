@@ -25,9 +25,6 @@ public class TopicService implements Serializable {
     private TermsRepository termsRepository;
 
     @Autowired
-    private AuditLogRepository auditLogRepository;
-
-    @Autowired
     private MessageBean messageBean;
 
 
@@ -46,33 +43,45 @@ public class TopicService implements Serializable {
         return topicRepository.findFirstByTopicName(topicName);
     }
 
-//    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('GAME_MANAGER')")
+    /**
+     * returns and saves a given topic into the repo
+     * @param topic
+     * @return topic object
+     */
     public Topic saveTopic(Topic topic) {
-//        AuditLog auditLog = new AuditLog();
-//        auditLog.setTime(new Date());
-        if (!topicRepository.findByTopicNameContaining(topic.getTopicName()).isEmpty()) {
-            messageBean.alertInformation("Topic already exists.", "");
+        if (topicExists(topic)) {
+            messageBean.alertError("Topic already exists", "Topics need to have unique names.");
             return topicRepository.findFirstByTopicName(topic.getTopicName());
         }
         else if (topic.isNew()) {
             topic.setCreateDate(new Date());
-//            auditLog.setMessage("Topic" + topic.getTopicName() + "was created.");
         } else {
             topic.setUpdateDate(new Date());
             topic.setUpdateTopic(getAuthenticatedTopic());
             topic.setCreateDate(new Date());
-//            auditLog.setMessage("Topic" + topic.getTopicName() + "was updated.");
         }
-//        auditLogRepository.save(auditLog);
         if(topic.getUpdateDate() == null)
-            messageBean.alertInformation("Info", "Topic was created!");
+            messageBean.alertInformation("Success", "Topic was created!");
         else
-            messageBean.alertInformation("Info", "Topic was updated!");
+            messageBean.alertInformation("Success", "Topic was updated!");
 
         return topicRepository.save(topic);
     }
 
+    /**
+     * returns true if topic is already in the reop
+     * @param topic
+     * @return boolean
+     */
+    public boolean topicExists(Topic topic) {
+        return !topicRepository.findByTopicNameContaining(topic.getTopicName()).isEmpty();
+    }
 
+    /**
+     * deletes a given topic if it exists
+     * @param topic
+     * @throws IllegalArgumentException
+     */
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('GAME_MANAGER')")
     public void deleteTopic(Topic topic) throws IllegalArgumentException {
         if (!termsRepository.findAllByTopic(topic).isEmpty()) {
@@ -86,23 +95,20 @@ public class TopicService implements Serializable {
         return this.loadTopic(topic.getTopicName());
     }
 
-    private void validateTopic(String name) throws IllegalArgumentException {
-        Topic t = topicRepository.findFirstByTopicName(name);
-        if (t != null) {
-            throw new IllegalArgumentException("Topic already exists.");
-        }
-    }
-
     private Topic getAuthenticatedTopic() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return (Topic) topicRepository.findFirstByTopicName(auth.getName());
+        return topicRepository.findFirstByTopicName(auth.getName());
     }
 
+    /**
+     * returns for each topic its containing terms
+     * @return list of gameTopicCounts
+     */
     public List<GameTopicCount> getTopicTermsAmount() {
         List<GameTopicCount> in = termsRepository.getAmountOfTerms();
 
-        Set<Topic> all = new HashSet<Topic>(topicRepository.findAll());
-        Set<Topic> terms = new HashSet<Topic>(termsRepository.getAmountOfTermsJustTerms());
+        Set<Topic> all = new HashSet<>(topicRepository.findAll());
+        Set<Topic> terms = new HashSet<>(termsRepository.getAmountOfTermsJustTerms());
         all.removeAll(terms);
 
         List<GameTopicCount> notIncluded = new ArrayList<>();
@@ -113,6 +119,4 @@ public class TopicService implements Serializable {
         in.addAll(notIncluded);
         return in;
     }
-
-
 }

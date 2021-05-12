@@ -25,7 +25,7 @@ public class MessageBean implements Serializable {
     public void alertInformation(String summary, String info) {
         logger.info("Message Success: " + info);
         FacesContext context = FacesContext.getCurrentInstance();
-        context.addMessage(summary , new FacesMessage(FacesMessage.SEVERITY_INFO, summary + ": " + info, null));
+        context.addMessage(summary , new FacesMessage(FacesMessage.SEVERITY_INFO, summary, info));
     }
 
     /**
@@ -37,7 +37,7 @@ public class MessageBean implements Serializable {
     public void alertError(String summary, String info) {
         logger.info("Message Error: " + info);
         FacesContext context = FacesContext.getCurrentInstance();
-        context.addMessage(summary, new FacesMessage(FacesMessage.SEVERITY_ERROR, summary + ": " + info, null));
+        context.addMessage(summary, new FacesMessage(FacesMessage.SEVERITY_ERROR, summary, info));
     }
 
 }

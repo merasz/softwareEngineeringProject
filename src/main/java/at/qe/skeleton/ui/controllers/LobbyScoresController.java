@@ -27,56 +27,22 @@ import java.util.stream.Collectors;
 public class LobbyScoresController extends Controller implements Serializable {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
-    private UserStatsService userStatsService;
-
-    @Autowired
-    private TeamService teamService;
-
-    @Autowired
     private GameService gameService;
-
-    @Autowired
-    private SessionInfoBean sessionInfoBean;
 
     @Autowired
     private ScoreService scoreService;
 
     private Collection<Topic> mostPopularTopics;
-    private Collection<User> mostValuedUsers;
-    private Collection<Integer> mostValuedUsersScores;
     private Map<User, Integer> mostValuedUsersWithScore;
-    private Map<User, Integer> mostValuedUsersWithScoreAGame;
 
     @PostConstruct
     public void init(){
         mostPopularTopics = gameService.getMostPopularTopics();
-        mostValuedUsers = scoreService.getMostValuedUsers();
-        mostValuedUsersScores = scoreService.getMostValuedUserScores();
         mostValuedUsersWithScore = scoreService.getUsersWithScores();
-        mostValuedUsersWithScoreAGame = scoreService.getUsersWithScoreAGame();
     }
 
     public Collection<Topic> getMostPopularTopics() {
         return mostPopularTopics.stream().limit(3).collect(Collectors.toList());
-    }
-
-    public Collection<User> getMostValuedUsers() {
-        return mostValuedUsers.stream().limit(10).collect(Collectors.toList());
-    }
-
-    public Collection<Integer> getMostValuedUsersScores() {
-        return mostValuedUsersScores.stream().limit(10).collect(Collectors.toList());
-    }
-
-    public Map<User, Integer> getMostValuedUsersWithScore() {
-        return mostValuedUsersWithScore;
-    }
-
-    public Map<User, Integer> getMostValuedUsersWithScoreAGame() {
-        return mostValuedUsersWithScoreAGame;
     }
 
     public List<Map.Entry<User, Integer>> getHighscores() {

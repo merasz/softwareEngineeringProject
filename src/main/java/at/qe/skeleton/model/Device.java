@@ -14,19 +14,19 @@ public class Device implements Serializable {
 
     private String deviceIdIp;
 
-    @OneToMany(mappedBy = "device")
-    private List<User> userDevice;
+    //@OneToMany(mappedBy = "device")
+    //private List<User> userDevice;
 
-    @ManyToOne
-    private Game game;
+    //@ManyToOne
+    //private Game game;
 
     public Device() {
     }
 
     public Device(String deviceIdIp, List<User> userDevice, Game game) {
         this.deviceIdIp = deviceIdIp;
-        this.userDevice = userDevice;
-        this.game = game;
+        //this.userDevice = userDevice;
+        //this.game = game;
     }
 
     public static long getSerialVersionUID() {
@@ -49,19 +49,4 @@ public class Device implements Serializable {
         this.deviceIdIp = deviceIdIp;
     }
 
-    public List<User> getUserDevice() {
-        return userDevice;
-    }
-
-    public void setUserDevice(List<User> userDevice) {
-        this.userDevice = userDevice;
-    }
-
-    public Game getGame() {
-        return game;
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
 }

@@ -3,6 +3,7 @@ package at.qe.skeleton.ui.controllers.gameSockets;
 import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.Score;
 import at.qe.skeleton.model.Team;
+import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.demo.*;
 import at.qe.skeleton.repositories.GameRepository;
 import at.qe.skeleton.repositories.ScoreRepository;
@@ -15,13 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import javax.annotation.PostConstruct;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * This controller holds and manages all user's status-information (i.e. their
@@ -48,55 +51,67 @@ public class ScoreManagerController {
 
     @CDIAutowired
     private WebSocketManager websocketManager;
-    private Map<String, TeamScoreInfo> scores = new ConcurrentHashMap<>();
-    private List<LogEntry> actionLogs = new CopyOnWriteArrayList<>();
+    private Map<Integer,Map<String, TeamScoreInfo>> scores = new ConcurrentHashMap<>();
 
-    private Game game;
-
-    @PostConstruct
-    public void init(){
-        game = gameRepository.findAll().get(1);
-
-        System.out.println(game.getGameId());
-        setupScores();
+    /**
+     * Action which sets up the List of scores for the game to be shown in the frontend
+     * @param game Game
+     */
+    public void setupScores(Game game) {
+        Map<String, TeamScoreInfo> tmp = new ConcurrentHashMap<>();
+        System.out.println(game);
+        this.scoreRepository.findGameScoresByGame(game)
+              .forEach(score -> tmp.put(score.getTeam().getTeamName(), new TeamScoreInfo(score.getTeam(),score.getTotalRoundScore())));
+        scores.put(game.getGameId(), tmp);
     }
 
-    public void setupScores() {
-        this.scoreRepository.findGameScoresByGame(this.game)
-              .forEach(score -> this.scores.put(score.getTeam().getTeamName(), new TeamScoreInfo(score.getTeam(),score.getTotalRoundScore())));
+    /**
+     * Action to get the List of TeamScores for a Game
+     * @param game Game
+     * @return Collection of TeamScores
+     */
+    public Collection<TeamScoreInfo> getScores(Game game) {
+        if(this.scores.get(game.getGameId()) == null) {return null;}
+        return Collections.unmodifiableCollection(this.scores.get(game.getGameId()).values());
     }
 
-    public Collection<TeamScoreInfo> getScores() {
-        return Collections.unmodifiableCollection(this.scores.values());
-    }
-
-    public Game getGame() {
-        return game;
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
-
-    public void addScore1(int roundScore) {
-        Team team = teamRepository.findByTeamId(Long.valueOf(3));
+    /**
+     * Action to add scores to a team in a game and check if winning score is reached
+     * @param game Game playing
+     * @param user User who played
+     * @param roundScore Score to add
+     * @return true if game is won, else false
+     */
+    public boolean addScoreToTeam(Game game, User user, int roundScore) {
+        Team team = teamRepository.findByTeamPlayersAndGame(user,game);
         Score tmp = new Score();
-        tmp.setGame(this.game);
+        tmp.setGame(game);
         tmp.setTotalRoundScore(roundScore);
         tmp.setTeam(team);
+        tmp.setUser(user);
         scoreRepository.save(tmp);
-        setupScores();
-        this.websocketManager.getScoreChannel().send("scoreUpdate");
+        setupScores(game);
+
+        AtomicBoolean gameWon = new AtomicBoolean(false);
+        scores.get(game.getGameId()).forEach((key,value) -> {
+            if(value.getScore() >= game.getScoreToWin()){
+                System.out.println("IN LOOP " + key + " " + value.getScore());
+                gameWon.set(true);
+            }
+        });
+        return gameWon.get();
     }
 
-    public void addScore2(int roundScore) {
-        Team team = teamRepository.findByTeamId(Long.valueOf(4));
-        Score tmp = new Score();
-        tmp.setGame(this.game);
-        tmp.setTotalRoundScore(roundScore);
-        tmp.setTeam(team);
-        scoreRepository.save(tmp);
-        setupScores();
-        this.websocketManager.getScoreChannel().send("scoreUpdate");
+    /**
+     * Action to set a game as finished
+     * @param game
+     */
+    public void setGameEnd(Game game) {
+        Date end = Timestamp.valueOf(LocalDateTime.now());
+        game.setEndTime(end);
+        game.setActive(false);
+
+        gameRepository.save(game);
     }
+
 }

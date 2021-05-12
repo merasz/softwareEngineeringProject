@@ -13,20 +13,23 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.IntStream;
 
+// handles the GUI for game creation (availableGames.xhtml)
 @Component
 @Scope("view")
 public class GameCreationController extends Controller implements Serializable {
     @Autowired
     private GameService gameService;
 
+    /*
     @Autowired
     private TopicService topicService;
 
     @Autowired
-    private TermsService termsService;
+    private UserService userService;
+    */
 
     @Autowired
-    private UserService userService;
+    private TermsService termsService;
 
     @Autowired
     private TeamService teamService;
@@ -34,19 +37,21 @@ public class GameCreationController extends Controller implements Serializable {
     @Autowired
     private SessionInfoBean sessionInfoBean;
 
+    //minimum number of points for winning the game allowed to set at game creation
     private int MIN_WIN_SCORE = 12;
+
     private Game game;
     private Topic currentTopic;
 
     private User user;
-    private List<User> userList;
-    private List<User> tmp;
+    //private List<User> userList;
+    //private List<User> tmp;
     private int numberTeams;
 
     @PostConstruct
     public void init() {
         doCreateNewGame();
-        setUserList();
+        //setUserList();
     }
 
     public void doCreateNewGame() {
@@ -74,9 +79,11 @@ public class GameCreationController extends Controller implements Serializable {
         }
     }
 
+    /*
     public void setUserList() {
         userList = new ArrayList<>(userService.getAllUsers());
     }
+    */
 
     //region getter & setter
     public int getNumberTeams() {
@@ -103,6 +110,7 @@ public class GameCreationController extends Controller implements Serializable {
         this.currentTopic = topic;
     }
 
+    /*
     public List<User> getUserList() {
         return userList;
     }
@@ -114,5 +122,6 @@ public class GameCreationController extends Controller implements Serializable {
     public void setTmp(List<User> tmp) {
         this.tmp = tmp;
     }
+    */
     //endregion
 }

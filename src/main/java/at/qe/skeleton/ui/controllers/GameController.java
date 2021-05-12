@@ -3,8 +3,6 @@ package at.qe.skeleton.ui.controllers;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.*;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
-import org.primefaces.model.chart.*;
-import org.primefaces.model.chart.LineChartModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -21,6 +19,7 @@ public class GameController extends Controller implements Serializable {
     @Autowired
     private TopicService topicService;
 
+    /*
     @Autowired
     private GameStatsService gameStatsService;
 
@@ -29,6 +28,7 @@ public class GameController extends Controller implements Serializable {
 
     @Autowired
     private GameListController gameListController;
+    */
 
     @Autowired
     UserService userService;
@@ -40,7 +40,7 @@ public class GameController extends Controller implements Serializable {
     private Game game;
     private User user;
 
-
+    // save the currently set game
     public void doSaveGame() {
         try {
             game = gameService.saveGame(game);
@@ -49,12 +49,14 @@ public class GameController extends Controller implements Serializable {
         }
     }
 
+    // get all games from the database
     public List<Game> getGames() {
         games = gameService.getGameRepository().findAll();
         return games;
     }
 
     //region getter & setter
+    /*
     public GameStatsService getGameStatsService() {
         return gameStatsService;
     }
@@ -62,6 +64,7 @@ public class GameController extends Controller implements Serializable {
     public TermsService getTermsService() {
         return termsService;
     }
+    */
 
     public TopicService getTopicService() {
         return topicService;
@@ -71,6 +74,7 @@ public class GameController extends Controller implements Serializable {
         return user;
     }
 
+    // set user-attribute to the current user
     public void setUser() {
         this.user = sessionInfoBean.getCurrentUser();
     }
@@ -83,6 +87,7 @@ public class GameController extends Controller implements Serializable {
         this.game = game;
     }
 
+    /*
     public Topic getGameTopic() {
         return this.topicService.getTopicByName(game.getTopic());
     }
@@ -95,6 +100,7 @@ public class GameController extends Controller implements Serializable {
     public void setGameListController(GameListController gameListController) {
         this.gameListController = gameListController;
     }
+    */
 
     public UserService getUserService() {
         return userService;

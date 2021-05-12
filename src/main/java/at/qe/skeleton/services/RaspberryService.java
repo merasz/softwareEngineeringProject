@@ -19,8 +19,7 @@ public class RaspberryService {
 
     /**
      * Returns a collection of all raspberries.
-     *
-     * @return
+     * @return Collection of Raspberries
      */
 
     public Collection<Raspberry> getAllRaspberries() {
@@ -29,31 +28,43 @@ public class RaspberryService {
 
     /**
      * Returns the raspberry with the given ip address
-     *
-     * @param ipAddress
-     * @return
+     * @param ipAddress ipAdress for the Raspberry
+     * @return Raspberry with the given ipAddress
      */
     public Raspberry loadRaspberryByIp(String ipAddress) {
         return raspberryRepository.findByIpAddress(ipAddress);
     }
 
     /**
-     *  creates a new Raspberry and returns it
-     *
-     * @return
+     * creates a new Raspberry and returns it
+     * @return Raspberry Object
      */
     public Raspberry createNewRaspberry() {
         return new Raspberry();
     }
 
+    /**
+     * deletes a raspberry from the database
+     * @param raspberry Raspberry to delete
+     */
     public void deleteRaspberry(Raspberry raspberry) {
         raspberryRepository.delete(raspberry);
     }
 
+    /**
+     * saves a Raspberry Object in the database
+     * @param raspberry
+     * @return
+     */
     public Raspberry saveRaspberry(Raspberry raspberry) {
         return raspberryRepository.save(raspberry);
     }
 
+    /**
+     * Method to invalidate an API Key for the given raspberry
+     * @param raspberry Raspberry
+     * @return Raspberry Object with deleted API Key
+     */
     public Raspberry invalidateApiKey(Raspberry raspberry) {
         raspberry.setApiKey("");
         raspberry.setInUse(false);

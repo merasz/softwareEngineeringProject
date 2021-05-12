@@ -11,6 +11,16 @@
         <p:growl id="growl" showDetail="false" life="6000" >
             <p:autoUpdate/>
         </p:growl>
+        <p:commandButton style="width: 10%; margin-top: 9px;margin-right: 80px; float: right;" id="help"
+                         oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
+        <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
+            <h:panelGrid columns="1">
+                <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Statistics</h2>
+                <h:outputText value="Here you can see the statistics from the user."/>
+                <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Change Raspberry</h2>
+                <h:outputText value="Here you can change the Raspberry."/>
+            </h:panelGrid>
+        </p:dialog>
         <h:form id="userForm">
             <h:panelGroup layout="block" style="margin:0px auto; padding-top: 100px; display: flex; justify-content: center; margin-left: 250px">
                 <h:panelGroup layout="block" style="width: 80%; height: auto; display: flex; padding: 40px;box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;">
@@ -118,13 +128,19 @@
         </h:form>
 
         <h:form id="changeRaspberryForm" >
-            <p:dialog header="Change Raspberry" id="changeRaspberryDialog" widgetVar="changeRaspberryDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" style="display: none">
+            <p:dialog header="Change Raspberry" id="changeRaspberryDialog" widgetVar="changeRaspberryDialog" modal="true"
+                      showEffect="fade" hideEffect="fade" resizable="false" style="display: none">
                 <p:outputPanel id="raspberryData" >
-                    <p:selectOneListbox id="basic"  value="#{userDetailController.user.raspberry}" converter="#{raspberryConverter}" style="width:300px">
-                        <f:selectItems value="#{raspberryListController.getRaspberries()}" var="raspberry" itemLabel="#{raspberry.raspberryId} - #{raspberry.ipAddress}" itemValue="#{raspberry}"/>
+                    <p:selectOneListbox id="basic"  value="#{userDetailController.user.raspberry}"
+                                        converter="#{raspberryConverter}" style="width:300px">
+                        <f:selectItems value="#{raspberryListController.getRaspberries()}" var="raspberry"
+                                       itemLabel="#{raspberry.raspberryId} - #{raspberry.hostname} - #{raspberry.ipAddress}"
+                                       itemValue="#{raspberry}"/>
                     </p:selectOneListbox>
                     <h:panelGrid columns="2">
-                        <p:commandButton value="Save" action="#{userDetailController.doSaveUser()}" oncomplete="PF('changeRaspberryDialog').hide()" actionListener="#{userScoresController.doReloadUser()}" update=":userForm"/>
+                        <p:commandButton value="Save" action="#{userDetailController.doSaveUser()}"
+                                         oncomplete="PF('changeRaspberryDialog').hide()"
+                                         actionListener="#{userScoresController.doReloadUser()}" update=":userForm"/>
                         <p:commandButton value="Abort" onclick="PF('changeRaspberryDialog').hide()"/>
                     </h:panelGrid>
                 </p:outputPanel>

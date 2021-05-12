@@ -1,89 +1,59 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3c.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
-    <body>
-        <ui:composition>
-            <h:form>
-                <div class="header">
-                    <div class="left_area">
-                     <h1>Gruppe6<span style="color: #0d9dbb">Team1</span></h1>
-                    </div>
+      xmlns:ng="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:demo="http://java.sun.com/jsf/composite/demo"
+      template="/WEB-INF/templates/main.xhtml">
 
-                    <div class="right_area">
-                        <h:form id="menubar">
-                            <p:menubar>
-                                <p:menuitem value="PAUSE GAME" rendered="#{!gamePlayController.isPaused}" action="#{gamePlayController.pauseGame}"/>
-                                <p:menuitem value="RESUME GAME" rendered="#{gamePlayController.isPaused}" action="#{gamePlayController.pauseGame}"/>
-                                <p:menuitem value="CANCEL GAME" rendered="#{sessionInfoBean.hasRole('GAME_MANAGER')}" url="/logout"/>
-                            </p:menubar>
-                        </h:form>
-                    </div>
-                </div>
+<h:head>
+    <title>Game Finished</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" href="/resources/css/style.css"/>
+</h:head>
+<h:body>
+    <h:panelGroup layout="block" style="display: flex; flex-direction: column;align-items: center; justify-content: space-around; min-height: 100vh">
+        <h:panelGroup>
+            <h:outputText value="Game Finished" style="font-size: 54px; font-weight: bold; color: #ffffff; display: flex; flex-direction: column; align-items: center"/>
+        </h:panelGroup>
 
-                <div class="main">
-                    <p>REMAINING TIME</p>
-                    <br/>
+        <h:panelGroup layout="block" style="font-size: 54px; font-weight: bold; color: #ffffff; display: flex; flex-direction: column; align-items: center">
+            <h:outputText style="text-shadow: 2px 7px 5px rgba(0,0,0,0.3),
+    0px -4px 10px rgba(255,255,255,0.3);" value="#{sessionInfoBean.currentGame.gameName}" />
+        </h:panelGroup>
 
-                    <br/>
-                    <p>TASK</p>
-                    <br/>
-                    <p><span style="color: #22242a; font-size: 50px">#{gamePlayController.task.requestType}</span></p>
-                </div>
+        <h:panelGroup layout="block" style="font-size: 54px; font-weight: bold; color: #ffffff; display: flex; flex-direction: column; align-items: center">
+            <h:outputText style="" value="Winner: " />
+            <h:outputText style="" value=" #{userScoresController.getTopTeamFromGame(sessionInfoBean.currentGame).teamName}" />
+        </h:panelGroup>
 
-                <div class="scoreboard">
-                    <div style="text-align: center; color: #4682B4">
-                        <h4>CORRECT GUESSES FOR WIN: <span style="color: #0d9dbb"><b>#{gamePlayController.countGuessesForWin}</b></span></h4>
-                    </div>
-                    <h:form id="scoretable">
-                        <p:dataTable  id="userscore" var="userscore" value="#{gamePlayController.playerScore}" style="color: #0d9dbb; width: 70%; margin: auto;">
-                            <p:column headerText="TEAMS">
-                                <h:outputText value="#{userscore.user}"/>
-                            </p:column>
-                            <p:column headerText="SCORE">
-                                <h:outputText value="#{userscore.totalRoundScore}" />
-                            </p:column>
-                            <p:column headerText="RIGHT GUESSES">
-                                <h:outputText value="#{userscore.guessedTerms}" />
-                            </p:column>
-                            <p:column headerText="WRONG GUESSES">
-                                <h:outputText value="#{userscore.notGuessedTerms}" />
-                            </p:column>
-                        </p:dataTable>
-                        <p:dataTable  id="teamscore" var="teamscore" value="#{gamePlayController.scoreboard}" style="color: #4682B4; width: 70%; margin: auto;">
-                            <p:column>
-                                <h:outputText value="#{teamscore.team}"/>
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{teamscore.totalRoundScore}" />
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{teamscore.guessedTerms}" />
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{teamscore.notGuessedTerms}" />
-                            </p:column>
-                        </p:dataTable>
-                    </h:form>
-                </div>
+        <h:form id="scoreBoard" style="width: 90%">
+            <p:growl id="scoreData" showDetail="false" life="6000">
+                <p:autoUpdate/>
+            </p:growl>
+            <h:panelGroup layout="block" style="display: flex; flex-direction: column;align-items: center">
+                <p:dataTable widgetVar="scoreTable" id="scoreTable" var="score"
+                             value="#{scoreManagerController.getScores(sessionInfoBean.currentGame)}" >
+                    <f:facet name="header">Scores</f:facet>
+                    <p:column headerText="Team">
+                        <h:outputText value="#{score.team.teamName}"/>
+                    </p:column>
+                    <p:column headerText="Score">
+                        <h:outputText value="#{score.score}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:panelGroup>
+        </h:form>
+        <h:button id="backButton" widgetVar="backBtn" value="Back to Lobby" outcome="/secured/welcome.xhtml" styleClass="gameButton" style="color: #000" />
 
-                <p:dialog header="END GAME" id="stopGameDialog" widgetVar="stopGameDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-                    <p:outputPanel id="stopGamePanel" >
-                        <p>Are you sure? The game will be ended and connot be resumed.<br/>
-                            To pause and resume a game press the <b>PAUSE GAME</b> button instead.</p>
-                        <p:separator />
-                        <h:panelGrid columns ="2">
-                            <p:commandButton value="END GAME" action="#{gamePlayController.endGame}" oncomplete="PF('stopGameDialog').hide()" update=":userForm:usersTable">
-                            </p:commandButton>
-                            <p:commandButton value="CANCEL" oncomplete="PF('stopGameDialog').hide()">
-                            </p:commandButton>
-                        </h:panelGrid>
-                    </p:outputPanel>
-                </p:dialog>
-            </h:form>
-        </ui:composition>
-    </body>
+
+    </h:panelGroup>
+</h:body>
+
+
 </html>
-

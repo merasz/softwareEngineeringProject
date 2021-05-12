@@ -4,6 +4,7 @@ import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.Task;
 import at.qe.skeleton.model.Team;
 import at.qe.skeleton.model.User;
+import at.qe.skeleton.model.demo.TeamPlayer;
 import at.qe.skeleton.repositories.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Component;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.NoSuchElementException;
 
 @Component
 @Scope("view")
@@ -28,44 +28,8 @@ public class GamePlayService extends GameService {
     private String timerString;
     private boolean guessAccepted = false;
 
-    /*
-    public Game joinGame(User user) throws NoSuchElementException {
-        this.user = user;
-        this.game = getGameRepository().findActiveGameByRaspberry(user.getRaspberry().getRaspberryId());
-
-        if (game == null ) {
-            throw new NoSuchElementException("No active game found. Ask a game manager to create a new game.");
-        }
-
-        this.team = getTeamService().createTeam(game);
-        this.game.getTeamList().add(team);
-        return game;
-    }
-
-    public void selectPlayer(User user) {
-        team.getTeamPlayers().add(user);
-        this.team = getTeamService().saveTeam(team);
-        this.game = getGameRepository().save(game);
-        getGameJoinController().onSelect(user);
-    }
-
-    public void startGame(String teamName) throws IllegalArgumentException {
-        if (teamName.isEmpty()) {
-            throw new IllegalArgumentException("Give your team a name first.");
-        } else if (!teamReady()) {
-            throw new IllegalArgumentException("You haven't assigned enough team mates yet.");
-        }
-        this.team.setTeamName(teamName);
-        getTeamService().saveTeam(team);
-        getGameRepository().save(game);
-    }
-
-    public boolean teamReady() {
-        return game.getTeamSize() == team.getTeamPlayers().size();
-    }
-    */
-
     //region guessing round with timer loop
+    /*
     //TODO: where task?
     public void runGameRound(Game game) {
         //get task
@@ -85,6 +49,7 @@ public class GamePlayService extends GameService {
         }
     }
 
+
     private String buildTimeString(long remainingSeconds) {
         return String.format("%02d", remainingSeconds / 60) + ":" + String.format("%02d", remainingSeconds % 60);
     }
@@ -96,33 +61,32 @@ public class GamePlayService extends GameService {
     public void setGuessAccepted(boolean accepted) {
         this.guessAccepted = accepted;
     }
+    */
     //endregion
 
     //region next round
+    /*
     //TODO
     public Game nextTurn(Game game) {
         TeamPlayer tp = selectNextPlayer(game);
-        setCurrentTeam(tp.team);
-        setCurrentPlayer(tp.player);
+        setCurrentTeam(tp.getTeam());
+        setCurrentPlayer(tp.getPlayer());
         //selectNextTerm();
         game.incrementNrRound();
         getGameRepository().save(game);
         return game;
     }
 
-    public Task getTask(Game game) {
-        //TODO
-        return null;
-    }
 
     private TeamPlayer selectNextPlayer(Game game) {
         return getPlayers().get((game.getNrRound() - 1) % getNumPlayers());
     }
-    //endregion
 
-    public String updateTimer(Game game) {
+    public Task getTask(Game game) {
+        //TODO
         return null;
     }
+    //endregion
 
     public int countGuessesForWin(Game game) {
         return game.getScoreToWin() / SUCCESS_POINTS;
@@ -143,11 +107,9 @@ public class GamePlayService extends GameService {
         getGameRepository().save(game);
         return game;
     }
-
-    //region getter & setter
     public Game getGame() {
         return game;
     }
+    */
 
-    //endregion
 }
