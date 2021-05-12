@@ -15,6 +15,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+// handles the logic for the player selection phase
+// after starting a game and before entering the game room,
+// team-leaders get to select their players (if not already set beforehand)
 @Component
 @Scope("session")
 public class GameStartService extends GameService {
@@ -27,6 +30,7 @@ public class GameStartService extends GameService {
     private Team team;
 
     //region Player join phase
+    // start game by game creator
     public Game startGame(Game game, User user) throws IllegalArgumentException {
         game.setActive(true);
         this.user = user;
@@ -36,6 +40,7 @@ public class GameStartService extends GameService {
         return game;
     }
 
+    // join game for all other team representatives
     public Game joinGame(Game game, User user) throws NoSuchElementException, IllegalArgumentException {
         this.user = user;
         this.game = reloadGame(game);
@@ -47,6 +52,7 @@ public class GameStartService extends GameService {
         return this.game;
     }
 
+    // get game object, choosing the latest game assigned to the same raspberry as the user
     public Game getActiveGame(User user) {
         return getGameRepository().findActiveGameByRaspberry(user.getRaspberry().getRaspberryId());
     }
@@ -72,6 +78,7 @@ public class GameStartService extends GameService {
         addUserToTeam(team);
     }
 
+    // assign a user to a team
     private void addUserToTeam(Team team) {
         if (!team.getTeamPlayers().contains(user)) {
             List<User> players = team.getTeamPlayers();
@@ -83,6 +90,8 @@ public class GameStartService extends GameService {
         getGameJoinController().takeTeam(game, team);
     }
 
+    // select player in the GUI
+    // assigns player to team and makes player unavailable in selection screen
     public Game selectPlayer(User user) {
         this.game = reloadGame(game);
         this.user = user;
@@ -91,12 +100,14 @@ public class GameStartService extends GameService {
         return game;
     }
 
+    // check if team is ready to play (all team seats occupied with players)
     public boolean teamReady() {
         return game.getTeamSize() == team.getTeamPlayers().size();
     }
     //endregion
 
     //region initialize and enter game
+    // announce team ready to play, try to join if other teams ready too
     public Game finishTeamAssign(String teamName) throws IllegalArgumentException, IOException {
         if (teamName.isEmpty()) {
             throw new IllegalArgumentException("Give your team a name first.");
@@ -114,6 +125,7 @@ public class GameStartService extends GameService {
         return enterGame();
     }
 
+    // enter game room, if all teams are ready to play and have run finishTeamAssign()
     public Game enterGame() throws IOException {
         this.game = reloadGame(game);
         if (getGameJoinController().updateReadyToStart(game, user)) {
@@ -130,6 +142,7 @@ public class GameStartService extends GameService {
         return game;
     }
 
+    // initialize game with new Score instances, start time and iterable player-list
     private void initializeGame(Game game) {
         // initialize scores
         for (Team t : game.getTeamList()) {

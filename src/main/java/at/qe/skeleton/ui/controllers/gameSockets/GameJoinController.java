@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
+// coordinates the player selection phase via websocket
 @Controller
 @Scope("application")
 @CDIContextRelated
@@ -95,15 +96,19 @@ public class GameJoinController {
         this.webSocketManager.getJoinChannel().send("teamJoin", sendTo);
     }
 
+    // when entering player select phase, claim a team
     public void takeTeam(Game game, Team team) {
         teamTaken.computeIfAbsent(game, k -> ConcurrentHashMap.newKeySet());
         teamTaken.get(game).add(team);
     }
 
+    // gets list of player availabilities (player free to select or already assigned to a team)
     public List<PlayerAvailability> getPlayerAvailability(Game game) {
         return Collections.unmodifiableList(getGamePlayerAvailabilities(game));
     }
 
+    // updates set of Teams that have already been claimed
+    // returns true if all teams have been claimed and all teams are ready to play
     public boolean updateReadyToStart(Game game, User user) {
         //updateTeamsReady(game);
         teamAccepted.get(game).add(game.getTeamList().stream()
@@ -113,29 +118,39 @@ public class GameJoinController {
         return allReadyToStart(game);
     }
 
+    // returns true if all teams have been claimed and all teams are ready to play
+    // teams are ready if all open team positions are assigned to players
     public boolean allReadyToStart(Game game) {
         return this.allTeamsReady.get(game)
                 && teamAccepted.get(game).size() == game.getTeamList().size();
     }
 
+    // updates if all teams are ready to play
+    // teams are ready if all open team positions are assigned to players
     public void updateTeamsReady(Game game) {
         this.allTeamsReady.put(game,
                 getGamePlayerAvailabilities(game).stream().filter(pa -> !pa.isAvailable()).count() == game.getCountPlayers());
     }
 
+    // gets list of player availabilities by game (player free to select or already assigned to a team)
     private List<PlayerAvailability> getGamePlayerAvailabilities(Game game) {
         return playerAvailability.stream().filter(pa -> pa.getGame().equals(game)).collect(Collectors.toList());
     }
 
+    // returns true if given team is available
+    // (set of taken teams does not contain given team)
     public boolean teamAvailable(Game game, Team team) {
         teamTaken.computeIfAbsent(game, k -> ConcurrentHashMap.newKeySet());
         return !teamTaken.get(game).contains(team);
     }
 
+    // returns true if game is initialized
+    // (all teams are ready to join and game has been initialized in GameStartService)
     public boolean isInitialized(Game game) {
         return gameInitialized.get(game);
     }
 
+    // set to true if game has been initialized in GameStartService
     public void setInitialized(Game game) {
         gameInitialized.put(game, true);
     }

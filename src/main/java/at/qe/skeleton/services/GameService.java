@@ -27,11 +27,13 @@ public class GameService {
     private GameJoinController gameJoinController;
 
     protected final int PENALTY_POINTS = -1;
+    /*
     protected final int SUCCESS_POINTS = 3;
     private int numPlayers = 0;
     private Team currentTeam;
     private User currentPlayer;
     private List<TeamPlayer> players;
+    */
 
     public Collection<Game> getAllActiveGames() {
         return gameRepository.findAllActive();
@@ -64,6 +66,7 @@ public class GameService {
         return teamService;
     }
 
+    /*
     public int getNumPlayers() {
         return numPlayers;
     }
@@ -76,17 +79,19 @@ public class GameService {
         this.currentTeam = currentTeam;
     }
 
-    public User getCurrentPlayer() {
-        return currentPlayer;
-    }
-
     public void setCurrentPlayer(User currentPlayer) {
         this.currentPlayer = currentPlayer;
+    }
+
+
+    public User getCurrentPlayer() {
+        return currentPlayer;
     }
 
     public List<TeamPlayer> getPlayers() {
         return players;
     }
+    */
 
     public GameJoinController getGameJoinController() {
         return gameJoinController;

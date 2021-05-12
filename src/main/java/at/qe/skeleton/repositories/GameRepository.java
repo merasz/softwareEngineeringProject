@@ -30,12 +30,6 @@ public interface GameRepository extends AbstractRepository<Game, Integer> {
     @Query("SELECT g FROM Game g WHERE g.active = true AND :r = g.raspberry.raspberryId ORDER BY g.gameId DESC")
     List<Game> internalFindActiveGameByRaspberry(@Param("r") int raspberryId, Pageable page);
 
-
-    /**
-     *
-     * @param raspberryId
-     * @return
-     */
     default Game findActiveGameByRaspberry(int raspberryId) {
         List<Game> games = internalFindActiveGameByRaspberry(raspberryId, PageRequest.of(0,1));
         if (games.isEmpty()) {

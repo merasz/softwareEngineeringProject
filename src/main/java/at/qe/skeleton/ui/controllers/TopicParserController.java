@@ -49,7 +49,8 @@ public class TopicParserController {
             JSONObject jsonObject = (JSONObject)jsonParser.parse(new InputStreamReader(inputStream, "UTF-8"));
             String topicName = jsonObject.get("topic").toString();
 
-            Topic topic = topicService.saveTopic(new Topic(topicName));
+            Topic topic = new Topic(topicName);
+            if (!topicService.topicExists(topic)) topicService.saveTopic(topic);
             termsService.importTerms(jsonObject, topic);
         }catch (Exception e) {
             e.printStackTrace();

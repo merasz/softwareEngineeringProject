@@ -14,6 +14,7 @@ import java.util.List;
 @Scope("application")
 public class GameStatsService extends GameService {
 
+    /*
     //TODO: where task?
     public Game updateScores(Game game, int guessAccepted, Term term) {
         Score score = getScoreRepository().findFirstByUserAndGame(getCurrentPlayer(), game);
@@ -61,6 +62,7 @@ public class GameStatsService extends GameService {
         return scores;
     }
 
+
     private Score sumScores(List<Score> scores) {
         Score score = new Score();
         int totalScore = 0;
@@ -74,4 +76,5 @@ public class GameStatsService extends GameService {
         score.setTotalRoundScore(totalScore);
         return score;
     }
+    */
 }

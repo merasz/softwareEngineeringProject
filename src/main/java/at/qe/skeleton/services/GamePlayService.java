@@ -29,6 +29,7 @@ public class GamePlayService extends GameService {
     private boolean guessAccepted = false;
 
     //region guessing round with timer loop
+    /*
     //TODO: where task?
     public void runGameRound(Game game) {
         //get task
@@ -48,6 +49,7 @@ public class GamePlayService extends GameService {
         }
     }
 
+
     private String buildTimeString(long remainingSeconds) {
         return String.format("%02d", remainingSeconds / 60) + ":" + String.format("%02d", remainingSeconds % 60);
     }
@@ -59,9 +61,11 @@ public class GamePlayService extends GameService {
     public void setGuessAccepted(boolean accepted) {
         this.guessAccepted = accepted;
     }
+    */
     //endregion
 
     //region next round
+    /*
     //TODO
     public Game nextTurn(Game game) {
         TeamPlayer tp = selectNextPlayer(game);
@@ -73,19 +77,16 @@ public class GamePlayService extends GameService {
         return game;
     }
 
-    public Task getTask(Game game) {
-        //TODO
-        return null;
-    }
 
     private TeamPlayer selectNextPlayer(Game game) {
         return getPlayers().get((game.getNrRound() - 1) % getNumPlayers());
     }
-    //endregion
 
-    public String updateTimer(Game game) {
+    public Task getTask(Game game) {
+        //TODO
         return null;
     }
+    //endregion
 
     public int countGuessesForWin(Game game) {
         return game.getScoreToWin() / SUCCESS_POINTS;
@@ -106,11 +107,9 @@ public class GamePlayService extends GameService {
         getGameRepository().save(game);
         return game;
     }
-
-    //region getter & setter
     public Game getGame() {
         return game;
     }
+    */
 
-    //endregion
 }

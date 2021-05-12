@@ -23,13 +23,13 @@ public class TermsService {
     private TopicRepository topicRepository;
 
     private final int MIN_NUMBER_TERMS = 10;
-    private Term currentTerm;
-    private List<Term> termsInGame;
-    private Iterator<Term> iterateTerms;
+    //private Term currentTerm;
+    //private List<Term> termsInGame;
+    //private Iterator<Term> iterateTerms;
 
     @PreAuthorize("hasAuthority('ADMIN')")
     public Topic loadTopic(String topicName) {
-        return (Topic) topicRepository.findFirstByTopicName(topicName);
+        return topicRepository.findFirstByTopicName(topicName);
     }
 
     public void saveTopic(String name, Topic topic) throws IllegalArgumentException {
@@ -38,14 +38,19 @@ public class TermsService {
         topicRepository.save(topic);
     }
 
+    /*
     public void saveTerm(String name, Topic topic, Term term) throws IllegalArgumentException {
         validateTerm(name);
         term.setTermName(name);
         term.setTopic(topic);
         termsRepository.save(term);
     }
+    */
 
     public Term saveTerm(Term term) throws IllegalArgumentException {
+        if (termsRepository.findAll().stream().anyMatch(t -> t.getTermName().equals(term.getTermName()))) {
+            throw new IllegalArgumentException("Term already exists.");
+        }
         return termsRepository.save(term);
     }
 
@@ -62,13 +67,14 @@ public class TermsService {
         if (terms.size() < MIN_NUMBER_TERMS) {
             throw new IllegalArgumentException("Topic has less than " + MIN_NUMBER_TERMS + " terms. Please choose another topic.");
         } else {
-            termsInGame = terms;
-            Collections.shuffle(termsInGame);
-            iterateTerms = termsInGame.iterator();
+            //termsInGame = terms;
+            //Collections.shuffle(termsInGame);
+            //iterateTerms = termsInGame.iterator();
             return topic;
         }
     }
 
+    /*
     public Term getNextTerm(Game game) {
         if (!iterateTerms.hasNext()) {
             Collections.shuffle(termsInGame);
@@ -78,12 +84,14 @@ public class TermsService {
         return currentTerm;
     }
 
+
     private void validateTerm(String name) throws IllegalArgumentException {
         Term t = termsRepository.findFirstByTermName(name);
         if (t != null) {
             throw new IllegalArgumentException("Term already exists.");
         }
     }
+    */
 
     private void validateTopic(String name) throws IllegalArgumentException {
         Topic t = topicRepository.findFirstByTopicName(name);
@@ -97,7 +105,7 @@ public class TermsService {
 
         List<String> allTerms = new ArrayList<>();
         allTerms.addAll(Arrays.asList(allTermsAsStringJson.split("[\"]")));
-        Set<String> newTerms = new HashSet<>();
+        //Set<String> newTerms = new HashSet<>();
         for (String v: allTerms) {
             if(v.contains("[") || v.contains(",") || v.contains("]"))
                 continue;
@@ -105,7 +113,6 @@ public class TermsService {
             if(!termsRepository.doesTermExits(tmp.getTermName(), topic.getTopicName()))
                 termsRepository.save(tmp);
         }
-
     }
 
     public List<Term> getTermsForTopic(Topic topic) {
