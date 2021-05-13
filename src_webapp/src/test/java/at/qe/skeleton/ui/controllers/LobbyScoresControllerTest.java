@@ -1,4 +1,4 @@
-/*package at.qe.skeleton.ui.controllers;
+package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.*;
@@ -8,6 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.util.*;
 
@@ -33,6 +35,7 @@ class LobbyScoresControllerTest {
     @InjectMocks
     private LobbyScoresController lobbyScoresController;
 
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testInit() {
         when(gameService.getMostPopularTopics()).thenReturn(Arrays.asList(new Topic("topicName")));
@@ -45,7 +48,7 @@ class LobbyScoresControllerTest {
         when(scoreService.getUsersWithScoreAGame()).thenReturn(new HashMap<>());
         lobbyScoresController.init();
     }
-
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testInit_GameServiceReturnsNoItems() {
         when(gameService.getMostPopularTopics()).thenReturn(Collections.emptyList());
@@ -62,7 +65,7 @@ class LobbyScoresControllerTest {
         when(scoreService.getUsersWithScoreAGame()).thenReturn(new HashMap<>());
         lobbyScoresController.init();
     }
-
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testInit_ScoreServiceGetMostValuedUsersReturnsNoItems() {
         when(gameService.getMostPopularTopics()).thenReturn(Arrays.asList(new Topic("topicName")));
@@ -74,7 +77,7 @@ class LobbyScoresControllerTest {
         lobbyScoresController.init();
 
     }
-
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testInit_ScoreServiceGetMostValuedUserScoresReturnsNoItems() {
         when(gameService.getMostPopularTopics()).thenReturn(Arrays.asList(new Topic("topicName")));
@@ -92,17 +95,17 @@ class LobbyScoresControllerTest {
 
     }
 
-    //@Test
+    @Test
     void testGetHighscores() {
         final List<Map.Entry<User, Integer>> expectedResult = Arrays.asList();
         final List<Map.Entry<User, Integer>> result = lobbyScoresController.getHighscores();
         assertThat(result).isEqualTo(expectedResult);
     }
 
-    // @Test
+    @Test
     void testGetHighscoresAGame() {
         final List<Map.Entry<User, Integer>> expectedResult = Arrays.asList();
         final List<Map.Entry<User, Integer>> result = lobbyScoresController.getHighscoresAGame();
         assertThat(result).isEqualTo(expectedResult);
     }
-}*/
+}
