@@ -35,22 +35,22 @@
                     <p:link outcome="/secured/demos/chatRoom.xhtml">
                         <i class="fas fa-users"></i><span>Lobby</span>
                     </p:link>
-                    <p:link outcome="/admin/categories.xhtml" rendered="#{sessionInfoBean.hasRole('ADMIN') or sessionInfoBean.hasRole('GAME_MANAGER')}">
+                    <p:link outcome="/manager/categories.xhtml" rendered="#{sessionInfoBean.hasRole('ADMIN') or sessionInfoBean.hasRole('GAME_MANAGER')}">
                         <i class="fas fa-list-alt"></i><span>Topic Hub</span>
                     </p:link>
                     <p:link outcome="/admin/users.xhtml" rendered="#{sessionInfoBean.hasRole('ADMIN')}">
                         <i class="fas fa-user-cog"></i><span>User Hub</span>
                     </p:link>
-                    <p:link outcome="/secured/test.xhtml" rendered="#{sessionInfoBean.hasRole('ADMIN')}">
+                    <p:link outcome="/admin/test.xhtml" rendered="#{sessionInfoBean.hasRole('ADMIN')}">
                         <i class="fas fa-tasks"></i><span>Test Submenu</span>
                     </p:link>
-                    <p:link outcome="/admin/raspberry.xhtml" rendered="#{sessionInfoBean.hasRole('ADMIN')}">
+                    <p:link outcome="/manager/raspberry.xhtml" rendered="#{sessionInfoBean.hasRole('ADMIN') or sessionInfoBean.hasRole('GAME_MANAGER')}">
                         <i class="fab fa-raspberry-pi"></i><span>Raspberries</span>
                     </p:link>
-                    <p:link outcome="/admin/admin.xhtml" rendered="#{sessionInfoBean.hasRole('ADMIN') or sessionInfoBean.hasRole('GAME_MANAGER')}">
+                    <p:link outcome="/manager/manage.xhtml" rendered="#{sessionInfoBean.hasRole('ADMIN') or sessionInfoBean.hasRole('GAME_MANAGER')}">
                         <i class="fas fa-chart-pie"></i><span>Manager Hub</span>
                     </p:link>
-                    <p:link outcome="/admin/availableGames.xhtml" rendered="#{sessionInfoBean.hasRole('ADMIN') or sessionInfoBean.hasRole('GAME_MANAGER')}">
+                    <p:link outcome="/manager/availableGames.xhtml" rendered="#{sessionInfoBean.hasRole('ADMIN') or sessionInfoBean.hasRole('GAME_MANAGER')}">
                         <i class="fas fa-chess"></i><span>Available Games</span>
                     </p:link>
                     <p:commandLink id="join" action="#{gameStartController.joinGame}">

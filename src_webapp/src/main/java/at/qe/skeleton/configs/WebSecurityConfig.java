@@ -58,6 +58,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // Only access with admin role
                 .antMatchers("/admin/**")
                 .hasAnyAuthority("ADMIN", "GAME_MANAGER")
+                // Only access with admin or game_manager role
+                .antMatchers("/manager/**")
+                .hasAnyAuthority("ADMIN", "GAME_MANAGER")
                 //Permit access only for some roles
                 .antMatchers("/secured/**")
                 //TODO set correct user role names

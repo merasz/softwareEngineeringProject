@@ -18,7 +18,7 @@ public class SecurityTestBean {
     private boolean showOkDialog = false;
     private String performedAction = "NONE";
 
-    // :TODO: Fix the corresponding vulnerability , cf. http://localhost:8080/secured/test.xhtml
+    // :TODO: Fix the corresponding vulnerability , cf. http://localhost:8080/admin/test.xhtml
     private String testString = "CHANGE ME";
 
     public String getTestString() {
