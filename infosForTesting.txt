@@ -1,0 +1,7 @@
+Wir bieten in unserer Software 2 Möglichkeiten an, wie sie die Applikation runnen können,
+hierbei wäre die perfomantere wahl Docker - sollten sie diese verwenden wollen bitte lesen sie
+README_DOCKER.md sollten Sie es wünschen und mit einer inMemory Datenbank zu arbeiten, navigieren sie sich in den folder src_webapp und führen sie den befehl mvn spring-boot:run aus.
+
+Bei Unklarheiten, können Sie sich gerne bei uns melden.
+michael.a.hauser@student.uibk.ac.at
+sowie telefonisch unter +43677/61680791
