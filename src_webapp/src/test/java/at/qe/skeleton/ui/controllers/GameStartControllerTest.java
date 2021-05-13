@@ -1,4 +1,4 @@
-/*package at.qe.skeleton.ui.controllers;
+package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.demo.PlayerAvailability;
@@ -10,6 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.primefaces.event.SelectEvent;
 
 import javax.faces.component.UIComponent;
@@ -58,6 +60,7 @@ class GameStartControllerTest {
         assertThat(result).isEqualTo("result");
     }
 
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testJoinGame() {
         final User user = new User();
@@ -79,6 +82,7 @@ class GameStartControllerTest {
         assertThat(result).isEqualTo("result");
     }
 
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testJoinGame_GameStartServiceJoinGameThrowsNoSuchElementException() {
         final User user = new User();
@@ -96,6 +100,7 @@ class GameStartControllerTest {
         assertThat(result).isEqualTo("result");
     }
 
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testJoinGame_GameStartServiceJoinGameThrowsIllegalArgumentException() {
         final User user = new User();
@@ -103,7 +108,7 @@ class GameStartControllerTest {
         when(gameStartService.getActiveGame(new User())).thenReturn(game);
 
         when(gameStartService.getGameJoinController()).thenReturn(new GameJoinController());
-        when(gameStartService.joinGame(new Game(0, 0, 0, new Topic("topicName"), new Raspberry(0, "hostname", Arrays.asList(new User()), false, "ipAddress")), new User())).thenThrow(IllegalArgumentException.class);
+        when(gameStartService.joinGame(new Game(), new User())).thenThrow(IllegalArgumentException.class);
         final String result = gameStartController.joinGame();
         assertThat(result).isEqualTo("result");
     }
@@ -133,6 +138,7 @@ class GameStartControllerTest {
         gameStartController.selectPlayer(event);
     }
 
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testFinishTeamAssign() throws Exception {
         final User user = new User();
@@ -145,6 +151,7 @@ class GameStartControllerTest {
         verify(sessionInfoBean).setCurrentGame(new Game());
     }
 
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testFinishTeamAssign_GameStartServiceThrowsIllegalArgumentException() throws Exception {
         when(gameStartService.finishTeamAssign("teamName")).thenThrow(IllegalArgumentException.class);
@@ -152,13 +159,14 @@ class GameStartControllerTest {
         verify(sessionInfoBean).setCurrentGame(new Game());
     }
 
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testFinishTeamAssign_GameStartServiceThrowsIOException() throws Exception {
         when(gameStartService.finishTeamAssign("teamName")).thenThrow(IOException.class);
         gameStartController.finishTeamAssign();
         verify(sessionInfoBean).setCurrentGame(new Game());
     }
-
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testEnterGame() throws Exception {
         final User user = new User();
@@ -169,7 +177,7 @@ class GameStartControllerTest {
         when(gameStartService.enterGame()).thenReturn(game);
         gameStartController.enterGame();
     }
-
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testEnterGame_GameStartServiceThrowsIOException() throws Exception {
         when(gameStartService.enterGame()).thenThrow(IOException.class);
@@ -189,4 +197,4 @@ class GameStartControllerTest {
         final boolean result = gameStartController.getTeamReady();
         assertThat(result).isTrue();
     }
-}*/
+}

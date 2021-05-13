@@ -47,7 +47,7 @@ public class TeamService {
      * saves a player to a given team
      * @param team
      * @param player
-     * @return Team obejct
+     * @return Team object
      */
     public Team savePlayerToTeam(Team team, User player) {
         List<User> players = team.getTeamPlayers();

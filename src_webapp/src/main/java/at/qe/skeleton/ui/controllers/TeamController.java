@@ -38,9 +38,10 @@ public class TeamController extends Controller implements Serializable {
 
     private User tmpPlayer;
 
-    private List<User> assignablePlayers;
-
-
+    /**
+     * sets a new team, unless all teams for the game are already set
+     * @param game
+     */
     public void doSetTeam(Game game) {
         this.game = game;
         try {
@@ -51,6 +52,9 @@ public class TeamController extends Controller implements Serializable {
         }
     }
 
+    /**
+     * saves a team to the database
+     */
     public void doSaveTeam() {
         if (team.getTeamName() == null || team.getTeamName().isEmpty()) {
             displayError("No team name", "Give this team a name.");
@@ -66,6 +70,9 @@ public class TeamController extends Controller implements Serializable {
         }
     }
 
+    /**
+     * saves a user in a team
+     */
     public void doSaveUserToTeam() {
         try {
             team = teamService.savePlayerToTeam(team, tmpPlayer);
@@ -76,8 +83,10 @@ public class TeamController extends Controller implements Serializable {
         }
     }
 
+    /**
+     * manages the dialog for adding a player to a team
+     */
     public void addPlayerDialog() {
-        assignablePlayers = getAssignablePlayers();
         if (team.getTeamPlayers().size() == game.getTeamSize()) {
             displayError("Team full", "There are no more free places in this team.");
         } else {
@@ -85,10 +94,17 @@ public class TeamController extends Controller implements Serializable {
         }
     }
 
+    /**
+     * get a list of users that are not already assigned to a team
+     * @return
+     */
     public List<User> getAssignablePlayers() {
-        return assignablePlayers = playerListController.getAssignablePlayers(game);
+        return playerListController.getAssignablePlayers(game);
     }
 
+    /**
+     * delete a user from the database
+     */
     public void doDeletePlayer() {
         try {
             team = teamService.deletePlayerFromTeam(team,tmpPlayer);
@@ -99,6 +115,9 @@ public class TeamController extends Controller implements Serializable {
         }
     }
 
+    /**
+     * resets a team by emptying all attributes
+     */
     public void doClearTeam() {
         try {
             for (Team t : game.getTeamList()) {
@@ -118,6 +137,12 @@ public class TeamController extends Controller implements Serializable {
         }
     }
 
+    /**
+     * get a team associated to a given game, containing a given user
+     * @param user
+     * @param game
+     * @return
+     */
     public Team getTeamByPlayerAndGame(User user, Game game) {return teamService.getTeamByPlayerAndGame(user,game);}
 
     //region getter & setter

@@ -2,7 +2,6 @@ package at.qe.skeleton.repositories;
 
 import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.Topic;
-import at.qe.skeleton.model.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -20,8 +19,7 @@ public interface GameRepository extends AbstractRepository<Game, Integer> {
     Game findByGameId(Integer integer);
 
     /**
-     * Function takes the ID of a raspberry and returns a list of games,
-     * which are currently played on this raspberry.
+     * Takes the ID of a raspberry and returns the last created game associated with this raspberry.
      *
      * @param raspberryId
      * @param page

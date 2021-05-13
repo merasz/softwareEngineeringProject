@@ -108,10 +108,11 @@ public class ScoreManagerController {
      */
     public void setGameEnd(Game game) {
         Date end = Timestamp.valueOf(LocalDateTime.now());
-        game.setEndTime(end);
-        game.setActive(false);
+        Game newgame = gameRepository.findByGameId(game.getGameId());
+        newgame.setEndTime(end);
+        newgame.setActive(false);
 
-        gameRepository.save(game);
+        gameRepository.save(newgame);
     }
 
 }

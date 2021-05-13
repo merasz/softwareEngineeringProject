@@ -9,9 +9,7 @@ import at.qe.skeleton.repositories.TeamRepository;
 import at.qe.skeleton.repositories.UserRepository;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
-import org.primefaces.shaded.json.JSONObject;
+import at.qe.skeleton.ui.controllers.demo.ChatManagerController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,12 +37,15 @@ public class UserService {
     @Autowired
     private TeamRepository teamRepository;
 
+    @Autowired
+    private ChatManagerController chatManagerController;
+
     /**
      * Returns a collection of all users.
      *
      * @return
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('GAME_MANAGER')")
     public Collection<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -55,7 +56,7 @@ public class UserService {
      * @param username the username to search for
      * @return the user with the given username
      */
-    @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #username")
+    //@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('GAME_MANAGER')")
     public User loadUser(String username) {
         return userRepository.findFirstByUsername(username);
     }
@@ -69,7 +70,7 @@ public class UserService {
      * @param user the user to save
      * @return the updated user
      */
-    @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #user.username")
+    //@PreAuthorize("hasAuthority('ADMIN') or principal.username eq #user.username")
     public User saveUser(User user) {
         if (user.isNew()) {
             user.setCreateDate(new Date());
@@ -87,8 +88,12 @@ public class UserService {
      *
      * @param user the user to delete
      */
-    @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #user.username")
+    //@PreAuthorize("hasAuthority('ADMIN') or principal.username eq #user.username")
     public void deleteUser(User user) throws IllegalArgumentException {
+        if (chatManagerController.getPossibleRecipients().contains(user)) {
+            throw new IllegalArgumentException("User is currently logged in and therefore can't be deleted.");
+        }
+
         if (user.isEnabled()) {
             throw new IllegalArgumentException("User must be disabled before deleting.");
         }
@@ -151,19 +156,6 @@ public class UserService {
     }
     */
 
-    public Collection<User> getAllAdmins() {
-        return userRepository.findAllAdmins();
-    }
-
-    public Collection<User> getAllManagers() {
-        return userRepository.findAllManagers();
-    }
-
-    public Collection<User> getAllPlayers() {
-        return userRepository.findAllPlayers();
-    }
-
-
     private void validateInput(String username, String password) throws IllegalArgumentException, NullPointerException {
         if (username.isEmpty() || password.isEmpty()) {
             throw new IllegalArgumentException("All fields need to be filled.");
@@ -177,6 +169,18 @@ public class UserService {
         }
     }
 
+    //region getter & setter
+    public Collection<User> getAllAdmins() {
+        return userRepository.findAllAdmins();
+    }
+
+    public Collection<User> getAllManagers() {
+        return userRepository.findAllManagers();
+    }
+
+    public Collection<User> getAllPlayers() {
+        return userRepository.findAllPlayers();
+    }
     private User getAuthenticatedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return userRepository.findFirstByUsername(auth.getName());
@@ -193,4 +197,5 @@ public class UserService {
     public List<User> getUserByRaspberry(Raspberry raspberry) {
         return userRepository.findAllByRaspberry(raspberry);
     }
+    //endregion
 }

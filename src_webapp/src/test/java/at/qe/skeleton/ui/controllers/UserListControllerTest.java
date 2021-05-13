@@ -26,11 +26,8 @@ class UserListControllerTest {
     void testInit() {
         final User user = new User();
         final Collection<User> users = Arrays.asList(user);
-        when(userService.getAllUsers()).thenReturn(users);
         userListController.init();
-
     }
-
 
     @Test
     void testGetUsers() {

@@ -73,9 +73,7 @@ public class UserDetailController extends Controller implements Serializable {
             displayInfo("User deleted", "Account successfully deleted.");
         } catch (IllegalArgumentException e){
             displayError("User not deleted", e.getMessage());
-        } //catch (Exception e) {
-            //displayError("Error", "Account could not be deleted." + e.getMessage());
-        //}
+        }
     }
 
     /**

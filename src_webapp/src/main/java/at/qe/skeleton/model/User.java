@@ -39,14 +39,8 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
 
     boolean enabled;
 
-    //@ManyToOne
-    //private Device device;
-
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "teamPlayers", cascade = CascadeType.ALL)
     private List<Team> team;
-
-    //@ManyToOne
-    //private GameLobby gameLobby;
 
     @ManyToOne
     private Raspberry raspberry;

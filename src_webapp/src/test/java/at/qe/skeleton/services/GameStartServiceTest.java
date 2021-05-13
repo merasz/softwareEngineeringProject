@@ -2,7 +2,9 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.demo.TeamPlayer;
+import at.qe.skeleton.repositories.ScoreRepository;
 import at.qe.skeleton.ui.controllers.gameSockets.GamePlaySocketController;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,6 +16,7 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,7 +28,12 @@ class GameStartServiceTest {
     @InjectMocks
     private GameStartService gameStartServiceUnderTest;
 
-    //@Test
+    @BeforeEach
+    void setUp() {
+        gameStartServiceUnderTest = new GameStartService();
+    }
+
+    @Test
     void testStartGame() {
         final User user = new User();
         final Game game = new Game();
@@ -34,7 +42,7 @@ class GameStartServiceTest {
         assertThat(result).isEqualTo(expectedResult);
     }
 
-    //@Test
+    @Test
     void testJoinGame() {
         final User user = new User();
         final Game game = new Game();
@@ -43,7 +51,7 @@ class GameStartServiceTest {
         assertThat(result).isEqualTo(expectedResult);
     }
 
-    //@Test
+    @Test
     void testGetActiveGame() {
         final User user = new User();
         final Game expectedResult = new Game();
@@ -51,7 +59,7 @@ class GameStartServiceTest {
         assertThat(result).isEqualTo(expectedResult);
     }
 
-    //@Test
+    @Test
     void testSelectPlayer() {
         final User user = new User();
         final Game expectedResult = new Game();
@@ -59,13 +67,13 @@ class GameStartServiceTest {
         assertThat(result).isEqualTo(expectedResult);
     }
 
-    //@Test
+    @Test
     void testTeamReady() {
         final boolean result = gameStartServiceUnderTest.teamReady();
         assertThat(result).isTrue();
     }
 
-    //@Test
+    @Test
     void testFinishTeamAssign() throws Exception {
         final User user = new User();
         final Game expectedResult = new Game();
@@ -75,7 +83,7 @@ class GameStartServiceTest {
         verify(mockGamePlaySocketController).initGame(new Game());
     }
 
-    //@Test
+    @Test
     void testEnterGame() throws Exception {
         final User user = new User();
         final Game expectedResult = new Game();
@@ -85,7 +93,7 @@ class GameStartServiceTest {
         verify(mockGamePlaySocketController).initGame(new Game());
     }
 
-    //@Test
+    @Test
     void testGetTeamSizeString() {
         final String result = gameStartServiceUnderTest.getTeamSizeString();
         assertThat(result).isEqualTo("result");

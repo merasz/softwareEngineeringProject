@@ -42,14 +42,12 @@ public class GamePlaySocketController {
 
     @CDIAutowired
     private WebSocketManager websocketManager;
-    private Map<Integer,Topic> topicMap = new ConcurrentHashMap<>();
     private Map<Integer,Queue<Term>> termQueueMap = new ConcurrentHashMap<>();
     private Map<Integer,Term> currentTermMap = new ConcurrentHashMap<>();
     private Map<Integer,Queue<TeamPlayer>> teamPlayerMap = new ConcurrentHashMap<>();
     private Map<Integer,String> typeMap = new ConcurrentHashMap<>();
     private Map<Integer,Integer> timeMap = new ConcurrentHashMap<>();
     private Map<Integer,Integer> pointsMap = new ConcurrentHashMap<>();
-    private Map<Integer,Team> teamMap = new ConcurrentHashMap<>();
     private Map<Integer,User> currentPlayerMap = new ConcurrentHashMap<>();
     private Map<Integer,User> nextPlayerMap = new ConcurrentHashMap<>();
     private Map<Integer,Integer> gameFinishedMap = new ConcurrentHashMap<>();
@@ -62,12 +60,11 @@ public class GamePlaySocketController {
      * @param game Game to be started
      */
     public void initGame(Game game) {
-        //teamPlayerMap.put(game.getGameId(),createPlayerOrdering(game));
-
         Topic topic = game.getTopic();
         List<Term> terms = topic.getTerms();
         Collections.shuffle(terms);
         termQueueMap.put(game.getGameId(),new LinkedList<>(terms));
+
         System.out.println("init game: " + game);
         scoreManagerController.setupScores(game);
 
@@ -166,6 +163,7 @@ public class GamePlaySocketController {
      */
     public void termGuessed(Game game) {
         if(currentRoundRunning.get(game.getGameId()) == 1) {
+            websocketManager.getTimeChannel().send("stopTimer",getAllRecipients(game));
             boolean finished = scoreManagerController.addScoreToTeam(game, currentPlayerMap.get(game.getGameId()),pointsMap.get(game.getGameId()));
             currentRoundRunning.put(game.getGameId(),0);
             setTimeInternal(game,0);
@@ -190,6 +188,7 @@ public class GamePlaySocketController {
      */
     public void termGuessedWithRulebreak(Game game) {
         if(currentRoundRunning.get(game.getGameId()) == 1) {
+            websocketManager.getTimeChannel().send("stopTimer",getAllRecipients(game));
             boolean finished = scoreManagerController.addScoreToTeam(game, currentPlayerMap.get(game.getGameId()),pointsMap.get(game.getGameId())-1);
             currentRoundRunning.put(game.getGameId(),0);
             websocketManager.getScoreChannel().send("scoreUpdate",getAllRecipients(game));
@@ -211,6 +210,7 @@ public class GamePlaySocketController {
      */
     public void termNotGuessed(Game game) {
         if(currentRoundRunning.get(game.getGameId()) == 1) {
+            websocketManager.getTimeChannel().send("stopTimer",getAllRecipients(game));
             currentRoundRunning.put(game.getGameId(),0);
             setTimeInternal(game,0);
             gameInfoSocketController.setGameMessageToGame(game,"Term not guessed correctly! Roll the dice to start the next round");
@@ -352,68 +352,6 @@ public class GamePlaySocketController {
      */
     public void setPoints(Game game, Integer points) {
         pointsMap.put(game.getGameId(),points);
-    }
-
-    /**
-     * returns guessing topic for the current game
-     * @param game current game
-     * @return guessing topic
-     */
-    public Topic getTopic(Game game) {
-        if (runningMap.get(game.getGameId()) == 0) {return null;}
-        while(topicMap.get(game.getGameId()) == null ){}
-        return topicMap.get(game.getGameId());
-    }
-
-    /**
-     * set topic for a specific game
-     * @param game current game
-     * @param topic topic to set
-     */
-    public void setTopic(Game game, Topic topic) {
-        topicMap.put(game.getGameId(),topic);
-    }
-
-    /**
-     * returns topicname for a game
-     * @param game Game
-     * @return topic name
-     */
-    public String getTopicName(Game game) {
-        if (runningMap.get(game.getGameId()) == 0) {return null;}
-        while(topicMap.get(game.getGameId()) == null ){}
-        return topicMap.get(game.getGameId()).getTopicName();
-    }
-
-    /**
-     * Set current team for a specified game
-     * @param game current game
-     * @param Team current team
-     */
-    public void setTeam(Game game, Team Team) {
-        teamMap.put(game.getGameId(),Team);
-    }
-
-    /**
-     * returns current team for a specified game
-     * @param game current Game
-     * @return Team
-     */
-    public Team getTeam(Game game) {
-        if (runningMap.get(game.getGameId()) == 0) {return null;}
-        while(teamMap.get(game.getGameId()) == null ){}
-        return teamMap.get(game.getGameId());
-    }
-
-    /**
-     * returns currently playing teams name for a game
-     * @param game Game
-     * @return Name of the current team
-     */
-    public String getTeamName(Game game) {
-        if (runningMap.get(game.getGameId()) == 0) {return null;}
-        while(teamMap.get(game.getGameId()) == null ){}
-        return teamMap.get(game.getGameId()).getTeamName();
     }
 
     /**

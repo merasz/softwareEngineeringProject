@@ -9,7 +9,6 @@ import org.springframework.stereotype.*;
 import javax.annotation.PostConstruct;
 import java.io.*;
 import java.util.Collection;
-import java.util.List;
 
 @Component
 @Scope("view")
@@ -18,14 +17,9 @@ public class TopicController extends Controller implements Serializable {
     @Autowired
     private TopicService topicService;
 
-    //@Autowired
-    //private TermsService termsService;
-
     public Topic topic;
 
     public GameTopicCount gameTopicCount;
-
-    //private Collection<Topic> topicList;
 
     @PostConstruct
     public void init() {
@@ -33,16 +27,9 @@ public class TopicController extends Controller implements Serializable {
     }
 
     public void doCreateNewTopic() {
-        //setTopicList();
         topic = new Topic();
         gameTopicCount = new GameTopicCount();
     }
-
-    /*
-    public void setTopicList() {
-        topicList = topicService.getAllTopics();
-    }
-    */
 
     public GameTopicCount getGameTopicCount() {
         return gameTopicCount;
@@ -51,12 +38,6 @@ public class TopicController extends Controller implements Serializable {
     public void setGameTopicCount(GameTopicCount gameTopicCount) {
         this.gameTopicCount = gameTopicCount;
     }
-
-    /*
-    private void doReloadTopic() {
-        topic = topicService.loadTopic(topic.getTopicName());
-    }
-    */
 
     public void doDeleteTopic() {
         try {
@@ -88,10 +69,6 @@ public class TopicController extends Controller implements Serializable {
     }
 
     public void setTopic(Topic topic) {
-        //if(gameTopicCount != null)
-        //    this.topic = gameTopicCount.getTopic();
-        //else
-        //System.out.println("-----  set topic  -----");
         this.topic = topic;
     }
 }

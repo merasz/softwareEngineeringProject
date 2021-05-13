@@ -3,16 +3,12 @@ package at.qe.skeleton.ui.controllers;
 import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.Score;
 import at.qe.skeleton.model.Team;
-import at.qe.skeleton.model.User;
-import at.qe.skeleton.repositories.ScoreRepository;
 import at.qe.skeleton.services.ScoreService;
 import at.qe.skeleton.services.TeamService;
-import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,12 +24,7 @@ public class TeamListController {
     private TeamService teamService;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private ScoreService scoreService;
-
-    private Map<Team, Integer> teamsWithItsTotalScoreAGame;
 
     public Collection<Team> getTeams() {
         return teamService.getAllTeams();
@@ -45,7 +36,7 @@ public class TeamListController {
 
     public Collection<Team> getTeamsByGame() {
         if(game == null) {
-            return new ArrayList<Team>();
+            return new ArrayList<>();
         }
         return teamService.getTeamsByGame(this.game).stream().filter(t -> t.getTeamName() != null).collect(Collectors.toList());
     }

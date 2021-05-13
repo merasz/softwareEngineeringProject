@@ -19,17 +19,6 @@ public class GameController extends Controller implements Serializable {
     @Autowired
     private TopicService topicService;
 
-    /*
-    @Autowired
-    private GameStatsService gameStatsService;
-
-    @Autowired
-    private TermsService termsService;
-
-    @Autowired
-    private GameListController gameListController;
-    */
-
     @Autowired
     UserService userService;
 
@@ -40,7 +29,9 @@ public class GameController extends Controller implements Serializable {
     private Game game;
     private User user;
 
-    // save the currently set game
+    /**
+     * save the currently set game
+     */
     public void doSaveGame() {
         try {
             game = gameService.saveGame(game);
@@ -49,23 +40,16 @@ public class GameController extends Controller implements Serializable {
         }
     }
 
-    // get all games from the database
+    /**
+     * get all games from the database
+     * @return
+     */
     public List<Game> getGames() {
         games = gameService.getGameRepository().findAll();
         return games;
     }
 
     //region getter & setter
-    /*
-    public GameStatsService getGameStatsService() {
-        return gameStatsService;
-    }
-
-    public TermsService getTermsService() {
-        return termsService;
-    }
-    */
-
     public TopicService getTopicService() {
         return topicService;
     }
@@ -74,7 +58,9 @@ public class GameController extends Controller implements Serializable {
         return user;
     }
 
-    // set user-attribute to the current user
+    /**
+     * set user-attribute to the current user
+     */
     public void setUser() {
         this.user = sessionInfoBean.getCurrentUser();
     }
@@ -86,21 +72,6 @@ public class GameController extends Controller implements Serializable {
     public void setGame(Game game) {
         this.game = game;
     }
-
-    /*
-    public Topic getGameTopic() {
-        return this.topicService.getTopicByName(game.getTopic());
-    }
-
-
-    public GameListController getGameListController() {
-        return gameListController;
-    }
-
-    public void setGameListController(GameListController gameListController) {
-        this.gameListController = gameListController;
-    }
-    */
 
     public UserService getUserService() {
         return userService;

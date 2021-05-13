@@ -15,12 +15,6 @@ public class TimeFlipConf implements Serializable {
     private RequestType requestType;
     private int time;
 
-    public TimeFlipConf(Integer facetPoint, Integer time, RequestType type) {
-        this.facetPoint = facetPoint;
-        this.time = time;
-        this.requestType = type;
-    }
-
     public TimeFlipConf() { }
 
     public Integer getFacetId() { return facetId; }

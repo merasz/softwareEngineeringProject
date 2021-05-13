@@ -1,7 +1,6 @@
 package at.qe.skeleton.repositories;
 
 import at.qe.skeleton.model.Topic;
-import org.omnifaces.cdi.*;
 import org.springframework.data.jpa.repository.*;
 
 import java.util.*;

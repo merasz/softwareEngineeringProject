@@ -2,7 +2,6 @@ package at.qe.skeleton.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 public class Term implements Serializable {
@@ -16,7 +15,6 @@ public class Term implements Serializable {
 
     public Term() {
     }
-
 
     public Term(String termName, Topic topic) {
         this.termName = termName;
@@ -38,7 +36,6 @@ public class Term implements Serializable {
     public void setTopic(Topic topic) {
         this.topic = topic;
     }
-
 
     public static long getSerialVersionUID() {
         return serialVersionUID;

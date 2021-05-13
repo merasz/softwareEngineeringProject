@@ -1,7 +1,6 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.*;
-import at.qe.skeleton.model.demo.TeamPlayer;
 import at.qe.skeleton.repositories.GameRepository;
 import at.qe.skeleton.repositories.ScoreRepository;
 import at.qe.skeleton.ui.controllers.gameSockets.GameJoinController;
@@ -26,8 +25,6 @@ public class GameService {
     @Autowired
     private GameJoinController gameJoinController;
 
-    protected final int PENALTY_POINTS = -1;
-
     /**
      * Function returns all active games.
      * @return collection of games
@@ -41,13 +38,11 @@ public class GameService {
      * @return Game object
      */
     public Game saveGame(Game game) {
-        game.setNrRound(0);
-        game.setTotalScore(0);
         return gameRepository.save(game);
     }
 
     /**
-     * Returns a given game actualized.
+     * Reloads a game from the database.
      * @param game
      * @return game object
      */

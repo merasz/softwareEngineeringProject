@@ -5,8 +5,8 @@ import at.qe.skeleton.repositories.ScoreRepository;
 import at.qe.skeleton.repositories.TopicGamesRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.*;
 
@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 class UserStatsServiceTest {
 
     private UserStatsService userStatsServiceUnderTest;
@@ -30,16 +30,29 @@ class UserStatsServiceTest {
     @Test
     void testGetBestScoresFromUser() {
         final User user = new User();
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setEnabled(false);
+        user.setTeam(Arrays.asList(new Team()));
+        user.setRoles(new HashSet<>(Arrays.asList(UserRole.ADMIN)));
+        user.setRaspberry(new Raspberry());
+        user.setCreateUser(new User());
+        user.setCreateDate(new GregorianCalendar().getTime());
+        user.setUpdateUser(new User());
+        user.setUpdateDate(new GregorianCalendar().getTime());
         final List<Team> teams = Arrays.asList(new Team());
         when(userStatsServiceUnderTest.teamService.getTeamsByPlayer(new User())).thenReturn(teams);
         final List<Score> scores = Arrays.asList(new Score());
         when(userStatsServiceUnderTest.scoreRepository.findGameScoresByUser(Arrays.asList(new Team()))).thenReturn(scores);
-//        final List<Score> result = userStatsServiceUnderTest.getBestScoresFromUser(user);
+        final List<Score> result = userStatsServiceUnderTest.getBestScoresFromUser(user);
+        //verify
+        //assertThat(result).isEqualTo(0);
     }
 
     @Test
     void testGetLatestScoresFromUser() {
         final User user = new User();
+
         final List<Score> scores = Arrays.asList(new Score());
         when(userStatsServiceUnderTest.scoreRepository.findGameScoresByUser(Arrays.asList(new Team()))).thenReturn(scores);
         final List<Score> result = userStatsServiceUnderTest.getLatestScoresFromUser(user);

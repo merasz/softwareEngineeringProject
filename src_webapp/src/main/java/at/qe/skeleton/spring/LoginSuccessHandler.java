@@ -1,6 +1,7 @@
 package at.qe.skeleton.spring;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.stereotype.Component;

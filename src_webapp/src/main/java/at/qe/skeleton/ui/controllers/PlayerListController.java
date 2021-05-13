@@ -4,10 +4,8 @@ import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.Raspberry;
 import at.qe.skeleton.model.Team;
 import at.qe.skeleton.model.User;
-import at.qe.skeleton.services.TeamService;
 import at.qe.skeleton.services.UserService;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
-import org.primefaces.PrimeFaces;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -32,13 +30,17 @@ public class PlayerListController {
 
     public List<User> getPlayerByTeam() {
         if(team == null) {
-            return new ArrayList<User>();
+            return new ArrayList<>();
         }
         return team.getTeamPlayers();
     }
 
-    // get players assignable to a team:
-    // having the same raspberry id and not already assigned to another team
+    /**
+     * get players assignable to a team:
+     * having the same raspberry id and not already assigned to another team
+     * @param game
+     * @return List<User>
+     */
     public List<User> getAssignablePlayers(Game game) {
         Raspberry raspberry = sessionInfoBean.getCurrentUser().getRaspberry();
 

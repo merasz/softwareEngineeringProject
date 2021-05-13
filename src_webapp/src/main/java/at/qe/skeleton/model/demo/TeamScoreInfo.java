@@ -1,7 +1,6 @@
 package at.qe.skeleton.model.demo;
 
 import at.qe.skeleton.model.Team;
-import at.qe.skeleton.model.User;
 
 /**
  * Just combines a user and its status.

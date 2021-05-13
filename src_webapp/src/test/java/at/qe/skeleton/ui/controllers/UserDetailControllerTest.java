@@ -9,7 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.internal.util.collections.Sets;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.annotation.DirtiesContext;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.util.*;
 
@@ -32,9 +33,7 @@ class UserDetailControllerTest {
     public void testDeleteUser() {
         int previousSize = userService.getAllUsers().size();
 
-        User user = new User();
-
-        user = userService.loadUser("Ale");
+        User user = userService.loadUser("Alex");
         verify(userService).deleteUser(new User());
         userDetailController.setUser(user);
 
@@ -64,7 +63,7 @@ class UserDetailControllerTest {
     }
 
 
-
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     public void testSaveUser() {
         User adminUser = userService.loadUser("admin");
@@ -80,5 +79,3 @@ class UserDetailControllerTest {
     }
 
 }
-
-
