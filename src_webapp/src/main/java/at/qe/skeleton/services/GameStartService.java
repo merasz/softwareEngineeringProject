@@ -15,6 +15,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * handles the logic for the player selection phase
+ * after starting a game and before entering the game room,
+ * team-leaders get to select their players (if not already set beforehand)
+ */
 @Component
 @Scope("session")
 public class GameStartService extends GameService {
@@ -27,11 +32,10 @@ public class GameStartService extends GameService {
     private Team team;
 
     /**
-     * returns the game which got selected to start
-     * game gets initialized
+     * start game by game creator
      * @param game
      * @param user
-     * @return
+     * @return activated Game
      * @throws IllegalArgumentException
      */
     public Game startGame(Game game, User user) throws IllegalArgumentException {
@@ -44,10 +48,10 @@ public class GameStartService extends GameService {
     }
 
     /**
-     * returns a game if it got selected
+     * join game for all other team representatives
      * @param game
      * @param user
-     * @return
+     * @return current game
      * @throws NoSuchElementException
      * @throws IllegalArgumentException
      */
@@ -63,7 +67,7 @@ public class GameStartService extends GameService {
     }
 
     /**
-     * returns the active game where the user is assigned
+     * get game object by choosing the latest game assigned to the same raspberry as the user
      * @param user
      * @return game object
      */
@@ -111,7 +115,8 @@ public class GameStartService extends GameService {
     }
 
     /**
-     * returns a game for the selected user
+     * select player in the GUI
+     * assigns player to team and makes player unavailable in selection screen
      * @param user
      * @return game object
      */
@@ -124,7 +129,7 @@ public class GameStartService extends GameService {
     }
 
     /**
-     * checks if all conditions are success to start the game and wipe to the gameroom
+     * check if team is ready to play (all team seats occupied with players)
      * @return boolean
      */
     public boolean teamReady() {
@@ -132,7 +137,7 @@ public class GameStartService extends GameService {
     }
 
     /**
-     * returns a playable game
+     * announce team ready to play, try to join if other teams ready too
      * @param teamName
      * @return game object
      * @throws IllegalArgumentException
@@ -156,7 +161,7 @@ public class GameStartService extends GameService {
     }
 
     /**
-     * enter a game
+     * enter game room, if all teams are ready to play and have run finishTeamAssign()
      * @return game
      * @throws IOException
      */
@@ -177,7 +182,7 @@ public class GameStartService extends GameService {
     }
 
     /**
-     * initializes a game
+     * initialize game with new Score instances, start time and iterable player-list
      * @param game
      */
     private void initializeGame(Game game) {

@@ -1,7 +1,6 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.User;
-import at.qe.skeleton.model.UserRole;
 import at.qe.skeleton.services.UserService;
 import java.io.Serializable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,24 +54,6 @@ public class UserController extends Controller implements Serializable {
     public void doReloadUser() {
         user = userService.loadUser(user.getUsername());
     }
-
-
-    /**
-     * Action to delete the currently displayed user.
-     */
-    /*
-    public void doDeleteUser() {
-        try {
-            this.userService.deleteUser(user);
-            user = null;
-            displayInfo("User deleted", "Account successfully deleted.");
-        } catch (IllegalArgumentException e){
-            displayError("Error", e.getMessage());
-        } catch (Exception e) {
-            displayError("Error", "Account could not be deleted.");
-        }
-    }
-    */
 
     /**
      * Action to save the currently displayed user.

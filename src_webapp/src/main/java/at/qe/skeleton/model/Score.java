@@ -2,7 +2,6 @@ package at.qe.skeleton.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 public class Score implements Serializable {
@@ -27,7 +26,6 @@ public class Score implements Serializable {
         this.totalRoundScore = 0;
     }
 
-    //TODO: add new parameters to constructor
     public Score(User user, Team team, Game game) {
         this.user = user;
         this.team = team;

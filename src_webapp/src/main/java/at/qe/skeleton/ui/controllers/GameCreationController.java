@@ -1,7 +1,12 @@
 package at.qe.skeleton.ui.controllers;
 
-import at.qe.skeleton.model.*;
-import at.qe.skeleton.services.*;
+import at.qe.skeleton.model.Game;
+import at.qe.skeleton.model.Team;
+import at.qe.skeleton.model.Topic;
+import at.qe.skeleton.model.User;
+import at.qe.skeleton.services.GameService;
+import at.qe.skeleton.services.TeamService;
+import at.qe.skeleton.services.TermsService;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
 import org.primefaces.PrimeFaces;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,23 +15,17 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
-import java.util.*;
 import java.util.stream.IntStream;
 
-// handles the GUI for game creation (availableGames.xhtml)
+/**
+ * handles the GUI for game creation (availableGames.xhtml)
+ */
 @Component
 @Scope("view")
 public class GameCreationController extends Controller implements Serializable {
+
     @Autowired
     private GameService gameService;
-
-    /*
-    @Autowired
-    private TopicService topicService;
-
-    @Autowired
-    private UserService userService;
-    */
 
     @Autowired
     private TermsService termsService;
@@ -37,21 +36,20 @@ public class GameCreationController extends Controller implements Serializable {
     @Autowired
     private SessionInfoBean sessionInfoBean;
 
-    //minimum number of points for winning the game allowed to set at game creation
+    /**
+     * minimum number of points for winning the game allowed to set at game creation
+     */
     private int MIN_WIN_SCORE = 12;
 
     private Game game;
     private Topic currentTopic;
 
     private User user;
-    //private List<User> userList;
-    //private List<User> tmp;
     private int numberTeams;
 
     @PostConstruct
     public void init() {
         doCreateNewGame();
-        //setUserList();
     }
 
     public void doCreateNewGame() {
@@ -79,12 +77,6 @@ public class GameCreationController extends Controller implements Serializable {
         }
     }
 
-    /*
-    public void setUserList() {
-        userList = new ArrayList<>(userService.getAllUsers());
-    }
-    */
-
     //region getter & setter
     public int getNumberTeams() {
         return numberTeams;
@@ -109,19 +101,5 @@ public class GameCreationController extends Controller implements Serializable {
     public void setCurrentTopic(Topic topic) {
         this.currentTopic = topic;
     }
-
-    /*
-    public List<User> getUserList() {
-        return userList;
-    }
-
-    public List<User> getTmp() {
-        return tmp;
-    }
-
-    public void setTmp(List<User> tmp) {
-        this.tmp = tmp;
-    }
-    */
     //endregion
 }

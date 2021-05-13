@@ -1,11 +1,9 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.User;
-import at.qe.skeleton.model.UserRole;
 import at.qe.skeleton.services.UserService;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -28,13 +26,11 @@ public class UserListController implements Serializable {
     @Autowired
     private UserService userService;
 
-    private Collection<User> filteredList;
     private String option;
 
     @PostConstruct
     public void init() {
         setOption("all");
-        setFilteredList(getUsers());
     }
     /**
      * Returns a list of all users.
@@ -63,10 +59,6 @@ public class UserListController implements Serializable {
 
     public void setOption(String option) {
         this.option = option;
-    }
-
-    public void setFilteredList(Collection<User> filteredList) {
-        this.filteredList = filteredList;
     }
 
 }

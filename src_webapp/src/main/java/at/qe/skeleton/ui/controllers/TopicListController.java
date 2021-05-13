@@ -30,12 +30,6 @@ public class TopicListController implements Serializable {
         return topicService.getAllTopics();
     }
 
-    /*
-    public Collection<Topic> getTopicsAsc() {
-        return topicService.getAllTopicsAsc();
-    }
-    */
-
     public Collection<GameTopicCount> getTopicAmount() {
         return topicService.getTopicTermsAmount();
     }

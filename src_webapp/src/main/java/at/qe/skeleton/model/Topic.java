@@ -1,8 +1,6 @@
 package at.qe.skeleton.model;
 
-import org.hibernate.annotations.*;
 import javax.persistence.*;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import java.io.Serializable;
 import java.util.*;
@@ -29,12 +27,9 @@ public class Topic implements Serializable {
     @ManyToOne(optional = true)
     private Topic updateTopic;
 
-
-
     public Topic() {
     }
 
-    //TODO: add new parameters to constructor
     public Topic(String topicName) {
         this.topicName = topicName;
     }
@@ -96,36 +91,22 @@ public class Topic implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
-        if (obj == null)
-        {
-            return false;
-        }
-        if (!(obj instanceof Topic))
-        {
-            return false;
-        }
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (!(obj instanceof Topic)) return false;
+
         final Topic other = (Topic) obj;
-        if (!Objects.equals(this.topicName, other.topicName))
-        {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.topicName, other.topicName);
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return (getTopicName() != null) ? (getClass().getSimpleName().hashCode() + getTopicName().hashCode()) : super.hashCode();
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return topicName;
     }
-
-
 
 }

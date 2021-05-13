@@ -5,7 +5,6 @@ import org.omnifaces.cdi.Param;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ScoreRepository extends AbstractRepository<Score, Integer> {
 
@@ -16,32 +15,6 @@ public interface ScoreRepository extends AbstractRepository<Score, Integer> {
      * @return list of scores
      */
     List<Score> findAllByUser(User user);
-
-    /**
-     * Function which returns all scores for a game
-     *
-     * @param game
-     * @return list of scores
-     */
-    List<Score> findAllByGame(Game game);
-
-    /**
-     * Function which returns all scores for a team in a game.
-     *
-     * @param game
-     * @param team
-     * @return list of scores
-     */
-    List<Score> findAllByGameAndTeam(Game game, Team team);
-
-    /**
-     * Function which returns score by a user with given game.
-     *
-     * @param user
-     * @param game
-     * @return
-     */
-    Score findFirstByUserAndGame(User user, Game game);
 
     /**
      * Function returns score from each user in the game.

@@ -21,18 +21,7 @@ public class Raspberry implements Serializable {
     private String ipAddress;
     private String apiKey;
 
-    @OneToOne
-    private TimeFlip timeFlip;
-
     public Raspberry() {
-    }
-
-    public Raspberry(String hostname, List<User> users, boolean inUse, String ipAddress, TimeFlip timeFlip) {
-        this.hostname = hostname;
-        this.users = users;
-        this.inUse = inUse;
-        this.ipAddress = ipAddress;
-        this.timeFlip = timeFlip;
     }
 
     public int getRaspberryId() {
@@ -79,19 +68,4 @@ public class Raspberry implements Serializable {
 
     public void setApiKey(String apiKey) { this.apiKey = apiKey; }
 
-    public Raspberry(int raspberryId, String hostname, List<User> user, boolean inUse, String ipAddress) {
-        this.raspberryId = raspberryId;
-        this.hostname = hostname;
-        this.users = user;
-        this.inUse = inUse;
-        this.ipAddress = ipAddress;
-    }
-
-    public TimeFlip getTimeFlip() {
-        return timeFlip;
-    }
-
-    public void setTimeFlip(TimeFlip timeFlip) {
-        this.timeFlip = timeFlip;
-    }
 }

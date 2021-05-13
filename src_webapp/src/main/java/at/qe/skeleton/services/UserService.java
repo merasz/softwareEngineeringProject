@@ -9,9 +9,7 @@ import at.qe.skeleton.repositories.TeamRepository;
 import at.qe.skeleton.repositories.UserRepository;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
-import org.primefaces.shaded.json.JSONObject;
+import at.qe.skeleton.ui.controllers.demo.ChatManagerController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,6 +36,9 @@ public class UserService {
 
     @Autowired
     private TeamRepository teamRepository;
+
+    @Autowired
+    private ChatManagerController chatManagerController;
 
     /**
      * Returns a collection of all users.
@@ -89,6 +90,10 @@ public class UserService {
      */
     @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #user.username")
     public void deleteUser(User user) throws IllegalArgumentException {
+        if (chatManagerController.getPossibleRecipients().contains(user)) {
+            throw new IllegalArgumentException("User is currently logged in and therefore can't be deleted.");
+        }
+
         if (user.isEnabled()) {
             throw new IllegalArgumentException("User must be disabled before deleting.");
         }
@@ -151,19 +156,6 @@ public class UserService {
     }
     */
 
-    public Collection<User> getAllAdmins() {
-        return userRepository.findAllAdmins();
-    }
-
-    public Collection<User> getAllManagers() {
-        return userRepository.findAllManagers();
-    }
-
-    public Collection<User> getAllPlayers() {
-        return userRepository.findAllPlayers();
-    }
-
-
     private void validateInput(String username, String password) throws IllegalArgumentException, NullPointerException {
         if (username.isEmpty() || password.isEmpty()) {
             throw new IllegalArgumentException("All fields need to be filled.");
@@ -177,6 +169,18 @@ public class UserService {
         }
     }
 
+    //region getter & setter
+    public Collection<User> getAllAdmins() {
+        return userRepository.findAllAdmins();
+    }
+
+    public Collection<User> getAllManagers() {
+        return userRepository.findAllManagers();
+    }
+
+    public Collection<User> getAllPlayers() {
+        return userRepository.findAllPlayers();
+    }
     private User getAuthenticatedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return userRepository.findFirstByUsername(auth.getName());
@@ -193,4 +197,5 @@ public class UserService {
     public List<User> getUserByRaspberry(Raspberry raspberry) {
         return userRepository.findAllByRaspberry(raspberry);
     }
+    //endregion
 }

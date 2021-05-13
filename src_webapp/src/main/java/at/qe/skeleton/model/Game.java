@@ -16,10 +16,8 @@ public class Game implements Serializable {
     private Integer gameId;
     private String gameName;
     private int scoreToWin;
-    private int totalScore;
     private int countPlayers;
     private int teamSize;
-    private int nrRound;
     private boolean active;
     @Temporal(TemporalType.TIMESTAMP)
     private Date startTime;
@@ -34,9 +32,6 @@ public class Game implements Serializable {
     @OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, orphanRemoval = true)
     private List<Team> teamList;
 
-    //@ElementCollection
-    //private List<Integer> deviceTeamIdList;
-
     @ManyToOne
     private Topic topic;
 
@@ -45,23 +40,9 @@ public class Game implements Serializable {
 
     public Game() {
         this.teamList = new ArrayList<>();
-        this.totalScore = 0;
-        this.nrRound = 1;
         this.active = false;
         this.countPlayers = 0;
         this.teamSize = 0;
-    }
-
-    public Game(int scoreToWin, int countPlayers, int teamSize, Topic topic, Raspberry raspberry) {
-        this.scoreToWin = scoreToWin;
-        this.totalScore = 0;
-        this.countPlayers = countPlayers;
-        this.teamSize = teamSize;
-        this.nrRound = 1;
-        this.topic = topic;
-        this.raspberry = raspberry;
-        this.teamList = new ArrayList<>();
-        this.active = false;
     }
 
     public int getScoreToWin() {
@@ -72,24 +53,8 @@ public class Game implements Serializable {
         this.scoreToWin = scoreToWin;
     }
 
-    public int getTotalScore() {
-        return totalScore;
-    }
-
-    public void setTotalScore(int totalScore) {
-        this.totalScore = totalScore;
-    }
-
     public int getCountPlayers() {
         return countPlayers;
-    }
-
-    public int getNrRound() {
-        return nrRound;
-    }
-
-    public void incrementNrRound() {
-        this.nrRound++;
     }
 
     public boolean isActive() {
@@ -147,7 +112,6 @@ public class Game implements Serializable {
     public Date getPausedTime() {
         return pausedTime;
     }
-
     public void setPausedTime(Date pausedTime) {
         this.pausedTime = pausedTime;
     }
@@ -160,17 +124,11 @@ public class Game implements Serializable {
 
     public String getGameName() { return gameName; }
 
-    public List<Score> getScoreList() { return scoreList; }
-
     public void setGameName(String gameName) { this.gameName = gameName; }
 
     public void setCountPlayers(int countPlayers) { this.countPlayers = countPlayers; }
 
-    public void setNrRound(int nrRound) { this.nrRound = nrRound; }
-
     public void setRaspberry(Raspberry raspberry) { this.raspberry = raspberry; }
-
-    public void setScoreList(List<Score> scoreList) { this.scoreList = scoreList; }
 
     public void setGameId(int gameId) {
         this.gameId = gameId;

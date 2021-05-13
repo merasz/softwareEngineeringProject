@@ -2,7 +2,6 @@ package at.qe.skeleton.repositories;
 
 import at.qe.skeleton.model.GameTopicCount;
 import at.qe.skeleton.model.Team;
-import at.qe.skeleton.model.User;
 import org.omnifaces.cdi.Param;
 import org.springframework.data.jpa.repository.Query;
 

@@ -7,7 +7,6 @@ import at.qe.skeleton.model.User;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface TeamRepository extends AbstractRepository<Team,Integer>{
@@ -46,6 +45,4 @@ public interface TeamRepository extends AbstractRepository<Team,Integer>{
      * @return team
      */
     Team findByTeamPlayersAndGame(User user, Game game);
-
-
 }
