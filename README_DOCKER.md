@@ -1,7 +1,7 @@
 To start the application in Docker:
 
 ```
-$ docker create network timeflip
+$ docker network create timeflip
 
 $ docker run -p 3306:3306 --network timeflip --name=docker-mysql  --env="MYSQL_ROOT_PASSWORD=root" --env="MYSQL_USER=spring" --env="MYSQL_PASSWORD=uraniumjazz43" --env="MYSQL_DATABASE=timeflip_guess"  mysql --lower-case-table-names=1
 
