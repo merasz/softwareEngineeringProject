@@ -154,7 +154,7 @@
                         <f:setPropertyActionListener value="#{team}" target="#{teamController.team}" />
                     </p:commandButton>
                 </p:column>
-                <p:column style="width:100px;text-align: center" headerText="Delete Team">
+                <p:column style="width:100px;text-align: center" headerText="Delete">
                     <p:commandButton title="Delete" icon="ui-icon-trash" action="#{teamController.doClearTeam()}" update="teamsTable, :teamsForm:createTeamButton"  style="width:20px;height:20px">
                         <f:setPropertyActionListener value="#{team}" target="#{teamController.team}" />
                     </p:commandButton>
@@ -190,7 +190,7 @@
                 <p:column headerText="Player name">
                     <h:outputText value="#{player.username}"/>
                 </p:column>
-                <p:column style="width:100px;text-align: center" headerText="Delete Player">
+                <p:column style="width:100px;text-align: center" headerText="Delete">
                     <p:commandButton title="Player" icon="ui-icon-trash" action="#{teamController.doDeletePlayer()}" update=":playerForm:playerTable"  style="width:20px;height:20px">
                         <f:setPropertyActionListener value="#{player}" target="#{teamController.tmpPlayer}" />
                     </p:commandButton>
