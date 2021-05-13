@@ -24,13 +24,6 @@ public class Team implements Serializable {
     @ManyToOne
     private Game game;
 
-    /*
-    @ElementCollection
-    @MapKeyColumn(name="key") // column name for map "key"
-    @Column(name="value") // column name for map "value"
-    private Map<User,String> deviceIdsFromTeam = new HashMap<>();
-    */
-
     @OneToMany(mappedBy = "team")
     private List<Score> scores;
 
@@ -40,17 +33,6 @@ public class Team implements Serializable {
         this.game = game;
         this.teamPlayers = new ArrayList<>();
     }
-
-    /*
-    public Team(List<User> teamPlayers, String teamName, Game game, List<Score> scores,
-                Map<User,String> deviceIdsFromTeam) {
-        this.teamPlayers = teamPlayers;
-        this.teamName = teamName;
-        this.game = game;
-        this.scores = scores;
-        this.deviceIdsFromTeam = deviceIdsFromTeam;
-    }
-    */
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -96,16 +78,6 @@ public class Team implements Serializable {
     public void setScores(List<Score> scores) {
         this.scores = scores;
     }
-
-    /*
-    public Map<User, String> getDeviceIdsFromTeam() {
-        return deviceIdsFromTeam;
-    }
-
-    public void setDeviceIdsFromTeam(Map<User, String> deviceIdsFromTeam) {
-        this.deviceIdsFromTeam = deviceIdsFromTeam;
-    }
-    */
 
     @Override
     public boolean equals(Object o) {
