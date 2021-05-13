@@ -1,4 +1,4 @@
-package at.qe.skeleton.tests;
+package at.qe.skeleton.services;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

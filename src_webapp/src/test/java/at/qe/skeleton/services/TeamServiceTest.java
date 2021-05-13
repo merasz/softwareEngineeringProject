@@ -8,6 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.*;
@@ -16,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 class TeamServiceTest {
 
     private TeamService teamServiceUnderTest;
@@ -41,7 +43,7 @@ class TeamServiceTest {
         final User user = new User();
         final List<Team> teams = Arrays.asList(new Team());
         when(teamServiceUnderTest.teamRepository.findByGame(0)).thenReturn(teams);
-        //final List<Team> result = teamServiceUnderTest.getTeamsByGame(game);
+        final List<Team> result = teamServiceUnderTest.getTeamsByGame(game);
     }
 
     @Test
@@ -99,7 +101,7 @@ class TeamServiceTest {
         final User user = new User();
         final List<Team> teams = Arrays.asList(new Team());
         when(teamServiceUnderTest.teamRepository.findByGame(0)).thenReturn(teams);
-        //final boolean result = teamServiceUnderTest.isPlayerAssignedToEnemyTeam(game, tmpPlayer);
-        //assertThat(result).isTrue();
+        final boolean result = teamServiceUnderTest.isPlayerAssignedToEnemyTeam(game, tmpPlayer);
+        assertThat(result).isTrue();
     }
 }

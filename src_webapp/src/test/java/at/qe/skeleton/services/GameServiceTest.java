@@ -87,27 +87,10 @@ class GameServiceTest {
     }
 
     @Test
-    void testGetAllGames_GameRepositoryReturnsNoItems() {
-        final User user = new User();
-        final Collection<Game> expectedResult = Arrays.asList(new Game());
-        when(mockGameRepository.findAll()).thenReturn(Collections.emptyList());
-        final Collection<Game> result = gameServiceUnderTest.getAllGames();
-//        assertThat(result).isEqualTo(expectedResult);
-    }
-
-    @Test
     void testGetMostPopularTopics() {
         final Collection<Topic> expectedResult = Arrays.asList(new Topic("topicName"));
         when(mockGameRepository.getMostPopularTopics()).thenReturn(Arrays.asList(new Topic("topicName")));
         final Collection<Topic> result = gameServiceUnderTest.getMostPopularTopics();
         assertThat(result).isEqualTo(expectedResult);
-    }
-
-    @Test
-    void testGetMostPopularTopics_GameRepositoryReturnsNoItems() {
-        final Collection<Topic> expectedResult = Arrays.asList(new Topic("topicName"));
-        when(mockGameRepository.getMostPopularTopics()).thenReturn(Collections.emptyList());
-        final Collection<Topic> result = gameServiceUnderTest.getMostPopularTopics();
-//        assertThat(result).isEqualTo(expectedResult);
     }
 }
