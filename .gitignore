@@ -7,6 +7,7 @@ src_webapp/target/
 src_webapp/src/main/webapp/WEB-INF/.faces-config.xml.jsfdia
 /.idea/
 src_webapp/.idea/
+src_rasp/.idea/
 /lib/
 .DS_Store
 documents/softwarekonzept/.DS_Store
