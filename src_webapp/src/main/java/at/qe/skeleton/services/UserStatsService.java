@@ -30,7 +30,9 @@ public class UserStatsService {
      */
     public List<Score> getBestScoresFromUser(User user) {
         List<Team> teams = teamService.getTeamsByPlayer(user);
+        if(teams == null) return null;
         List<Score> scores= scoreRepository.findGameScoresByUser(teams);
+        if(scores.size() == 0) return null;
         scores.sort(compareByScore);
         int length = scores.size();
         return length > 5 ?  scores.subList(0,5) : scores.subList(0,length);
@@ -43,7 +45,12 @@ public class UserStatsService {
      */
     public List<Score> getLatestScoresFromUser(User user) {
         List<Team> teams = teamService.getTeamsByPlayer(user);
+        if(teams == null) return null;
         List<Score> scores= scoreRepository.findGameScoresByUser(teams);
+        System.out.println(teams);
+        System.out.println(scores);
+        System.out.println(scores.size());
+        if(scores.size() == 0) return null;
         scores.sort(compareByDate);
         int length = scores.size();
         return length > 5 ?  scores.subList(0,5) : scores.subList(0,length);
