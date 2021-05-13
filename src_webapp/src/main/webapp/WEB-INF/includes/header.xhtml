@@ -50,7 +50,7 @@
                     <p:link outcome="/admin/admin.xhtml" rendered="#{sessionInfoBean.hasRole('ADMIN') or sessionInfoBean.hasRole('GAME_MANAGER')}">
                         <i class="fas fa-chart-pie"></i><span>Manager Hub</span>
                     </p:link>
-                    <p:link outcome="/secured/availableGames.xhtml" rendered="#{sessionInfoBean.hasRole('ADMIN') or sessionInfoBean.hasRole('GAME_MANAGER')}">
+                    <p:link outcome="/admin/availableGames.xhtml" rendered="#{sessionInfoBean.hasRole('ADMIN') or sessionInfoBean.hasRole('GAME_MANAGER')}">
                         <i class="fas fa-chess"></i><span>Available Games</span>
                     </p:link>
                     <p:commandLink id="join" action="#{gameStartController.joinGame}">

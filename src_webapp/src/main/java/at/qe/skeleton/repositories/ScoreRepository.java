@@ -21,7 +21,7 @@ public interface ScoreRepository extends AbstractRepository<Score, Integer> {
      * @param teams
      * @return list of scores
      */
-    @Query("SELECT new at.qe.skeleton.model.Score (MAX(s.scoreId),SUM(s.totalRoundScore),s.team,s.game) from Score s WHERE s.team in :teams GROUP BY s.game.gameId")
+    @Query("SELECT new at.qe.skeleton.model.Score (MAX(s.scoreId),SUM(s.totalRoundScore),s.team,s.game) from Score s WHERE s.team in :teams AND s.game.endTime is not null GROUP BY s.game.gameId")
     List<Score> findGameScoresByUser(@Param(name = "teams") List<Team> teams);
 
     /**
@@ -38,7 +38,7 @@ public interface ScoreRepository extends AbstractRepository<Score, Integer> {
      * @param teams
      * @return int
      */
-    @Query("SELECT count( distinct s.game) from Score s WHERE s.team in :teams")
+    @Query("SELECT count( distinct s.game) from Score s WHERE s.team in :teams AND s.game.endTime is not null")
     int countGamesByTeam(@Param(name = "teams") List<Team> teams);
 
     /**
@@ -46,7 +46,7 @@ public interface ScoreRepository extends AbstractRepository<Score, Integer> {
      * @param teams
      * @return Integer
      */
-    @Query("SELECT count(distinct s.game) from Score s WHERE s.team in :teams GROUP BY s.game.gameId HAVING SUM(s.totalRoundScore) >= s.game.scoreToWin")
+    @Query("SELECT count(distinct s.game) from Score s WHERE s.team in :teams AND s.game.endTime is not null GROUP BY s.game.gameId HAVING SUM(s.totalRoundScore) >= s.game.scoreToWin")
     Integer countWonGamesByUser(@Param(name = "teams") List<Team> teams);
 
     /**
@@ -54,7 +54,7 @@ public interface ScoreRepository extends AbstractRepository<Score, Integer> {
      * @param teams
      * @return Integer
      */
-    @Query("SELECT count(distinct s.game) from Score s WHERE s.team in :teams GROUP BY s.game.gameId HAVING SUM(s.totalRoundScore) < s.game.scoreToWin")
+    @Query("SELECT count(distinct s.game) from Score s WHERE s.team in :teams AND s.game.endTime is not null GROUP BY s.game.gameId HAVING SUM(s.totalRoundScore) < s.game.scoreToWin")
     Integer countLostGamesByUser(@Param(name = "teams") List<Team> teams);
 
     /**

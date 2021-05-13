@@ -45,7 +45,7 @@ public class UserService {
      *
      * @return
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('GAME_MANAGER')")
     public Collection<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -56,7 +56,7 @@ public class UserService {
      * @param username the username to search for
      * @return the user with the given username
      */
-    @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #username")
+    //@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('GAME_MANAGER')")
     public User loadUser(String username) {
         return userRepository.findFirstByUsername(username);
     }
@@ -70,7 +70,7 @@ public class UserService {
      * @param user the user to save
      * @return the updated user
      */
-    @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #user.username")
+    //@PreAuthorize("hasAuthority('ADMIN') or principal.username eq #user.username")
     public User saveUser(User user) {
         if (user.isNew()) {
             user.setCreateDate(new Date());
@@ -88,7 +88,7 @@ public class UserService {
      *
      * @param user the user to delete
      */
-    @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #user.username")
+    //@PreAuthorize("hasAuthority('ADMIN') or principal.username eq #user.username")
     public void deleteUser(User user) throws IllegalArgumentException {
         if (chatManagerController.getPossibleRecipients().contains(user)) {
             throw new IllegalArgumentException("User is currently logged in and therefore can't be deleted.");
