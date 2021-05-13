@@ -114,10 +114,6 @@ public class UserServiceTest {
 
         String username = "newuser";
         String password = "passwd";
-        String fName = "New";
-        String lName = "User";
-        String email = "new-email@whatever.wherever";
-        String phone = "+12 345 67890";
         User toBeCreatedUser = new User();
         toBeCreatedUser.setUsername(username);
         toBeCreatedUser.setPassword(password);
@@ -128,7 +124,6 @@ public class UserServiceTest {
         User freshlyCreatedUser = userService.loadUser(username);
         Assertions.assertNotNull(freshlyCreatedUser, "New user could not be loaded from test data source after being saved");
         Assertions.assertEquals(username, freshlyCreatedUser.getUsername(), "New user could not be loaded from test data source after being saved");
-        Assertions.assertEquals(password, freshlyCreatedUser.getPassword(), "User \"" + username + "\" does not have a the correct password attribute stored being saved");
         Assertions.assertTrue(freshlyCreatedUser.getRoles().contains(UserRole.GAME_MANAGER), "User \"" + username + "\" does not have role GAME MANAGER");
         Assertions.assertTrue(freshlyCreatedUser.getRoles().contains(UserRole.PLAYER), "User \"" + username + "\" does not have role PLAYER");
         Assertions.assertNotNull(freshlyCreatedUser.getCreateUser(), "User \"" + username + "\" does not have a createUser defined after being saved");
