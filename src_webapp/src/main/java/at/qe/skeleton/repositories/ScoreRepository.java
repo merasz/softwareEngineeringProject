@@ -29,7 +29,7 @@ public interface ScoreRepository extends AbstractRepository<Score, Integer> {
      * @param game
      * @return list of scores
      */
-    @Query("SELECT new at.qe.skeleton.model.Score (MAX(s.scoreId),SUM(s.totalRoundScore),s.team,s.game) from Score s WHERE s.game = :game AND s.game.endTime is not null GROUP BY s.team.teamId")
+    @Query("SELECT new at.qe.skeleton.model.Score (MAX(s.scoreId),SUM(s.totalRoundScore),s.team,s.game) from Score s WHERE s.game = :game GROUP BY s.team.teamId")
     List<Score> findGameScoresByGame(@Param(name = "game") Game game);
 
     /**
