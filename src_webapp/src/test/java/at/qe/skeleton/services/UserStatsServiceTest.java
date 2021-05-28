@@ -31,28 +31,22 @@ class UserStatsServiceTest {
     void testGetBestScoresFromUser() {
         final User user = new User();
         user.setUsername("username");
-        user.setPassword("password");
-        user.setEnabled(false);
-        user.setTeam(Arrays.asList(new Team()));
-        user.setRoles(new HashSet<>(Arrays.asList(UserRole.ADMIN)));
-        user.setRaspberry(new Raspberry());
-        user.setCreateUser(new User());
-        user.setCreateDate(new GregorianCalendar().getTime());
-        user.setUpdateUser(new User());
-        user.setUpdateDate(new GregorianCalendar().getTime());
+        //final Game game = new Game();
         final List<Team> teams = Arrays.asList(new Team());
         when(userStatsServiceUnderTest.teamService.getTeamsByPlayer(new User())).thenReturn(teams);
+        //final Game game2 = new Game();
+        //final Game game3 = new Game();
         final List<Score> scores = Arrays.asList(new Score());
         when(userStatsServiceUnderTest.scoreRepository.findGameScoresByUser(Arrays.asList(new Team()))).thenReturn(scores);
         final List<Score> result = userStatsServiceUnderTest.getBestScoresFromUser(user);
-        //verify
-        //assertThat(result).isEqualTo(0);
+        assertThat(result).isEqualTo(0);
+        //when(userStatsServiceUnderTest.scoreRepository.findGameScoresByUser(Arrays.asList(new Team(new Game())))).thenReturn(scores);
+        //final List<Score> result = userStatsServiceUnderTest.getBestScoresFromUser(user);
     }
 
     @Test
     void testGetLatestScoresFromUser() {
         final User user = new User();
-
         final List<Score> scores = Arrays.asList(new Score());
         when(userStatsServiceUnderTest.scoreRepository.findGameScoresByUser(Arrays.asList(new Team()))).thenReturn(scores);
         final List<Score> result = userStatsServiceUnderTest.getLatestScoresFromUser(user);
@@ -64,8 +58,8 @@ class UserStatsServiceTest {
         final List<Team> teams = Arrays.asList(new Team());
         when(userStatsServiceUnderTest.teamService.getTeamsByPlayer(new User())).thenReturn(teams);
         when(userStatsServiceUnderTest.scoreRepository.countGamesByTeam(Arrays.asList(new Team()))).thenReturn(0);
-//        final int result = userStatsServiceUnderTest.getGameCountByUser(user);
-//        assertThat(result).isEqualTo(0);
+        final int result = userStatsServiceUnderTest.getGameCountByUser(user);
+        assertThat(result).isEqualTo(0);
     }
 
     @Test
@@ -74,8 +68,8 @@ class UserStatsServiceTest {
         final List<Team> teams = Arrays.asList(new Team());
         when(userStatsServiceUnderTest.teamService.getTeamsByPlayer(new User())).thenReturn(teams);
         when(userStatsServiceUnderTest.scoreRepository.countWonGamesByUser(Arrays.asList(new Team()))).thenReturn(0);
-//        final int result = userStatsServiceUnderTest.getWonCountByUser(user);
-//        assertThat(result).isEqualTo(0);
+        final int result = userStatsServiceUnderTest.getWonCountByUser(user);
+        assertThat(result).isEqualTo(0);
     }
 
     @Test
@@ -84,8 +78,8 @@ class UserStatsServiceTest {
         final List<Team> teams = Arrays.asList(new Team());
         when(userStatsServiceUnderTest.teamService.getTeamsByPlayer(new User())).thenReturn(teams);
         when(userStatsServiceUnderTest.scoreRepository.countLostGamesByUser(Arrays.asList(new Team()))).thenReturn(0);
-//        final int result = userStatsServiceUnderTest.getLostCountByUser(user);
-//        assertThat(result).isEqualTo(0);
+        final int result = userStatsServiceUnderTest.getLostCountByUser(user);
+        assertThat(result).isEqualTo(0);
     }
 
     @Test
@@ -95,6 +89,21 @@ class UserStatsServiceTest {
         when(userStatsServiceUnderTest.teamService.getTeamsByPlayer(new User())).thenReturn(teams);
         final List<GameTopicCount> gameTopicCounts = Arrays.asList(new GameTopicCount(new Topic("topicName"), 0L));
         when(userStatsServiceUnderTest.topicGamesRepository.countWonGamesByUserAndTopic(Arrays.asList(new Team()))).thenReturn(gameTopicCounts);
-//        final List<GameTopicCount> result = userStatsServiceUnderTest.getWonGamesByTopics(user);
+        final List<GameTopicCount> result = userStatsServiceUnderTest.getWonGamesByTopics(user);
+    }
+
+    @Test
+    void testGetTopTeamForGame() {
+        final Game game = new Game();
+        game.setScoreToWin(0);
+        game.setTeamList(Arrays.asList(new Team(new Game())));
+        final Raspberry raspberry = new Raspberry();
+        game.setRaspberry(raspberry);
+        final Team expectedResult = new Team(game);
+        final Game game2 = new Game();
+        final List<Team> teams = Arrays.asList(new Team(game2));
+        when(userStatsServiceUnderTest.scoreRepository.getTopTeamInAGame(new Game())).thenReturn(teams);
+        final Team result = userStatsServiceUnderTest.getTopTeamForGame(game);
+        assertThat(result).isEqualTo(expectedResult);
     }
 }

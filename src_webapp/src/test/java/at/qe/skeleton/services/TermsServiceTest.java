@@ -10,24 +10,25 @@ import at.qe.skeleton.services.TermsService;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+//@SpringBootTest
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@ExtendWith(MockitoExtension.class)
 public class TermsServiceTest {
     @Autowired
     TermsService termsService;
@@ -45,63 +46,44 @@ public class TermsServiceTest {
         final Topic expectedResult = new Topic("topicName");
         when(mockTopicRepository.findFirstByTopicName("name")).thenReturn(new Topic("topicName"));
         final Topic result = termsServiceUnderTest.loadTopic("topicName");
-//        assertThat(result).isEqualTo(expectedResult);
+        assertThat(result).isEqualTo(expectedResult);
     }
 
     @Test
     public void testSaveTopic() {
-        String newName = "TestTopic";
-        String existingName = "TestTopic";
-        termsService.saveTopic(newName, new Topic());
-
-        Topic newTopic = termsService.getTopicRepository().findFirstByTopicName(newName);
-        Assertions.assertNotNull(newTopic, "New topic not found in database");
-        Assertions.assertThrows(IllegalArgumentException.class, () -> termsService.saveTopic(existingName, new Topic()));
-
-        List<Topic> topics = termsService.getTopicRepository().findAll().stream()
-                                .filter(x -> x.getTopicName().equals(existingName))
-                                .collect(Collectors.toList());
-        Assertions.assertEquals(1, topics.size(), "Topic exists multiple times in database");
+        final Topic topic = new Topic("topicName");
+        when(mockTopicRepository.findFirstByTopicName("name")).thenReturn(new Topic("topicName"));
+        when(mockTopicRepository.save(new Topic("topicName"))).thenReturn(new Topic("topicName"));
+        termsServiceUnderTest.saveTopic("name", topic);
     }
 
     @Test
     public void testSaveTerm() {
-        String topicName = "TestTopic";
-        String newName = "TestTerm";
-        String existingName = "TestTerm";
-        termsService.getTopicRepository().save(new Topic(topicName));
-
-        Term term = new Term();
-        term.setTermName(newName);
-        termsService.saveTerm(term);
-
-        term = termsService.getTermsRepository().findFirstByTermName(newName);
-        Assertions.assertNotNull(term, "New term not found in database");
-
-        Term existingTerm = new Term();
-        existingTerm.setTermName(existingName);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> termsService.saveTerm(existingTerm));
-
-        List<Term> terms = termsService.getTermsRepository().findAll().stream()
-                            .filter(x -> x.getTermName().equals(existingName))
-                            .collect(Collectors.toList());
-        Assertions.assertEquals(1, terms.size(), "Term exists multiple times in database");
+        final Term term = new Term("termName", new Topic("topicName"));
+        final List<Term> terms = Arrays.asList(new Term("termName", new Topic("topicName")));
+        when(mockTermsRepository.findAll()).thenReturn(terms);
+        final Term term1 = new Term("termName", new Topic("topicName"));
+        when(mockTermsRepository.save(any(Term.class))).thenReturn(term1);
+        final Term result = termsServiceUnderTest.saveTerm(term);
     }
 
     @Test
     public void testDeleteTopic() {
-        Topic topic = new Topic("TestTopic");
-        termsService.getTopicRepository().save(topic);
-
-        Assertions.assertDoesNotThrow(() -> termsService.deleteTopic(topic), "Topic could not be deleted");
-
-        Term term = new Term();
-        term.setTermName("TestTerm");
-        term.setTopic(topic);
-//        termsService.getTermsRepository().save(term);
-//        Assertions.assertThrows(IllegalArgumentException.class, () -> termsService.deleteTopic(topic));
+        final Topic topic = new Topic("topicName");
+        final List<Term> terms = Arrays.asList(new Term("termName", new Topic("topicName")));
+        when(mockTermsRepository.findAllByTopic(new Topic("topicName"))).thenReturn(terms);
+        termsServiceUnderTest.deleteTopic(topic);
+        verify(mockTopicRepository).delete(new Topic("topicName"));
     }
 
+    @Test
+    void testDeleteTopic_TermsRepositoryReturnsNoItems() {
+        final Topic topic = new Topic("topicName");
+        when(mockTermsRepository.findAllByTopic(new Topic("topicName"))).thenReturn(Collections.emptyList());
+        termsServiceUnderTest.deleteTopic(topic);
+        verify(mockTopicRepository).delete(new Topic("topicName"));
+    }
+/*
     private Topic createTestTopic() {
         Topic topic = new Topic("TestTopic");
         termsService.getTopicRepository().save(topic);
@@ -121,6 +103,8 @@ public class TermsServiceTest {
         }
     }
 
+ */
+/*
     @Test
     public void testSetGameTopic() {
         Topic topic = createTestTopic();
@@ -129,6 +113,7 @@ public class TermsServiceTest {
         fillTopic(topic);
         Assertions.assertDoesNotThrow(() -> termsService.setTopic(topic));
     }
+ */
 
     @Test
     void testSetTopic() {
@@ -136,15 +121,8 @@ public class TermsServiceTest {
         final Topic expectedResult = new Topic("topicName");
         final List<Term> terms = Arrays.asList(new Term("termName", new Topic("topicName")));
         when(mockTermsRepository.findAllByTopic(new Topic("topicName"))).thenReturn(terms);
-//        final Topic result = termsServiceUnderTest.setTopic(topic);
-//        assertThat(result).isEqualTo(expectedResult);
-    }
-
-    @Test
-    public void testGetNextTerm() {
-        final User user = new User();
-        final Game game = new Game();
-        //final Term result = termsServiceUnderTest.getNextTerm(game);
+        final Topic result = termsServiceUnderTest.setTopic(topic);
+        assertThat(result).isEqualTo(expectedResult);
     }
 
     @Test
@@ -154,7 +132,7 @@ public class TermsServiceTest {
         when(mockTermsRepository.doesTermExits("name", "tn")).thenReturn(false);
         final Term term = new Term("termName", new Topic("topicName"));
         when(mockTermsRepository.save(any(Term.class))).thenReturn(term);
-//        termsServiceUnderTest.importTerms(jsonObject, topic);
+        termsServiceUnderTest.importTerms(jsonObject, topic);
     }
 
     @Test
