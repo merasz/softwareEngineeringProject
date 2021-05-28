@@ -8,21 +8,36 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name ="content">
+        <p:commandButton style="width: 10%; margin-top: 9px;margin-right: 80px; float: right;" id="help"
+                         oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
+        <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
+            <h:panelGrid columns="1">
+                <h3>Create User</h3>
+                <h:outputText value="Click on 'Create new User' to create a new User.
+                                    To create a User you have to give a Username which only includes letters and numbers
+                                    and have to be in range from 4 to 16 signs.
+                                    Also a Password is required, here all signs are allowed and it must be in range from  4 to 18.
+                                    Select minimum 1 role for the User,
+                                    Admin - all priviliges (fully access - take care),
+                                    Manager - less privileges than an Admin (can not create new Users and can not modify Users, allowed to create new Games, Topics)
+                                    Player - can not modify anything.
+                                    Raspberry is optional, it can get modified later, Raspberry is used to identify in which Game someone will play, it can get modified by each User.
+                                " style="font-weight:normal" />
+                <h3>Edit user</h3>
+                <h:outputText value="Click on 'Edit' to change some characteristics from a User, you are
+                                    allowed to enable/disable a User, add/delete Roles and select a Raspberry on which he will play,
+                                    this can help if a User has no device but he wants to play with some friends in the same Game." style="font-weight:normal"/>
+                <h3>Delete user</h3>
+                <h:outputText value="Click on 'Delete' to delete the user.
+                                    Deleting a User is only possible if he is disabled,
+                                    to disable a User he can´t be logged in, he´s not assigned to a running game.
+                                " style="font-weight:normal"/>
+            </h:panelGrid>
+        </p:dialog>
         <h:form id="userForm" style="width: 98%; margin-top: 15px;margin-left: 25px; float: right;">
             <p:dataTable  id="usersTable" var="user" value="#{userListController.users}" widgetVar="usersTable" paginator="true" rows="10" emptyMessage="Select Role." style="width:85%; margin-top:100px; float:right;">
                 <f:facet name="header">
                     <p:outputPanel>
-                        <p:commandButton id="help" oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
-                        <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="400">
-                            <h:panelGrid columns="1">
-                                <h3>Create User</h3>
-                                <h:outputText value="Click on 'Create new User' to create a new User and assign roles/raspberry."/>
-                                <h3>Edit user</h3>
-                                <h:outputText value="Click on 'Edit' to change the role/raspberry."/>
-                                <h3>Delete user</h3>
-                                <h:outputText value="Click on 'Delete' to delete the user."/>
-                            </h:panelGrid>
-                        </p:dialog>
                         <div align="right">
                             <h:outputText style="font-size: 0.8em;"/>
                             <p:selectOneButton value="#{userListController.option}" onchange="PF('usersTable').filter()" unselectable="false">
@@ -106,11 +121,14 @@
                     <h:panelGrid columns ="2">
                         <p:outputLabel for="newUsername" value="Username: "/>
                         <p:inputText id="newUsername" value="#{userCreationController.user.username}" required="true" requiredMessage="Insert Username."
-                                     validatorMessage="letters/numbers">
-                            <f:validateRegex pattern="^[a-zA-Z0-9]+$"/>
+                                     validatorMessage="Username length 4-16 characters of type letters/numbers.">
+                            <f:validateRegex pattern="^[a-zA-Z0-9]+$" />
+                            <f:validateLength minimum="4" maximum="16" />
                         </p:inputText>
                         <p:outputLabel for="newPassword" value="Password: " />
-                        <p:password id="newPassword" value="#{userCreationController.user.password}" />
+                        <p:password id="newPassword" value="#{userCreationController.user.password}" required="true" requiredMessage="Insert Password." >
+                        <f:validateLength minimum="4" maximum="18" />
+                        </p:password>
                     </h:panelGrid>
                     <h:panelGrid columns="2">
                         <p:outputLabel for="newRole" value="Role: "/>
@@ -127,7 +145,7 @@
                     <p:separator />
 
                     <h:panelGrid columns ="2">
-                        <p:commandButton value="Save" action="#{userCreationController.doSaveUser()}" oncomplete="PF('userCreationDialog').hide()" update=":userForm:usersTable">
+                        <p:commandButton value="Save" action="#{userCreationController.doSaveUser()}" oncomplete="if (args &amp;&amp; !args.validationFailed) PF('userCreationDialog').hide()" update=":userForm:usersTable">
                         </p:commandButton>
                     </h:panelGrid>
                 </p:outputPanel>

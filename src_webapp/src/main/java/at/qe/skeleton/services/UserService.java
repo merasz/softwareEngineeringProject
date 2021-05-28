@@ -156,19 +156,6 @@ public class UserService {
     }
     */
 
-    private void validateInput(String username, String password) throws IllegalArgumentException, NullPointerException {
-        if (username.isEmpty() || password.isEmpty()) {
-            throw new IllegalArgumentException("All fields need to be filled.");
-        }
-    }
-
-    private void validateUsername(String username) throws IllegalArgumentException {
-        User user = userRepository.findFirstByUsername(username);
-        if (user != null) {
-            throw new IllegalArgumentException("A user with this username does already exist.");
-        }
-    }
-
     //region getter & setter
     public Collection<User> getAllAdmins() {
         return userRepository.findAllAdmins();

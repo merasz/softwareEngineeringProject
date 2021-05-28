@@ -1,6 +1,7 @@
 /bin/
 src_webapp/target/
 /target/
+src_rasp/target/
 /.classpath
 /.settings/
 /.project

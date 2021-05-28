@@ -59,7 +59,6 @@ public class UserStatusController {
     }
 
     public void addUserStatus(User user) {
-        System.out.println(user);
         this.userStatus.put(user.getUsername(), new UserStatusInfo(user));
         this.websocketManager.getUserRegistrationChannel().send("connectionUpdate");
     }
