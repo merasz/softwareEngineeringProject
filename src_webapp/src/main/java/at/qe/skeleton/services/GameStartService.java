@@ -59,7 +59,7 @@ public class GameStartService extends GameService {
         this.user = user;
         this.game = reloadGame(game);
         if (this.game == null ) {
-            throw new NoSuchElementException("No active game found. Ask a game manager to create a new game.");
+            throw new NoSuchElementException();
         }
         joinTeam();
         getGameJoinController().onSelect(user, this.game);
@@ -169,7 +169,6 @@ public class GameStartService extends GameService {
         this.game = reloadGame(game);
         if (getGameJoinController().updateReadyToStart(game, user)) {
             if (game.getStartTime() == null && !getGameJoinController().isInitialized(game)) {
-                //System.out.println("-------  initialized  -------");
                 initializeGame(game);
                 getGameJoinController().setInitialized(game);
                 this.game = saveGame(game);

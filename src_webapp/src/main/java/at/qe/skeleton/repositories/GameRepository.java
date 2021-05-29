@@ -1,12 +1,14 @@
 package at.qe.skeleton.repositories;
 
 import at.qe.skeleton.model.Game;
+import at.qe.skeleton.model.Raspberry;
 import at.qe.skeleton.model.Topic;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface GameRepository extends AbstractRepository<Game, Integer> {
@@ -53,5 +55,12 @@ public interface GameRepository extends AbstractRepository<Game, Integer> {
     @Query("Select g from Game g where g.active = 1 and g.startTime is not NULL and g.endTime is NULL")
     List<Game> findAllActive();
 
+    /**
+     * returns games by given raspberry
+     * used to find all games associated with a given user
+     * @params (Date) endTime
+     * @return list of games
+     */
+    List<Game> findAllByRaspberry(Raspberry raspberry);
 
 }

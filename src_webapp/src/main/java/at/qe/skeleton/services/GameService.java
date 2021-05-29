@@ -84,6 +84,14 @@ public class GameService {
     }
 
     /**
+     * returns all unfinished games (without end time)
+     * @return collection of games
+     */
+    public Collection<Game> getPersonalGames(Raspberry raspberry) {
+        return gameRepository.findAllByRaspberry(raspberry);
+    }
+
+    /**
      * returns the most popular topics
      * @return collection of topics
      */

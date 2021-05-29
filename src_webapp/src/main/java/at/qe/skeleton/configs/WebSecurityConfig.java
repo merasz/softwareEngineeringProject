@@ -71,7 +71,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().formLogin()
                 .loginPage("/login.xhtml")
                 .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/secured/welcome.xhtml")
+                .defaultSuccessUrl("/secured/lobby.xhtml")
                 .failureUrl("/login.xhtml?error");
 
         http.authorizeRequests().antMatchers("/api/apikey").authenticated().and().httpBasic();

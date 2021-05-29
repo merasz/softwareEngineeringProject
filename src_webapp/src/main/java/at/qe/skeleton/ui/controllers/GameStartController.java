@@ -43,8 +43,10 @@ public class GameStartController extends GameController implements Serializable 
         teamComplete = false;
         if (game.isActive()) {
             displayError("Game already started", "Please use JOIN GAME to join this game.");
-        } else if (game.getTeamList().stream().map(t -> t.getTeamPlayers().size()).reduce(0, Integer::sum) == game.getCountPlayers()
-                && game.getTeamList().stream().noneMatch(t -> t.getTeamPlayers().contains(getUser()))) {
+        } else if (getUserService().getUserByRaspberry(getUser().getRaspberry()).size() < game.getCountPlayers()) {
+            displayError("Not enough players", "You have not enough players in your friend list. " +
+                    "Make sure everyone has assigned your Raspberry Pi in their profile.");
+        } else if (isTeamFull(game)) {
             displayError("All teams full", "You cannot join this game because all teams are full and you are not assigned to any of them.");
         } else {
             try {
@@ -57,13 +59,24 @@ public class GameStartController extends GameController implements Serializable 
         return "";
     }
 
+    private boolean isTeamFull(Game game) {
+        int countAssignedPlayers = game.getTeamList().stream().map(t -> t.getTeamPlayers().size()).reduce(0, Integer::sum);
+        boolean userNotAssigned = game.getTeamList().stream().noneMatch(t -> t.getTeamPlayers().contains(getUser()));
+        return countAssignedPlayers == game.getCountPlayers() && userNotAssigned;
+    }
+
     /**
      * let all other team representatives join an active game
      * @return
      */
     public String joinGame() {
         setUser();
-        setGame(gameStartService.getActiveGame(getUser()));
+        try {
+            setGame(gameStartService.getActiveGame(getUser()));
+        } catch (NullPointerException e) {
+            displayError("No active Games", "Start a game in Game Creation first.");
+            return "";
+        }
 
         // check for rejoin: if game was already entered before
         boolean allTeamsEntered;
@@ -81,8 +94,8 @@ public class GameStartController extends GameController implements Serializable 
             try {
                 setGame(gameStartService.joinGame(getGame(), getUser()));
                 return "/secured/game_room/join.xhtml?faces-redirect=true";
-            } catch (NoSuchElementException e) {
-                displayError("No games", e.getMessage());
+            } catch (NoSuchElementException | NullPointerException e) {
+                displayError("No games", "No active game found. Ask a game manager to create a new game.");
             } catch (IllegalArgumentException e) {
                 displayError("All teams already full", e.getMessage());
             }

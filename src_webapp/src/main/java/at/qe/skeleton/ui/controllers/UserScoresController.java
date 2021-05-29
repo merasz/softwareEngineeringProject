@@ -22,7 +22,7 @@ import java.util.*;
  * University of Innsbruck.
  */
 @Component
-@Scope("view")
+@Scope("session")
 public class UserScoresController extends Controller implements Serializable {
 
     @Autowired
@@ -42,18 +42,36 @@ public class UserScoresController extends Controller implements Serializable {
      */
     private User user;
 
-    @PostConstruct
-    public void init(){
-        if(this.user == null){
-            setLoggedInUser();
-        }
+    /**
+     * for accessing another player's profile
+     */
+    private String username;
+    private boolean viewPrivate;
+
+    /**
+     * display the user's profile
+     * @return redirection String to profile.xhtml
+     */
+    public String showProfile() {
+        user = sessionInfoBean.getCurrentUser();
+        viewPrivate = true;
+        return "/secured/profile.xhtml?faces-redirect=true";
     }
 
     /**
-     * sets the currently logged in user to the classes attribute
+     * display the profile of another user
+     * @return redirection String to profile.xhtml
      */
-    private void setLoggedInUser() {
-        user = sessionInfoBean.getCurrentUser();
+    public String showOtherProfile() {
+        user = userService.loadUser(username);
+        username = null;
+
+        if (user == null) {
+            displayError("User not found", "Make sure the username is correct.");
+            return "";
+        }
+        viewPrivate = false;
+        return "/secured/profile.xhtml?faces-redirect=true";
     }
 
     /**
@@ -128,13 +146,8 @@ public class UserScoresController extends Controller implements Serializable {
      * @return List of teams
      */
     public List<Team> getTeamsByPlayer() {
-        Set<Team> tmp = new HashSet<>();
-        tmp.addAll(teamService.getTeamsByPlayer(this.user));
-        List<Team> myTeams = new ArrayList<>();
-        for (Team t: tmp) {
-            myTeams.add(t);
-        }
-        return myTeams;
+        Set<Team> tmp = new HashSet<>(teamService.getTeamsByPlayer(this.user));
+        return new ArrayList<>(tmp);
     }
 
     /**
@@ -146,4 +159,21 @@ public class UserScoresController extends Controller implements Serializable {
         return userStatsService.getTopTeamForGame(game);
     }
 
+    //region getter & setter
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setViewPrivate(boolean viewPrivate) {
+        this.viewPrivate = viewPrivate;
+    }
+
+    public boolean isViewPrivate() {
+        return viewPrivate;
+    }
+    //endregion
 }

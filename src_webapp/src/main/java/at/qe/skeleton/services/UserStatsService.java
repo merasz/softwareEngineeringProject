@@ -47,9 +47,6 @@ public class UserStatsService {
         List<Team> teams = teamService.getTeamsByPlayer(user);
         if(teams == null) return null;
         List<Score> scores= scoreRepository.findGameScoresByUser(teams);
-        System.out.println(teams);
-        System.out.println(scores);
-        System.out.println(scores.size());
         if(scores.size() == 0) return null;
         scores.sort(compareByDate);
         int length = scores.size();

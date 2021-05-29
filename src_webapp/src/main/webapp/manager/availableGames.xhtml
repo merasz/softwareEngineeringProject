@@ -17,19 +17,30 @@
                              oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
             <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
                 <h:panelGrid columns="1">
-                    <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Join Game</h2>
-                    <h:outputText value="Here you can join a Game or create a new Game."/>
+                    <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Create new Game</h2>
+                    <h:outputText value="Create a new Game for your circle of players."/>
                     <h2 style="color: #0d9dbb; font-weight: bold;">Teams</h2>
-                    <h:outputText value="Here you can create new Team and add Players to the Team. Also delete them"/>
+                    <h:outputText value="Create Teams for this Game upfront and add Players to them."/>
+                    <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Start Game</h2>
+                    <h:outputText value="Start the game and enable it for your friends to join.
+                                            Be aware that only players that set the same Raspberry Pi as you in their profile can join."/>
                 </h:panelGrid>
             </p:dialog>
-            <p:dataTable widgetVar="gameCreationTable" id="gameCreationTable" var="game" value="#{gameListController.games}" style="width: 80%; margin-top: 110px; float: right; margin-right: -200px">
 
-                <f:facet name="header">Join Game</f:facet>
-                <p:column headerText="Game ID">
+            <p:dataTable widgetVar="gameCreationTable" id="gameCreationTable" var="game" value="#{gameListController.games}" style="width: 80%; margin-top: 110px; float: right; margin-right: -200px">
+                <f:facet name="header">
+                    <p:panelGrid columns="1">
+                        <h:outputText value="Games"/>
+                        <h:outputText value="See all your Games here
+                                                &lt;br/&gt;
+                                                Edit or start Games that haven't already begun or create a new Game"
+                                      style="font-weight: normal" escape="false"/>
+                    </p:panelGrid>
+                </f:facet>
+                <p:column headerText="ID">
                     <h:outputText value="#{game.gameId}"/>
                 </p:column>
-                <p:column headerText="Game Name">
+                <p:column headerText="Name">
                     <h:outputText value="#{game.gameName}" />
                 </p:column>
                 <p:column headerText="Topic">
@@ -41,18 +52,21 @@
                 <p:column headerText="max Players">
                     <h:outputText value="#{game.countPlayers}" disabled="true"/>
                 </p:column>
-                <p:column headerText="score to win">
+                <p:column headerText="Score to win">
                     <h:outputText value="#{game.scoreToWin}" disabled="true"/>
                 </p:column>
-                <p:column style="width:100px;text-align: center" headerText="Teams">
+                <p:column headerText="Status">
+                    <h:outputText value="#{gameListController.getStatusString(game)}" disabled="true"/>
+                </p:column>
+                <p:column style="width:100px;text-align: center" headerText="Action">
                     <p:commandButton title="Teams" icon="ui-icon-note" action="#{teamListController.doSetGame(gameCreationController.game)}"
-                                     update=":teamsForm" oncomplete="$('#gamesForm').hide();$('#teamsForm').show();"  style="width:20px;height:20px">
+                                     update=":teamsForm" oncomplete="$('#gamesForm').hide();$('#teamsForm').show();"
+                                     style="width:20px;height:20px" disabled="#{game.active || game.endTime != null}">
                         <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}" />
                     </p:commandButton>
-                </p:column>
-                <p:column style="width:100px;text-align: center" headerText="Start">
-                    <p:commandButton title="Start" icon="ui-icon-play" action="#{gameStartController.startGame(game)}" style="width:20px;height:20px">
-                        <!--<f:setPropertyActionListener value="#{game}" target="#{gameStartController.game}" />-->
+                    <h:outputText value="      " />
+                    <p:commandButton title="Start" icon="ui-icon-play" action="#{gameStartController.startGame(game)}"
+                                     style="width:20px;height:20px" disabled="#{game.active || game.endTime != null}">
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
@@ -203,6 +217,11 @@
 
 
             <p:dialog header="Add new Player" id="playerAddDialog" widgetVar="playerAddDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <div style="font-size: medium">
+                    <p>If you can't find some of your friends,<br/>
+                        make sure they have set your<br/>
+                    <i>Raspberry Pi</i> in their profile.</p>
+                </div>
                 <p:outputPanel id="playerAddData" >
                     <p:selectOneListbox id="basic" value="#{teamController.tmpPlayer}" converter="omnifaces.SelectItemsConverter">
                         <f:selectItems value="#{teamController.getAssignablePlayers()}" var="player" itemLabel="#{player.username}" itemValue="#{player}" />

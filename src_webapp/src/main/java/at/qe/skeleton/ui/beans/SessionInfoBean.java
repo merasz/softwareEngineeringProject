@@ -39,13 +39,11 @@ public class SessionInfoBean implements Serializable {
      * @return
      */
     public User getCurrentUser() {
-        if (currentUser == null) {
-            String currentUserName = getCurrentUserName();
-            if (currentUserName.isEmpty()) {
-                return null;
-            }
-            currentUser = userService.loadUser(currentUserName);
+        String currentUserName = getCurrentUserName();
+        if (currentUser == null && currentUserName.isEmpty()) {
+            return null;
         }
+        currentUser = userService.loadUser(currentUserName);
         return currentUser;
     }
 

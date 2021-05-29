@@ -2,7 +2,6 @@ package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.GameService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -62,7 +61,7 @@ class GameListControllerTest {
         final Collection<Game> games = Arrays.asList(new Game());
         when(gameService.getAllActiveGames()).thenReturn(games);
 
-        final Collection<Game> result = gameListControllerUnderTest.getactivegGames();
+        final Collection<Game> result = gameListControllerUnderTest.getActiveGames();
 
         assertThat(result).isEqualTo(expectedResult);
     }
@@ -76,7 +75,7 @@ class GameListControllerTest {
         final Collection<Game> expectedResult = Arrays.asList(new Game());
         when(gameService.getAllActiveGames()).thenReturn(Collections.emptyList());
 
-        final Collection<Game> result = gameListControllerUnderTest.getactivegGames();
+        final Collection<Game> result = gameListControllerUnderTest.getActiveGames();
         assertThat(result).isEqualTo(expectedResult);
     }
 }

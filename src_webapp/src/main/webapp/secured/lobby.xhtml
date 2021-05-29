@@ -18,28 +18,25 @@
 
         <!--        <p:chart style="color: #00a7d0; " type="pie" model="#{userScoresController.model}" />-->
 
+        <p:commandButton style="width: 10%; margin-top: 9px;margin-right: 80px; float: right;" id="help"
+                         oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
+        <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
+            <h:panelGrid columns="1">
+                <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Highscores</h2>
+                <h:outputText value="Here you can see the current Highscores"/>
+                <h2 style="color: #0d9dbb; font-weight: bold;">Chat</h2>
+                <h:outputText value="Here you can chat with the members in the Lobby"/>
+            </h:panelGrid>
+        </p:dialog>
+
         <h:form style="width: 83%; padding-left: 72px; margin-top: 75px; float: right" id="chatRoomForm">
             <div class="chatRoomContent">
                 <h1 class="box-title"><i class="fa fa-users"></i> Lobby</h1>
 
-                <p:commandButton style="width: 10%; margin-top: 9px;margin-right: 9px; float: left;" id="help"
-                                 oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
-                <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
-                    <h:panelGrid columns="1">
-                        <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Highscores</h2>
-                        <h:outputText value="Here you can see the current Highscores"/>
-                        <h2 style="color: #0d9dbb; font-weight: bold;">Chat</h2>
-                        <h:outputText value="Here you can chat with the members in the Lobby"/>
-                    </h:panelGrid>
-                </p:dialog>
-
                 <p:panelGrid columns="2" style="width: 100%;"
                              columnClasses="chatRoomDescriptionPanel,chatRoomPanel">
 
-                    <p:panel id="panelL" header="All Time Top Scores">
-
-
-
+                    <p:panel id="panelL" header="All Time Top Scores" style="border: none;">
                         <p>Here you can find all Data for the <span
                                 style="color: #2ecc71; font-weight: bold"> Highscores</span></p>
 
@@ -60,7 +57,6 @@
                                 </p:column>
                             </p:dataTable>
                         </h:panelGroup>
-
 
                         <h:panelGroup layout="block"
                                       style="display: flex; align-items: center; justify-content: space-evenly; width: 100%;font-weight: bold; color: #0d9dbb; font-size: 35px; margin-top: 30px">
@@ -94,55 +90,66 @@
                                 </p:column>
                             </p:dataTable>
                         </h:panelGroup>
-
-
                     </p:panel>
 
-                    <p:panel header="Chat" style=" border: none;">
-                        <h3>Who's online?</h3>
-                        <p:scrollPanel id="onlineInfo"
-                                       styleClass="chatRoomPanelContent onlineInfoBox"
-                                       widgetVar="onlineInfoWidget">
-                            <ui:repeat var="userStatusEntry"
-                                       value="#{userStatusController.userStatusInfos}">
-                                <demo:userStatusOutput userStatusInfo="#{userStatusEntry}"/>
-                            </ui:repeat>
-                        </p:scrollPanel>
-                        <h3>What's going on?</h3>
-                        <p:scrollPanel id="actionLog"
-                                       styleClass="chatRoomPanelContent actionLogBox"
-                                       widgetVar="eventLogwWidget">
-                            <ui:repeat var="logEntry"
-                                       value="#{userStatusController.actionLogs}">
-                                <demo:logOutput logEntry="#{logEntry}"/>
-                            </ui:repeat>
-                        </p:scrollPanel>
-                        <h3>Messages</h3>
-                        <p:scrollPanel id="chatContentWindow"
-                                       styleClass="chatRoomPanelContent chatBox"
-                                       widgetVar="chatWindowWidget">
-                            <ui:repeat var="msg" value="#{userChatController.chatContent}">
-                                <demo:msgOutput message="#{msg}"/>
-                            </ui:repeat>
-                        </p:scrollPanel>
-                        <h:panelGrid id="recipientsSelection" columns="2"
-                                     style="height: 50px;">
-                            <h:outputText value="Send to"/>
-                            <p:selectManyButton
-                                    value="#{userChatController.currentMessage.to}">
-                                <f:selectItems value="#{userChatController.possibleRecipients}"/>
-                                <f:ajax execute="@this" render="sendBtn"/>
-                            </p:selectManyButton>
-                        </h:panelGrid>
-                        <p:inputTextarea id="msgBox" rows="3"
-                                         value="#{userChatController.currentMessage.text}"
-                                         style="padding: 0px;" styleClass="chatRoomPanelContent"/>
-                        <h:commandButton id="sendBtn" value="Send"
-                                         action="#{userChatController.sendMessage()}"
-                                         disabled="#{empty userChatController.currentMessage.to}">
-                            <f:ajax execute="@form" render="msgBox"/>
-                        </h:commandButton>
-                    </p:panel>
+                    <p:column>
+                        <p:panel id="search" header="Stalk other Players" style="border: none;">
+                            <div class="p-col-12 p-md-4">
+                                <div class="ui-inputgroup">
+                                    <p:commandButton value="Search" action="#{userScoresController.showOtherProfile}" update="search"/>
+                                    <p:autoComplete id="acSimple" placeholder="enter a username"
+                                                    value="#{userScoresController.username}"
+                                                    completeMethod="#{userListController.completeText}" scrollHeight="250"/>
+                                </div>
+                            </div>
+                        </p:panel>
+
+                        <p:panel header="Chat" style="border: none;">
+                            <h3>Who's online?</h3>
+                            <p:scrollPanel id="onlineInfo"
+                                           styleClass="chatRoomPanelContent onlineInfoBox"
+                                           widgetVar="onlineInfoWidget">
+                                <ui:repeat var="userStatusEntry"
+                                           value="#{userStatusController.userStatusInfos}">
+                                    <demo:userStatusOutput userStatusInfo="#{userStatusEntry}"/>
+                                </ui:repeat>
+                            </p:scrollPanel>
+                            <h3>What's going on?</h3>
+                            <p:scrollPanel id="actionLog"
+                                           styleClass="chatRoomPanelContent actionLogBox"
+                                           widgetVar="eventLogwWidget">
+                                <ui:repeat var="logEntry"
+                                           value="#{userStatusController.actionLogs}">
+                                    <demo:logOutput logEntry="#{logEntry}"/>
+                                </ui:repeat>
+                            </p:scrollPanel>
+                            <h3>Messages</h3>
+                            <p:scrollPanel id="chatContentWindow"
+                                           styleClass="chatRoomPanelContent chatBox"
+                                           widgetVar="chatWindowWidget">
+                                <ui:repeat var="msg" value="#{userChatController.chatContent}">
+                                    <demo:msgOutput message="#{msg}"/>
+                                </ui:repeat>
+                            </p:scrollPanel>
+                            <h:panelGrid id="recipientsSelection" columns="2"
+                                         style="height: 50px;">
+                                <h:outputText value="Send to"/>
+                                <p:selectManyButton
+                                        value="#{userChatController.currentMessage.to}">
+                                    <f:selectItems value="#{userChatController.possibleRecipients}"/>
+                                    <f:ajax execute="@this" render="sendBtn"/>
+                                </p:selectManyButton>
+                            </h:panelGrid>
+                            <p:inputTextarea id="msgBox" rows="3"
+                                             value="#{userChatController.currentMessage.text}"
+                                             style="padding: 0px;" styleClass="chatRoomPanelContent"/>
+                            <h:commandButton id="sendBtn" value="Send"
+                                             action="#{userChatController.sendMessage()}"
+                                             disabled="#{empty userChatController.currentMessage.to}">
+                                <f:ajax execute="@form" render="msgBox"/>
+                            </h:commandButton>
+                        </p:panel>
+                    </p:column>
                 </p:panelGrid>
             </div>
 

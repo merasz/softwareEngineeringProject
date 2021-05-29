@@ -122,6 +122,16 @@
                                 </p:column>
                             </p:dataTable>
                         </h:panelGroup>
+                        <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: space-evenly; width: 100%;font-weight: bold; font-size: 20px; margin-top: 30px">
+                            <h:outputText value="My Circle of Players"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:dataTable  id="playersTable" var="user" value="#{userListController.getPlayerCircle(userScoresController.user)}" widgetVar="teamsTable" rows="5" style="width:80%;margin: 0px auto; margin-top:30px">
+                                <p:column headerText="Player Name" style="text-align: center; width: 25%">
+                                    <h:outputText value="#{user.username}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </h:panelGroup>
                     </h:panelGroup>
                 </h:panelGroup>
             </h:panelGroup>
@@ -129,7 +139,7 @@
 
         <h:form id="changeRaspberryForm" >
             <p:dialog header="Change Raspberry" id="changeRaspberryDialog" widgetVar="changeRaspberryDialog" modal="true"
-                      showEffect="fade" hideEffect="fade" resizable="false" style="display: none">
+                      showEffect="fade" hideEffect="fade" resizable="false" style="display: none" rendered="#{userScoresController.viewPrivate}">
                 <p:outputPanel id="raspberryData" >
                     <p:selectOneListbox id="basic"  value="#{userDetailController.user.raspberry}"
                                         converter="#{raspberryConverter}" style="width:300px">

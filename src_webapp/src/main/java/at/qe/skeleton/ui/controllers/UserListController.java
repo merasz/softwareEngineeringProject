@@ -1,10 +1,14 @@
 package at.qe.skeleton.ui.controllers;
 
+import at.qe.skeleton.model.Raspberry;
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.services.UserService;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import at.qe.skeleton.ui.beans.SessionInfoBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -53,6 +57,18 @@ public class UserListController implements Serializable {
 
     public Collection<User> getAllPlayers(){
         return userService.getAllPlayers();
+    }
+
+    public List<User> getPlayerCircle(User user) {
+        List<User> users = userService.getUserByRaspberry(user.getRaspberry());
+        users.remove(user);
+        return users;
+    }
+
+    public List<String> completeText(String query) {
+        String queryLowerCase = query.toLowerCase();
+        List<String> usernames = userService.getAllUsers().stream().map(User::getUsername).collect(Collectors.toList());
+        return usernames.stream().filter(s -> s.toLowerCase().startsWith(queryLowerCase)).collect(Collectors.toList());
     }
 
     public String getOption() { return option; }
