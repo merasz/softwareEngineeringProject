@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 import org.primefaces.model.file.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.json.*;
 import org.springframework.stereotype.Controller;
 
 import org.json.simple.parser.JSONParser;
@@ -29,25 +30,33 @@ public class TopicParserController {
     private UploadedFile file;
 
     public void upload() {
-      if (file != null) {
-          parseAndSave();
-            FacesMessage message = new FacesMessage("Successful", file.getFileName() + " is uploaded.");
-            FacesContext.getCurrentInstance().addMessage(null, message);
-      }
+        if (file != null) {
+            try {
+                parseAndSave();
+                FacesMessage message = new FacesMessage("Successful", file.getFileName() + " is uploaded.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void parseAndSave() {
         try {
             InputStream inputStream = file.getInputStream();
             JSONParser jsonParser = new JSONParser();
-            JSONObject jsonObject = (JSONObject)jsonParser.parse(new InputStreamReader(inputStream, "UTF-8"));
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(new InputStreamReader(inputStream, "UTF-8"));
             String topicName = jsonObject.get("topic").toString();
 
             Topic topic = new Topic(topicName);
             if (!topicService.topicExists(topic)) topicService.saveTopic(topic);
             termsService.importTerms(jsonObject, topic);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            String errorMessage = file.getFileName() + " has a invalid JSON-Format.";
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error!", errorMessage);
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            throw new JsonParseException();
         }
     }
 
@@ -59,7 +68,3 @@ public class TopicParserController {
         return file;
     }
 }
-
-
-
-
