@@ -17,11 +17,12 @@
                              oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
             <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
                 <h:panelGrid columns="1">
-                    <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Create new Game</h2>
+                    <h:outputText value="See all your past and current games here."/>
+                    <h2 style="color: #0d9dbb; font-weight: bold">Create new Game</h2>
                     <h:outputText value="Create a new Game for your circle of players."/>
                     <h2 style="color: #0d9dbb; font-weight: bold;">Teams</h2>
                     <h:outputText value="Create Teams for this Game upfront and add Players to them."/>
-                    <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Start Game</h2>
+                    <h2 style="color: #0d9dbb; font-weight: bold">Start Game</h2>
                     <h:outputText value="Start the game and enable it for your friends to join.
                                             Be aware that only players that set the same Raspberry Pi as you in their profile can join."/>
                 </h:panelGrid>

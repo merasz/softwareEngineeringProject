@@ -32,10 +32,13 @@
                             <h:outputText id="username" value="#{userScoresController.user.username}" />
                         </h:panelGroup>
                         <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: center; width: 100%; font-size: 24px; margin-bottom: 5px">
-                            <h:outputText value="Raspberry:" style="margin-right: 10px"/>
-                            <h:outputText id="raspberry" value="#{userScoresController.user.raspberry.raspberryId}" />
+                            <p>
+                                <h:outputText value="Raspberry:" style="margin-right: 10px"/>
+                                <br/>
+                                <h:outputText id="raspberry" value="#{userScoresController.user.raspberry.hostname}" />
+                            </p>
                         </h:panelGroup>
-                        <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: center; width: 100%; font-size: 14px; margin-bottom: 50px">
+                        <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: center; width: 100%; font-size: 14px; margin-bottom: 50px" rendered="#{userScoresController.viewPrivate}">
                             <p:commandButton style="" oncomplete="PF('changeRaspberryDialog').show()" icon="ui-icon-plusthick" value ="Change" update=":changeRaspberryForm:changeRaspberryDialog">
                                 <f:setPropertyActionListener value="#{userScoresController.user}" target="#{userDetailController.user}" />
                             </p:commandButton>
@@ -139,7 +142,7 @@
 
         <h:form id="changeRaspberryForm" >
             <p:dialog header="Change Raspberry" id="changeRaspberryDialog" widgetVar="changeRaspberryDialog" modal="true"
-                      showEffect="fade" hideEffect="fade" resizable="false" style="display: none" rendered="#{userScoresController.viewPrivate}">
+                      showEffect="fade" hideEffect="fade" resizable="false" style="display: none" >
                 <p:outputPanel id="raspberryData" >
                     <p:selectOneListbox id="basic"  value="#{userDetailController.user.raspberry}"
                                         converter="#{raspberryConverter}" style="width:300px">
