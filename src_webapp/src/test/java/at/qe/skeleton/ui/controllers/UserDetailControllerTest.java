@@ -35,7 +35,7 @@ class UserDetailControllerTest {
 
         User user = userService.loadUser("Alex");
         verify(userService).deleteUser(new User());
-        userDetailController.setUser(user);
+        userDetailController.setSelectedUser(user);
 
         try {
             userDetailController.doDeleteUser();

@@ -34,10 +34,10 @@
             <p:dataTable widgetVar="topicCreationTable" id="topicCreationTable" var="topic"
                          value="#{topicListController.topicAmount}" style="width: 83%; margin-top: 85px; float: right;">
                 <f:facet name="header">Topic Hub</f:facet>
-                <p:column headerText="Themengebiet">
+                <p:column headerText="Topic">
                     <h:outputText value="#{topic.topic.topicName}"/>
                 </p:column>
-                <p:column headerText="Anzahl Begriffe">
+                <p:column headerText="Number of Terms">
                     <h:outputText value="#{topic.gameCount}"/>
                 </p:column>
 
@@ -61,9 +61,7 @@
                              action="#{topicController.doCreateNewTopic()}" value="Create new Topic">
                 <f:setPropertyActionListener value="#{topic}" target="#{topicController.topic}"/>
             </p:commandButton>
-        </h:form>
 
-        <h:form id="createTopicForm">
             <p:dialog header="Create new Topic" id="topicCreationDialog" widgetVar="topicCreationDialog" modal="true"
                       showEffect="fade" hideEffect="fade" resizable="false">
                 <p:outputPanel id="topicCreateData">
@@ -73,8 +71,7 @@
                     </h:panelGrid>
                     <h:panelGrid columns="2">
                         <p:commandButton value="Save" action="#{topicController.doSaveTopic()}"
-                                         oncomplete="PF('topicCreationDialog').hide()"
-                                         update=":topicForm:topicCreationTable :createTopicForm"/>
+                                         update=":topicForm:topicCreationTable"/>
                         <p:commandButton value="Abort" onclick="PF('Dialog').hide()"/>
                     </h:panelGrid>
                 </p:outputPanel>
@@ -118,8 +115,8 @@
                     <h:panelGrid columns="2">
                         <p:commandButton value="Save"
                                          action="#{termsController.doSaveTerm(topicController.gameTopicCount.topic)}"
-                                         oncomplete="PF('termCreationDialog').hide()" update=":termsForm:termsTable"/>
-                        <p:commandButton value="Abort" onclick="PF('Dialog').hide();$('#termsForm').show();"/>
+                                         update=":termsForm:termsTable"/>
+                        <p:commandButton value="Abort" onclick="PF('termCreationDialog').hide()"/>
                     </h:panelGrid>
 
                 </p:outputPanel>

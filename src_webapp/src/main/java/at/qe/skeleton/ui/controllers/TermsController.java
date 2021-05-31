@@ -3,6 +3,7 @@ package at.qe.skeleton.ui.controllers;
 import at.qe.skeleton.model.Term;
 import at.qe.skeleton.model.Topic;
 import at.qe.skeleton.services.TermsService;
+import org.primefaces.PrimeFaces;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -41,13 +42,14 @@ public class TermsController extends Controller implements Serializable {
      * @param topic
      */
     public void doSaveTerm(Topic topic) {
-        if(topic == null) {
-            displayInfo("Term not created", "No term was entered.");
+        if(term.getTermName().isEmpty()) {
+            displayError("Term not created", "No term was entered.");
             return;
         }
         term.setTopic(topic);
         try {
             term = termsService.saveTerm(term);
+            PrimeFaces.current().executeScript("PF('termCreationDialog').hide()");
         } catch (IllegalArgumentException e){
             displayError("Term not created.", e.getMessage());
         }

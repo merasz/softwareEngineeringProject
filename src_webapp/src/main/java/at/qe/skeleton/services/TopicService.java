@@ -48,10 +48,12 @@ public class TopicService implements Serializable {
      * @param topic
      * @return topic object
      */
-    public Topic saveTopic(Topic topic) {
+    public Topic saveTopic(Topic topic) throws IllegalArgumentException {
+        if (topic.getTopicName().isEmpty()) {
+            throw new IllegalArgumentException("Topic has no name", new Throwable("Please enter a name for your Topic."));
+        }
         if (topicExists(topic)) {
-            messageBean.alertError("Topic already exists", "Topics need to have unique names.");
-            return topicRepository.findFirstByTopicName(topic.getTopicName());
+            throw new IllegalArgumentException("Topic already exists", new Throwable("Topics need to have unique names."));
         }
         else if (topic.isNew()) {
             topic.setCreateDate(new Date());
@@ -60,11 +62,6 @@ public class TopicService implements Serializable {
             topic.setUpdateTopic(getAuthenticatedTopic());
             topic.setCreateDate(new Date());
         }
-        if(topic.getUpdateDate() == null)
-            messageBean.alertInformation("Success", "Topic was created!");
-        else
-            messageBean.alertInformation("Success", "Topic was updated!");
-
         return topicRepository.save(topic);
     }
 

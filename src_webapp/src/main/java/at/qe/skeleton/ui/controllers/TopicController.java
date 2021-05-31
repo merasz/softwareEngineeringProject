@@ -2,6 +2,7 @@ package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.*;
+import org.primefaces.PrimeFaces;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.annotation.*;
 import org.springframework.stereotype.*;
@@ -55,8 +56,10 @@ public class TopicController extends Controller implements Serializable {
         try{
             topic = topicService.saveTopic(topic);
             topic = new Topic();
+            displayInfo("Topic saved", "");
+            PrimeFaces.current().executeScript("PF('topicCreationDialog').hide()");
         } catch (IllegalArgumentException e) {
-            displayError("Error", e.getMessage());
+            displayError(e.getMessage(), e.getCause().getMessage());
         }
     }
 

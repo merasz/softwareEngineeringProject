@@ -3,11 +3,12 @@ package at.qe.skeleton.ui.controllers;
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.UserRole;
 import at.qe.skeleton.services.UserService;
-import at.qe.skeleton.ui.beans.SessionInfoBean;
+import at.qe.skeleton.ui.controllers.demo.UserStatusController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,15 +25,29 @@ import java.util.List;
 public class UserDetailController extends Controller implements Serializable {
 
     @Autowired
-    private UserService userService;
+    private UserListController userListController;
 
     @Autowired
-    private SessionInfoBean sessionInfoBean;
+    UserStatusController userStatusController;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * Attribute to cache the currently displayed user
      */
-    private User user;
+    private User newUser;
+    private User selectedUser;
+
+    @PostConstruct
+    public void init() {
+        doCreateNewUser();
+    }
+
+    public void doCreateNewUser() {
+        newUser = new User();
+        newUser.setEnabled(true);
+    }
 
     /**
      * Sets the currently displayed user and reloads it form db. This user is
@@ -40,10 +55,10 @@ public class UserDetailController extends Controller implements Serializable {
      * {@link #doReloadUser()}, {@link #doSaveUser()} and
      * {@link #doDeleteUser()}.
      *
-     * @param user
+     * @param selectedUser
      */
-    public void setUser(User user) {
-        this.user = user;
+    public void setSelectedUser(User selectedUser) {
+        this.selectedUser = selectedUser;
         doReloadUser();
     }
 
@@ -52,15 +67,15 @@ public class UserDetailController extends Controller implements Serializable {
      *
      * @return User
      */
-    public User getUser() {
-        return user;
+    public User getSelectedUser() {
+        return selectedUser;
     }
 
     /**
      * Action to force a reload of the currently displayed user.
      */
     public void doReloadUser() {
-        user = userService.loadUser(user.getUsername());
+        selectedUser = userService.loadUser(selectedUser.getUsername());
     }
 
     /**
@@ -68,8 +83,8 @@ public class UserDetailController extends Controller implements Serializable {
      */
     public void doDeleteUser() {
         try {
-            this.userService.deleteUser(user);
-            user = null;
+            this.userService.deleteUser(selectedUser);
+            selectedUser = null;
             displayInfo("User deleted", "Account successfully deleted.");
         } catch (IllegalArgumentException e){
             displayError("User not deleted", e.getMessage());
@@ -81,13 +96,27 @@ public class UserDetailController extends Controller implements Serializable {
      */
     public void doSaveUser() {
         try {
-            if(user.getRoles().size() > 0) {
-                user = userService.saveUser(user);
-                displayInfo("User updated!","");
+            if(!userService.isUsernameAlreadyTaken(newUser)) {
+                selectedUser = userService.saveUser(newUser);
+                displayInfo("User created", "");
+                userStatusController.addUserStatus(selectedUser);
+                doCreateNewUser();
+                userListController.loadUsers();
             }
+            else
+                displayError("User not created", "Username already exists.");
         } catch (IllegalArgumentException e) {
             displayError("Error", e.getMessage());
         }
+    }
+
+    /**
+     * Edit the currently displayed user.
+     */
+    public void doUpdateUser() {
+        selectedUser = userService.saveUser(selectedUser);
+        userListController.loadUsers();
+        displayInfo("User edited", "");
     }
 
     public List<UserRole> getListRoles(){
@@ -98,4 +127,11 @@ public class UserDetailController extends Controller implements Serializable {
         return list;
     }
 
+    public User getNewUser() {
+        return newUser;
+    }
+
+    public void setNewUser(User newUser) {
+        this.newUser = newUser;
+    }
 }

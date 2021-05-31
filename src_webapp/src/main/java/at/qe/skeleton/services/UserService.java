@@ -72,6 +72,10 @@ public class UserService {
      */
     //@PreAuthorize("hasAuthority('ADMIN') or principal.username eq #user.username")
     public User saveUser(User user) {
+        if(user.getRoles().isEmpty()) {
+            user.setRoles(Collections.singleton(UserRole.PLAYER));
+        }
+
         if (user.isNew()) {
             user.setCreateDate(new Date());
             user.setEnabled(true);

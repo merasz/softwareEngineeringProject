@@ -8,6 +8,9 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name ="content">
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="-1" />
+
         <p:commandButton style="width: 10%; margin-top: 9px;margin-right: 80px; float: right;" id="help"
                          oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
         <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
@@ -60,48 +63,58 @@
                     <h:selectBooleanCheckbox value="#{user.enabled}" disabled="true"/>
                 </p:column>
                 <p:column headerText="Operation" style="width:100px;text-align: center">
-                    <p:commandButton title="Edit" icon="ui-icon-note" update=":userForm:userEditDialog" oncomplete="PF('userEditDialog').show()">
-                        <f:setPropertyActionListener value="#{user}" target="#{userDetailController.user}" />
+                    <p:commandButton title="Edit" icon="ui-icon-note" update=":userForm:userEditDialog"
+                                     oncomplete="PF('userEditDialog').show()">
+                        <f:setPropertyActionListener value="#{user}" target="#{userDetailController.selectedUser}" />
                     </p:commandButton>
-                    <p:commandButton title="Delete" icon="ui-icon-trash" action="#{userDetailController.doDeleteUser()}" update=":userForm:usersTable">
-                        <f:setPropertyActionListener value="#{user}" target="#{userDetailController.user}" />
+                    <p:commandButton title="Delete" icon="ui-icon-trash" action="#{userDetailController.doDeleteUser()}"
+                                     update=":userForm:usersTable">
+                        <f:setPropertyActionListener value="#{user}" target="#{userDetailController.selectedUser}" />
                         <p:confirm header="Confirmation" message="Are you sure that you want to delete this user? You cannot undo this operation." icon="ui-icon-alert" />
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
 
-            <p:commandButton action="#{userCreationController.createUser()}" style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('userCreationDialog').show()" icon="ui-icon-add-box" value ="Create new User" update=":userCreationForm:userCreationDialog">
+            <p:commandButton action="#{userDetailController.doCreateNewUser()}" style="width: 25%; margin-top: 25px; float: right;"
+                             oncomplete="PF('userCreationDialog').show()"
+                             icon="ui-icon-add-box" value ="Create new User" update=":userCreationForm">
             </p:commandButton>
 
-            <p:dialog header="Edit User" id="userEditDialog" widgetVar="userEditDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-                <p:outputPanel id="userData" rendered="#{not empty userDetailController.user}">
+            <p:dialog header="Edit User" id="userEditDialog" widgetVar="userEditDialog" modal="true"
+                      showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="userData" rendered="#{not empty userDetailController.selectedUser}">
                     <h:panelGrid columns="2">
                         <p:outputLabel for="username" value="Username: " />
-                        <p:inputText id="username" value="#{userDetailController.user.username}" disabled="true"/>
+                        <p:inputText id="username" value="#{userDetailController.selectedUser.username}" disabled="true"/>
                         <p:outputLabel for="password" value="Password: " />
-                        <p:password id="password" value="#{userDetailController.user.password}" disabled="true"/>
+                        <p:password id="password" value="#{userDetailController.selectedUser.password}" disabled="true"/>
                     </h:panelGrid>
                     <p:separator />
                     <h:panelGrid columns="2">
                         <p:outputLabel for="enabled" value="Enabled: " />
-                        <p:selectBooleanCheckbox id="enabled" value="#{userDetailController.user.enabled}"/>
+                        <p:selectBooleanCheckbox id="enabled" value="#{userDetailController.selectedUser.enabled}"/>
                     </h:panelGrid>
                     <p:separator />
                 <h:panelGrid columns="2">
-                    <p:outputLabel for="newRole" value="Role: "/>
-                    <p:selectManyMenu id="newRole" value="#{userDetailController.user.roles}" collectionType="java.util.LinkedHashSet" showCheckbox="true" required="true" requiredMessage="Role(s) required." style="width: 175px;">
+                    <p:outputLabel for="editRole" value="Role: "/>
+                    <p:selectManyMenu id="editRole" value="#{userDetailController.selectedUser.roles}"
+                                      collectionType="java.util.LinkedHashSet" showCheckbox="true"
+                                      required="true" requiredMessage="Role(s) required." style="width: 175px;">
                         <f:selectItems value="#{userDetailController.listRoles}"/>
                     </p:selectManyMenu>
                 </h:panelGrid>
                     <h:panelGrid columns="2">
                         <p:outputLabel for="editRasp" value="Raspberry: "/>
-                        <p:selectOneListbox id="editRasp"  value="#{userDetailController.user.raspberry}" converter="#{raspberryConverter}" style="width:300px">
-                            <f:selectItems value="#{raspberryListController.getRaspberries()}" var="raspberry" itemLabel="#{raspberry.raspberryId} - #{raspberry.ipAddress}" itemValue="#{raspberry}"/>
+                        <p:selectOneListbox id="editRasp"  value="#{userDetailController.selectedUser.raspberry}"
+                                            converter="#{raspberryConverter}" style="width:300px">
+                            <f:selectItems value="#{raspberryListController.getRaspberries()}" var="raspberry"
+                                           itemLabel="#{raspberry.raspberryId} - #{raspberry.ipAddress}" itemValue="#{raspberry}"/>
                         </p:selectOneListbox>
                     </h:panelGrid>
                     <p:separator />
                     <h:panelGrid columns="3">
-                        <p:commandButton value="Save" action="#{userDetailController.doSaveUser()}" oncomplete="PF('userEditDialog').hide()" update=":userForm:usersTable"/>
+                        <p:commandButton value="Save" action="#{userDetailController.doUpdateUser()}"
+                                         oncomplete="PF('userEditDialog').hide()" update=":userForm:usersTable"/>
                         <p:commandButton value="Reload" action="#{userDetailController.doReloadUser()}" update=":userForm:userData"/>
                         <p:commandButton value="Abort" onclick="PF('userEditDialog').hide()"/>
                     </h:panelGrid>
@@ -120,32 +133,40 @@
                 <p:outputPanel id="userCreateData" >
                     <h:panelGrid columns ="2">
                         <p:outputLabel for="newUsername" value="Username: "/>
-                        <p:inputText id="newUsername" value="#{userCreationController.user.username}" required="true" requiredMessage="Insert Username."
+                        <p:inputText id="newUsername" value="#{userDetailController.newUser.username}" autocomplete="off"
+                                     required="true" requiredMessage="Insert Username." placeholder="enter new username"
                                      validatorMessage="Username length 4-16 characters of type letters/numbers.">
                             <f:validateRegex pattern="^[a-zA-Z0-9]+$" />
                             <f:validateLength minimum="4" maximum="16" />
                         </p:inputText>
                         <p:outputLabel for="newPassword" value="Password: " />
-                        <p:password id="newPassword" value="#{userCreationController.user.password}" required="true" requiredMessage="Insert Password." >
+                        <p:password id="newPassword" value="#{userDetailController.newUser.password}" autocomplete="new-password"
+                                    placeholder="enter new password" required="true" requiredMessage="Insert Password." >
                         <f:validateLength minimum="4" maximum="18" />
                         </p:password>
                     </h:panelGrid>
                     <h:panelGrid columns="2">
                         <p:outputLabel for="newRole" value="Role: "/>
-                        <p:selectManyMenu id="newRole" value="#{userCreationController.user.roles}" collectionType="java.util.LinkedHashSet" showCheckbox="true" required="true" requiredMessage="Role(s) required." style="width: 175px;">
-                            <f:selectItems value="#{userCreationController.listRoles}"/>
+                        <p:selectManyMenu id="newRole" value="#{userDetailController.newUser.roles}"
+                                          collectionType="java.util.LinkedHashSet" showCheckbox="true"
+                                          required="true" requiredMessage="Role(s) required." style="width: 175px;">
+                            <f:selectItems value="#{userDetailController.listRoles}"/>
                         </p:selectManyMenu>
                     </h:panelGrid>
                     <h:panelGrid columns="2">
                         <p:outputLabel for="newRasp" value="Raspberry: "/>
-                        <p:selectOneListbox id="newRasp"  value="#{userCreationController.user.raspberry}" converter="#{raspberryConverter}" style="width:300px">
-                            <f:selectItems value="#{raspberryListController.getRaspberries()}" var="raspberry" itemLabel="#{raspberry.raspberryId} - #{raspberry.ipAddress}" itemValue="#{raspberry}"/>
+                        <p:selectOneListbox id="newRasp"  value="#{userDetailController.newUser.raspberry}"
+                                            converter="#{raspberryConverter}" style="width:300px">
+                            <f:selectItems value="#{raspberryListController.getRaspberries()}" var="raspberry"
+                                           itemLabel="#{raspberry.raspberryId} - #{raspberry.ipAddress}" itemValue="#{raspberry}"/>
                         </p:selectOneListbox>
                     </h:panelGrid>
                     <p:separator />
 
                     <h:panelGrid columns ="2">
-                        <p:commandButton value="Save" action="#{userCreationController.doSaveUser()}" oncomplete="if (args &amp;&amp; !args.validationFailed) PF('userCreationDialog').hide()" update=":userForm:usersTable">
+                        <p:commandButton value="Save" action="#{userDetailController.doSaveUser()}"
+                                         oncomplete="if (args &amp;&amp; !args.validationFailed) PF('userCreationDialog').hide()"
+                                         update=":userForm:usersTable">
                         </p:commandButton>
                     </h:panelGrid>
                 </p:outputPanel>

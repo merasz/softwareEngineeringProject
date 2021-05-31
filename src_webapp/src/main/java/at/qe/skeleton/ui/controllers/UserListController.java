@@ -31,27 +31,29 @@ public class UserListController implements Serializable {
     private UserService userService;
 
     private String option;
+    private Collection<User> users;
 
     @PostConstruct
     public void init() {
         setOption("all");
+        loadUsers();
     }
     /**
      * Returns a list of all users.
      *
      * @return
      */
-    public Collection<User> getUsers() {
+    public void loadUsers() {
         if(getOption().equals("all")) {
-            return userService.getAllUsers();
+            users = userService.getAllUsers();
         } else if(getOption().equals("admin")) {
-            return userService.getAllAdmins();
+            users = userService.getAllAdmins();
         } else if(getOption().equals("manager")) {
-            return userService.getAllManagers();
+            users = userService.getAllManagers();
         } else if (getOption().equals("player")) {
-            return userService.getAllPlayers();
+            users = userService.getAllPlayers();
         } else {
-            return null;
+            users = null;
         }
     }
 
@@ -75,6 +77,10 @@ public class UserListController implements Serializable {
 
     public void setOption(String option) {
         this.option = option;
+        loadUsers();
     }
 
+    public Collection<User> getUsers() {
+        return users;
+    }
 }
