@@ -24,11 +24,22 @@
                     <div class="right_area">
                         <a href="/logout" class="logout_btn">Logout</a>
                     </div>
+<!---
+                    <div class="session_info">
+                        <ui:fragment rendered="#{sessionInfoBean.loggedIn}">
+                            Logged in as #{sessionInfoBean.currentUserName} [#{sessionInfoBean.currentUserRoles}]
+                        </ui:fragment>
+                        <ui:fragment rendered="#{!sessionInfoBean.loggedIn}">
+                            Not logged in
+                        </ui:fragment>
+                    </div>
+-->
                 </div>
 
                 <div class="sidebar">
                         <a style="padding-left: 80px" href="/login.xhtml" ><img style="border: 0 none" src="/loginpage.jpg" class="logo" alt=""/> </a>
-                        <h4 style="padding-left: 70px">Gruppe6Team1</h4>
+          <!---              <h4 style="padding-left: 70px">Gruppe6Team1</h4>    -->
+                        <h4 style="padding-left: 40px">Logged in as #{sessionInfoBean.currentUserName}<br/>[#{sessionInfoBean.currentUserRoles}]</h4>
                     <p:commandLink id="profile" action="#{userScoresController.showProfile}">
                         <i class="far fa-user"></i><span>My Profile</span>
                     </p:commandLink>

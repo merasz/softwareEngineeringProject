@@ -16,7 +16,11 @@ body{
     width: 100%;
     height: 30px;
     left: 0%;
+    z-index: 10;
+}
 
+html {
+    scroll-behavior: smooth;
 }
 
 .left_area h1{
@@ -30,6 +34,15 @@ body{
 .left_area span{
     color: #1dc4e7;
 }
+
+/*
+.session_info {
+    color: #ccc;
+    position: absolute;
+    top: 25px;
+    right: 100px;
+}
+ */
 
 .logout_btn{
     padding: 5px;
