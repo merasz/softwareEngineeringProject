@@ -13,9 +13,10 @@ import org.mockito.quality.Strictness;
 
 import java.util.*;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
+
 class GameCreationControllerTest {
 
     @Mock
@@ -34,9 +35,14 @@ class GameCreationControllerTest {
     @InjectMocks
     private GameCreationController gameCreationController;
 
+    /*@Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+    }*/
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testInit() {
+
         final User user = new User();
         when(mockSessionInfoBean.getCurrentUser()).thenReturn(user);
         final User user1 = new User();
@@ -70,7 +76,7 @@ class GameCreationControllerTest {
         when(mockGameService.saveGame(new Game())).thenReturn(game);
         final Team team = new Team();
         when(mockTeamService.saveTeam(new Team())).thenReturn(team);
-        //gameCreationController.doSaveGame();
+        gameCreationController.getGame();
     }
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
@@ -87,7 +93,7 @@ class GameCreationControllerTest {
         final User user3 = new User();
         final Team team = new Team();
         when(mockTeamService.saveTeam(new Team())).thenReturn(team);
-        //gameCreationController.doSaveGame();
+        gameCreationController.getGame();
     }
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
@@ -98,13 +104,73 @@ class GameCreationControllerTest {
         user.setEnabled(false);
         final Collection<User> users = Arrays.asList(user);
         when(mockUserService.getAllUsers()).thenReturn(users);
-        //gameCreationController.setUserList();
+        gameCreationController.getGame();
     }
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testSetUserList_UserServiceReturnsNoItems() {
         when(mockUserService.getAllUsers()).thenReturn(Collections.emptyList());
-        //gameCreationController.setGame();
+        gameCreationController.getGame();
 
     }
+
+
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    @Test
+    void testGetNumberTeams() {
+        final User user1 = new User();
+        final Team team = new Team();
+        final Collection<User> teams = Arrays.asList(user1);
+        when(mockUserService.getAllUsers()).thenReturn(teams);
+        gameCreationController.getNumberTeams();
+    }
+
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    @Test
+    void testGetGame() {
+        final User user1 = new User();
+        final Team team = new Team();
+        final Collection<Game> games = Arrays.asList();
+        when(mockGameService.getAllGames()).thenReturn(games);
+        gameCreationController.getGame();
+    }
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    @Test
+    void testSetGame() {
+        final User user1 = new User();
+        final Team team = new Team();
+        final Collection<Game> games = Arrays.asList();
+        when(mockGameService.getAllGames()).thenReturn(games);
+        gameCreationController.getGame();
+    }
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    @Test
+    void testGetCurrentTopic() {
+        final User user1 = new User();
+        final Team team = new Team();
+        final Topic topic = new Topic();
+        final Collection<Topic> topics= Arrays.asList();
+        gameCreationController.getCurrentTopic();
+        
+    }
+    @Test
+    void testSetCurrentTopic() {
+        final User user = new User();
+        final Team team = new Team();
+        final Topic topic = new Topic();
+        gameCreationController.setCurrentTopic(topic);
+    }
+
+    @Test
+    void testSetNumberTeams() {
+        final User user = new User();
+        final Team team = new Team();
+        final Topic topic = new Topic();
+        int numberTeams= 2;
+        gameCreationController.setNumberTeams(numberTeams);
+    }
+
+
+
+
 }

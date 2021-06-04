@@ -37,4 +37,18 @@ class PlayerListControllerTest {
         final Team team = new Team();
         playerListController.doSetTeam(team);
     }
+
+    @Test
+    void testGetTeam() {
+        final User user = new User();
+        final Team team = new Team();
+        playerListController.getTeam();
+    }
+
+    @Test
+    void testSetTeam() {
+        final User user = new User();
+        final Team team = new Team();
+        playerListController.setTeam(team);
+    }
 }

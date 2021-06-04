@@ -21,18 +21,18 @@ class GameListControllerTest {
     private GameService gameService;
 
     @InjectMocks
-    private GameListController gameListControllerUnderTest;
+    private GameListController gameListController;
 
     @Test
     void testGetGames() {
 
         final User user = new User();
         final Collection<Game> expectedResult = Arrays.asList(new Game());
-
+        final Game game = new Game();
         final User user1 = new User();
         final Collection<Game> games = Arrays.asList(new Game());
         when(gameService.getAllGames()).thenReturn(games);
-        final Collection<Game> result = gameListControllerUnderTest.getGames();
+        final Collection<Game> result = gameListController.getGames();
         assertThat(result).isEqualTo(expectedResult);
     }
 
@@ -44,7 +44,7 @@ class GameListControllerTest {
         user.setPassword("password");
         final Collection<Game> expectedResult = Arrays.asList(new Game());
         when(gameService.getAllGames()).thenReturn(Collections.emptyList());
-        final Collection<Game> result = gameListControllerUnderTest.getGames();
+        final Collection<Game> result = gameListController.getGames();
         assertThat(result).isEqualTo(expectedResult);
     }
 
@@ -61,7 +61,7 @@ class GameListControllerTest {
         final Collection<Game> games = Arrays.asList(new Game());
         when(gameService.getAllActiveGames()).thenReturn(games);
 
-        final Collection<Game> result = gameListControllerUnderTest.getActiveGames();
+        final Collection<Game> result = gameListController.getActiveGames();
 
         assertThat(result).isEqualTo(expectedResult);
     }
@@ -75,7 +75,8 @@ class GameListControllerTest {
         final Collection<Game> expectedResult = Arrays.asList(new Game());
         when(gameService.getAllActiveGames()).thenReturn(Collections.emptyList());
 
-        final Collection<Game> result = gameListControllerUnderTest.getActiveGames();
+        final Collection<Game> result = gameListController.getActiveGames();
         assertThat(result).isEqualTo(expectedResult);
     }
+
 }
