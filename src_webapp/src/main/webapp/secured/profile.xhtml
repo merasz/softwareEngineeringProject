@@ -8,9 +8,10 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name ="content">
-        <p:growl id="growl" showDetail="false" life="6000" >
+        <p:growl id="growl" showDetail="true" life="6000" >
             <p:autoUpdate/>
         </p:growl>
+
         <p:commandButton style="width: 10%; margin-top: 9px;margin-right: 80px; float: right;" id="help"
                          oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
         <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
@@ -21,6 +22,7 @@
                 <h:outputText value="Here you can change the Raspberry."/>
             </h:panelGrid>
         </p:dialog>
+
         <h:form id="userForm">
             <h:panelGroup layout="block" style="margin:0px auto; padding-top: 100px; display: flex; justify-content: center; margin-left: 250px">
                 <h:panelGroup layout="block" style="width: 80%; height: auto; display: flex; padding: 40px;box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;">
@@ -31,19 +33,27 @@
                         <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: center; width: 100%; font-weight: bold; font-size: 30px; margin-bottom: 50px">
                             <h:outputText id="username" value="#{userScoresController.user.username}" />
                         </h:panelGroup>
-                        <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: center; width: 100%; font-size: 24px; margin-bottom: 5px">
+                        <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: center; width: 100%; font-size: 14px; margin-bottom: 50px" rendered="#{userScoresController.viewPrivate}">
+                            <p:commandButton style="" oncomplete="PF('changePasswordDialog').show()" icon="ui-icon-key"
+                                             value ="change password" update=":changePasswordForm:changePasswordDialog">
+                                <f:setPropertyActionListener value="#{userScoresController.user}" target="#{userDetailController.selectedUser}" />
+                            </p:commandButton>
+                        </h:panelGroup>
+                        <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: center; width: 100%; font-size: 20px; margin-bottom: 0px">
                             <p>
-                                <h:outputText value="Raspberry:" style="margin-right: 10px"/>
+                                <h:outputText value="Raspberry Pi:" style="margin-right: 10px"/>
                                 <br/>
                                 <h:outputText id="raspberry" value="#{userScoresController.user.raspberry.hostname}" />
                             </p>
                         </h:panelGroup>
                         <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: center; width: 100%; font-size: 14px; margin-bottom: 50px" rendered="#{userScoresController.viewPrivate}">
-                            <p:commandButton style="" oncomplete="PF('changeRaspberryDialog').show()" icon="ui-icon-plusthick" value ="Change" update=":changeRaspberryForm:changeRaspberryDialog">
+                            <p:commandButton style="" oncomplete="PF('changeRaspberryDialog').show()" icon="fab fa-raspberry-pi"
+                                             value ="change Raspberry" update=":changeRaspberryForm:changeRaspberryDialog">
                                 <f:setPropertyActionListener value="#{userScoresController.user}" target="#{userDetailController.selectedUser}" />
                             </p:commandButton>
                         </h:panelGroup>
                     </h:panelGroup>
+
                     <h:panelGroup layout="block" style="display: flex; flex-direction: column; align-items: center">
                         <h:outputText value="Statistics" style="font-weight: bold; font-size: 30px; margin-bottom: 30px"/>
                         <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: space-evenly; width: 80%; font-size: 20px;">
@@ -62,7 +72,8 @@
                             <h:outputText value="My Best Games"/>
                         </h:panelGroup>
                         <h:panelGroup>
-                            <p:dataTable  id="scoreTable" var="score" value="#{userScoresController.bestScoresForUser}" widgetVar="scoreTable" rows="5" style="width:80%;margin: 0px auto; margin-top:30px">
+                            <p:dataTable  id="scoreTable" var="score" value="#{userScoresController.bestScoresForUser}"
+                                          widgetVar="scoreTable" rows="5" style="width:80%;margin: 0px auto; margin-top:30px">
                                 <p:column headerText="Game Name" style="text-align: center; width: 20%">
                                     <h:outputText value="#{score.game.gameName}"/>
                                 </p:column>
@@ -78,7 +89,8 @@
                             <h:outputText value="My Latest Games"/>
                         </h:panelGroup>
                         <h:panelGroup>
-                            <p:dataTable  id="latestScoreTable" var="score" value="#{userScoresController.latestScoresForUser}" widgetVar="latestScoreTable" rows="5" style="max-width: 80%;margin: 0px auto; margin-top:30px">
+                            <p:dataTable  id="latestScoreTable" var="score" value="#{userScoresController.latestScoresForUser}"
+                                          widgetVar="latestScoreTable" rows="5" style="max-width: 80%;margin: 0px auto; margin-top:30px">
                                 <p:column headerText="Game Name" style="text-align: center; width: 25%">
                                     <h:outputText value="#{score.game.gameName}"/>
                                 </p:column>
@@ -99,7 +111,8 @@
                             <h:outputText value="Won Games By Topic"/>
                         </h:panelGroup>
                         <h:panelGroup>
-                            <p:dataTable  id="gamesTopicTable" var="game" value="#{userScoresController.wonGamesByTopics}" widgetVar="gamesTopicTable" rows="5" style="width:80%;margin: 0px auto; margin-top:30px">
+                            <p:dataTable  id="gamesTopicTable" var="game" value="#{userScoresController.wonGamesByTopics}"
+                                          widgetVar="gamesTopicTable" rows="5" style="width:80%;margin: 0px auto; margin-top:30px">
                                 <p:column headerText="Topic Name" style="text-align: center; width: 25%">
                                     <h:outputText value="#{game.topic.topicName}"/>
                                 </p:column>
@@ -112,12 +125,14 @@
                             <h:outputText value="My Teams"/>
                         </h:panelGroup>
                         <h:panelGroup>
-                            <p:dataTable  id="teamsTable" var="team" value="#{userScoresController.teamsByPlayer}" widgetVar="teamsTable" rows="5" style="width:80%;margin: 0px auto; margin-top:30px">
+                            <p:dataTable  id="teamsTable" var="team" value="#{userScoresController.teamsByPlayer}" widgetVar="teamsTable"
+                                          rows="5" style="width:80%;margin: 0px auto; margin-top:30px">
                                 <p:column headerText="Team Name" style="text-align: center; width: 25%">
                                     <h:outputText value="#{team.teamName}"/>
                                 </p:column>
                                 <p:column headerText="player" style="text-align: center; width: 25%">
-                                    <p:dataTable  id="teamPlayerTable" styleClass="tableNoHead" var="player" value="#{team.teamPlayers}" widgetVar="teamPlayerTable" rows="10" style="">
+                                    <p:dataTable  id="teamPlayerTable" styleClass="tableNoHead" var="player" value="#{team.teamPlayers}"
+                                                  widgetVar="teamPlayerTable" rows="10" style="">
                                         <p:column headerText="Player" style="text-align: center; width: 25%">
                                             <h:outputText value="#{player.username}"/>
                                         </p:column>
@@ -129,7 +144,8 @@
                             <h:outputText value="My Circle of Players"/>
                         </h:panelGroup>
                         <h:panelGroup>
-                            <p:dataTable  id="playersTable" var="user" value="#{userListController.getPlayerCircle(userScoresController.user)}" widgetVar="teamsTable" rows="5" style="width:80%;margin: 0px auto; margin-top:30px">
+                            <p:dataTable  id="playersTable" var="user" value="#{userListController.getPlayerCircle(userScoresController.user)}"
+                                          widgetVar="teamsTable" rows="5" style="width:80%;margin: 0px auto; margin-top:30px">
                                 <p:column headerText="Player Name" style="text-align: center; width: 25%">
                                     <h:outputText value="#{user.username}"/>
                                 </p:column>
@@ -151,10 +167,29 @@
                                        itemValue="#{raspberry}"/>
                     </p:selectOneListbox>
                     <h:panelGrid columns="2">
-                        <p:commandButton value="Save" action="#{userDetailController.doSaveUser()}"
+                        <p:commandButton value="Save" action="#{userDetailController.doSaveNewUser()}"
                                          oncomplete="PF('changeRaspberryDialog').hide()"
                                          actionListener="#{userScoresController.doReloadUser()}" update=":userForm"/>
                         <p:commandButton value="Abort" onclick="PF('changeRaspberryDialog').hide()"/>
+                    </h:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+
+        <h:form id="changePasswordForm" >
+            <p:dialog header="Change Raspberry" id="changePasswordDialog" widgetVar="changePasswordDialog" modal="true"
+                      showEffect="fade" hideEffect="fade" resizable="false" style="display: none" >
+                <p:outputPanel id="editPassword" >
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="newPassword" value="enter new password: " />
+                        <p:password id="newPassword" value="#{userDetailController.password}" />
+                        <p:outputLabel for="confirmPassword" value="confirm new password: " />
+                        <p:password id="confirmPassword" value="#{userDetailController.confirmPassword}" />
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="Save" action="#{userDetailController.updatePasswordDialog}"
+                                         actionListener="#{userScoresController.doReloadUser()}" update=":userForm"/>
+                        <p:commandButton value="Abort" onclick="PF('changePasswordDialog').hide()"/>
                     </h:panelGrid>
                 </p:outputPanel>
             </p:dialog>

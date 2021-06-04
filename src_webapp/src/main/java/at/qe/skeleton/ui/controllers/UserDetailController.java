@@ -4,6 +4,7 @@ import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.UserRole;
 import at.qe.skeleton.services.UserService;
 import at.qe.skeleton.ui.controllers.demo.UserStatusController;
+import org.primefaces.PrimeFaces;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -39,6 +41,9 @@ public class UserDetailController extends Controller implements Serializable {
     private User newUser;
     private User selectedUser;
 
+    private String password;
+    private String confirmPassword;
+
     @PostConstruct
     public void init() {
         doCreateNewUser();
@@ -52,7 +57,7 @@ public class UserDetailController extends Controller implements Serializable {
     /**
      * Sets the currently displayed user and reloads it form db. This user is
      * targeted by any further calls of
-     * {@link #doReloadUser()}, {@link #doSaveUser()} and
+     * {@link #doReloadUser()}, {@link #doSaveNewUser()} and
      * {@link #doDeleteUser()}.
      *
      * @param selectedUser
@@ -94,7 +99,7 @@ public class UserDetailController extends Controller implements Serializable {
     /**
      * Action to save the currently displayed user.
      */
-    public void doSaveUser() {
+    public void doSaveNewUser() {
         try {
             if(!userService.isUsernameAlreadyTaken(newUser)) {
                 selectedUser = userService.saveUser(newUser);
@@ -114,19 +119,53 @@ public class UserDetailController extends Controller implements Serializable {
      * Edit the currently displayed user.
      */
     public void doUpdateUser() {
+        try {
+            if (password != null) {
+                updatePassword();
+            }
+            saveUser();
+            PrimeFaces.current().executeScript("PF('userEditDialog').hide()");
+            displayInfo("User edited", "");
+        } catch (IllegalArgumentException e) {
+            displayError("Password not changed", "Confirmation password does not match.");
+        }
+    }
+
+    /**
+     * Edit the own users password in the profile.
+     */
+    public void updatePasswordDialog() {
+        try {
+            updatePassword();
+            saveUser();
+            PrimeFaces.current().executeScript("PF('changePasswordDialog').hide()");
+            displayInfo("Password changed", "");
+        } catch (IllegalArgumentException e) {
+            displayError("Password not changed", "Confirmation password does not match.");
+        }
+    }
+
+    public void updatePassword() throws IllegalArgumentException {
+        if (password.equals(confirmPassword)) {
+            selectedUser.setPassword(password);
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private void saveUser() {
         selectedUser = userService.saveUser(selectedUser);
         userListController.loadUsers();
-        displayInfo("User edited", "");
     }
 
+    /**
+     * Get User Roles for datatable filter.
+     */
     public List<UserRole> getListRoles(){
-        List<UserRole> list = new ArrayList<>();
-        list.add(UserRole.ADMIN);
-        list.add(UserRole.GAME_MANAGER);
-        list.add(UserRole.PLAYER);
-        return list;
+        return Arrays.asList(UserRole.values());
     }
 
+    //region getter & setter
     public User getNewUser() {
         return newUser;
     }
@@ -134,4 +173,21 @@ public class UserDetailController extends Controller implements Serializable {
     public void setNewUser(User newUser) {
         this.newUser = newUser;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+    //endregion
 }
