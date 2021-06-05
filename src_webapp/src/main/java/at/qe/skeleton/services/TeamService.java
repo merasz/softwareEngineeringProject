@@ -6,6 +6,7 @@ import at.qe.skeleton.model.User;
 import at.qe.skeleton.repositories.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -94,7 +95,8 @@ public class TeamService {
      * @param team
      */
     public void deleteTeam(Team team) {
-        team.setTeamPlayers(new ArrayList<>());
+        team.setTeamPlayers(null);
+        team.setScores(null);
         teamRepository.save(team);
         teamRepository.delete(team);
     }
@@ -114,6 +116,7 @@ public class TeamService {
      * @param game
      * @return team object
      */
-    public Team getTeamByPlayerAndGame(User user, Game game) {return teamRepository.findByTeamPlayersAndGame(user, game);}
-
+    public Team getTeamByPlayerAndGame(User user, Game game) {
+        return teamRepository.findByTeamPlayersAndGame(user, game);
+    }
 }

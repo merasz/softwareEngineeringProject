@@ -75,6 +75,7 @@ public class TeamController extends Controller implements Serializable {
      */
     public void doSaveUserToTeam() {
         try {
+            team = teamService.reloadTeam(team);
             team = teamService.savePlayerToTeam(team, tmpPlayer);
             playerListController.setTeam(team);
             game = gameService.reloadGame(game);

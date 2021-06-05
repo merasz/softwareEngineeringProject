@@ -1,6 +1,7 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.Game;
+import at.qe.skeleton.model.Team;
 import at.qe.skeleton.model.demo.PlayerAvailability;
 import at.qe.skeleton.services.GameStartService;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -115,7 +117,7 @@ public class GameStartController extends GameController implements Serializable 
      * socket-channel update, used to query if all teams ready to join
      */
     public void setAllTeamsReady() {
-        gameStartService.getGameJoinController().updateJoinChannel();
+        gameStartService.getGameJoinController().updateJoinChannel(getGame());
     }
 
     /**
@@ -155,6 +157,21 @@ public class GameStartController extends GameController implements Serializable 
                 displayError("Redirect error", e.getMessage());
             }
         }
+    }
+
+    /**
+     * reset all the player assignments
+     */
+    public void resetAssignments() {
+        teamComplete = false;
+
+        // reset teams
+        for (Team t : getGame().getTeamList()) {
+            t.setTeamPlayers(new ArrayList<>());
+            gameStartService.getTeamService().saveTeam(t);
+        }
+
+        gameStartService.getGameJoinController().resetAssignments(getGame());
     }
 
     //region getter & setter

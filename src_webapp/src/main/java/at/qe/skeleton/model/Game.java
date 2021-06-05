@@ -85,11 +85,11 @@ public class Game implements Serializable {
         return topic;
     }
 
-    public void setScores(List<Score> scoreList) {
+    public void setScoreList(List<Score> scoreList) {
         this.scoreList = scoreList;
     }
 
-    public List<Score> getScores() {
+    public List<Score> getScoreList() {
         return scoreList;
     }
 

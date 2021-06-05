@@ -38,9 +38,6 @@
                                       style="font-weight: normal" escape="false"/>
                     </p:panelGrid>
                 </f:facet>
-                <p:column headerText="ID">
-                    <h:outputText value="#{game.gameId}"/>
-                </p:column>
                 <p:column headerText="Name">
                     <h:outputText value="#{game.gameName}" />
                 </p:column>
@@ -78,7 +75,8 @@
             </p:dataTable>
 
             <p:commandButton style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('gameCreationDialog').show()"
-                             icon="ui-icon-plusthick" action="#{gameCreationController.doCreateNewGame()}" value ="Create new Game" update="createGameForm">
+                             icon="ui-icon-plusthick" action="#{gameCreationController.doCreateNewGame()}" value ="Create new Game"
+                             update="createGameForm">
                 <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}" />
                 <f:setPropertyActionListener value="#{game}" target="#{teamController.game}" />
             </p:commandButton>
@@ -236,7 +234,8 @@
                         <f:selectItems value="#{teamController.getAssignablePlayers()}" var="player" itemLabel="#{player.username}" itemValue="#{player}" />
                     </p:selectOneListbox>
                     <h:panelGrid columns ="2">
-                        <p:commandButton value="Save" action="#{teamController.doSaveUserToTeam()}" oncomplete="PF('playerAddDialog').hide()" update=":playerForm:playerTable"/>
+                        <p:commandButton value="Save" action="#{teamController.doSaveUserToTeam()}" oncomplete="PF('playerAddDialog').hide()"
+                                         update=":playerForm:playerTable"/>
                         <p:commandButton value="Abort" onclick="PF('playerAddDialog').hide();$('#playerForm').show();"/>
                     </h:panelGrid>
                 </p:outputPanel>
@@ -244,8 +243,6 @@
 
             <p:commandButton style="width: 200px; margin-top: 25px; float: left; margin-left: 290px" oncomplete="$('#playerForm').hide();$('#teamsForm').show();" icon="ui-icon-arrowthick-1-w" value ="Back to Teams">
             </p:commandButton>
-
-
         </h:form>
 
     </ui:define>

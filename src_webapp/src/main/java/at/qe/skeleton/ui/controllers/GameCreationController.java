@@ -68,6 +68,7 @@ public class GameCreationController extends Controller implements Serializable {
                 IntStream.range(0,numberTeams).forEach(i -> game.getTeamList().add(teamService.saveTeam(new Team(game))));
                 game.setCountPlayers(numberTeams * game.getTeamSize());
                 game = gameService.saveGame(game);
+                currentTopic = null;
                 displayInfo("Game created", "You can now create Teams and assign players or start the Game immediately.");
                 PrimeFaces.current().executeScript("PF('gameCreationDialog').hide()");
             } catch (IllegalArgumentException e) {

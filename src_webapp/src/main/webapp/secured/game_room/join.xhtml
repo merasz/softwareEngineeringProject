@@ -28,10 +28,14 @@
                                 <h:outputText value="Choose your Team Players"/>
                             </div>
 
-                            <h:panelGrid columns ="2" >
+                            <h:panelGrid columns ="3" >
                                 <p:outputLabel for="teamName" value="Team Name: " style="color: white"/>
                                 <p:inputText id="teamName" value="#{gameStartController.teamName}" placeholder="#{gameStartController.teamName}"
                                              style="color: black; background-color: white"/>
+                                <p:commandButton id="reset" action="#{gameStartController.resetAssignments}" value="reset Teams"
+                                                 update="playerList"
+                                                 style="height:40px; width:150px; border: 2px solid #3498db; font-weight: normal;
+                                                 border-radius: 48px; padding: 0; margin-top: 5px; text-align: center" />
                             </h:panelGrid>
 
                             <div style="font-size: large; color: white; padding-bottom: 20px">
