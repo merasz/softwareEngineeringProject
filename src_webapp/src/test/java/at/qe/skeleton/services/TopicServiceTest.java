@@ -9,15 +9,12 @@ import at.qe.skeleton.repositories.TopicRepository;
 import at.qe.skeleton.ui.beans.MessageBean;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -68,7 +65,7 @@ class TopicServiceTest {
     void testSaveTopic() {
         final Topic topic = new Topic("topicName");
         final Topic expectedResult = new Topic("topicName");
-        when(mockTopicRepository.findByTopicNameContaining("topicName")).thenReturn(Arrays.asList(new Topic("topicName")));
+        when(mockTopicRepository.findByTopicName("topicName")).thenReturn(Arrays.asList(new Topic("topicName")));
         when(mockTopicRepository.findFirstByTopicName("name")).thenReturn(new Topic("topicName"));
         when(mockTopicRepository.save(new Topic("topicName"))).thenReturn(new Topic("topicName"));
         final Topic result = topicServiceUnderTest.saveTopic(topic);

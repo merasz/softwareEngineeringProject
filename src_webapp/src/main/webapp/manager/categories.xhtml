@@ -41,25 +41,28 @@
                     <h:outputText value="#{topic.gameCount}"/>
                 </p:column>
 
-                <p:column style="width:100px;text-align: center" headerText="create">
-                    <p:commandButton title="Terms" icon="ui-icon-note"
+                <p:column style="width:100px;text-align: center" headerText="Terms">
+                    <p:commandButton title="Terms" icon="fa fa-fw fa-list"
                                      action="#{termListController.doSetTopic(topicController.gameTopicCount.topic)}"
-                                     update=":termsForm" oncomplete="$('#topicForm').hide();$('#termsForm').show();"
-                                     style="width:20px;height:20px">
+                                     update=":termsForm" oncomplete="$('#topicForm').hide();$('#termsForm').show();">
                         <f:setPropertyActionListener value="#{topic}" target="#{topicController.gameTopicCount}"/>
                     </p:commandButton>
                 </p:column>
+                <p:column style="width:100px;text-align: center" headerText="edit">
+                    <p:commandButton icon="fa fa-fw fa-edit" title="edit" oncomplete="PF('topicEditDialog').show()" update=":editForm:topicEditDialog">
+                        <f:setPropertyActionListener value="#{topic.topic}" target="#{topicController.topic}"/>
+                    </p:commandButton>
+                </p:column>
                 <p:column style="width:100px;text-align: center" headerText="delete">
-                    <p:commandButton action="#{topicController.doDeleteTopic}" icon="ui-icon-trash" title="Delete"
+                    <p:commandButton action="#{topicController.doDeleteTopic}" icon="ui-icon-trash" title="delete"
                                      update=":topicForm:topicCreationTable">
                         <f:setPropertyActionListener value="#{topic.topic}" target="#{topicController.topic}"/>
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
             <p:commandButton style="width: 25%; margin-top: 25px; float: right;"
-                             oncomplete="PF('topicCreationDialog').show()" icon="ui-icon-add-box"
-                             action="#{topicController.doCreateNewTopic()}" value="Create new Topic">
-                <f:setPropertyActionListener value="#{topic}" target="#{topicController.topic}"/>
+                             oncomplete="PF('topicCreationDialog').show()" icon="fa fa-plus-square" value="Create new Topic"
+                             action="#{topicController.doCreateNewTopic()}" update=":topicForm:topicCreationDialog">
             </p:commandButton>
 
             <p:dialog header="Create new Topic" id="topicCreationDialog" widgetVar="topicCreationDialog" modal="true"
@@ -67,12 +70,33 @@
                 <p:outputPanel id="topicCreateData">
                     <h:panelGrid columns="2">
                         <p:outputLabel for="topicName" value="Topic Name: "/>
-                        <p:inputText id="topicName" value="#{topicController.topic.topicName}"/>
+                        <p:inputText id="topicName" placeholder="new Topic name" value="#{topicController.topicName}"/>
                     </h:panelGrid>
+                    <p:separator/>
                     <h:panelGrid columns="2">
                         <p:commandButton value="Save" action="#{topicController.doSaveTopic()}"
+                                         update=":topicForm"/>
+                        <p:commandButton value="Abort" onclick="PF('topicCreationDialog').hide()"/>
+                    </h:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+
+        <h:form id="editForm" >
+            <p:dialog header="Edit Topic" id="topicEditDialog" widgetVar="topicEditDialog" modal="true"
+                      showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="topicEditData">
+                    <h:panelGrid columns="2">
+                        <h:outputText value="Topic name: "/>
+                        <h:outputText value="#{topicController.topic.topicName}"/>
+                        <p:outputLabel for="editName" value="new name: "/>
+                        <p:inputText id="editName" placeholder="new Topic name" value="#{topicController.topicName}"/>
+                    </h:panelGrid>
+                    <p:separator/>
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="Save" action="#{topicController.doEditTopic()}"
                                          update=":topicForm:topicCreationTable"/>
-                        <p:commandButton value="Abort" onclick="PF('Dialog').hide()"/>
+                        <p:commandButton value="Abort" onclick="PF('topicEditDialog').hide()"/>
                     </h:panelGrid>
                 </p:outputPanel>
             </p:dialog>
@@ -93,7 +117,7 @@
                 </p:column>
             </p:dataTable>
             <p:commandButton style="width: 25%; margin-top: 25px; float: right;"
-                             oncomplete="PF('termCreationDialog').show()" icon="ui-icon-add-box"
+                             oncomplete="PF('termCreationDialog').show()" icon="fa fa-plus-square"
                              action="#{termsController.doCreateNewTerm()}" value="Create new Term" update=":termsForm:termCreationDialog">
                 <f:setPropertyActionListener value="#{term}" target="#{termsController.term}"/>
             </p:commandButton>
@@ -109,16 +133,13 @@
                         <p:outputLabel for="termName" value="Term Name: "/>
                         <p:inputText id="termName" value="#{termsController.term.termName}"/>
                     </h:panelGrid>
-
                     <p:separator/>
-
                     <h:panelGrid columns="2">
                         <p:commandButton value="Save"
                                          action="#{termsController.doSaveTerm(topicController.gameTopicCount.topic)}"
                                          update=":termsForm:termsTable"/>
                         <p:commandButton value="Abort" onclick="PF('termCreationDialog').hide()"/>
                     </h:panelGrid>
-
                 </p:outputPanel>
             </p:dialog>
         </h:form>

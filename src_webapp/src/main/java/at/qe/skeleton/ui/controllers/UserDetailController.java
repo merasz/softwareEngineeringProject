@@ -120,8 +120,12 @@ public class UserDetailController extends Controller implements Serializable {
      */
     public void doUpdateUser() {
         try {
-            if (password != null) {
-                updatePassword();
+            if (!password.isEmpty()) {
+                if (validatePassword(password)) {
+                    updatePassword();
+                } else {
+                    return;
+                }
             }
             saveUser();
             PrimeFaces.current().executeScript("PF('userEditDialog').hide()");
@@ -136,7 +140,11 @@ public class UserDetailController extends Controller implements Serializable {
      */
     public void updatePasswordDialog() {
         try {
-            updatePassword();
+            if (validatePassword(password)) {
+                updatePassword();
+            } else {
+                return;
+            }
             saveUser();
             PrimeFaces.current().executeScript("PF('changePasswordDialog').hide()");
             displayInfo("Password changed", "");
@@ -150,6 +158,15 @@ public class UserDetailController extends Controller implements Serializable {
             selectedUser.setPassword(password);
         } else {
             throw new IllegalArgumentException();
+        }
+    }
+
+    private boolean validatePassword(String password) {
+        if (password.length() > 3) {
+            return true;
+        } else {
+            displayError("Password wrong", "Your password must be at least 4 characters long.");
+            return false;
         }
     }
 

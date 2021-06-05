@@ -10,6 +10,9 @@ public class Topic implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     private String topicName;
 
     @OneToMany(mappedBy = "topic")
@@ -88,6 +91,14 @@ public class Topic implements Serializable {
 
     public void setUpdateTopic(Topic updateTopic) {
         this.updateTopic = updateTopic;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     @Override

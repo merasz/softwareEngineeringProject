@@ -51,6 +51,15 @@ public class GameService {
     }
 
     /**
+     * delete a Game instance from the database
+     */
+    public void deleteGame(Game game) {
+        scoreRepository.findGameScoresByGame(game).forEach(s -> scoreRepository.delete(s));
+        teamService.getTeamsByGame(game).forEach(t -> teamService.deleteTeam(t));
+        gameRepository.delete(game);
+    }
+
+    /**
      * Returns the current played game by the given Raspberry Id
      * @param raspiId
      * @return game object

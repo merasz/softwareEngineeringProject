@@ -78,6 +78,11 @@ public class GameCreationController extends Controller implements Serializable {
         }
     }
 
+    public void doDeleteGame() {
+        gameService.deleteGame(game);
+        displayInfo("Game deleted", "");
+    }
+
     //region getter & setter
     public int getNumberTeams() {
         return numberTeams;

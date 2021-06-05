@@ -65,7 +65,7 @@
                     <h:selectBooleanCheckbox value="#{user.enabled}" disabled="true"/>
                 </p:column>
                 <p:column headerText="Operation" style="width:100px;text-align: center">
-                    <p:commandButton title="Edit" icon="ui-icon-note" update=":userForm:userEditDialog"
+                    <p:commandButton title="Edit" icon="fa fa-fw fa-edit" update=":userForm:userEditDialog"
                                      oncomplete="PF('userEditDialog').show()">
                         <f:setPropertyActionListener value="#{user}" target="#{userDetailController.selectedUser}" />
                     </p:commandButton>
