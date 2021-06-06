@@ -26,7 +26,7 @@
         <h:form id="userForm">
             <h:panelGroup layout="block" style="margin:0px auto; padding-top: 100px; display: flex; justify-content: center; margin-left: 250px">
                 <h:panelGroup layout="block" style="width: 80%; height: auto; display: flex; padding: 40px;box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;">
-                    <h:panelGroup layout="block" style="width: 20%; min-width: 20%; display: flex; flex-direction: column; align-items: center; border-right: 1px solid #303030">
+                    <h:panelGroup id="userInfoPanel" layout="block" style="width: 20%; min-width: 20%; display: flex; flex-direction: column; align-items: center; border-right: 1px solid #303030">
                         <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: center; width: 100%; font-weight: bold; font-size: 30px">
                             <i class="far fa-user fa-2x" style="margin: 30px 0px;"></i>
                         </h:panelGroup>
@@ -47,8 +47,7 @@
                             </p>
                         </h:panelGroup>
                         <h:panelGroup layout="block" style="display: flex; align-items: center; justify-content: center; width: 100%; font-size: 14px; margin-bottom: 50px" rendered="#{userScoresController.viewPrivate}">
-                            <p:commandButton style="" oncomplete="PF('changeRaspberryDialog').show()" icon="fab fa-raspberry-pi"
-                                             value ="change Raspberry" update=":changeRaspberryForm:changeRaspberryDialog">
+                            <p:commandButton style="" icon="fab fa-raspberry-pi" value ="change Raspberry" onclick="PF('raspberryEditDialog').show()">
                                 <f:setPropertyActionListener value="#{userScoresController.user}" target="#{userDetailController.selectedUser}" />
                             </p:commandButton>
                         </h:panelGroup>
@@ -156,21 +155,42 @@
             </h:panelGroup>
         </h:form>
 
-        <h:form id="changeRaspberryForm" >
-            <p:dialog header="Change Raspberry" id="changeRaspberryDialog" widgetVar="changeRaspberryDialog" modal="true"
+        <h:form id="editRaspberryForm" >
+            <p:dialog header="Change Raspberry" id="raspberryEditDialog" widgetVar="raspberryEditDialog" modal="true"
                       showEffect="fade" hideEffect="fade" resizable="false" style="display: none" >
                 <p:outputPanel id="raspberryData" >
                     <p:selectOneListbox id="basic"  value="#{userDetailController.selectedUser.raspberry}"
                                         converter="#{raspberryConverter}" style="width:300px">
                         <f:selectItems value="#{raspberryListController.getRaspberries()}" var="raspberry"
-                                       itemLabel="#{raspberry.raspberryId} - #{raspberry.hostname} - #{raspberry.ipAddress}"
+                                       itemLabel="#{raspberry.raspberryId} - #{raspberry.hostname}"
                                        itemValue="#{raspberry}"/>
                     </p:selectOneListbox>
                     <h:panelGrid columns="2">
-                        <p:commandButton value="Save" action="#{userDetailController.doSaveNewUser()}"
-                                         oncomplete="PF('changeRaspberryDialog').hide()"
-                                         actionListener="#{userScoresController.doReloadUser()}" update=":userForm"/>
-                        <p:commandButton value="Abort" onclick="PF('changeRaspberryDialog').hide()"/>
+                        <p:commandButton value="Save" action="#{raspberryController.accessRaspberry(sessionInfoBean.hasRole('ADMIN'))}">
+                            <f:setPropertyActionListener value="#{userDetailController.selectedUser.raspberry}" target="#{raspberryController.raspberry}" />
+                            <f:setPropertyActionListener value="SET" target="#{raspberryController.action}" />
+                        </p:commandButton>
+                        <p:commandButton value="Abort" onclick="PF('raspberryEditDialog').hide()"/>
+                    </h:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+
+        <h:form id="authorizeForm" >
+            <p:dialog header="Confirm Authorization" id="authorizeDialog" widgetVar="authorizeDialog" modal="true" showEffect="fade"
+                      hideEffect="fade" resizable="false">
+                <p:outputPanel >
+                    <div style="font-size: medium">
+                        <p>Enter the ip address of this <i>Raspberry Pi</i> to be able to edit it.</p>
+                    </div>
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="ipAuthorize" value="enter ip-address: " />
+                        <p:inputText id="ipAuthorize" value="#{raspberryController.ipAddress}"/>
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="Confirm" action="#{raspberryController.authorize}" update=":userForm:userInfoPanel"
+                                         actionListener="#{userScoresController.doReloadUser()}"/>
+                        <p:commandButton value="Abort" onclick="PF('authorizeDialog').hide()"/>
                     </h:panelGrid>
                 </p:outputPanel>
             </p:dialog>

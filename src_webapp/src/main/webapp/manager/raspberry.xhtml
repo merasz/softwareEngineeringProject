@@ -29,24 +29,30 @@
                 <p:column headerText="Name">
                     <h:outputText value="#{raspberry.hostname}"/>
                 </p:column>
-                <p:column headerText="IP Address">
+                <p:column headerText="IP Address" rendered="#{sessionInfoBean.hasRole('ADMIN')}">
                     <h:outputText value="#{raspberry.ipAddress}"/>
                 </p:column>
-                <p:column headerText="API Key">
+                <p:column headerText="API Key" rendered="#{sessionInfoBean.hasRole('ADMIN')}">
                     <h:outputText value="#{raspberry.apiKey}"/>
                 </p:column>
                 <p:column headerText="inUse" style="width:50px">
                     <h:selectBooleanCheckbox value="#{raspberry.inUse}" disabled="true" style="margin: 0px auto; display: block"/>
                 </p:column>
                 <p:column headerText="actions" style="width:150px;text-align: center">
-                    <p:commandButton update=":raspberryForm:raspberryEditDialog" oncomplete="PF('raspberryEditDialog').show()" icon="ui-icon-note" title="Edit">
+                    <p:commandButton update=":raspberryForm:raspberryEditDialog :authorizeForm:authorizeDialog" icon="fa fa-fw fa-edit" title="Edit"
+                                     action="#{raspberryController.accessRaspberry(sessionInfoBean.hasRole('ADMIN'))}" >
                         <f:setPropertyActionListener value="#{raspberry}" target="#{raspberryController.raspberry}" />
+                        <f:setPropertyActionListener value="EDIT" target="#{raspberryController.action}" />
                     </p:commandButton>
-                    <p:commandButton update=":raspberryForm:raspberryTable" title="Invalidate API Key" icon="ui-icon-close" action="#{raspberryController.doInvalidateApiKey()}">
+                    <p:commandButton update=":raspberryForm:raspberryTable :authorizeForm:authorizeDialog" title="Invalidate API Key" icon="ui-icon-close"
+                                     action="#{raspberryController.accessRaspberry(sessionInfoBean.hasRole('ADMIN'))}">
                         <f:setPropertyActionListener value="#{raspberry}" target="#{raspberryController.raspberry}" />
+                        <f:setPropertyActionListener value="INVALIDATE" target="#{raspberryController.action}" />
                     </p:commandButton>
-                    <p:commandButton update=":raspberryForm:raspberryTable" title="Delete Raspberry" icon="ui-icon-trash" action="#{raspberryController.doDeleteRaspberry()}">
+                    <p:commandButton update=":raspberryForm:raspberryTable :authorizeForm:authorizeDialog" title="Delete Raspberry" icon="ui-icon-trash"
+                                     action="#{raspberryController.accessRaspberry(sessionInfoBean.hasRole('ADMIN'))}">
                         <f:setPropertyActionListener value="#{raspberry}" target="#{raspberryController.raspberry}" />
+                        <f:setPropertyActionListener value="DELETE" target="#{raspberryController.action}" />
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
@@ -74,10 +80,30 @@
                     </h:panelGrid>
                 </p:outputPanel>
             </p:dialog>
-
         </h:form>
+
+        <h:form id="authorizeForm">
+            <p:dialog header="Confirm Authorization" id="authorizeDialog" widgetVar="authorizeDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel >
+                    <div style="font-size: medium">
+                        <p>Enter the ip address of this <i>Raspberry Pi</i> to be able to edit it.</p>
+                    </div>
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="ipAuthorize" value="enter ip-address: " />
+                        <p:inputText id="ipAuthorize" value="#{raspberryController.ipAddress}"/>
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="Confirm" action="#{raspberryController.authorize}"/>
+                        <p:commandButton value="Abort" onclick="PF('authorizeDialog').hide()"/>
+                    </h:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+
         <!-- Create Raspberry Button -->
-        <p:commandButton update=":raspberryForm:raspberryEditDialog" oncomplete="PF('raspberryEditDialog').show();" title="Add new Raspberry" action="#{raspberryController.doCreateRaspberry()}"></p:commandButton>
+        <p:commandButton update=":raspberryForm:raspberryEditDialog" oncomplete="PF('raspberryEditDialog').show();" title="Add new Raspberry"
+                         action="#{raspberryController.doCreateRaspberry()}">
+        </p:commandButton>
 
     </ui:define>
 </ui:composition>

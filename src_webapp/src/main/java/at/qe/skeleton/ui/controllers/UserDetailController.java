@@ -170,7 +170,7 @@ public class UserDetailController extends Controller implements Serializable {
         }
     }
 
-    private void saveUser() {
+    public void saveUser() {
         selectedUser = userService.saveUser(selectedUser);
         userListController.loadUsers();
     }

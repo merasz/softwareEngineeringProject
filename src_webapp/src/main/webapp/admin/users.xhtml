@@ -112,7 +112,7 @@
                         <p:selectOneListbox id="editRasp"  value="#{userDetailController.selectedUser.raspberry}"
                                             converter="#{raspberryConverter}" style="width:300px">
                             <f:selectItems value="#{raspberryListController.getRaspberries()}" var="raspberry"
-                                           itemLabel="#{raspberry.raspberryId} - #{raspberry.ipAddress}" itemValue="#{raspberry}"/>
+                                           itemLabel="#{raspberry.raspberryId} - #{raspberry.hostname}" itemValue="#{raspberry}"/>
                         </p:selectOneListbox>
                     </h:panelGrid>
                     <p:separator />
