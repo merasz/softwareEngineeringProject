@@ -52,3 +52,4 @@ class PlayerListControllerTest {
         playerListController.setTeam(team);
     }
 }
+

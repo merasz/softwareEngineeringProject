@@ -151,7 +151,7 @@ class GameCreationControllerTest {
         final Topic topic = new Topic();
         final Collection<Topic> topics= Arrays.asList();
         gameCreationController.getCurrentTopic();
-        
+
     }
     @Test
     void testSetCurrentTopic() {
@@ -174,3 +174,4 @@ class GameCreationControllerTest {
 
 
 }
+

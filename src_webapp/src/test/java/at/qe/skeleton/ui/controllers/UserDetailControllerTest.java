@@ -3,6 +3,8 @@ package at.qe.skeleton.ui.controllers;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.UserService;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,10 +25,21 @@ class UserDetailControllerTest {
     @Mock
     private UserService userService;
     @Mock
+    private UserListController userListController;
+    @Mock
     private SessionInfoBean sessionInfoBean;
 
     @InjectMocks
     private UserDetailController userDetailController;
+
+    @BeforeEach
+    public void testInit() {
+        final User user = new User();
+        final List<User> users = Arrays.asList(user);
+        when(userService.getAllUsers()).thenReturn(Arrays.asList(user));
+        when(userService.getAllUsers()).thenReturn(new ArrayList<>());
+        userDetailController.init();
+    }
 
     @Test
     //@WithMockUser(username = "admin", authorities = { "ADMIN" })
@@ -35,7 +48,7 @@ class UserDetailControllerTest {
 
         User user = userService.loadUser("Alex");
         verify(userService).deleteUser(new User());
-        userDetailController.setSelectedUser(user);
+        userListController.getAllPlayers();
 
         try {
             userDetailController.doDeleteUser();
@@ -44,14 +57,16 @@ class UserDetailControllerTest {
         }
     }
 
-
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     public void testDoReloadUser() {
         final User user = new User();
+        user.getUsername();
         user.setPassword("password");
         user.setEnabled(false);
-        //when(userService.loadUser("username")).thenReturn(userService.loadUser(user));
-        //userDetailController.doReloadUser();
+        //when(userDetailController.getNewUser().compareTo(userService.loadUser(user.getUsername())));
+        when(userService.loadUser("username")).thenReturn(userService.saveUser(user));
+        userDetailController.doReloadUser();
     }
 
     @Test
@@ -62,6 +77,27 @@ class UserDetailControllerTest {
         assertThat(result).isEqualTo(Arrays.asList(UserRole.ADMIN));
     }
 
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    @Test
+    void testSetNewUser() {
+        final User newUser = new User();
+        final Team team = new Team();
+
+        final List<User> newUsers = Arrays.asList();
+        when(userService.getAllUsers()).thenReturn(newUsers);
+        userDetailController.setNewUser(newUser);
+    }
+
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    @Test
+    void testGetNewUser() {
+        final User newUser = new User();
+        final Team team = new Team();
+
+        final List<User> newUsers = Arrays.asList();
+        when(userService.getAllUsers()).thenReturn(newUsers);
+        userDetailController.getNewUser();
+    }
 
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
