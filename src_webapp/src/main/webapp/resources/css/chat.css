@@ -13,7 +13,7 @@
 
 .chatRoomContent .chatRoomPanel {
 	vertical-align: top;
-	width: 450px;
+	width: 40%;
 }
 
 .chatRoomContent .msgOutputTag{
@@ -21,7 +21,7 @@
 }
 
 .chatRoomContent .chatRoomPanelContent {
-	width: 410px;
+	width: 40%;
 }
 
 .chatRoomContent .onlineInfoBox{

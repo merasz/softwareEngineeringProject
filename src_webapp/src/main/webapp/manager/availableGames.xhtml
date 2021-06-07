@@ -7,14 +7,10 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name ="content">
-
         <h:form id="gamesForm">
-            <p:growl id="message" showDetail="true" >
-                <p:autoUpdate />
-            </p:growl>
-
-            <p:commandButton style="width: 10%; margin-top: 9px;margin-right: 80px; float: right;" id="help"
-                             oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
+            <p:commandButton style="width: 100px; margin-top: 70px; margin-right: 20px; float: right;" id="help"
+                             oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help">
+            </p:commandButton>
             <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
                 <h:panelGrid columns="1">
                     <h:outputText value="See all your past and current games here."/>
@@ -28,11 +24,12 @@
                 </h:panelGrid>
             </p:dialog>
 
-            <p:dataTable widgetVar="gameCreationTable" id="gameCreationTable" var="game" value="#{gameListController.games}" style="width: 80%; margin-top: 110px; float: right; margin-right: -200px">
+            <p:dataTable widgetVar="gameCreationTable" id="gameCreationTable" var="game" value="#{gameListController.games}"
+                         style="margin-top: 20px; margin-right: 20px; margin-left: 270px; float: left;">
                 <f:facet name="header">
                     <p:panelGrid columns="1">
                         <h:outputText value="Games"/>
-                        <h:outputText value="See all your Games here
+                        <h:outputText value="See all your Games here:
                                                 &lt;br/&gt;
                                                 Edit or start Games that haven't already begun or create a new Game"
                                       style="font-weight: normal" escape="false"/>
@@ -74,7 +71,7 @@
                 </p:column>
             </p:dataTable>
 
-            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('gameCreationDialog').show()"
+            <p:commandButton style="width: 300px; margin-top: 20px; margin-right: 20px; float: right;" oncomplete="PF('gameCreationDialog').show()"
                              icon="ui-icon-plusthick" action="#{gameCreationController.doCreateNewGame()}" value ="Create new Game"
                              update="createGameForm">
                 <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}" />
@@ -161,7 +158,8 @@
         </h:form>
 
         <h:form id="teamsForm" style="display: none">
-            <p:dataTable widgetVar="teamsTable" id="teamsTable" var="team" value="#{teamListController.teamsByGame}" style="width: 83%; margin-top: 110px; float: right;">
+            <p:dataTable widgetVar="teamsTable" id="teamsTable" var="team" value="#{teamListController.teamsByGame}"
+                         style="margin-top: 80px; margin-right: 20px; margin-left: 270px; float: left;">
                 <f:facet name="header">Teams - #{teamListController.game.gameName}</f:facet>
                 <p:column headerText="Team name">
                     <h:outputText value="#{team.teamName}"/>
@@ -181,10 +179,10 @@
                 </p:column>
             </p:dataTable>
 
-            <p:commandButton id="createTeamButton" style="width: 25%; margin-top: 25px; float: right;" icon="ui-icon-plusthick"
+            <p:commandButton id="createTeamButton" style="width: 300px; margin-top: 20px; margin-right: 20px; float: right;" icon="ui-icon-plusthick"
                              action="#{teamController.doSetTeam(teamListController.game)}" value ="Create new Team" update=":teamsForm:teamCreationDialog" >
             </p:commandButton>
-            <p:commandButton style="width: 200px; margin-top: 25px; float: left; margin-left: 290px" oncomplete="$('#teamsForm').hide();$('#gamesForm').show();" icon="ui-icon-arrowthick-1-w" value ="Back to Games">
+            <p:commandButton style="width: 200px; margin-top: 20px; float: left; margin-left: 270px" oncomplete="$('#teamsForm').hide();$('#gamesForm').show();" icon="ui-icon-arrowthick-1-w" value ="Back to Games">
             </p:commandButton>
 
             <p:dialog header="Create new Team" id="teamCreationDialog" widgetVar="teamCreationDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
@@ -205,7 +203,8 @@
         </h:form>
 
         <h:form id="playerForm" style="display: none">
-            <p:dataTable widgetVar="playerTable" id="playerTable" var="player" value="#{playerListController.playerByTeam}" style="width: 83%; margin-top: 110px; float: right;">
+            <p:dataTable widgetVar="playerTable" id="playerTable" var="player" value="#{playerListController.playerByTeam}"
+                         style="margin-top: 80px; margin-right: 20px; margin-left: 270px; float: left;">
                 <f:facet name="header">Players - #{teamController.team.teamName}</f:facet>
                 <p:column headerText="Player name">
                     <h:outputText value="#{player.username}"/>
@@ -217,11 +216,14 @@
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
-            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" action="#{teamController.addPlayerDialog()}"
-                             icon="ui-icon-plusthick" value ="Add Player" update=":playerForm:playerAddDialog" >
+
+            <p:commandButton style="width: 300px; margin-top: 20px; margin-right: 20px; float: right;" icon="ui-icon-plusthick"
+                             action="#{teamController.addPlayerDialog()}" value ="Add Player" update=":playerForm:playerAddDialog" >
                 <f:setPropertyActionListener value="#{playerListController.team}" target="#{teamController.team}" />
             </p:commandButton>
-
+            <p:commandButton style="width: 200px; margin-top: 20px; float: left; margin-left: 270px"
+                             oncomplete="$('#playerForm').hide();$('#teamsForm').show();" icon="ui-icon-arrowthick-1-w" value ="Back to Teams">
+            </p:commandButton>
 
             <p:dialog header="Add new Player" id="playerAddDialog" widgetVar="playerAddDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                 <div style="font-size: medium">
@@ -240,9 +242,6 @@
                     </h:panelGrid>
                 </p:outputPanel>
             </p:dialog>
-
-            <p:commandButton style="width: 200px; margin-top: 25px; float: left; margin-left: 290px" oncomplete="$('#playerForm').hide();$('#teamsForm').show();" icon="ui-icon-arrowthick-1-w" value ="Back to Teams">
-            </p:commandButton>
         </h:form>
 
     </ui:define>

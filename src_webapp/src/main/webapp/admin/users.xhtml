@@ -11,7 +11,7 @@
         <meta http-equiv="Pragma" content="no-cache" />
         <meta http-equiv="Expires" content="-1" />
 
-        <p:commandButton style="width: 10%; margin-top: 9px;margin-right: 80px; float: right;" id="help"
+        <p:commandButton style="width: 100px; margin-top: 70px; margin-right: 20px; float: right;" id="help"
                          oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
         <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
             <h:panelGrid columns="1">
@@ -38,9 +38,9 @@
             </h:panelGrid>
         </p:dialog>
 
-        <h:form id="userForm" style="width: 98%; margin-top: 15px;margin-left: 25px; float: right;">
+        <h:form id="userForm" >
             <p:dataTable  id="usersTable" var="user" value="#{userListController.users}" widgetVar="usersTable" paginator="true"
-                          rows="10" emptyMessage="Select Role." style="width:85%; margin-top:100px; float:right;">
+                          rows="10" emptyMessage="Select Role." style="margin-top: 20px; margin-right: 20px; margin-left: 270px; float: left;">
                 <f:facet name="header">
                     <p:outputPanel>
                         <div align="right">
@@ -77,9 +77,9 @@
                 </p:column>
             </p:dataTable>
 
-            <p:commandButton action="#{userDetailController.doCreateNewUser()}" style="width: 25%; margin-top: 25px; float: right;"
+            <p:commandButton action="#{userDetailController.doCreateNewUser()}" style="width: 300px; margin-top: 20px; margin-right: 20px; float: right;"
                              oncomplete="PF('userCreationDialog').show()"
-                             icon="ui-icon-add-box" value ="Create new User" update=":userCreationForm">
+                             icon="ui-icon-plusthick" value ="Create new User" update=":userCreationForm">
             </p:commandButton>
 
             <p:dialog header="Edit User" id="userEditDialog" widgetVar="userEditDialog" modal="true"
@@ -142,10 +142,13 @@
                             <f:validateRegex pattern="^[a-zA-Z0-9]+$" />
                             <f:validateLength minimum="4" maximum="16" />
                         </p:inputText>
-                        <p:outputLabel for="newPassword" value="Password: " />
-                        <p:password id="newPassword" value="#{userDetailController.newUser.password}" autocomplete="new-password"
-                                    placeholder="enter new password" required="true" requiredMessage="Insert Password." >
-                        <f:validateLength minimum="4" maximum="18" />
+                        <p:outputLabel for="newPassword" value="password: " />
+                        <p:password id="newPassword" value="#{userDetailController.password}" autocomplete="new-password"
+                                    placeholder="enter password" required="true" >
+                        </p:password>
+                        <p:outputLabel for="confirmPassword2" value="confirm password: " />
+                        <p:password id="confirmPassword2" value="#{userDetailController.confirmPassword}" autocomplete="new-password"
+                                    placeholder="confirm password" required="true" >
                         </p:password>
                     </h:panelGrid>
                     <h:panelGrid columns="2">
@@ -165,11 +168,10 @@
                         </p:selectOneListbox>
                     </h:panelGrid>
                     <p:separator />
-
                     <h:panelGrid columns ="2">
                         <p:commandButton value="Save" action="#{userDetailController.doSaveNewUser()}"
                                          oncomplete="if (args &amp;&amp; !args.validationFailed) PF('userCreationDialog').hide()"
-                                         update=":userForm:usersTable">
+                                         update=":userForm">
                         </p:commandButton>
                     </h:panelGrid>
                 </p:outputPanel>

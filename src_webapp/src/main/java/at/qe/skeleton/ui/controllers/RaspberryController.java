@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.el.MethodExpression;
 import java.io.Serializable;
 
 @Component
@@ -19,6 +18,9 @@ public class RaspberryController extends Controller implements Serializable {
 
     @Autowired
     private UserDetailController userDetailController;
+
+    @Autowired
+    private UserScoresController userScoresController;
 
     /**
      * Attribute to cache the currently displayed raspberry
@@ -115,6 +117,7 @@ public class RaspberryController extends Controller implements Serializable {
             case "SET":
                 userDetailController.saveUser();
                 displayInfo("Raspberry Pi changed", "");
+                userScoresController.setUser(userDetailController.getSelectedUser());
                 PrimeFaces.current().executeScript("PF('raspberryEditDialog').hide()");
                 break;
             default:

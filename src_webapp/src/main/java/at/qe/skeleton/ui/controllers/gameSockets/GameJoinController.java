@@ -43,7 +43,7 @@ public class GameJoinController {
      * @param game
      */
     public void onJoin(Game game) {
-        List<User> playerCircle = userRepository.findAllByRaspberry(game.getRaspberry());
+        List<User> playerCircle = userRepository.findAllByRaspberryAndRaspberryNotNull(game.getRaspberry());
 
         // create list of players with their availabilities for each player circle
         if (!playerAvailabilities.containsKey(game)) {

@@ -27,6 +27,7 @@ public class LoginSuccessHandler implements ApplicationListener<InteractiveAuthe
 
     @Override
     public void onApplicationEvent(InteractiveAuthenticationSuccessEvent event) {
+        userStatusController.setupUserStatus();
         String username = event.getAuthentication().getName();
         // update chat-manager
         this.chatManagerController.onLogin(username);

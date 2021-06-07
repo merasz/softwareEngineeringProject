@@ -13,12 +13,8 @@ import org.mockito.Mock;
 import org.mockito.internal.util.collections.Sets;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.web.WebAppConfiguration;
-
-import at.qe.skeleton.services.UserService;
 
 import java.util.*;
 
@@ -431,7 +427,7 @@ public class UserServiceTest {
         user.setUsername("username");
         final List<User> expectedResult = Arrays.asList(user);
         final List<User> users = Arrays.asList(user);
-        when(mockUserRepository.findAllByRaspberry(any(Raspberry.class))).thenReturn(users);
+        when(mockUserRepository.findAllByRaspberryAndRaspberryNotNull(any(Raspberry.class))).thenReturn(users);
         final List<User> result = userServiceUnderTest.getUserByRaspberry(raspberry);
         assertThat(result).isEqualTo(expectedResult);
     }

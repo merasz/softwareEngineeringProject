@@ -54,7 +54,7 @@ public class UserStatusController {
      * this setup.method again to refresh the mentioned collection
      */
     public void setupUserStatus() {
-        this.userRepository.findAll()
+        this.userRepository.findAll().stream().filter(u -> !u.getUsername().equals("signupBot"))
                 .forEach(user -> this.userStatus.put(user.getUsername(), new UserStatusInfo(user)));
     }
 
@@ -92,13 +92,15 @@ public class UserStatusController {
      * @param logType   The log-type for the event to collect
      */
     private void afterStatusChange(String username, UserStatus newStatus, LogEntryType logType) {
-        User user = this.userRepository.findFirstByUsername(username);
-        // change status
-        this.userStatus.get(username).setStatus(newStatus);
-        // append log
-        this.log(user, logType);
-        // notify all users (application-wide)
-        this.websocketManager.getUserRegistrationChannel().send("connectionUpdate");
+        if (!username.equals("signupBot")) {
+            User user = this.userRepository.findFirstByUsername(username);
+            // change status
+            this.userStatus.get(username).setStatus(newStatus);
+            // append log
+            this.log(user, logType);
+            // notify all users (application-wide)
+            this.websocketManager.getUserRegistrationChannel().send("connectionUpdate");
+        }
     }
 
     /**

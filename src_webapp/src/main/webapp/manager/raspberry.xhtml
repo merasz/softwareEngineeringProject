@@ -8,7 +8,7 @@
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name ="content">
 
-        <p:commandButton style="width: 10%; margin-top: 9px;margin-right: 80px; float: right;" id="help"
+        <p:commandButton style="width: 100px; margin-top: 70px; margin-right: 20px; float: right;" id="help"
                          oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
         <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
             <h:panelGrid columns="1">
@@ -21,8 +21,9 @@
             </h:panelGrid>
         </p:dialog>
 
-        <h:form id="raspberryForm" style="width: 98%; margin-top: 15px;margin-left: 25px; float: right;">
-            <p:dataTable id="raspberryTable" var="raspberry" value="#{raspberryListController.raspberries}" style="width:85%; margin-top:100px; float:right;">
+        <h:form id="raspberryForm" >
+            <p:dataTable id="raspberryTable" var="raspberry" value="#{raspberryListController.raspberries}"
+                         style="margin-top: 20px; margin-right: 20px; margin-left: 270px; float: left;">
                 <p:column headerText="ID" style="width: 75px">
                     <h:outputText value="#{raspberry.raspberryId}"/>
                 </p:column>

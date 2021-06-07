@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -51,7 +52,6 @@ public class UserDetailController extends Controller implements Serializable {
 
     public void doCreateNewUser() {
         newUser = new User();
-        newUser.setEnabled(true);
     }
 
     /**
@@ -91,6 +91,7 @@ public class UserDetailController extends Controller implements Serializable {
             this.userService.deleteUser(selectedUser);
             selectedUser = null;
             displayInfo("User deleted", "Account successfully deleted.");
+            userListController.loadUsers();
         } catch (IllegalArgumentException e){
             displayError("User not deleted", e.getMessage());
         }
@@ -101,17 +102,38 @@ public class UserDetailController extends Controller implements Serializable {
      */
     public void doSaveNewUser() {
         try {
-            if(!userService.isUsernameAlreadyTaken(newUser)) {
-                selectedUser = userService.saveUser(newUser);
-                displayInfo("User created", "");
-                userStatusController.addUserStatus(selectedUser);
-                doCreateNewUser();
-                userListController.loadUsers();
-            }
-            else
-                displayError("User not created", "Username already exists.");
+            saveNewUser();
+            displayInfo("User created", "");
+            userStatusController.addUserStatus(selectedUser);
+            doCreateNewUser();
+            userListController.loadUsers();
         } catch (IllegalArgumentException e) {
-            displayError("Error", e.getMessage());
+            displayError(e.getMessage(), e.getCause().getMessage());
+        }
+    }
+
+    private void saveNewUser() throws IllegalArgumentException {
+        selectedUser = newUser;
+        if (!(password == null) && !password.isEmpty()) {
+            updatePassword();
+        }
+        if(!userService.isUsernameAlreadyTaken(selectedUser)) {
+            selectedUser = userService.saveUser(selectedUser);
+        } else {
+            throw new IllegalArgumentException("User not created", new Throwable("Username already exists."));
+        }
+    }
+
+    /**
+     * Sign up as a new user from login-page
+     */
+    public void signUp() {
+        newUser.setRoles(new HashSet<>());
+        try {
+            saveNewUser();
+            displayInfo("Account created", "You can log in now.");
+        } catch (IllegalArgumentException e) {
+            displayError(e.getMessage(), e.getCause().getMessage());
         }
     }
 
@@ -121,17 +143,13 @@ public class UserDetailController extends Controller implements Serializable {
     public void doUpdateUser() {
         try {
             if (!password.isEmpty()) {
-                if (validatePassword(password)) {
-                    updatePassword();
-                } else {
-                    return;
-                }
+                updatePassword();
             }
             saveUser();
             PrimeFaces.current().executeScript("PF('userEditDialog').hide()");
             displayInfo("User edited", "");
         } catch (IllegalArgumentException e) {
-            displayError("Password not changed", "Confirmation password does not match.");
+            displayError(e.getMessage(), e.getCause().getMessage());
         }
     }
 
@@ -140,36 +158,30 @@ public class UserDetailController extends Controller implements Serializable {
      */
     public void updatePasswordDialog() {
         try {
-            if (validatePassword(password)) {
-                updatePassword();
-            } else {
-                return;
-            }
+            updatePassword();
             saveUser();
             PrimeFaces.current().executeScript("PF('changePasswordDialog').hide()");
             displayInfo("Password changed", "");
         } catch (IllegalArgumentException e) {
-            displayError("Password not changed", "Confirmation password does not match.");
+            displayError(e.getMessage(), e.getCause().getMessage());
         }
     }
 
-    public void updatePassword() throws IllegalArgumentException {
-        if (password.equals(confirmPassword)) {
-            selectedUser.setPassword(password);
-        } else {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    private boolean validatePassword(String password) {
+    private void updatePassword() throws IllegalArgumentException {
         if (password.length() > 3) {
-            return true;
+            if (password.equals(confirmPassword)) {
+                selectedUser.setPassword(password);
+            } else {
+                throw new IllegalArgumentException("Password not changed", new Throwable("Confirmation password does not match."));
+            }
         } else {
-            displayError("Password wrong", "Your password must be at least 4 characters long.");
-            return false;
+            throw new IllegalArgumentException("Password invalid", new Throwable("Your password must be at least 4 characters long."));
         }
     }
 
+    /**
+     * simply save a user and update UserListController.
+     */
     public void saveUser() {
         selectedUser = userService.saveUser(selectedUser);
         userListController.loadUsers();

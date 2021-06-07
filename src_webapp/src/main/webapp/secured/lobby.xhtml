@@ -18,79 +18,68 @@
 
         <!--        <p:chart style="color: #00a7d0; " type="pie" model="#{userScoresController.model}" />-->
 
-        <p:commandButton style="width: 10%; margin-top: 9px;margin-right: 80px; float: right;" id="help"
-                         oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
-        <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
-            <h:panelGrid columns="1">
-                <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Highscores</h2>
-                <h:outputText value="Here you can see the current Highscores"/>
-                <h2 style="color: #0d9dbb; font-weight: bold;">Chat</h2>
-                <h:outputText value="Here you can chat with the members in the Lobby"/>
-            </h:panelGrid>
-        </p:dialog>
-
-        <h:form style="width: 83%; padding-left: 72px; margin-top: 75px; float: right" id="chatRoomForm">
+        <h:form style="margin-left: 270px; margin-right: 20px; margin-top: 75px; float: left" id="chatRoomForm">
             <div class="chatRoomContent">
                 <h1 class="box-title"><i class="fa fa-users"></i> Lobby</h1>
 
-                <p:panelGrid columns="2" style="width: 100%;"
-                             columnClasses="chatRoomDescriptionPanel,chatRoomPanel">
+                <p:panelGrid columns="2" columnClasses="chatRoomDescriptionPanel,chatRoomPanel">
+                    <p:column>
+                        <p:panel id="panelL" header="All Time Top Scores" style="border: none;">
+                            <p>Here you can find all Data for the <span
+                                    style="color: #2ecc71; font-weight: bold"> Highscores</span></p>
 
-                    <p:panel id="panelL" header="All Time Top Scores" style="border: none;">
-                        <p>Here you can find all Data for the <span
-                                style="color: #2ecc71; font-weight: bold"> Highscores</span></p>
+                            <h:panelGroup layout="block"
+                                          style="display: flex; align-items: center; justify-content: space-evenly; width: 100%;font-weight: bold; color: #0d9dbb; font-size: 35px; margin-top: 30px">
+                                <h:outputText value="Highest Scores by User over all ever played Games"/>
+                            </h:panelGroup>
 
-                        <h:panelGroup layout="block"
-                                      style="display: flex; align-items: center; justify-content: space-evenly; width: 100%;font-weight: bold; color: #0d9dbb; font-size: 35px; margin-top: 30px">
-                            <h:outputText value="Highest Scores by User over all ever Played Games"/>
-                        </h:panelGroup>
-                        <h:panelGroup>
+                            <h:panelGroup>
+                                <p:dataTable id="highScoreTable" value="#{lobbyScoresController.highscores}"
+                                             var="user" widgetVar="scoreTableByGames" rows="10"
+                                             style="width:90%;margin: 0px auto; margin-top:30px">
+                                    <p:column headerText="User" style="text-align: center; width: 30%">
+                                        <h:outputText value="#{user.key.username}"/>
+                                    </p:column>
+                                    <p:column headerText="Points" style="text-align: center; width: 30%">
+                                        <h:outputText value="#{user.value}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
 
-                            <p:dataTable id="highScoreTable" value="#{lobbyScoresController.highscores}"
-                                         var="user" widgetVar="scoreTableByGames" rows="10"
-                                         style="width:80%;margin: 0px auto; margin-top:30px">
-                                <p:column headerText="User" style="text-align: center; width: 30%">
-                                    <h:outputText value="#{user.key.username}"/>
-                                </p:column>
-                                <p:column headerText="Points" style="text-align: center; width: 30%">
-                                    <h:outputText value="#{user.value}"/>
-                                </p:column>
-                            </p:dataTable>
-                        </h:panelGroup>
+                            <h:panelGroup layout="block"
+                                          style="display: flex; align-items: center; justify-content: space-evenly; width: 100%;font-weight: bold; color: #0d9dbb; font-size: 35px; margin-top: 30px">
+                                <h:outputText value="Highest Score by a Player in a Game"/>
+                            </h:panelGroup>
 
-                        <h:panelGroup layout="block"
-                                      style="display: flex; align-items: center; justify-content: space-evenly; width: 100%;font-weight: bold; color: #0d9dbb; font-size: 35px; margin-top: 30px">
-                            <h:outputText value="Highest Score by a Player in a Game"/>
-                        </h:panelGroup>
+                            <h:panelGroup>
+                                <p:dataTable id="highScoreTableAGame" value="#{lobbyScoresController.highscoresAGame}"
+                                             var="agame" widgetVar="scoreTableByGames" rows="3"
+                                             style="width:80%;margin: 0px auto; margin-top:30px">
+                                    <p:column headerText="User" style="text-align: center; width: 30%">
+                                        <h:outputText value="#{agame.key.username}"/>
+                                    </p:column>
+                                    <p:column headerText="Points" style="text-align: center; width: 30%">
+                                        <h:outputText value="#{agame.value}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
 
-                        <h:panelGroup>
-                            <p:dataTable id="highScoreTableAGame" value="#{lobbyScoresController.highscoresAGame}"
-                                         var="agame" widgetVar="scoreTableByGames" rows="3"
-                                         style="width:80%;margin: 0px auto; margin-top:30px">
-                                <p:column headerText="User" style="text-align: center; width: 30%">
-                                    <h:outputText value="#{agame.key.username}"/>
-                                </p:column>
-                                <p:column headerText="Points" style="text-align: center; width: 30%">
-                                    <h:outputText value="#{agame.value}"/>
-                                </p:column>
-                            </p:dataTable>
-                        </h:panelGroup>
+                            <h:panelGroup layout="block"
+                                          style="display: flex; align-items: center; justify-content: space-evenly; width: 100%;font-weight: bold; color: #0d9dbb; font-size: 35px; margin-top: 30px">
+                                <h:outputText value="TOP 3 Topics"/>
+                            </h:panelGroup>
 
-                        <h:panelGroup layout="block"
-                                      style="display: flex; align-items: center; justify-content: space-evenly; width: 100%;font-weight: bold; color: #0d9dbb; font-size: 35px; margin-top: 30px">
-                            <h:outputText value="TOP 3 Topics"/>
-                        </h:panelGroup>
-
-                        <h:panelGroup>
-                            <p:dataTable id="scoreTableByGamesss" value="#{lobbyScoresController.mostPopularTopics}"
-                                         var="topic" widgetVar="scoreTableByGames" rows="5"
-                                         style="width:80%;margin: 0px auto; margin-top:30px">
-                                <p:column headerText="Game Name" style="text-align: center; width: 30%">
-                                    <h:outputText value="#{topic.topicName}"/>
-                                </p:column>
-                            </p:dataTable>
-                        </h:panelGroup>
-                    </p:panel>
+                            <h:panelGroup>
+                                <p:dataTable id="scoreTableByGamesss" value="#{lobbyScoresController.mostPopularTopics}"
+                                             var="topic" widgetVar="scoreTableByGames" rows="5"
+                                             style="width:80%;margin: 0px auto; margin-top:30px">
+                                    <p:column headerText="Game Name" style="text-align: center; width: 30%">
+                                        <h:outputText value="#{topic.topicName}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+                        </p:panel>
+                    </p:column>
 
                     <p:column>
                         <p:panel id="search" header="Stalk other Players" style="border: none;">

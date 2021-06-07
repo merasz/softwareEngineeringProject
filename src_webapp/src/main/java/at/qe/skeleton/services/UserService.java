@@ -12,7 +12,6 @@ import java.util.*;
 import at.qe.skeleton.ui.controllers.demo.ChatManagerController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -76,13 +75,19 @@ public class UserService {
             user.setRoles(Collections.singleton(UserRole.PLAYER));
         }
 
+        // get creator user ('signupBot' when created via signup)
+        User authenticator = getAuthenticatedUser();
+        if (authenticator == null) {
+            authenticator = userRepository.findFirstByUsername("signupBot");
+        }
+
         if (user.isNew()) {
             user.setCreateDate(new Date());
             user.setEnabled(true);
-            user.setCreateUser(getAuthenticatedUser());
+            user.setCreateUser(authenticator);
         } else {
             user.setUpdateDate(new Date());
-            user.setUpdateUser(getAuthenticatedUser());
+            user.setUpdateUser(authenticator);
         }
         return userRepository.save(user);
     }
@@ -118,48 +123,6 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    /*
-    public User createUser(User user, String username, String password) throws IllegalArgumentException, NullPointerException {
-        validateInput(username, password);
-        validateUsername(username);
-
-        Set<UserRole> roles = user.getRoles();
-        if (user.isNew()) {
-            user = new User();
-        }
-        //TODO: check
-        if (roles.isEmpty()) {
-            roles = new HashSet<>(Collections.singletonList(UserRole.PLAYER));
-        }
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setEnabled(true);
-        user.setRoles(roles);
-
-        return saveUser(user);
-    }
-
-    @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #user.username")
-    public User updatePassword(User user, String password, String confirm) throws IllegalArgumentException {
-        if (password.trim().isEmpty()) {
-            throw new IllegalArgumentException("Password cannot be empty.");
-        } else if (!password.equals(confirm)) {
-            throw new IllegalArgumentException("Confirmed password differs.");
-        }
-
-        user.setPassword(password.trim());
-        return saveUser(user);
-    }
-
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public User updateRoles(User user, UserRole[] roles) {
-        Set<UserRole> ur = new HashSet<>(Arrays.asList(roles));
-        user.setRoles(ur);
-
-        return userRepository.save(user);
-    }
-    */
-
     //region getter & setter
     public Collection<User> getAllAdmins() {
         return userRepository.findAllAdmins();
@@ -172,6 +135,7 @@ public class UserService {
     public Collection<User> getAllPlayers() {
         return userRepository.findAllPlayers();
     }
+
     private User getAuthenticatedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return userRepository.findFirstByUsername(auth.getName());
@@ -186,7 +150,7 @@ public class UserService {
     }
 
     public List<User> getUserByRaspberry(Raspberry raspberry) {
-        return userRepository.findAllByRaspberry(raspberry);
+        return userRepository.findAllByRaspberryAndRaspberryNotNull(raspberry);
     }
     //endregion
 }
