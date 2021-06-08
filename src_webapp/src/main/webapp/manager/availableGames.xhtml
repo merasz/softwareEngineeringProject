@@ -77,26 +77,6 @@
                 <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}" />
                 <f:setPropertyActionListener value="#{game}" target="#{teamController.game}" />
             </p:commandButton>
-
-            <p:dialog header="Edit Teams" id="teamsDialog" widgetVar="teamsDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-                <p:outputPanel id="userData" rendered="#{not empty gameController.game}">
-                    <div style="display: flex; justify-content: space-between; align-items: center">
-                        <div class="formHeading" style="font-weight: bold; font-size: 20px;">Game Name:</div>
-                        <div class="formText">#{gameController.game.gameName}</div>
-                    </div>
-                    <p:separator />
-                    <p:commandButton value="add Team" oncomplete="PF('autoAssignDialog').hide()" update=":gamesForm" style="display:block;margin: 0px auto"/>
-                    <h:panelGrid columns="3" style="margin-top:50px">
-                        <p:commandButton value="Save" action="#{userController.doSaveUser()}" oncomplete="PF('autoAssignDialog').hide()" update=":gamesForm:gameCreationTable"/>
-                        <p:commandButton value="Reload" action="#{userController.doReloadUser()}" update=":gamesForm:gameCreationTable"/>
-                        <p:commandButton value="Abort" onclick="PF('autoAssignDialog').hide()"/>
-                    </h:panelGrid>
-                </p:outputPanel>
-            </p:dialog>
-            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
-                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-            </p:confirmDialog>
         </h:form>
 
         <h:form id="createGameForm">
@@ -195,7 +175,7 @@
                     <h:panelGrid columns ="2">
                         <p:commandButton value="Save" action="#{teamController.doSaveTeam}" update=":teamsForm:teamsTable">
                         </p:commandButton>
-                        <p:commandButton value="Abort" onclick="PF('Dialog').hide()"/>
+                        <p:commandButton value="Abort" onclick="PF('teamCreationDialog').hide()"/>
                     </h:panelGrid>
 
                 </p:outputPanel>

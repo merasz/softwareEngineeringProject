@@ -69,7 +69,7 @@ public class GameCreationController extends Controller implements Serializable {
                 game.setCountPlayers(numberTeams * game.getTeamSize());
                 game = gameService.saveGame(game);
                 currentTopic = null;
-                displayInfo("Game created", "You can now create Teams and assign players or start the Game immediately.");
+                displayInfo("Game created", "You can now create Teams and assign players or start the Game right away.");
                 PrimeFaces.current().executeScript("PF('gameCreationDialog').hide()");
             } catch (IllegalArgumentException e) {
                 displayError("Too few terms", e.getMessage());

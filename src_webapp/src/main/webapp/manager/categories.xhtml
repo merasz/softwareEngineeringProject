@@ -8,15 +8,15 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name="content">
-        <h:form enctype="multipart/form-data" style="width: 50%; margin-top: 10px; float: right;">
-            <p:fileUpload value="#{topicParserController.file}" mode="simple" skinSimple="true" style="color: white"/>
-            <p:commandButton value="Submit" ajax="false" action="#{topicParserController.upload}"
-                             styleClass="p-mt-3 ui-button-outlined p-d-block"/>
-        </h:form>
+        <h:form enctype="multipart/form-data" style="margin-top: 70px; margin-left: 270px; margin-right: 20px; float: left">
+            <p:row style="width: 100%">
+                <p:fileUpload value="#{topicParserController.file}" mode="simple" skinSimple="true" style="color: white; float: left"/>
+                <p:commandButton value="Submit" ajax="false" action="#{topicParserController.upload}" style="float: left"
+                                 styleClass="p-mt-3 ui-button-outlined p-d-block"/>
+                <p:commandButton style="width: 100px; float: right" id="help"
+                                 oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
+            </p:row>
 
-        <h:form>
-            <p:commandButton style="width: 100px; margin-top: 70px; margin-right: 20px; float: right;" id="help"
-                             oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
             <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="400">
                 <h:panelGrid columns="1">
                     <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Choose File</h2>
