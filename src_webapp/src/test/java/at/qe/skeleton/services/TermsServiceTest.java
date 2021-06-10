@@ -49,6 +49,7 @@ public class TermsServiceTest {
 
     @Test
     public void testSaveTerm() {
+        //TODO: test throw
         final Term term = new Term();
         final Term result = termsServiceUnderTest.saveTerm(term);
         assertThat(result).isEqualTo(term);
@@ -120,5 +121,12 @@ public class TermsServiceTest {
     void testGetAllTerms() {
         final List<Term> terms = Arrays.asList(new Term("termName", new Topic("topicName")));
         when(mockTermsRepository.findAll()).thenReturn(terms);
+    }
+
+    @Test
+    void testGetALlTerms() {
+        Collection<Term> result = termsServiceUnderTest.getAllTerms();
+        Collection<Term> expectedResult = mockTermsRepository.findAll();
+        assertThat(result).isEqualTo(expectedResult);
     }
 }

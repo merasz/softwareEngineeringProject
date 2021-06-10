@@ -5,16 +5,18 @@ import at.qe.skeleton.repositories.GameRepository;
 import at.qe.skeleton.repositories.ScoreRepository;
 import at.qe.skeleton.repositories.TopicRepository;
 import at.qe.skeleton.ui.controllers.gameSockets.GameJoinController;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class GameServiceTest {
@@ -23,24 +25,21 @@ class GameServiceTest {
     private GameRepository mockGameRepository;
     @Mock
     private ScoreRepository mockScoreRepository;
-    @Mock
-    private TeamService mockTeamService;
-    @Mock
-    private GameJoinController mockGameJoinController;
 
     @InjectMocks
     private GameService gameServiceUnderTest;
 
     @Test
     void testGetAllActiveGames() {
-        final List<Game> games = Arrays.asList(new Game());
-        when(mockGameRepository.findAllActive()).thenReturn(games);
+        Collection<Game> result = gameServiceUnderTest.getAllActiveGames();
+        Collection<Game> expectedResult = mockGameRepository.findAllActive();
+        assertThat(result).isEqualTo(expectedResult);
     }
 
     @Test
     void testSaveGame() {
         final Game game = new Game();
-        final Game expectedResult = new Game();
+        final Game expectedResult = mockGameRepository.save(game);
         final Game result = gameServiceUnderTest.saveGame(game);
         assertThat(result).isEqualTo(expectedResult);
     }
@@ -48,8 +47,8 @@ class GameServiceTest {
     @Test
     void testReloadGame() {
         final Game game = new Game();
-        final Game expectedResult = new Game();
         final Game result = gameServiceUnderTest.reloadGame(game);
+        final Game expectedResult = mockGameRepository.findByGameId(game.getGameId());
         assertThat(result).isEqualTo(expectedResult);
     }
 
@@ -57,14 +56,16 @@ class GameServiceTest {
     void testDeleteGame() {
         final Game game = new Game();
         gameServiceUnderTest.deleteGame(game);
-        when(mockScoreRepository.findGameScoresByGame(game)).thenReturn(null);
-        when(mockTeamService.getTeamsByGame(game)).thenReturn(null);
+        //TODO: catch block coverage
+        //doThrow(new DataIntegrityViolationException("")).when(mockGameRepository).delete(game);
     }
 
     @Test
     void testGetRunningGameByRaspberry() {
-        final Game game = new Game();
-        when(mockGameRepository.findActiveGameByRaspberry(0)).thenReturn(game);
+        final Raspberry raspberry = new Raspberry();
+        Game result = gameServiceUnderTest.getRunningGameByRaspberry(raspberry.getRaspberryId());
+        Game expectedResult = mockGameRepository.findActiveGameByRaspberry(raspberry.getRaspberryId());
+        assertThat(result).isEqualTo(expectedResult);
     }
 
     @Test
@@ -75,15 +76,32 @@ class GameServiceTest {
     }
 
     @Test
+    void testGetTeamService() {
+        TeamService teamService = new TeamService();
+        TeamService result = gameServiceUnderTest.getTeamService();
+        assertThat(result).isEqualTo(teamService);
+    }
+
+    @Test
     void testGetGameJoinController() {
-
-
+        GameJoinController gameJoinController = new GameJoinController();
+        GameJoinController result = gameServiceUnderTest.getGameJoinController();
+        assertThat(result).isEqualTo(gameJoinController);
     }
 
     @Test
     void testGetAllGames() {
-        final List<Game> games = Arrays.asList(new Game());
-        when(mockGameRepository.findAll()).thenReturn(games);
+        Collection<Game> result = gameServiceUnderTest.getAllGames();
+        Collection<Game> games = mockGameRepository.findAll();
+        assertThat(result).isEqualTo(games);
+    }
+
+    @Test
+    void testGetPersonalGames() {
+        Raspberry raspberry = new Raspberry();
+        Collection<Game> result = gameServiceUnderTest.getPersonalGames(raspberry);
+        Collection<Game> personalGames = mockGameRepository.findAllByRaspberry(raspberry);
+        assertThat(result).isEqualTo(personalGames);
     }
 
     @Test

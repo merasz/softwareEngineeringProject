@@ -13,7 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-//import java.lang.reflect.Method;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
@@ -39,11 +39,11 @@ class GameStartServiceTest {
     @Test
     void testStartGame() {
         Assertions.assertThrows(java.lang.IllegalArgumentException.class, () -> {
-                final User user = new User();
-                final Game game = new Game();
-                final Game expectedResult = new Game();
-                final Game result = gameStartServiceUnderTest.startGame(game, user);
-                assertThat(result).isEqualTo(expectedResult);
+            final User user = new User();
+            final Game game = new Game();
+            final Game expectedResult = new Game();
+            final Game result = gameStartServiceUnderTest.startGame(game, user);
+            assertThat(result).isEqualTo(expectedResult);
         });
     }
 
@@ -71,7 +71,6 @@ class GameStartServiceTest {
 
     @Test
     void testJoinTeam() {
-        /*
         Assertions.assertThrows(java.lang.NoSuchMethodException.class, () -> {
             final Team team = new Team();
             final User user = new User();
@@ -83,13 +82,10 @@ class GameStartServiceTest {
             Object result = method.invoke(gameStartService, null);
             assertThat(result).isEqualTo(expectedResult);
         });
-
-         */
     }
 
     @Test
     void testAddUserToTeam() {
-        /*
         Assertions.assertThrows(java.lang.reflect.InvocationTargetException.class, () -> {
             User user = new User();
             Team team = new Team();
@@ -99,8 +95,6 @@ class GameStartServiceTest {
             Object result = method.invoke(gameStartService, team);
             assertThat(result).isEqualTo(user);
         });
-
-         */
     }
 
     @Test
@@ -146,8 +140,6 @@ class GameStartServiceTest {
 
     @Test
     void testInitializeGame() {
-        //http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
-/*
         Assertions.assertThrows(java.lang.reflect.InvocationTargetException.class, () -> {
             Game game = new Game();
             Method method = GameStartService.class.getDeclaredMethod("initializeGame", Game.class);
@@ -156,19 +148,11 @@ class GameStartServiceTest {
             Object result = method.invoke(gameStartService, game);
             assertThat(result).isEqualTo(game);
         });
-
- */
-
     }
 
     @Test
     void testGetGame() {
-        Assertions.assertThrows(java.lang.IllegalArgumentException.class, () -> {
-            Game game = new Game();
-            User user = new User();
-            Game result = gameStartServiceUnderTest.startGame(game, user);
-            assertThat(gameStartServiceUnderTest.getGame()).isEqualTo(result);
-        });
+        gameStartServiceUnderTest.getGame();
     }
 
     @Test

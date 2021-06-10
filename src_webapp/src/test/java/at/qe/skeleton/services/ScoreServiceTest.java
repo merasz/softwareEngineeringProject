@@ -2,8 +2,10 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.repositories.ScoreRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import java.util.*;
 
@@ -15,6 +17,9 @@ class ScoreServiceTest {
 
     private ScoreService scoreServiceUnderTest;
 
+    @Mock
+    private ScoreRepository scoreRepository;
+
     @BeforeEach
     void setUp() {
         scoreServiceUnderTest = new ScoreService();
@@ -24,16 +29,16 @@ class ScoreServiceTest {
 
     @Test
     void testGetMostValuedUsers() {
-        final User user = new User();
-        final List<User> users = Arrays.asList(user);
-        when(scoreServiceUnderTest.scoreRepository.getTopPlayersUsernames()).thenReturn(users);
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            final List<User> result = scoreServiceUnderTest.getMostValuedUsers();
+            final List<User> expectedResult = scoreRepository.getTopPlayersUsernames();
+            assertThat(result).isEqualTo(expectedResult);
+        });
     }
 
     @Test
     void testGetMostValuedUserScores() {
-        when(scoreServiceUnderTest.scoreRepository.getTopPlayersScores()).thenReturn(Arrays.asList(0));
-        final List<Integer> result = scoreServiceUnderTest.getMostValuedUserScores();
-        assertThat(result).isEqualTo(Arrays.asList(0));
+        Map<User, Integer> usersWithScores = scoreServiceUnderTest.getUsersWithScores();
     }
 
     @Test
@@ -46,10 +51,9 @@ class ScoreServiceTest {
 
     @Test
     void testGetUsersWithScoreAGame() {
-        final User user = new User();
-        final List<User> users = Arrays.asList(user);
-        when(scoreServiceUnderTest.scoreRepository.getTopPlayersInAGame()).thenReturn(users);
-        when(scoreServiceUnderTest.scoreRepository.getTopPlayersInAGameScore()).thenReturn(Arrays.asList(0));
+        List<User> users = scoreServiceUnderTest.scoreRepository.getTopPlayersInAGame();
+        List<Integer> scores = scoreServiceUnderTest.scoreRepository.getTopPlayersInAGameScore();
+        Map<User, Integer> userIntegerMap = scoreServiceUnderTest.getUsersWithScores();
     }
 
     @Test

@@ -11,7 +11,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -32,6 +35,8 @@ class TopicServiceTest {
     private AuditLogRepository mockAuditLogRepository;
     @Mock
     private MessageBean mockMessageBean;
+    @Mock
+    private TopicRepository topicRepository;
 
     @InjectMocks
     private TopicService topicServiceUnderTest;
@@ -97,6 +102,19 @@ class TopicServiceTest {
         when(mockTopicRepository.findFirstByTopicName("name")).thenReturn(new Topic("topicName"));
         final Topic result = topicServiceUnderTest.getTopicByName(topic);
         assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
+    void testGetAuthenticatedTopic() {
+        Assertions.assertThrows(java.lang.reflect.InvocationTargetException.class, () -> {
+            Method method = GameStartService.class.getDeclaredMethod("getAuthenticatedTopic", null);
+            method.setAccessible(true);
+            TopicService topicService = new TopicService();
+            Object result = method.invoke(topicService, null);
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            Topic expectedResult = topicRepository.findFirstByTopicName(auth.getName());
+            assertThat(result).isEqualTo(expectedResult);
+        });
     }
 
     @Test
