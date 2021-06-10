@@ -8,9 +8,11 @@
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name ="content">
         <h:form id="gamesForm">
-            <p:commandButton style="width: 100px; margin-top: 70px; margin-right: 20px; float: right;" id="help"
+            <h:panelGroup layout="block" styleClass="helpTopRightOuter">
+            <p:commandButton styleClass="helpTopRight" id="help"
                              oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help">
             </p:commandButton>
+        </h:panelGroup>
             <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
                 <h:panelGrid columns="1">
                     <h:outputText value="See all your past and current games here."/>
@@ -25,7 +27,7 @@
             </p:dialog>
 
             <p:dataTable widgetVar="gameCreationTable" id="gameCreationTable" var="game" value="#{gameListController.games}"
-                         style="margin-top: 20px; margin-right: 20px; margin-left: 270px; float: left;">
+                         styleClass="fullScreenTable">
                 <f:facet name="header">
                     <p:panelGrid columns="1">
                         <h:outputText value="Games"/>
@@ -35,22 +37,22 @@
                                       style="font-weight: normal" escape="false"/>
                     </p:panelGrid>
                 </f:facet>
-                <p:column headerText="Name">
+                <p:column headerText="Name" style="width: 20%;">
                     <h:outputText value="#{game.gameName}" />
                 </p:column>
-                <p:column headerText="Topic">
+                <p:column headerText="Topic" style="width: 20%;">
                     <h:outputText value="#{game.topic.topicName}" />
                 </p:column>
-                <p:column headerText="Teams">
+                <p:column headerText="Teams" style="width: 5%;text-align: center;">
                     <h:outputText value="#{game.teamList.size()}" disabled="true"/>
                 </p:column>
-                <p:column headerText="max Players">
+                <p:column headerText="max Players" style="width: 10%; text-align: center;">
                     <h:outputText value="#{game.countPlayers}" disabled="true"/>
                 </p:column>
-                <p:column headerText="Score to win">
+                <p:column headerText="Score to win" style="width: 10%; text-align: center;">
                     <h:outputText value="#{game.scoreToWin}" disabled="true"/>
                 </p:column>
-                <p:column headerText="Status">
+                <p:column headerText="Status" style="width: 15%;">
                     <h:outputText value="#{gameListController.getStatusString(game)}" disabled="true"/>
                 </p:column>
                 <p:column style="width:150px;text-align: center" headerText="Operation">
@@ -71,7 +73,7 @@
                 </p:column>
             </p:dataTable>
 
-            <p:commandButton style="width: 300px; margin-top: 20px; margin-right: 20px; float: right;" oncomplete="PF('gameCreationDialog').show()"
+            <p:commandButton styleClass="buttonBelowRight" oncomplete="PF('gameCreationDialog').show()"
                              icon="ui-icon-plusthick" action="#{gameCreationController.doCreateNewGame()}" value ="Create new Game"
                              update="createGameForm">
                 <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}" />

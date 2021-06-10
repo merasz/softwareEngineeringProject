@@ -7,9 +7,10 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name ="content">
-
-        <p:commandButton style="width: 100px; margin-top: 70px; margin-right: 20px; float: right;" id="help"
+        <h:panelGroup layout="block" styleClass="helpTopRightOuter">
+        <p:commandButton styleClass="helpTopRight" id="help"
                          oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
+        </h:panelGroup>
         <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
             <h:panelGrid columns="1">
                 <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Edit Raspberry</h2>
@@ -23,23 +24,23 @@
 
         <h:form id="raspberryForm" >
             <p:dataTable id="raspberryTable" var="raspberry" value="#{raspberryListController.raspberries}"
-                         style="margin-top: 20px; margin-right: 20px; margin-left: 270px; float: left;">
-                <p:column headerText="ID" style="width: 75px">
+                          styleClass="fullScreenTable">
+                <p:column headerText="ID" style="width: 40px">
                     <h:outputText value="#{raspberry.raspberryId}"/>
                 </p:column>
-                <p:column headerText="Name">
+                <p:column headerText="Name" style="width: 20%">
                     <h:outputText value="#{raspberry.hostname}"/>
                 </p:column>
-                <p:column headerText="IP Address" rendered="#{sessionInfoBean.hasRole('ADMIN')}">
+                <p:column headerText="IP Address" rendered="#{sessionInfoBean.hasRole('ADMIN')}" style="width: 20%">
                     <h:outputText value="#{raspberry.ipAddress}"/>
                 </p:column>
                 <p:column headerText="API Key" rendered="#{sessionInfoBean.hasRole('ADMIN')}">
                     <h:outputText value="#{raspberry.apiKey}"/>
                 </p:column>
-                <p:column headerText="inUse" style="width:50px">
+                <p:column headerText="inUse" style="width:10%">
                     <h:selectBooleanCheckbox value="#{raspberry.inUse}" disabled="true" style="margin: 0px auto; display: block"/>
                 </p:column>
-                <p:column headerText="actions" style="width:150px;text-align: center">
+                <p:column headerText="actions" style="width:15%;text-align: center">
                     <p:commandButton update=":raspberryForm:raspberryEditDialog :authorizeForm:authorizeDialog" icon="fa fa-fw fa-edit" title="Edit"
                                      action="#{raspberryController.accessRaspberry(sessionInfoBean.hasRole('ADMIN'))}" >
                         <f:setPropertyActionListener value="#{raspberry}" target="#{raspberryController.raspberry}" />
@@ -103,7 +104,7 @@
 
         <!-- Create Raspberry Button -->
         <p:commandButton update=":raspberryForm:raspberryEditDialog" oncomplete="PF('raspberryEditDialog').show();" title="Add new Raspberry"
-                         action="#{raspberryController.doCreateRaspberry()}">
+                         action="#{raspberryController.doCreateRaspberry()}" icon="ui-icon-plusthick" value="Add new Raspberry" styleClass="buttonBelowRight">
         </p:commandButton>
 
     </ui:define>

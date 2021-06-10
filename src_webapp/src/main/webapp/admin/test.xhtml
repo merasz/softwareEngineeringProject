@@ -9,7 +9,7 @@
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name ="content">
         <h:form >
-            <p:panel header="Security Test Page" style="margin-top: 80px; margin-right: 20px; margin-left: 270px; float: left; padding-left: 72px;">
+            <p:panel header="Security Test Page" style="margin-top: 80px; margin-right: 20px; float: left;">
                 <p>You can use the following buttons to test the security settings for specific user roles</p>
                 <p>If the currently logged on user does not have the denoted role, an AccessDeniedException is thrown.</p>
                 <h:panelGrid columns="3">
@@ -19,7 +19,7 @@
                 </h:panelGrid>
             </p:panel>
 
-            <p:panel header="Max-Length Vulnerability Test"  style="margin-top: 20px; margin-right: 20px; margin-left: 270px; float: left; padding-left: 72px;" >
+            <p:panel header="Max-Length Vulnerability Test"  style="margin-top: 20px; margin-right: 20px; float: left;;" >
                 <p>This panel allows to illustrate a vulnerability present in PrimeFaces until at least version 8.0 with a planned fix in version 9.0. <a href="https://github.com/primefaces/primefaces/issues/5869">Reported by TobiasDick as PrimeFaces issue #5869</a>. We would like to thank Tobias for pointing us towards this issue relevant for our project.</p>
                 <p>The text input field below is restricted to only accept text input with a maximum length of 10. Affected PrimeFaces versions do not check the input's maximum length server-side, allowing for a basic JS-based hack to override the client-side setting and thus submit longer strings.</p>
                 <p:inputText value="#{securityTestBean.testString}" maxlength="10" />

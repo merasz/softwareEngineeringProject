@@ -38,9 +38,9 @@
                 </div>
 
                 <div class="sidebar">
-                        <a style="padding-left: 80px" href="/login.xhtml" ><img style="border: 0 none" src="/loginpage.jpg" class="logo" alt=""/> </a>
+                        <a href="/login.xhtml" class="topImg"><img style="border: 0 none" src="/loginpage.jpg" class="logo" alt=""/> </a>
           <!---              <h4 style="padding-left: 70px">Gruppe6Team1</h4>    -->
-                        <h4 style="padding-left: 40px">Logged in as #{sessionInfoBean.currentUserName}<br/>[#{sessionInfoBean.currentUserRoles}]</h4>
+                        <h4>Logged in as #{sessionInfoBean.currentUserName}<br/>[#{sessionInfoBean.currentUserRoles}]</h4>
                     <p:commandLink id="profile" action="#{userScoresController.showProfile}">
                         <i class="far fa-user"></i><span>My Profile</span>
                     </p:commandLink>
@@ -68,10 +68,6 @@
                     <p:commandLink id="join" action="#{gameStartController.joinGame}">
                         <i class="fas fa-gamepad"></i><span>Join Game</span>
                     </p:commandLink>
-
-                </div>
-
-                <div class="content">
 
                 </div>
             </h:form>

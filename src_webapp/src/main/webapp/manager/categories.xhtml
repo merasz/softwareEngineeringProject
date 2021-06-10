@@ -8,14 +8,16 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name="content">
-        <h:form enctype="multipart/form-data" style="margin-top: 70px; margin-left: 270px; margin-right: 20px; float: left">
-            <p:row style="width: 100%">
-                <p:fileUpload value="#{topicParserController.file}" mode="simple" skinSimple="true" style="color: white; float: left"/>
-                <p:commandButton value="Submit" ajax="false" action="#{topicParserController.upload}" style="float: left"
-                                 styleClass="p-mt-3 ui-button-outlined p-d-block"/>
+        <h:form enctype="multipart/form-data"  styleClass="buttonsTop">
+            <h:panelGroup layout="block" styleClass="buttonsTopInner">
+                <h:panelGroup layout="block" styleClass="left">
+                    <p:fileUpload value="#{topicParserController.file}" mode="simple" skinSimple="true" styleClass="uploader"/>
+                    <p:commandButton value="Submit" ajax="false" action="#{topicParserController.upload}" style="float: left"
+                                    styleClass="p-mt-3 ui-button-outlined p-d-block"/>
+                </h:panelGroup>
                 <p:commandButton style="width: 100px; float: right" id="help"
                                  oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
-            </p:row>
+            </h:panelGroup>
 
             <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="400">
                 <h:panelGrid columns="1">
@@ -37,8 +39,8 @@
                 <p:autoUpdate />
             </p:growl>
 
-            <p:dataTable widgetVar="topicCreationTable" id="topicCreationTable" var="topic"
-                         value="#{topicListController.topicAmount}" style="margin-top: 20px; margin-right: 20px; margin-left: 270px; float: left;">
+            <p:dataTable widgetVar="topicCreationTable" id="topicCreationTable" styleClass="fullScreenTable" var="topic"
+                         value="#{topicListController.topicAmount}">
                 <f:facet name="header">Topic Hub</f:facet>
                 <p:column headerText="Topic">
                     <h:outputText value="#{topic.topic.topicName}"/>
@@ -65,7 +67,7 @@
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
-            <p:commandButton style="width: 300px; margin-top: 20px; margin-right: 20px; float: right;"
+            <p:commandButton styleClass="buttonBelowRight"
                              oncomplete="PF('topicCreationDialog').show()" icon="ui-icon-plusthick" value="Create new Topic"
                              action="#{topicController.doCreateNewTopic()}" update=":topicForm:topicCreationDialog">
             </p:commandButton>

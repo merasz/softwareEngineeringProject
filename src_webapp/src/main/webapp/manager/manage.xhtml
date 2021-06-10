@@ -13,10 +13,10 @@
                 <p:autoUpdate/>
             </p:growl>
 
-            <p:chart style="color: #00a7d0; width: 60%; margin-top: 80px; margin-left: 270px; float: left;" type="bar" model="#{currentGamesController.model}" />
+            <p:chart style="color: #00a7d0; width: 60%; margin-top: 80px;" type="bar" model="#{currentGamesController.model}" />
 
             <p:dataTable widgetVar="adminTable" id="adminTable" var="game" value="#{gameListController.activeGames}"
-                         style="margin-top: 30px; margin-right: 20px; margin-left: 270px; float: left;">
+                         styleClass="fullScreenTable">
                 <f:facet name="header">
                     <p:panelGrid columns="1">
                         <h:outputText value="Currently Active Games"/>
