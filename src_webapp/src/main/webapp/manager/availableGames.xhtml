@@ -161,10 +161,10 @@
                 </p:column>
             </p:dataTable>
 
-            <p:commandButton id="createTeamButton" style="width: 300px; margin-top: 20px; margin-right: 20px; float: right;" icon="ui-icon-plusthick"
+            <p:commandButton id="createTeamButton" style="width: 300px; margin-top: 20px; float: right;" icon="ui-icon-plusthick"
                              action="#{teamController.doSetTeam(teamListController.game)}" value ="Create new Team" update=":teamsForm:teamCreationDialog" >
             </p:commandButton>
-            <p:commandButton style="width: 200px; margin-top: 20px; float: left; margin-left: 270px" oncomplete="$('#teamsForm').hide();$('#gamesForm').show();" icon="ui-icon-arrowthick-1-w" value ="Back to Games">
+            <p:commandButton style="width: 200px; margin-top: 20px; float: left;" oncomplete="$('#teamsForm').hide();$('#gamesForm').show();" icon="ui-icon-arrowthick-1-w" value ="Back to Games">
             </p:commandButton>
 
             <p:dialog header="Create new Team" id="teamCreationDialog" widgetVar="teamCreationDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
@@ -199,11 +199,11 @@
                 </p:column>
             </p:dataTable>
 
-            <p:commandButton style="width: 300px; margin-top: 20px; margin-right: 20px; float: right;" icon="ui-icon-plusthick"
+            <p:commandButton style="width: 300px; margin-top: 20px; float: right;" icon="ui-icon-plusthick"
                              action="#{teamController.addPlayerDialog()}" value ="Add Player" update=":playerForm:playerAddDialog" >
                 <f:setPropertyActionListener value="#{playerListController.team}" target="#{teamController.team}" />
             </p:commandButton>
-            <p:commandButton style="width: 200px; margin-top: 20px; float: left; margin-left: 270px"
+            <p:commandButton style="width: 200px; margin-top: 20px; float: left;"
                              oncomplete="$('#playerForm').hide();$('#teamsForm').show();" icon="ui-icon-arrowthick-1-w" value ="Back to Teams">
             </p:commandButton>
 
