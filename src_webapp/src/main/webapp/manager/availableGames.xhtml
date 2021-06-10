@@ -141,7 +141,7 @@
 
         <h:form id="teamsForm" style="display: none">
             <p:dataTable widgetVar="teamsTable" id="teamsTable" var="team" value="#{teamListController.teamsByGame}"
-                         style="margin-top: 80px; margin-right: 20px; margin-left: 270px; float: left;">
+                         styleClass="fullScreenTable">
                 <f:facet name="header">Teams - #{teamListController.game.gameName}</f:facet>
                 <p:column headerText="Team name">
                     <h:outputText value="#{team.teamName}"/>
@@ -186,7 +186,7 @@
 
         <h:form id="playerForm" style="display: none">
             <p:dataTable widgetVar="playerTable" id="playerTable" var="player" value="#{playerListController.playerByTeam}"
-                         style="margin-top: 80px; margin-right: 20px; margin-left: 270px; float: left;">
+                         styleClass="fullScreenTable">
                 <f:facet name="header">Players - #{teamController.team.teamName}</f:facet>
                 <p:column headerText="Player name">
                     <h:outputText value="#{player.username}"/>
