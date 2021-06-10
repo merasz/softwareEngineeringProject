@@ -111,7 +111,7 @@
 
         <h:form id="termsForm" style="display: none" enctype="multipart/form-data">
             <p:dataTable widgetVar="termsTable" id="termsTable" var="term" value="#{termListController.termsByTopic}"
-                         style="margin-top: 20px; margin-right: 20px; margin-left: 270px; float: left;">
+                         styleClass="fullScreenTable">
                 <f:facet name="header">Creat new Term for Selected Topic</f:facet>
                 <p:column headerText="Term name">
                     <h:outputText value="#{term.termName}"/>

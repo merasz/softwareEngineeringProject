@@ -16,7 +16,7 @@
                 <p:commandButton styleClass="helpTopRight" id="help"
                              oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
             </h:panelGroup>
-            <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
+            <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" styleClass="helpDialog">
                 <h:panelGrid columns="1">
                     <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Statistics</h2>
                     <h:outputText value="Here you can see the statistics from the user."/>
@@ -73,7 +73,7 @@
                         </h:panelGroup>
                         <h:panelGroup>
                             <p:dataTable  id="scoreTable" var="score" value="#{userScoresController.bestScoresForUser}"
-                                          widgetVar="scoreTable" rows="5" style="width:80%;margin: 0px auto; margin-top:30px">
+                                          widgetVar="scoreTable" rows="5" styleClass="statTable">
                                 <p:column headerText="Game Name" style="text-align: center; width: 20%">
                                     <h:outputText value="#{score.game.gameName}"/>
                                 </p:column>

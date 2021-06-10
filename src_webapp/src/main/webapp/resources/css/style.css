@@ -4,23 +4,60 @@
   box-sizing: border-box;
 }
 
+html {
+  height: 100%;
+}
+
 body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  background: #34495e;
+  font-family: "Roboto Light", sans-serif;
+  background: #7c7c7c;
+}
+
+.loginHeading {
+  margin-top: 50px;
+  color: #ffffff;
+  margin-left: 30px;
+  text-align: center;
+  z-index: 99;
+  position: relative;
+  font-size: 54px;
+  font-weight: bold;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-shadow: 2px 7px 5px rgba(0, 0, 0, 0.3),
+    0px -4px 10px rgba(255, 255, 255, 0.3);
+}
+
+.loginImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  filter: grayscale();
+  z-index: 0;
 }
 
 .login-box {
-  width: 450px;
-  height: 400px;
-  padding: 60px 20px 60px 20px;
+  width: 500px;
+  height: auto;
+  padding: 60px 40px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #4682b4;
+  background: #2b303a;
   text-align: center;
+  position: center;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .login-box input[type="text"],
@@ -30,7 +67,7 @@ body {
   display: orange;
   margin: 20px auto;
   text-align: center;
-  border: 2px solid #3498db;
+  border: 2px solid #92dce5;
   padding: 14px 10px;
   width: 200px;
   outline: none;
@@ -64,10 +101,15 @@ body {
   border-radius: 24px;
   transition: 0.25s;
   cursor: pointer;
+  font-weight: normal;
+  font-size: small;
 }
 
-.login-box input[type="submit"]:hover {
+.login-box [type="submit"]:hover {
   background: #2ecc71;
+}
+.login-box [type="submit"]:nth-of-type(2):hover {
+  background: #50b2fd;
 }
 
 .login-box [type="button"] {
@@ -85,6 +127,11 @@ body {
   transition: 0.25s;
 }
 
+.ui-inputfield,
+ui-inputfield.ui-state-focus {
+  box-shadow: none !important;
+}
+
 ::placeholder {
   color: white;
 }
@@ -96,4 +143,40 @@ body {
   color: #ffffff;
   width: 350px;
   max-width: 25%;
+}
+
+.gameRoomOuter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  min-height: 100vh;
+  max-width: 1440px;
+  margin: 0px auto;
+}
+
+.gameRoomOuter .gameHeader {
+  font-size: 54px;
+  font-weight: bold;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gameRoomOuter .gameInfoBox,
+.gameInfoBox {
+  display: flex;
+  position: relative;
+  z-index: 99;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  background: #ffffff;
+  align-items: center;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }

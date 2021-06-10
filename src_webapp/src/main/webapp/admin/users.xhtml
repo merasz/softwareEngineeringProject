@@ -14,7 +14,7 @@
         <p:commandButton styleClass="helpTopRight" id="help"
                          oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
         </h:panelGroup>
-        <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
+        <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" styleClass="helpDialog">
             <h:panelGrid columns="1">
                 <h3>Create User</h3>
                 <h:outputText value="Click on 'Create new User' to create a new User.
@@ -100,18 +100,18 @@
                         <p:selectBooleanCheckbox id="enabled" value="#{userDetailController.selectedUser.enabled}"/>
                     </h:panelGrid>
                     <p:separator />
-                <h:panelGrid columns="2">
+                <h:panelGrid columns="2" styleClass="fullWidth">
                     <p:outputLabel for="editRole" value="Role: "/>
                     <p:selectManyMenu id="editRole" value="#{userDetailController.selectedUser.roles}"
                                       collectionType="java.util.LinkedHashSet" showCheckbox="true"
-                                      required="true" requiredMessage="Role(s) required." style="width: 175px;">
+                                      required="true" requiredMessage="Role(s) required." style="width: 100%;">
                         <f:selectItems value="#{userDetailController.listRoles}"/>
                     </p:selectManyMenu>
                 </h:panelGrid>
-                    <h:panelGrid columns="2">
+                    <h:panelGrid columns="2" styleClass="fullWidth">
                         <p:outputLabel for="editRasp" value="Raspberry: "/>
                         <p:selectOneListbox id="editRasp"  value="#{userDetailController.selectedUser.raspberry}"
-                                            converter="#{raspberryConverter}" style="width:300px">
+                                            converter="#{raspberryConverter}" style="width:100%">
                             <f:selectItems value="#{raspberryListController.getRaspberries()}" var="raspberry"
                                            itemLabel="#{raspberry.raspberryId} - #{raspberry.hostname}" itemValue="#{raspberry}"/>
                         </p:selectOneListbox>
@@ -152,18 +152,18 @@
                                     placeholder="confirm password" required="true" >
                         </p:password>
                     </h:panelGrid>
-                    <h:panelGrid columns="2">
+                    <h:panelGrid columns="2" styleClass="fullWidth">
                         <p:outputLabel for="newRole" value="Role: "/>
                         <p:selectManyMenu id="newRole" value="#{userDetailController.newUser.roles}"
                                           collectionType="java.util.LinkedHashSet" showCheckbox="true"
-                                          required="true" requiredMessage="Role(s) required." style="width: 175px;">
+                                          required="true" requiredMessage="Role(s) required." style="width: 100%;">
                             <f:selectItems value="#{userDetailController.listRoles}"/>
                         </p:selectManyMenu>
                     </h:panelGrid>
-                    <h:panelGrid columns="2">
+                    <h:panelGrid columns="2" styleClass="fullWidth">
                         <p:outputLabel for="newRasp" value="Raspberry: "/>
                         <p:selectOneListbox id="newRasp"  value="#{userDetailController.newUser.raspberry}"
-                                            converter="#{raspberryConverter}" style="width:300px">
+                                            converter="#{raspberryConverter}" style="width:100%">
                             <f:selectItems value="#{raspberryListController.getRaspberries()}" var="raspberry"
                                            itemLabel="#{raspberry.raspberryId} - #{raspberry.ipAddress}" itemValue="#{raspberry}"/>
                         </p:selectOneListbox>

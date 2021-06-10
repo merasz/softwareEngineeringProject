@@ -8,12 +8,12 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name="content">
-        <h:form id="adminForm">
+        <h:form id="adminForm" >
             <p:growl id="growl" showDetail="false" life="6000">
                 <p:autoUpdate/>
             </p:growl>
 
-            <p:chart style="color: #00a7d0; width: 60%; margin-top: 80px;" type="bar" model="#{currentGamesController.model}" />
+            <p:chart styleClass="adminChart" style="color: #00a7d0; width: 60%; margin-top: 80px;" type="bar" model="#{currentGamesController.model}" />
 
             <p:dataTable widgetVar="adminTable" id="adminTable" var="game" value="#{gameListController.activeGames}"
                          styleClass="fullScreenTable">

@@ -14,16 +14,17 @@
     <link rel="stylesheet" href="resources/css/style.css"/>
 </h:head>
 
-<h:body style="background-color: #34495e; background-image: url(loginpage.jpg)">
+<h:body style="background-color: #7c7c7c;">
     <p:growl id="message" showDetail="true" >
         <p:autoUpdate />
     </p:growl>
 
-    <p style="margin-top:1cm; font-size:50pt; color: #ffffff;  text-shadow: 5px 10px 8px #34495e;margin-left: 30px; text-align: center; font-family: 'Berlin Sans FB Demi'">
-        LOGIN
+    <p class="loginHeading">
+        Login
     </p>
 
-    <div class="login-box" style="position: center; box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);">
+    <img src="loginpage.jpg" class="loginImage" />
+    <div class="login-box" style="">
         <div class="login-box-body">
             <p class="login-box-msg" style="color: white; font-size: larger; margin-top: -15px;">
                 Please enter your username and password.
@@ -54,7 +55,7 @@
                     </div>
                 </div>
                 <c:if test="#{param.error != null}">
-                    <div id="error" class="ui-messages-error ui-corner-all" style="width:250px; margin: 20px auto; display:block">
+                    <div id="error" class="ui-messages-error ui-corner-all" style="width:250px; margin: 0px auto; margin-top: 15px;; display:block">
                         <p style="text-align: center; margin:0;">
                             Wrong username or password. Please try again.
                         </p>

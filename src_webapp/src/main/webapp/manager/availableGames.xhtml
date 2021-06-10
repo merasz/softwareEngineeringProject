@@ -96,7 +96,7 @@
 
                     <p:separator />
 
-                    <h:selectOneMenu id ="topic" value="#{gameCreationController.currentTopic}" converter="omnifaces.SelectItemsConverter">
+                    <h:selectOneMenu id ="topic" value="#{gameCreationController.currentTopic}" converter="omnifaces.SelectItemsConverter" style="margin:15px 0">
                         <f:selectItem itemLabel="Select topic" noSelectionOption="true"/>
                         <f:selectItems value="#{topicListController.topics}" var="topic" itemValue="#{topic}" itemLabel="#{topic.topicName}"/>
                         <f:ajax render="selected_item" />

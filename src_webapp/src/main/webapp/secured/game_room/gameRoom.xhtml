@@ -14,18 +14,19 @@
     <h:head>
         <title>Gruppe6Team1 - Start</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+        <link rel="stylesheet" href="/resources/css/header.css"/>
         <link rel="stylesheet" href="/resources/css/style.css"/>
     </h:head>
     <h:body>
-        <h:panelGroup layout="block" style="display: flex; flex-direction: column;align-items: center; justify-content: space-around; min-height: 100vh">
-            <h:panelGroup layout="block" style="font-size: 54px; font-weight: bold; color: #ffffff; display: flex; flex-direction: column; align-items: center">
+        <h:panelGroup layout="block" styleClass="gameRoomOuter">
+            <h:panelGroup layout="block" styleClass="gameHeader">
                 <h:outputText style="text-shadow: 2px 7px 5px rgba(0,0,0,0.3),
     0px -4px 10px rgba(255,255,255,0.3);" value="#{sessionInfoBean.currentGame.gameName}" />
                 <h:outputText style="font-size:34px; margin-top: 20px" value="#{teamController.getTeamByPlayerAndGame(sessionInfoBean.currentUser,sessionInfoBean.currentGame).teamName}" />
             </h:panelGroup>
 
             <h:form style="width: 90%" id="gameForm">
-                <h:panelGroup layout="block" style="display: flex; flex-direction: column; box-sizing:border-box; width: 100%;background: #ffffff; align-items: center; padding: 20px; border-radius: 5px;  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;">
+                <h:panelGroup layout="block" styleClass="gameInfoBox">
                         <h:outputText value="Term: " style=" font-size: 32px; "/>
                         <h:outputText value="#{gamePlaySocketController.getNextTerm(sessionInfoBean.currentGame)}" id="termField" styleClass="term" style="font-size: 32px; font-weight: bold; margin-bottom: 25px"/>
 
@@ -44,7 +45,7 @@
             </h:form>
 
             <h:form style="width: 90%" id="infoForm">
-                <h:panelGroup layout="block" style="display: flex; flex-direction: column; box-sizing:border-box; width: 100%;background: #ffffff; align-items: center; padding: 20px; min-height:70px;  border-radius: 5px;  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;">
+                <h:panelGroup layout="block" styleClass="gameInfoBox">
                     <h:outputText value="#{gameInfoSocketController.messageMap[sessionInfoBean.currentGame.gameId]}" id="infoField" style="font-size: 26px;"/>
                  </h:panelGroup>
                 <o:socket channel="infoChannel" user="#{sessionInfoBean.currentUserName}" onmessage="function(m){console.log(m);}">
@@ -58,7 +59,7 @@
                 <p:growl id="scoreData" showDetail="false" life="6000">
                     <p:autoUpdate/>
                 </p:growl>
-                <h:panelGroup layout="block" style="display: flex; flex-direction: column;align-items: center">
+                <h:panelGroup layout="block" styleClass="">
                     <h:panelGroup layout="block" style="display: flex; width: 100%; justify-content: space-between; margin-bottom: 35px">
                         <p:commandButton id="termYesBtn" widgetVar="yesBtn" value="Guessed Correctly" styleClass="gameButton" style="background:#009a00"
                                          action="#{gamePlaySocketController.termGuessed(sessionInfoBean.currentGame)}" >
@@ -75,7 +76,7 @@
 
                     </h:panelGroup>
                     <p:dataTable widgetVar="scoreTable" id="scoreTable" var="score"
-                                 value="#{scoreManagerController.getScores(sessionInfoBean.currentGame)}" >
+                                 value="#{scoreManagerController.getScores(sessionInfoBean.currentGame)}" styleClass="fullScreenTable">
                         <f:facet name="header">Scores</f:facet>
                         <p:column headerText="Team">
                             <h:outputText value="#{score.team.teamName}"/>

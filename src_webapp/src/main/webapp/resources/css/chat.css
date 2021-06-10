@@ -1,37 +1,41 @@
 .chatRoomContent .loggedIn {
-	color: green;
-	font-weight: bold;
+  color: green;
+  font-weight: bold;
 }
 
 .chatRoomContent .loggedOut {
-	color: grey;
+  color: grey;
 }
 
 .chatRoomContent .chatRoomDescriptionPanel {
-	vertical-align: top;
+  vertical-align: top;
 }
 
 .chatRoomContent .chatRoomPanel {
-	vertical-align: top;
-	width: 40%;
+  vertical-align: top;
+  width: 40%;
 }
 
-.chatRoomContent .msgOutputTag{
-	vertical-align: top;
+.chatRoomContent .msgOutputTag {
+  vertical-align: top;
 }
 
 .chatRoomContent .chatRoomPanelContent {
-	width: 40%;
+  width: 100%;
 }
 
-.chatRoomContent .onlineInfoBox{
-	height: 150px;
+.chatRoomContent .onlineInfoBox {
+  height: 150px;
 }
 
-.chatRoomContent .actionLogBox{
-	height: 150px;
+.chatRoomContent .actionLogBox {
+  height: 150px;
 }
 
-.chatRoomContent .chatBox{
-	height: 200px;
+.chatRoomContent .chatBox {
+  height: 200px;
+}
+
+.chatRoomPanelContent ~ h3 {
+  margin-top: 30px;
 }

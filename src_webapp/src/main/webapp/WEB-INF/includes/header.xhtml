@@ -19,12 +19,13 @@
 
 
                     <div class="left_area">
-                     <h1>Gruppe6<span style="color: #0d9dbb">Team1</span></h1>
+                     <h1>Gruppe6<span style="color: #92dce5">Team1</span></h1>
                     </div>
 
-                    <div class="right_area">
-                        <a href="/logout" class="logout_btn">Logout</a>
+                    <div class="right_area .ui-button-text-icon-left">
+                        <a href="/logout" class="logout_btn ui-button ui-state-default ui-button-text ui-corner-all">Logout</a>
                     </div>
+                    <div style="clear:both"></div>
 <!---
                     <div class="session_info">
                         <ui:fragment rendered="#{sessionInfoBean.loggedIn}">
@@ -38,7 +39,7 @@
                 </div>
 
                 <div class="sidebar">
-                        <a href="/login.xhtml" class="topImg"><img style="border: 0 none" src="/loginpage.jpg" class="logo" alt=""/> </a>
+                        <a href="#" class="topImg"><img style="border: 0 none" src="/loginpage.jpg" class="logo" alt=""/> </a>
           <!---              <h4 style="padding-left: 70px">Gruppe6Team1</h4>    -->
                         <h4>Logged in as #{sessionInfoBean.currentUserName}<br/>[#{sessionInfoBean.currentUserRoles}]</h4>
                     <p:commandLink id="profile" action="#{userScoresController.showProfile}">

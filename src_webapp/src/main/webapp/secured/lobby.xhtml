@@ -18,15 +18,15 @@
 
         <!--        <p:chart style="color: #00a7d0; " type="pie" model="#{userScoresController.model}" />-->
 
-        <h:form style="margin-left: 270px; margin-right: 20px; margin-top: 75px; float: left" id="chatRoomForm">
+        <h:form style="margin-top: 75px;" id="chatRoomForm">
             <div class="chatRoomContent">
                 <h1 class="box-title"><i class="fa fa-users"></i> Lobby</h1>
 
                 <p:panelGrid columns="2" columnClasses="chatRoomDescriptionPanel,chatRoomPanel">
                     <p:column>
                         <p:panel id="panelL" header="All Time Top Scores" style="border: none;">
-                            <p>Here you can find all Data for the <span
-                                    style="color: #2ecc71; font-weight: bold"> Highscores</span></p>
+                           <!-- <p>Here you can find all Data for the <span
+                                    style="color: #2ecc71; font-weight: bold"> Highscores</span></p> -->
 
                             <h:panelGroup layout="block"
                                           style="display: flex; align-items: center; justify-content: space-evenly; width: 100%;font-weight: bold; color: #0d9dbb; font-size: 35px; margin-top: 30px">
@@ -36,7 +36,7 @@
                             <h:panelGroup>
                                 <p:dataTable id="highScoreTable" value="#{lobbyScoresController.highscores}"
                                              var="user" widgetVar="scoreTableByGames" rows="10"
-                                             style="width:90%;margin: 0px auto; margin-top:30px">
+                                             styleClass="scoreTable">
                                     <p:column headerText="User" style="text-align: center; width: 30%">
                                         <h:outputText value="#{user.key.username}"/>
                                     </p:column>
@@ -54,7 +54,7 @@
                             <h:panelGroup>
                                 <p:dataTable id="highScoreTableAGame" value="#{lobbyScoresController.highscoresAGame}"
                                              var="agame" widgetVar="scoreTableByGames" rows="3"
-                                             style="width:80%;margin: 0px auto; margin-top:30px">
+                                             styleClass="scoreTable">
                                     <p:column headerText="User" style="text-align: center; width: 30%">
                                         <h:outputText value="#{agame.key.username}"/>
                                     </p:column>
@@ -72,7 +72,7 @@
                             <h:panelGroup>
                                 <p:dataTable id="scoreTableByGamesss" value="#{lobbyScoresController.mostPopularTopics}"
                                              var="topic" widgetVar="scoreTableByGames" rows="5"
-                                             style="width:80%;margin: 0px auto; margin-top:30px">
+                                             styleClass="scoreTable">
                                     <p:column headerText="Game Name" style="text-align: center; width: 30%">
                                         <h:outputText value="#{topic.topicName}"/>
                                     </p:column>
@@ -132,11 +132,11 @@
                             <p:inputTextarea id="msgBox" rows="3"
                                              value="#{userChatController.currentMessage.text}"
                                              style="padding: 0px;" styleClass="chatRoomPanelContent"/>
-                            <h:commandButton id="sendBtn" value="Send"
+                            <p:commandButton id="sendBtn" value="Send"
                                              action="#{userChatController.sendMessage()}"
-                                             disabled="#{empty userChatController.currentMessage.to}">
+                                             disabled="#{empty userChatController.currentMessage.to}" icon="ui-icon-arrowthick-1-e" >
                                 <f:ajax execute="@form" render="msgBox"/>
-                            </h:commandButton>
+                        </p:commandButton>
                         </p:panel>
                     </p:column>
                 </p:panelGrid>
