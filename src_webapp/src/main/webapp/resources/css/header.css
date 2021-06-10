@@ -335,9 +335,9 @@ label #sidebar_btn:hover {
 }
 
 .ui-fileupload-simple input[type="file"] {
-  position: relative;
+  position: absolute;
   width: 180px;
-  height: 0px;
+  height: 33px;
   background: #92dce5;
   color: #fff;
 }
