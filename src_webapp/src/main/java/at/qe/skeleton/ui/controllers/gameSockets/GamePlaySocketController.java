@@ -245,7 +245,15 @@ public class GamePlaySocketController {
      * @param game current game
      */
     public void stopRound(Game game) {
-        websocketManager.getTimeChannel().send("stopTimer",getAllRecipients(game));
+
+        List<List<String>> recipients = getSeperatedRecipients(game, currentPlayerMap.get(game.getGameId()));
+        List<String> currentUser = recipients.get(0);
+        List<String> otherUser = recipients.get(1);
+
+        this.websocketManager.getTimeChannel().send("stopTimerOther",currentUser);
+        this.websocketManager.getTimeChannel().send("stopTimer",otherUser);
+
+        //websocketManager.getTimeChannel().send("stopTimer",getAllRecipients(game));
         gameInfoSocketController.setGameMessageToGame(game,"Was the term guessed correctly? Rate below!");
         websocketManager.getInfoChannel().send("infoUpdate",getAllRecipients(game));
     }

@@ -37,8 +37,8 @@
                         <h:outputText value="Next Up: #{gamePlaySocketController.getNextRoundPlayer(sessionInfoBean.currentGame).username}" id="nextField" style="font-size: 18px; margin-top:15px "/>
                 </h:panelGroup>
                 <o:socket channel="termChannel" user="#{sessionInfoBean.currentUserName}" onmessage="function(m){console.log(m);}">
-                    <f:ajax event="termUpdate" render="termField typeField pointsField playerField nextField" onevent="updateOtherScreen()" />
-                    <f:ajax event="termUpdateCurrent" render="typeField pointsField playerField nextField" onevent="updatePlayerScreen()" />
+                    <f:ajax event="termUpdate" render="termField typeField pointsField playerField nextField" onevent="disableButtons(false)" />
+                    <f:ajax event="termUpdateCurrent" render="typeField pointsField playerField nextField" onevent="disableButtons(true)" />
                 </o:socket>
 
             </h:form>
@@ -111,7 +111,8 @@
 
                 <o:socket channel="timeChannel" user="#{sessionInfoBean.currentUserName}" onmessage="function(m){console.log(m);}">
                     <f:ajax event="timeUpdate" render="timerOuter" />
-                    <f:ajax event="stopTimer" onevent="PF('timer1').pause()" />
+                    <f:ajax event="stopTimer" onevent="stopTimer(false)" />
+                    <f:ajax event="stopTimerOther" onevent="stopTimer(true)" />
                 </o:socket>
 
             </h:form>
@@ -125,14 +126,23 @@
             PF('knob').setValue(t.current);
         }
 
-        function updatePlayerScreen() {
-            $('#gameForm .term').html("");
+        function stopTimer(buttons) {
+            if(buttons === true) {
+                enableButtons();
+            }
+            PF('timer1').pause();
+        }
+
+        function disableButtons(emptyTerm) {
+            if(emptyTerm===true) {
+                $('#gameForm .term').html("");
+            }
             PF('yesBtn').disable()
             PF('ruleBtn').disable();
             PF('noBtn').disable();
         }
 
-        function updateOtherScreen() {
+        function enableButtons() {
             PF('yesBtn').enable();
             PF('ruleBtn').enable();
             PF('noBtn').enable();
