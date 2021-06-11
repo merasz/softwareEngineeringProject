@@ -54,7 +54,7 @@
 
         <h:form id="teamsForm" style="display: none">
             <p:dataTable widgetVar="teamsTable" id="teamsTable" var="scores" value="#{teamListController.teamScores}"
-                         style="margin-top: 80px; margin-right: 20px; margin-left: 270px; float: left;">
+                         styleClass="fullScreenTable">
                 <f:facet name="header">Teams - #{teamListController.game.gameName}</f:facet>
                 <p:column headerText="Team name">
                     <h:outputText value="#{scores.team.teamName}"/>
@@ -63,7 +63,7 @@
                     <h:outputText value="#{scores.totalRoundScore}" disabled="true"/>
                 </p:column>
             </p:dataTable>
-            <p:commandButton style="width: 200px; margin-top: 25px; float: left; margin-left: 290px"
+            <p:commandButton style="width: 200px; margin-top: 25px; float: left;"
                              oncomplete="$('#teamsForm').hide();$('#adminForm').show();" icon="ui-icon-arrowthick-1-w"
                              value="Back to Games">
             </p:commandButton>
