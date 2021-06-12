@@ -3,6 +3,8 @@ package at.qe.skeleton.ui.controllers;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.demo.PlayerAvailability;
 import at.qe.skeleton.services.GameStartService;
+
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
 import at.qe.skeleton.ui.controllers.gameSockets.GameJoinController;
@@ -35,6 +37,13 @@ class GameStartControllerTest {
     @InjectMocks
     private GameStartController gameStartController;
 
+
+
+    @Test
+    void testStartMio(){
+        Game game = new Game();
+
+    }
     @Test
     void testStartGame() {
         final User user = new User();
@@ -82,7 +91,7 @@ class GameStartControllerTest {
         when(gameStartService.joinGame(new Game(), new User())).thenReturn(game1);
 
         final String result = gameStartController.joinGame();
-        //assertThat(result).isEqualTo("result");
+        assertThat(result).isEqualTo("/secured/game_room/join.xhtml?faces-redirect=true");
     }
 
     @MockitoSettings(strictness = Strictness.LENIENT)
@@ -100,7 +109,9 @@ class GameStartControllerTest {
 
         final String result = gameStartController.joinGame();
 
-        //assertThat(result).isEqualTo("result");
+        assertThat(result).isEqualTo("/secured/game_room/join.xhtml?faces-redirect=true");
+        boolean allTeamsEntered = gameStartService.getGameJoinController().allReadyToStart(game);
+        assertThat(allTeamsEntered).isFalse();
     }
 
     @MockitoSettings(strictness = Strictness.LENIENT)
@@ -113,21 +124,21 @@ class GameStartControllerTest {
         when(gameStartService.getGameJoinController()).thenReturn(new GameJoinController());
         when(gameStartService.joinGame(new Game(), new User())).thenThrow(IllegalArgumentException.class);
         final String result = gameStartController.joinGame();
-        //assertThat(result).isEqualTo("result");
+        assertThat(result).isNotEqualTo("/secured/game_room/join.xhtml?faces-redirect=true");
     }
 
     @Test
     void testGetPlayerAvailability() {
         when(gameStartService.getGameJoinController()).thenReturn(new GameJoinController());
         final List<PlayerAvailability> result = gameStartController.getPlayerAvailability();
-
+        assertTrue(gameStartController.getPlayerAvailability() == result);
     }
 
     @Test
     void testSetAllTeamsReady() {
         GameStartController myService = mock(GameStartController.class, Mockito.RETURNS_DEEP_STUBS);
         when(gameStartService.getGameJoinController()).thenReturn(new GameJoinController());
-        gameStartController.setAllTeamsReady();
+        //assertTrue(gameStartController.setAllTeamsReady() == myService);
     }
 
     @Test
@@ -140,6 +151,7 @@ class GameStartControllerTest {
         final Game game = new Game();
         when(gameStartService.selectPlayer(new User())).thenReturn(game);
         gameStartController.selectPlayer(event);
+        verify(gameStartController).selectPlayer(event);
     }
 
     @MockitoSettings(strictness = Strictness.LENIENT)
@@ -190,6 +202,36 @@ class GameStartControllerTest {
         when(myService.enterGame()).thenThrow(IOException.class);
         gameStartController.enterGame();
     }
+    @Test
+    void testGetTeamName() {
+        when(gameStartService.getTeam().getTeamName()).thenReturn("result");
+        final String result = gameStartController.getTeamName();
+        assertThat(result).isEqualTo("result");
+    }
+    @Test
+    void testSetTeamName() {
+        when(gameStartService.getTeam().getTeamName()).thenReturn("result");
+        final String name = gameStartController.getTeamName();
+        assertThat(name).isEqualTo("result");
+    }
+    @Test
+    void testGetPlayer(){
+        User user = new User();
+        Game game = new Game();
+        PlayerAvailability playerAvailability;
+        gameStartController.getPlayer();
+        assertTrue(gameStartController.getPlayer() == null);
+
+    }
+    @Test
+    void testSetPlayer(){
+        User user = new User();
+        Game game = new Game();
+        PlayerAvailability playerAvailability;
+        gameStartController.getPlayer();
+        assertTrue(gameStartController.getPlayer() == null);
+
+    }
 
     @Test
     void testGetTeamSizeString() {
@@ -204,4 +246,12 @@ class GameStartControllerTest {
         final boolean result = gameStartController.getTeamReady();
         assertThat(result).isTrue();
     }
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    @Test
+    void testIsTeamComplete() {
+        when(gameStartService.teamReady()).thenReturn(true);
+        final boolean result = gameStartController.isTeamComplete();
+        assertThat(result).isFalse();
+    }
+
 }

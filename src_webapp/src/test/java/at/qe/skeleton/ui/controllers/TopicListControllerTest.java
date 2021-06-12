@@ -29,6 +29,23 @@ class TopicListControllerTest {
     @InjectMocks
     private TopicListController topicListController;
 
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    @Test
+    void testInit() {topicListController.init();
+    }
+
+    @Test
+    void testDoCreateNewTopic() {
+        topicListController.setAmountOfTermsTopic();
+    }
+    @Test
+    void testInit_retunNoItem() {
+        final Collection<Topic> expectedResult = Arrays.asList(new Topic("topicName"));
+        when(topicService.getAllTopics()).thenReturn(Collections.emptyList());
+        final Collection<Topic> result = topicListController.getTopics();
+        assertThat(result).isEqualTo(Arrays.asList());
+    }
+
     @Test
     void testGetTopics() {
         final Collection<Topic> expectedResult = Arrays.asList(new Topic("topicName"));
@@ -64,9 +81,9 @@ class TopicListControllerTest {
     @Test
     void testGetTopicAmount() {
         final Topic topic = new Topic();
-        final List<GameTopicCount> gameTopicCounts = Arrays.asList(new GameTopicCount(new Topic("topicName"), 0L));
+        final Collection<GameTopicCount> gameTopicCounts = Arrays.asList(new GameTopicCount(new Topic("topicName"), 0L));
         when(topicService.getTopicByName(new Topic("MATH"))).thenReturn( (new Topic("MATH")));
-        topicService.getTopicTermsAmount();
+        topicListController.getTopicAmount();
     }
 
     @Test
@@ -76,13 +93,14 @@ class TopicListControllerTest {
         when(topicService.getTopicTermsAmount()).thenReturn(gameTopicCounts);
         topicListController.setAmountOfTermsTopic();
     }
-    /*
     @Test
-    void testGetTopicName() {
-        final Topic topic = new Topic();
-        final List<GameTopicCount> gameTopicCounts = Arrays.asList(new GameTopicCount(new Topic("topicName"), 0L));
-        when(topicListController.getTopics().stream().map(Topic::getTopicName).collect(Collectors.toList())).thenReturn();
-        topicListController.setAmountOfTermsTopic();
-    }*/
+    void testGetTopicAmounts_TopicServiceReturnsNoItems() {
+        final Collection<Topic> expectedResult = Arrays.asList(new Topic("topicName"));
+        when(topicService.getAllTopics()).thenReturn(Collections.emptyList());
+        final Collection<Topic> result = topicListController.getTopics();
+        assertThat(result).isEqualTo(Arrays.asList());
+    }
+
+
 
 }

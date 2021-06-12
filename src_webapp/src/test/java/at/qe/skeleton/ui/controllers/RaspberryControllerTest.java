@@ -1,6 +1,7 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.Raspberry;
+import at.qe.skeleton.model.Score;
 import at.qe.skeleton.services.RaspberryService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,9 +11,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class RaspberryControllerTest {
@@ -36,6 +40,7 @@ class RaspberryControllerTest {
 
         raspberryController.doReloadRaspberry();
     }
+
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testDoSaveRaspberry() {
@@ -50,6 +55,7 @@ class RaspberryControllerTest {
         raspberryController.doSaveRaspberry();
 
     }
+
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testDoDeleteRaspberry() {
@@ -73,6 +79,7 @@ class RaspberryControllerTest {
 
 
     }
+
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testDoInvalidateApiKey() {
@@ -88,4 +95,48 @@ class RaspberryControllerTest {
         raspberryController.doInvalidateApiKey();
 
     }
+
+    @Test
+    void testSetRaspberry() {
+        Raspberry raspberry = new Raspberry();
+        raspberryController.setRaspberry(raspberry);
+        assertTrue(raspberryController.getRaspberry() == raspberry);
+    }
+
+    @Test
+    void testGetRaspberry() {
+        Raspberry raspberry = new Raspberry();
+        raspberryController.setRaspberry(raspberry);
+        assertTrue(raspberryController.getRaspberry() == raspberry);
+
+    }
+
+    @Test
+    void testSetIpAddress() {
+        raspberryController.setIpAddress("ipaddress");
+        assertTrue(raspberryController.getIpAddress() == "ipaddress");
+
+    }
+    @Test
+    void testGetIpAddress() {
+        raspberryController.setIpAddress("ipaddress");
+        assertTrue(raspberryController.getIpAddress() == "ipaddress");
+    }
+    @Test
+    void testGetAction() {
+        raspberryController.setAction("no");
+        assertTrue(raspberryController.getAction() == "no");
+    }
+    @Test
+    void testSetAction() {
+        raspberryController.setAction("no");
+        assertTrue(raspberryController.getAction() == "no");
+    }
+    @Test
+    void getRaspberryService(){
+        RaspberryService raspberryService = new RaspberryService();
+        raspberryService.getAllRaspberries();
+        assertTrue(raspberryController.getRaspberryService() == raspberryService);
+    }
 }
+

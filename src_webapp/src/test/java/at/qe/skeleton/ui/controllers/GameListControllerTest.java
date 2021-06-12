@@ -11,7 +11,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -67,7 +68,7 @@ class GameListControllerTest {
     }
 
     @Test
-    void testGetactivegGames_GameServiceReturnsNoItems() {
+    void testGetactiveGames_GameServiceReturnsNoItems() {
         final User user = new User();
         user.setUsername("username");
         user.setPassword("password");
@@ -78,5 +79,22 @@ class GameListControllerTest {
         final Collection<Game> result = gameListController.getActiveGames();
         assertThat(result).isEqualTo(expectedResult);
     }
+    @Test
+    public void testSetImageForConditionOne() {
+       User user = new User();
+       when(user.getRoles().contains(UserRole.ADMIN)).thenReturn(true);
+       assertThat(gameService.getAllGames());
+        when(user.getRoles().contains(UserRole.ADMIN)).thenReturn(false);
+        assertThat(gameService.getPersonalGames(user.getRaspberry()));
 
-}
+
+
+    }
+        //write test to make conditionOne true
+
+    }
+
+
+
+
+

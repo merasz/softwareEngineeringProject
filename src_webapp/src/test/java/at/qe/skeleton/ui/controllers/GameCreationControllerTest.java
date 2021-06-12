@@ -35,10 +35,6 @@ class GameCreationControllerTest {
     @InjectMocks
     private GameCreationController gameCreationController;
 
-    /*@Before
-    public void init() {
-        MockitoAnnotations.initMocks(this);
-    }*/
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testInit() {
@@ -93,7 +89,7 @@ class GameCreationControllerTest {
         final User user3 = new User();
         final Team team = new Team();
         when(mockTeamService.saveTeam(new Team())).thenReturn(team);
-        gameCreationController.getGame();
+        gameCreationController.doSaveGame();
     }
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
@@ -111,6 +107,7 @@ class GameCreationControllerTest {
     void testSetUserList_UserServiceReturnsNoItems() {
         when(mockUserService.getAllUsers()).thenReturn(Collections.emptyList());
         gameCreationController.getGame();
+        gameCreationController.displayInfo("Game deleted", "");
 
     }
 
@@ -137,11 +134,10 @@ class GameCreationControllerTest {
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testSetGame() {
-        final User user1 = new User();
-        final Team team = new Team();
+        Game game = new Game();
         final Collection<Game> games = Arrays.asList();
         when(mockGameService.getAllGames()).thenReturn(games);
-        gameCreationController.getGame();
+        gameCreationController.setGame(game);
     }
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
@@ -170,6 +166,15 @@ class GameCreationControllerTest {
         gameCreationController.setNumberTeams(numberTeams);
     }
 
+
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    @Test
+    void testdoDeleteGame() {
+        Game game = new Game();
+        final Collection<Game> games2 = Arrays.asList(game);
+        when(mockGameService.getAllGames()).thenReturn(games2);
+        gameCreationController.doDeleteGame();
+    }
 
 
 

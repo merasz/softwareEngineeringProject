@@ -14,6 +14,7 @@ import org.mockito.quality.Strictness;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -200,4 +201,44 @@ class TeamControllerTest {
         final Team result = teamControllerUnderTest.getTeamByPlayerAndGame(user, game1);
         assertThat(result).isEqualTo(expectedResult);
     }
+
+    @Test
+    void testGetTeam() {
+        Team team = new Team();
+        teamControllerUnderTest.setTeam(team);
+        assertTrue(teamControllerUnderTest.getTeam() == team);
+    }
+    @Test
+    void testSetTeam() {
+        Team team = new Team();
+        teamControllerUnderTest.setTeam(team);
+        assertTrue(teamControllerUnderTest.getTeam() == team);
+    }
+    @Test
+    void testGetTmpPlayer() {
+        User tmpPlayer = new User();
+        teamControllerUnderTest.setTmpPlayer(tmpPlayer);
+        assertTrue(teamControllerUnderTest.getTmpPlayer() == tmpPlayer);
+    }
+    @Test
+    void testSetTmpPlayer() {
+        User tmpPlayer = new User();
+        teamControllerUnderTest.setTmpPlayer(tmpPlayer);
+        assertTrue(teamControllerUnderTest.getTmpPlayer() == tmpPlayer);
+    }
+    @Test
+    void testSetGame() {
+        Game game = new Game();
+        teamControllerUnderTest.setGame(game);
+        assertTrue(teamControllerUnderTest.getGame() == game);
+
+    }
+    @Test
+    void testGetGame() {
+        Game game = new Game();
+        teamControllerUnderTest.setGame(game);
+        assertTrue(teamControllerUnderTest.getGame() == game);
+
+    }
+
 }
