@@ -10,10 +10,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -123,22 +120,45 @@ public class Main {
                 BluetoothGattService timeflipService = getService(device, "f1196f50-71a4-11e6-bdf4-0800200c9a66");
                 BluetoothGattService batteryService = getService(device, "0000180f-0000-1000-8000-00805f9b34fb");
                 setTimeflipPasswd(device, timeflipService);
+                Thread.sleep(4000);
 
+                System.out.println("DO YOU WANT TO CALIBRATE SET UP THE DICE?\n" +
+                        "A DICE SHOULD BE ALWAYS NEW CALIBRATED AFTER YOU REMOVED THE BATTERY!\n" +
+                        "DO YOU WANT TO CALIBRATE AND SET UP THE DICE? " +
+                        "IF YOU PLAY WITH A NOT CALIBRATED DICE, " +
+                        "IT CAN HAPPEN THAT ITS NOT WORKING AS EXPECTED!?\n" +
+                        "write YES, if you want to calibrate, NO if you want to skip!");
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                String shouldCalibrate = reader.readLine();
+
+                if(shouldCalibrate.equals("YES") || shouldCalibrate.equals("yes")) {
+                    System.out.println("######TIMEFLIP-FACET-CONFIG######");
+                    System.out.println("ITS NECESSARY THAT YOUR DICE IS MARKED UP AS IN OUR GIVEN EXAMPLE JPEG " +
+                            "- WHERE DO YOU FIND THIS .../src_rasp/diceNumbering.jpeg, WE JUST OFFER 12 NUMBERS FOR" +
+                            " THE DICE!");
+                    System.out.println("IN THE FOLLOWING 12 REQUESTS - HIT ENTER TO SAVE AND PROCESS THE NEXT NUMBER!");
+                    for (int i = 1; i < 13; i++) {
+                        System.out.println("IF YOU ARE READY - ROLL THE DICE ON SIDE " + i + " and enter to proceed!");
+                        shouldCalibrate = reader.readLine();
+                        System.out.println("current facet = " + getCurrentTimeflipFacet(device,timeflipService));
+                        Thread.sleep(3);
+                    }
+                    System.out.println("YOU SUCCESSFULLY SET UP THE DICE!");
+                }
+                System.out.println("##################INIT GAME MODE##################\n" +
+                        " FROM NOW ON IF YOU SET UP THE .../src_rasp/CONFIG.JSON " +
+                        "CORRECTLY, THE TIMEFLIP COMMUNICATE WITH THE RASPBERRY AND THE RASPBERRY" +
+                        " SHOULD NOW COMMUNICATE WITH THE WEBAPP IN YOUR BROWSER! ");
                 device.enableConnectedNotifications(new ConnectedNotification());
                 notifyFacet(device);
+            } catch (IOException e) {
+                e.printStackTrace();
             } finally {
                 device.disconnect();
             }
         } else {
             System.out.println("Connection not established - try it again");
         }
-
-        /*
-        send new update TimeFlip Request
-         */
-
-        System.out.println("Updating Timeflip");
-
     }
 
     private static void notifyFacet(BluetoothDevice device) throws InterruptedException {
