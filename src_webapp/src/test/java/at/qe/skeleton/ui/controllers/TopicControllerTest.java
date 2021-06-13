@@ -56,7 +56,7 @@ class TopicControllerTest {
         when(mockTopicService.saveTopic(new Topic("topicName"))).thenReturn(new Topic("topicName"));
         topicControllerUnderTest.doSaveTopic();
     }
-
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     public void shouldSendEmail_whenUserIsDeleted()  throws Exception {
         Topic topicName = new Topic();

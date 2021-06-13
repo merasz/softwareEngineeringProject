@@ -91,6 +91,7 @@ class TermListControllerTest {
         TopicService myService = mock(TopicService.class, Mockito.RETURNS_DEEP_STUBS);
         when(myService.getAllTopics()).thenThrow(IllegalArgumentException.class);
         when(termsService.getTermsRepository()).thenReturn(null);
+
         termListController.getTopics();
     }
 

@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class gGameControllerTest {
+class GameControllerTest {
 
 
     @Mock
@@ -50,6 +50,43 @@ class gGameControllerTest {
     @InjectMocks
     private GameController gameController;
 
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    @Test
+    void doSaveGame(){
+
+
+            User user = new User();
+            Game game = new Game();
+            Game game1 = new Game();
+            List<Game> games = new ArrayList<>();
+            gameService.saveGame(game);
+             when(gameStartService.startGame(new Game(), new User())).thenReturn(game1);
+            assertFalse(gameController.getGame() == games);
+            gameController.setGame(game);
+            gameController.setUser();
+            gameController.getUserService();
+            gameController.getTopicService();
+            gameController.getUser();
+            gameController.doSaveGame();
+        }
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    @Test
+    void doSaveGame_Excepition () throws IllegalArgumentException{
+
+        Game game = new Game();
+        Game game1 = new Game();
+        List<Game> games = new ArrayList<>();
+        gameService.saveGame(game);
+        when(gameStartService.startGame(new Game(), new User())).thenThrow(new IllegalArgumentException());
+        assertFalse(gameController.getGame() == games);
+        gameController.doSaveGame();
+    }
+
+    @Test
+    void testTopicService(){
+        gameController.getTopicService();
+
+    }
     @Test
     void testSetUser() {
         User user = new User();

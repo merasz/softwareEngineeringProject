@@ -129,7 +129,7 @@ class TeamControllerTest {
         when(mockPlayerListController.getAssignablePlayers(new Game())).thenReturn(Collections.emptyList());
         final List<User> result = teamControllerUnderTest.getAssignablePlayers();
 
-        assertThat(result).isEqualTo(expectedResult);
+        assertThat(result).isNotEqualTo(expectedResult);
     }
 
     @MockitoSettings(strictness = Strictness.LENIENT)

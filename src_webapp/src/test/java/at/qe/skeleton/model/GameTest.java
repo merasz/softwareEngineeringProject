@@ -70,13 +70,7 @@ public class GameTest {
         assertTrue(game.getRaspberry() == raspberry);
     }
 
-    @Test
-    void testGetTeamList() {
-        Game game = new Game();
-        List<Team> scores = new ArrayList<>();
-        game.setTeamList(scores);
-        assertTrue(game.getTeamList() == scores);
-    }
+
 
     @Test
     void testSetTeamList() {

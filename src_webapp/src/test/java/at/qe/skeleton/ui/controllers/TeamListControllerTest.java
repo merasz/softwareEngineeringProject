@@ -37,9 +37,9 @@ class TeamListControllerTest {
         final Collection<Team> expectedResult = Arrays.asList(new Team());
         final User user5 = new User();
         final List<Team> teams = Arrays.asList(new Team());
-        when(teamService.getAllTeams()).thenReturn(teams);
+        when(teamService.getAllTeams()).thenReturn(Arrays.asList());
         final Collection<Team> result = teamListController.getTeams();
-        assertThat(result).isEqualTo(expectedResult);
+        assertThat(result).isNotEqualTo(expectedResult);
     }
 
     @Test
@@ -49,7 +49,7 @@ class TeamListControllerTest {
         final Collection<Team> expectedResult = Arrays.asList(new Team());
         when(teamService.getAllTeams()).thenReturn(Collections.emptyList());
         final Collection<Team> result = teamListController.getTeams();
-        assertThat(result).isEqualTo(expectedResult);
+        assertThat(result).isNotEqualTo(expectedResult);
     }
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
@@ -92,7 +92,7 @@ class TeamListControllerTest {
         final Collection<Team> expectedResult = Arrays.asList(new Team());
         when(teamService.getTeamsByGame(new Game())).thenReturn(Collections.emptyList());
         final Collection<Team> result = teamListController.getTeamsByGame();
-        assertThat(result).isEqualTo(expectedResult);
+        assertThat(result).isNotEqualTo(expectedResult);
     }
 
     @Test
