@@ -9,10 +9,10 @@
     <ui:define name ="content">
         <h:form id="gamesForm">
             <h:panelGroup layout="block" styleClass="helpTopRightOuter">
-            <p:commandButton styleClass="helpTopRight" id="help"
-                             oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help">
-            </p:commandButton>
-        </h:panelGroup>
+                <p:commandButton styleClass="helpTopRight" id="help"
+                                 oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help">
+                </p:commandButton>
+            </h:panelGroup>
             <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
                 <h:panelGrid columns="1">
                     <h:outputText value="See all your past and current games here."/>
@@ -64,7 +64,7 @@
                                      disabled="#{game.active || game.endTime != null}">
                         <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}" />
                     </p:commandButton>
-                    <p:commandButton title="delete" icon="ui-icon-trash" action="#{gameCreationController.doDeleteGame}" update="gamesForm">
+                    <p:commandButton title="delete" icon="ui-icon-trash" action="#{gameCreationController.doDeleteGame()}" update=":gamesForm:gameCreationTable">
                         <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}"/>
                         <p:confirm header="Confirm deletion"
                                    message="Are you sure you want to delete this Game? You cannot undo this operation."
@@ -79,6 +79,11 @@
                 <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}" />
                 <f:setPropertyActionListener value="#{game}" target="#{teamController.game}" />
             </p:commandButton>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
         </h:form>
 
         <h:form id="createGameForm">
