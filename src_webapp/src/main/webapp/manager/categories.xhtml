@@ -128,7 +128,7 @@
                              action="#{termsController.doCreateNewTerm()}" value="Create new Term" update=":termsForm:termCreationDialog">
                 <f:setPropertyActionListener value="#{term}" target="#{termsController.term}"/>
             </p:commandButton>
-            <p:commandButton style="width: 200px; margin-top: 20px; float: left; margin-left: 270px" oncomplete="$('#termsForm').hide();$('#topicForm').show();"
+            <p:commandButton style="width: 200px; margin-top: 20px; float: left; margin-bottom: 50px;" oncomplete="$('#termsForm').hide();$('#topicForm').show();"
                              update=":topicForm:topicCreationTable"
                              icon="ui-icon-arrowthick-1-w" value ="Back to Topics">
             </p:commandButton>
