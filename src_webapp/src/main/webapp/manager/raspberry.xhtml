@@ -13,8 +13,20 @@
         </h:panelGroup>
         <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
             <h:panelGrid columns="1">
+                <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Info</h2>
+                <h:outputText value="The Raspberry is used to simulate our virtual Game Room.
+                              The Raspberry is communicating via BLE with the TimeFlip, and the Raspberry is communicating via REST with our WebApp.
+                              &lt;br /&gt;
+                              To make it more secure, we added a API KEY for the REST communication, so only Raspberries who know our API-KEY can communicate with the WebApp.
+                              &lt;br /&gt;
+                              If a Game gets created, the Game will take place on the Raspberry of the Game creator, if you want to play on a different Raspberry, you have switch the Raspberry in your Profile first.
+                              &lt;br /&gt;
+                              Only Users who have selected the same Raspberry can play together, else they wont show up in the Team selection.
+                              "
+                              escape="false"/>
                 <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Edit Raspberry</h2>
-                <h:outputText value="Here you can edit the Raspberry"/>
+                <h:outputText value="Here you can edit the Raspberries Name its IP Address and its API KEY."
+                              escape="false"/>
                 <h2 style="color: #0d9dbb; font-weight: bold;">Invalidate API Key</h2>
                 <h:outputText value="Here you can invalidate API kEY"/>
                 <h2 style="color: #0d9dbb; font-weight: bold;">Delete Raspberry</h2>

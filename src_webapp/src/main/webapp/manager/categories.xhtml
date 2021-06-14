@@ -22,14 +22,25 @@
             <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="400">
                 <h:panelGrid columns="1">
                     <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Choose File</h2>
-                    <h:outputText value="Click the 'choose' button to add a json File and submit. The JSON-file should contain 1 or more Topics and associated Terms."/>
+                    <h:outputText value="Click the 'choose' button to add a json File and submit. The JSON-file should contain only 1 Topic and its associated Terms.
+                        Example JSON FILE could look like this:
+                        &lt;br /&gt;
+                        { &#34;topic&#34; : &#34;TopicName&#34;, &lt;br /&gt; &#34;terms&#34; : [ &lt;br /&gt; &#34;
+                            Term1Name&#34;, &lt;br /&gt; &#34;Term2Name&#34; &lt;br /&gt;]&lt;br /&gt;}" escape="false"/>
                     <h2 style="color: #0d9dbb; font-weight: bold;">Create new Topic</h2>
                     <h:outputText value="Click to add a new Topic."/>
                     <h2 style="color: #0d9dbb; font-weight: bold; display: inline-block">Add Term</h2>
                     <h:outputText value="Click to add a new Term."/>
+                    <h2 style="color: #0d9dbb; font-weight: bold; display: inline-block">Edit Topic</h2>
+                    <h:outputText value="Click to change the name of the Topic."/>
                     <h2 style="color: #0d9dbb; font-weight: bold;">Delete Topic</h2>
                     <h:outputText
-                            value="Click to the button to delete the Topic. For now the topic deletion is not available because, if you want delete a topic, the user statistics w'ont be right."/>
+                            value="Click to the button to delete the Topic.
+                            You can only delete an empty Topic, the Terms of it must be deleted.
+                            &lt;br /&gt;
+                            If a Topic was already played once, you can only delete this Topic,
+                            if all Games with the selected Topic get also deleted, else the necessary statistics will get corrupted."
+                            escape="false"/>
                 </h:panelGrid>
             </p:dialog>
         </h:form>
