@@ -76,11 +76,24 @@
                 <p:outputPanel id="raspberryData" rendered="#{not empty raspberryController.raspberry}">
                     <h:panelGrid columns="2">
                         <p:outputLabel for="name" value="Device Name: " />
-                        <p:inputText id="name" value="#{raspberryController.raspberry.hostname}"/>
+                        <p:inputText id="name" value="#{raspberryController.raspberry.hostname}"
+                                     required="true" requiredMessage="Insert Device Name." placeholder="Device Name"
+                                     validatorMessage="Hostname length 4-16 characters of type letters/numbers.">
+                            <f:validateRegex pattern="^[a-zA-Z0-9]+$" />
+                            <f:validateLength minimum="4" maximum="16" />
+                        </p:inputText>
                         <p:outputLabel for="ipAddress" value="IP Address: " />
-                        <p:inputText id="ipAddress" value="#{raspberryController.raspberry.ipAddress}"/>
+                        <p:inputText id="ipAddress" value="#{raspberryController.raspberry.ipAddress}"
+                                     required="true" requiredMessage="Insert IP Address" placeholder="IP Address"
+                                     validatorMessage="IP Address length 4-16 characters of type numbers and '.'.">
+                            <f:validateLength minimum="4" maximum="16" />
+                        </p:inputText>
                         <p:outputLabel for="apiKey" value="API-KEY: " />
-                        <p:inputText id="apiKey" value="#{raspberryController.raspberry.apiKey}"/>
+                        <p:inputText id="apiKey" value="#{raspberryController.raspberry.apiKey}"
+                                     required="true" requiredMessage="Insert API-Key" placeholder="API KEY"
+                                     validatorMessage="API-KEY length 4-16 characters of type letters/numbers.">
+                            <f:validateLength minimum="4" maximum="16" />
+                        </p:inputText>
                     </h:panelGrid>
                     <p:separator />
                     <h:panelGrid columns="2">

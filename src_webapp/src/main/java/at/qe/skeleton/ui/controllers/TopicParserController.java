@@ -32,9 +32,16 @@ public class TopicParserController {
     public void upload() {
         if (file != null) {
             try {
-                parseAndSave();
-                FacesMessage message = new FacesMessage("Successful", file.getFileName() + " is uploaded.");
-                FacesContext.getCurrentInstance().addMessage(null, message);
+                String isItJson = file.getFileName().substring(file.getFileName().length()-4);
+                if(isItJson.equals("json")) {
+                    parseAndSave();
+                    FacesMessage message = new FacesMessage("Successfull", file.getFileName() + " is uploaded.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                }
+                else {
+                    FacesMessage message = new FacesMessage("Unsuccessful", file.getFileName() + " please use a json file.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
