@@ -126,21 +126,33 @@ public class Main {
                         "A DICE SHOULD BE ALWAYS NEW CALIBRATED AFTER YOU REMOVED THE BATTERY!\n" +
                         "DO YOU WANT TO CALIBRATE AND SET UP THE DICE? " +
                         "IF YOU PLAY WITH A NOT CALIBRATED DICE, " +
-                        "IT CAN HAPPEN THAT ITS NOT WORKING AS EXPECTED!?\n" +
+                        "IT CAN HAPPEN THAT IT IS NOT WORKING AS EXPECTED!\n" +
                         "write YES, if you want to calibrate, NO if you want to skip!");
                 BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
                 String shouldCalibrate = reader.readLine();
 
                 if(shouldCalibrate.equals("YES") || shouldCalibrate.equals("yes")) {
                     System.out.println("######TIMEFLIP-FACET-CONFIG######");
-                    System.out.println("ITS NECESSARY THAT YOUR DICE IS MARKED UP AS IN OUR GIVEN EXAMPLE JPEG " +
-                            "- WHERE DO YOU FIND THIS .../src_rasp/diceNumbering.jpeg, WE JUST OFFER 12 NUMBERS FOR" +
-                            " THE DICE!");
+                    System.out.println("YOU CAN MARK UP THE DICE AS IN OUR GIVEN EXAMPLE JPEG " +
+                            "- WHERE DO YOU FIND THIS .../src_rasp/diceNumbering.jpeg," +
+                            " OR YOU JUST MARK EACH SIDE WHICH IS ALREADY CALIBRATED, ELSE IT CAN BE HARD" +
+                            " TO TRACK WHICH SIDE YOU HAVE ALREADY CALIBRATED!");
                     System.out.println("IN THE FOLLOWING 12 REQUESTS - HIT ENTER TO SAVE AND PROCESS THE NEXT NUMBER!");
+                    List<Integer> calibratedFacets = new ArrayList<>();
                     for (int i = 1; i < 13; i++) {
+                        int currentFacet = getCurrentTimeflipFacet(device,timeflipService);
                         System.out.println("IF YOU ARE READY - ROLL THE DICE ON SIDE " + i + " and enter to proceed!");
                         shouldCalibrate = reader.readLine();
-                        System.out.println("current facet = " + getCurrentTimeflipFacet(device,timeflipService));
+                        System.out.println("current facet = " + currentFacet);
+                        if(calibratedFacets.contains(currentFacet)) {
+                            while (calibratedFacets.contains(currentFacet)) {
+                                System.out.println("THIS FACET SIDE HAS BEEN CALIBRATED ALREADY, PLEASE TURN IT ON A DIFFERENT SIDE!");
+                                currentFacet = getCurrentTimeflipFacet(device,timeflipService);
+                                shouldCalibrate = reader.readLine();
+                                System.out.println("current facet = " + currentFacet);
+                            }
+                        }
+                        calibratedFacets.add(currentFacet);
                         Thread.sleep(3);
                     }
                     System.out.println("YOU SUCCESSFULLY SET UP THE DICE!");
