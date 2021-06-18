@@ -22,13 +22,14 @@ import org.mockito.quality.Strictness;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 
 class ChatManagerControllerTest {
-    @Mock
+    @InjectMocks
     ChatManagerController chatManagerController;
     @Mock
     UserRepository userRepository;
@@ -39,8 +40,10 @@ class ChatManagerControllerTest {
 
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
-    void testOnLogin(){
+    void testOnLogin() {
+
         Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            chatManagerController.onLogin("player1");
             String username = new String();
             User user = new User();
             Map<String, List<Message>> chats = new ConcurrentHashMap<>();
@@ -51,10 +54,36 @@ class ChatManagerControllerTest {
             chatManagerController.onLogin(username);
             assertTrue(possibleRecipients == chats);
         });
+    }
 
+    @Test
+    void testGetPossibleRecipients() {
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            List<Message> msg = new ArrayList<>();
+            List<User> user2 = new ArrayList<>();
+            User user1 = new User();
+            Map<String, List<Message>> chats = new ConcurrentHashMap<>();
+            when(chats.get(user1.getUsername())).thenReturn(Collections.unmodifiableList(chats.get(user1.getUsername())));
 
+            chatManagerController.getPossibleRecipients();
+        });
+    }
+
+    @Test
+    void testDeliver() {
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            chatManagerController.deliver(new Message());
+        });
 
     }
 
+    @Test
+    void testGetChatContentRef() {
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
 
+            chatManagerController.getChatContentRef(new User());
+        });
+    }
 }
+
+

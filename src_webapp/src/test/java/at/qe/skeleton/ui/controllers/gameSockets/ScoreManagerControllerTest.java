@@ -57,9 +57,18 @@ class ScoreManagerControllerTest {
     ScoreManagerController scoreManagerController;
 
 
+
+    @Test
+    void testGetScore(){
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            scoreManagerController.getScores(new Game());
+            scoreManagerController.setupScores(new Game());
+        });
+    }
     @Test
     void addScoreToTeam() {
         Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            scoreManagerController.addScoreToTeam(new Game(), new User(), 6);
         TeamRepository teamRepository = new TeamRepository() {
             @Override
             public List<Team> findByGame(Integer game) {
@@ -219,6 +228,7 @@ class ScoreManagerControllerTest {
     @Test
     void setGameEnd() {
         Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            scoreManagerController.setGameEnd(new Game());
         Game game = new Game();
         Date end = Timestamp.valueOf(LocalDateTime.now());
         Game newgame = gameRepository.findByGameId(game.getGameId());

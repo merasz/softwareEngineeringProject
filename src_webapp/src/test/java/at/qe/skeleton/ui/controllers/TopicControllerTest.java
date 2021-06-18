@@ -1,6 +1,7 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.Game;
+import at.qe.skeleton.model.GameTopicCount;
 import at.qe.skeleton.model.Topic;
 import at.qe.skeleton.services.TopicService;
 import org.junit.jupiter.api.Assertions;
@@ -11,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.primefaces.PrimeFaces;
 
 import java.util.*;
 
@@ -38,6 +40,13 @@ class TopicControllerTest {
         topicControllerUnderTest.doCreateNewTopic();
     }
 
+    @Test
+    void testGetGameTopicCount(){
+        GameTopicCount gameTopicCount = new GameTopicCount();
+        topicControllerUnderTest.setGameTopicCount(gameTopicCount);
+        when(topicControllerUnderTest.getGameTopicCount()).thenReturn(gameTopicCount);
+    }
+
 
     @Test
     void testDoDeleteTopic() {
@@ -54,6 +63,13 @@ class TopicControllerTest {
 
         doThrow(IllegalArgumentException.class).when(mockTopicService).deleteTopic(new Topic("topicName"));
         topicControllerUnderTest.doDeleteTopic();
+        Controller controller = new Controller() {
+            @Override
+            protected void displayError(String summary, String detail) {
+                super.displayError(summary, detail);
+            }
+        };
+        controller.displayError("Topic not empty","message");
         });
     }
 
@@ -63,6 +79,14 @@ class TopicControllerTest {
         Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
         when(mockTopicService.saveTopic(new Topic("topicName"))).thenReturn(new Topic("topicName"));
         topicControllerUnderTest.doSaveTopic();
+            Controller controller = new Controller() {
+                @Override
+                protected void displayError(String summary, String detail) {
+                    super.displayError(summary, detail);
+                }
+            };controller.displayInfo("Topic saved", "");
+            PrimeFaces.current().executeScript("PF('topicCreationDialog').hide()");
+
         });
     }
     @MockitoSettings(strictness = Strictness.LENIENT)
@@ -75,6 +99,19 @@ class TopicControllerTest {
         verify(topicControllerUnderTest).saveTopic();
         });
     }
+
+    public void doEditTopic(){
+        assertTrue(topicControllerUnderTest.saveTopic());
+        Controller controller = new Controller() {
+                @Override
+                protected void displayInfo(String summary, String detail) {
+                    super.displayInfo(summary, detail);
+                }
+            };controller.displayInfo("Topic edited", "");
+
+        PrimeFaces.current().executeScript("PF('topicEditDialog').hide()");
+        }
+
     @Test
     void testGetTopics() {
         final Collection<Topic> expectedResult = Arrays.asList(new Topic("topicName"));
