@@ -137,3 +137,4 @@ public class TermsService {
         return termsRepository.findAll();
     }
 }
+//devi guardare test per if-else

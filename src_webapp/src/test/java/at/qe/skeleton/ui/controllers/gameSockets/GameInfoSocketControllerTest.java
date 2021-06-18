@@ -27,8 +27,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
-
 @ExtendWith(MockitoExtension.class)
 class GameInfoSocketControllerTest {
     @Mock
@@ -36,8 +34,6 @@ class GameInfoSocketControllerTest {
 
     @InjectMocks
     GameInfoSocketControllerTest gameInfoSocketControllerTest;
-
-
 
     @Test
     void setGameMessageToGame(){
@@ -56,13 +52,8 @@ class GameInfoSocketControllerTest {
             //gameInfoSocketController.getMessageMap();
             gameInfoSocketController.setGameMessageToGame(game, "hola");
             //gameInfoSocketCon
-
         });
-
     }
-
-
-
 
     @Test
     void testGetMessageMap() {
@@ -75,11 +66,12 @@ class GameInfoSocketControllerTest {
 
     @Test
     void testSetGameMessage() {
-        Game game = new Game();
-        GameInfoSocketController gameInfoSocketController = new GameInfoSocketController();
-        Map<Integer, String> msg  = new HashMap<>();
-        gameInfoSocketController.setMessageMap(msg);
-        assertTrue(gameInfoSocketController.getMessageMap() == msg);
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            GameInfoSocketController gameInfoSocketController = new GameInfoSocketController();
+            gameInfoSocketController.setGameMessageToGame(new Game(), "geo");
+            Map<Integer, String> msg = new HashMap<>();
+            gameInfoSocketController.setMessageMap(msg);
+            assertTrue(gameInfoSocketController.getMessageMap() == msg);
+        });
     }
-
 }

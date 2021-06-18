@@ -4,6 +4,7 @@ import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.Team;
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.demo.TeamPlayer;
+import at.qe.skeleton.ui.controllers.gameSockets.GameJoinController;
 import at.qe.skeleton.ui.controllers.gameSockets.GamePlaySocketController;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,11 +15,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.lang.reflect.Method;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -44,6 +50,8 @@ class GameStartServiceTest {
             final Game expectedResult = new Game();
             final Game result = gameStartServiceUnderTest.startGame(game, user);
             assertThat(result).isEqualTo(expectedResult);
+            GameJoinController gameJoinController = new GameJoinController();
+            assertThat(gameStartServiceUnderTest.getGameJoinController() == gameJoinController);
         });
     }
 
@@ -72,15 +80,19 @@ class GameStartServiceTest {
     @Test
     void testJoinTeam() {
         Assertions.assertThrows(java.lang.NoSuchMethodException.class, () -> {
-            final Team team = new Team();
-            final User user = new User();
-            final Game game = new Game();
             final Game expectedResult = new Game();
+            final Team team = new Team();
+
             Method method = Team.class.getDeclaredMethod("joinTeam", null);
             method.setAccessible(true);
             GameStartService gameStartService = new GameStartService();
             Object result = method.invoke(gameStartService, null);
             assertThat(result).isEqualTo(expectedResult);
+
+            Method method1 = GameStartService.class.getDeclaredMethod("addUserToTeam", Team.class);
+            method.setAccessible(true);
+            Object result1 = method.invoke(gameStartService, team);
+            assertThat(result1).isEqualTo(team);
         });
     }
 
@@ -123,6 +135,14 @@ class GameStartServiceTest {
             assertThat(result).isEqualTo(expectedResult);
             verify(mockGamePlaySocketController).putTeamPlayerMap(new Game(), new LinkedList<>(Arrays.asList(new TeamPlayer())));
             verify(mockGamePlaySocketController).initGame(new Game());
+
+            final Team team = new Team();
+            gameStartServiceUnderTest.setTeam(team);
+            final Game value = gameStartServiceUnderTest.enterGame();
+
+            String teamName = new String();
+            assertThat(gameStartServiceUnderTest.finishTeamAssign(teamName)).isEqualTo("Blakes");
+            when(gameStartServiceUnderTest.finishTeamAssign(teamName)).thenReturn(value);
         });
     }
 

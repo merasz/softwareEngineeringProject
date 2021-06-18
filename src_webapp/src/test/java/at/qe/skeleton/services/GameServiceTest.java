@@ -1,6 +1,7 @@
 package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.*;
+import at.qe.skeleton.model.demo.TeamPlayer;
 import at.qe.skeleton.repositories.GameRepository;
 import at.qe.skeleton.repositories.ScoreRepository;
 import at.qe.skeleton.repositories.TopicRepository;
@@ -15,6 +16,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.*;
 
+import static org.aspectj.bridge.MessageUtil.fail;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -54,10 +56,15 @@ class GameServiceTest {
 
     @Test
     void testDeleteGame() {
-        final Game game = new Game();
-        gameServiceUnderTest.deleteGame(game);
-        //TODO: catch block coverage
-        //doThrow(new DataIntegrityViolationException("")).when(mockGameRepository).delete(game);
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            final Game game = new Game();
+            gameServiceUnderTest.deleteGame(game);
+            try {
+                mockGameRepository.delete(game);
+            } catch (DataIntegrityViolationException e) {
+                mockGameRepository.delete(game);
+            }
+        });
     }
 
     @Test

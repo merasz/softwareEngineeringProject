@@ -3,11 +3,13 @@ package at.qe.skeleton.ui.controllers.gameSockets;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.model.demo.PlayerAvailability;
 import at.qe.skeleton.repositories.UserRepository;
+import at.qe.skeleton.services.GameStartService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -129,7 +131,16 @@ class GameJoinControllerTest {
     }
 
     @Test
-    void getPlayerAvailability() {
+    void getPlayerAvailabilities() {
+        Assertions.assertThrows(java.lang.NoSuchMethodException.class, () -> {
+            List<PlayerAvailability> playerAvailabilities = new ArrayList<>();
+            Game game = new Game();
+            Method method = GameStartService.class.getDeclaredMethod("getGamePlayerAvailabilities", Game.class);
+            method.setAccessible(true);
+            GameJoinController gameJoinController = new GameJoinController();
+            Object result = method.invoke(gameJoinController, game);
+            assertThat(result).isEqualTo(playerAvailabilities);
+        });
     }
 
     @Test
@@ -150,7 +161,10 @@ class GameJoinControllerTest {
 
     @Test
     void teamAvailable() {
+        final Game game = new Game();
+        final Team team = new Team();
     }
+
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void isInitialized() {
@@ -178,10 +192,10 @@ class GameJoinControllerTest {
             gameInitialized.put(game, true);
             gameInitialized2.put(game, false);
             assertFalse(gameInitialized == gameInitialized2);
+
             gameJoinController.setInitialized(game);
+            gameInitialized.put(game, true);
+            assertTrue(gameJoinController.isInitialized(game) == true);
         });
-
-
-
     }
 }

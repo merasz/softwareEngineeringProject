@@ -51,7 +51,11 @@ class ScoreServiceTest {
 
     @Test
     void testGetUsersWithScoreAGame() {
-        List<User> users = scoreServiceUnderTest.scoreRepository.getTopPlayersInAGame();
+        final User user = new User();
+        final List<User> users = Arrays.asList(user);
+        when(scoreServiceUnderTest.scoreRepository.getTopPlayersUsernames()).thenReturn(users);
+        when(scoreServiceUnderTest.scoreRepository.getTopPlayersScores()).thenReturn(Arrays.asList(0));
+        List<User> users1 = scoreServiceUnderTest.scoreRepository.getTopPlayersInAGame();
         List<Integer> scores = scoreServiceUnderTest.scoreRepository.getTopPlayersInAGameScore();
         Map<User, Integer> userIntegerMap = scoreServiceUnderTest.getUsersWithScores();
     }

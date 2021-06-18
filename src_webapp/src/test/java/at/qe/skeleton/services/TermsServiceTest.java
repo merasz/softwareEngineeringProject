@@ -49,7 +49,6 @@ public class TermsServiceTest {
 
     @Test
     public void testSaveTerm() {
-        //TODO: test throw
         final Term term = new Term();
         final Term result = termsServiceUnderTest.saveTerm(term);
         assertThat(result).isEqualTo(term);
