@@ -1,0 +1,312 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GameStartController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">at.qe.skeleton.ui.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: GameStartController (at.qe.skeleton.ui.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameStartController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    82,4%
+  </span>
+  <span class="absValue">
+    (14/17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    45,5%
+  </span>
+  <span class="absValue">
+    (35/77)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package at.qe.skeleton.ui.controllers;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import at.qe.skeleton.model.Game;
+<i class="no-highlight">4</i>&nbsp;import at.qe.skeleton.model.Team;
+<i class="no-highlight">5</i>&nbsp;import at.qe.skeleton.model.demo.PlayerAvailability;
+<i class="no-highlight">6</i>&nbsp;import at.qe.skeleton.services.GameStartService;
+<i class="no-highlight">7</i>&nbsp;import at.qe.skeleton.ui.beans.SessionInfoBean;
+<i class="no-highlight">8</i>&nbsp;import org.primefaces.event.SelectEvent;
+<i class="no-highlight">9</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i class="no-highlight">10</i>&nbsp;import org.springframework.context.annotation.Scope;
+<i class="no-highlight">11</i>&nbsp;import org.springframework.stereotype.Component;
+<i class="no-highlight">12</i>&nbsp;
+<i class="no-highlight">13</i>&nbsp;import java.io.IOException;
+<i class="no-highlight">14</i>&nbsp;import java.io.Serializable;
+<i class="no-highlight">15</i>&nbsp;import java.util.ArrayList;
+<i class="no-highlight">16</i>&nbsp;import java.util.List;
+<i class="no-highlight">17</i>&nbsp;import java.util.NoSuchElementException;
+<i class="no-highlight">18</i>&nbsp;
+<i class="no-highlight">19</i>&nbsp;/**
+<i class="no-highlight">20</i>&nbsp; * handles the GUI for the player selection phase (join.xhtml)
+<i class="no-highlight">21</i>&nbsp; * after starting a game and before entering the game room
+<i class="no-highlight">22</i>&nbsp; * team-leaders get to select their players (if not already set beforehand)
+<i class="no-highlight">23</i>&nbsp; */
+<i class="no-highlight">24</i>&nbsp;@Component
+<i class="no-highlight">25</i>&nbsp;@Scope(&quot;session&quot;)
+<b class="fc"><i class="no-highlight">26</i>&nbsp;public class GameStartController extends GameController implements Serializable {</b>
+<i class="no-highlight">27</i>&nbsp;
+<i class="no-highlight">28</i>&nbsp;    @Autowired
+<i class="no-highlight">29</i>&nbsp;    private GameStartService gameStartService;
+<i class="no-highlight">30</i>&nbsp;
+<i class="no-highlight">31</i>&nbsp;    @Autowired
+<i class="no-highlight">32</i>&nbsp;    private SessionInfoBean sessionInfoBean;
+<i class="no-highlight">33</i>&nbsp;
+<i class="no-highlight">34</i>&nbsp;    private PlayerAvailability player;
+<i class="no-highlight">35</i>&nbsp;    private String teamName;
+<b class="fc"><i class="no-highlight">36</i>&nbsp;    private boolean teamComplete = false;</b>
+<i class="no-highlight">37</i>&nbsp;
+<i class="no-highlight">38</i>&nbsp;    /**
+<i class="no-highlight">39</i>&nbsp;     * starts the game by the game creator
+<i class="no-highlight">40</i>&nbsp;     * @param game
+<i class="no-highlight">41</i>&nbsp;     * @return
+<i class="no-highlight">42</i>&nbsp;     */
+<i class="no-highlight">43</i>&nbsp;    public String startGame(Game game) {
+<b class="fc"><i class="no-highlight">44</i>&nbsp;        setUser();</b>
+<b class="fc"><i class="no-highlight">45</i>&nbsp;        teamComplete = false;</b>
+<b class="fc"><i class="no-highlight">46</i>&nbsp;        if (game.isActive()) {</b>
+<b class="nc"><i class="no-highlight">47</i>&nbsp;            displayError(&quot;Game already started&quot;, &quot;Please use JOIN GAME to join this game.&quot;);</b>
+<b class="fc"><i class="no-highlight">48</i>&nbsp;        } else if (getUserService().getUserByRaspberry(getUser().getRaspberry()).size() &lt; game.getCountPlayers()) {</b>
+<b class="nc"><i class="no-highlight">49</i>&nbsp;            displayError(&quot;Not enough players&quot;, &quot;You have not enough players in your friend list. &quot; +</b>
+<i class="no-highlight">50</i>&nbsp;                    &quot;Make sure everyone has assigned your Raspberry Pi in their profile.&quot;);
+<b class="nc"><i class="no-highlight">51</i>&nbsp;        } else if (isTeamFull(game)) {</b>
+<b class="nc"><i class="no-highlight">52</i>&nbsp;            displayError(&quot;All teams full&quot;, &quot;You cannot join this game because all teams are full and you are not assigned to any of them.&quot;);</b>
+<i class="no-highlight">53</i>&nbsp;        } else {
+<i class="no-highlight">54</i>&nbsp;            try {
+<b class="nc"><i class="no-highlight">55</i>&nbsp;                setGame(gameStartService.startGame(game, getUser()));</b>
+<b class="nc"><i class="no-highlight">56</i>&nbsp;                return &quot;/secured/game_room/join.xhtml?faces-redirect=true&quot;;</b>
+<b class="nc"><i class="no-highlight">57</i>&nbsp;            } catch (IllegalArgumentException e) {</b>
+<b class="nc"><i class="no-highlight">58</i>&nbsp;                displayError(&quot;All teams already have a team leader&quot;, e.getMessage());</b>
+<i class="no-highlight">59</i>&nbsp;            }
+<i class="no-highlight">60</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">61</i>&nbsp;        return &quot;&quot;;</b>
+<i class="no-highlight">62</i>&nbsp;    }
+<i class="no-highlight">63</i>&nbsp;
+<i class="no-highlight">64</i>&nbsp;    private boolean isTeamFull(Game game) {
+<b class="nc"><i class="no-highlight">65</i>&nbsp;        int countAssignedPlayers = game.getTeamList().stream().map(t -&gt; t.getTeamPlayers().size()).reduce(0, Integer::sum);</b>
+<b class="nc"><i class="no-highlight">66</i>&nbsp;        boolean userNotAssigned = game.getTeamList().stream().noneMatch(t -&gt; t.getTeamPlayers().contains(getUser()));</b>
+<b class="nc"><i class="no-highlight">67</i>&nbsp;        return countAssignedPlayers == game.getCountPlayers() &amp;&amp; userNotAssigned;</b>
+<i class="no-highlight">68</i>&nbsp;    }
+<i class="no-highlight">69</i>&nbsp;
+<i class="no-highlight">70</i>&nbsp;    /**
+<i class="no-highlight">71</i>&nbsp;     * let all other team representatives join an active game
+<i class="no-highlight">72</i>&nbsp;     * @return
+<i class="no-highlight">73</i>&nbsp;     */
+<i class="no-highlight">74</i>&nbsp;    public String joinGame() {
+<b class="fc"><i class="no-highlight">75</i>&nbsp;        setUser();</b>
+<i class="no-highlight">76</i>&nbsp;        try {
+<b class="fc"><i class="no-highlight">77</i>&nbsp;            setGame(gameStartService.getActiveGame(getUser()));</b>
+<b class="nc"><i class="no-highlight">78</i>&nbsp;        } catch (NullPointerException e) {</b>
+<b class="nc"><i class="no-highlight">79</i>&nbsp;            displayError(&quot;No active Games&quot;, &quot;Start a game in Game Creation first.&quot;);</b>
+<b class="nc"><i class="no-highlight">80</i>&nbsp;            return &quot;&quot;;</b>
+<b class="fc"><i class="no-highlight">81</i>&nbsp;        }</b>
+<i class="no-highlight">82</i>&nbsp;
+<i class="no-highlight">83</i>&nbsp;        // check for rejoin: if game was already entered before
+<i class="no-highlight">84</i>&nbsp;        boolean allTeamsEntered;
+<i class="no-highlight">85</i>&nbsp;        try {
+<b class="fc"><i class="no-highlight">86</i>&nbsp;            allTeamsEntered = gameStartService.getGameJoinController().allReadyToStart(getGame());</b>
+<b class="fc"><i class="no-highlight">87</i>&nbsp;        } catch (NullPointerException | NoSuchElementException e) {</b>
+<b class="fc"><i class="no-highlight">88</i>&nbsp;            allTeamsEntered = false;</b>
+<b class="nc"><i class="no-highlight">89</i>&nbsp;        }</b>
+<i class="no-highlight">90</i>&nbsp;
+<i class="no-highlight">91</i>&nbsp;        // redirect to appropriate page
+<b class="fc"><i class="no-highlight">92</i>&nbsp;        if (allTeamsEntered &amp;&amp; teamComplete) {</b>
+<b class="nc"><i class="no-highlight">93</i>&nbsp;            return &quot;/secured/game_room/gameRoom.xhtml?faces-redirect=true&quot;;</b>
+<i class="no-highlight">94</i>&nbsp;        } else {
+<b class="fc"><i class="no-highlight">95</i>&nbsp;            teamComplete = false;</b>
+<i class="no-highlight">96</i>&nbsp;            try {
+<b class="fc"><i class="no-highlight">97</i>&nbsp;                setGame(gameStartService.joinGame(getGame(), getUser()));</b>
+<b class="fc"><i class="no-highlight">98</i>&nbsp;                return &quot;/secured/game_room/join.xhtml?faces-redirect=true&quot;;</b>
+<b class="nc"><i class="no-highlight">99</i>&nbsp;            } catch (NoSuchElementException | NullPointerException e) {</b>
+<b class="nc"><i class="no-highlight">100</i>&nbsp;                displayError(&quot;No games&quot;, &quot;No active game found. Ask a game manager to create a new game.&quot;);</b>
+<b class="nc"><i class="no-highlight">101</i>&nbsp;            } catch (IllegalArgumentException e) {</b>
+<b class="nc"><i class="no-highlight">102</i>&nbsp;                displayError(&quot;All teams already full&quot;, e.getMessage());</b>
+<b class="nc"><i class="no-highlight">103</i>&nbsp;            }</b>
+<b class="nc"><i class="no-highlight">104</i>&nbsp;            return &quot;&quot;;</b>
+<i class="no-highlight">105</i>&nbsp;        }
+<i class="no-highlight">106</i>&nbsp;    }
+<i class="no-highlight">107</i>&nbsp;
+<i class="no-highlight">108</i>&nbsp;    /**
+<i class="no-highlight">109</i>&nbsp;     * get list of player availabilities (player free to select or already assigned to a team)
+<i class="no-highlight">110</i>&nbsp;     * @return List&lt;PlayerAvailability&gt;
+<i class="no-highlight">111</i>&nbsp;     */
+<i class="no-highlight">112</i>&nbsp;    public List&lt;PlayerAvailability&gt; getPlayerAvailability() {
+<b class="fc"><i class="no-highlight">113</i>&nbsp;        return gameStartService.getGameJoinController().getPlayerAvailability(getGame());</b>
+<i class="no-highlight">114</i>&nbsp;    }
+<i class="no-highlight">115</i>&nbsp;
+<i class="no-highlight">116</i>&nbsp;    /**
+<i class="no-highlight">117</i>&nbsp;     * socket-channel update, used to query if all teams ready to join
+<i class="no-highlight">118</i>&nbsp;     */
+<i class="no-highlight">119</i>&nbsp;    public void setAllTeamsReady() {
+<b class="fc"><i class="no-highlight">120</i>&nbsp;        gameStartService.getGameJoinController().updateJoinChannel(getGame());</b>
+<b class="nc"><i class="no-highlight">121</i>&nbsp;    }</b>
+<i class="no-highlight">122</i>&nbsp;
+<i class="no-highlight">123</i>&nbsp;    /**
+<i class="no-highlight">124</i>&nbsp;     * select a player in the GUI to add to current team
+<i class="no-highlight">125</i>&nbsp;     * @param event
+<i class="no-highlight">126</i>&nbsp;     */
+<i class="no-highlight">127</i>&nbsp;    public void selectPlayer(SelectEvent&lt;PlayerAvailability&gt; event) {
+<b class="nc"><i class="no-highlight">128</i>&nbsp;        this.player = event.getObject();</b>
+<b class="nc"><i class="no-highlight">129</i>&nbsp;        setGame(gameStartService.selectPlayer(player.getUser()));</b>
+<b class="nc"><i class="no-highlight">130</i>&nbsp;    }</b>
+<i class="no-highlight">131</i>&nbsp;
+<i class="no-highlight">132</i>&nbsp;    /**
+<i class="no-highlight">133</i>&nbsp;     * announce team ready to play, try to join if other teams ready too
+<i class="no-highlight">134</i>&nbsp;     * triggered by &quot;join game&quot; button
+<i class="no-highlight">135</i>&nbsp;     */
+<i class="no-highlight">136</i>&nbsp;    public void finishTeamAssign() {
+<b class="fc"><i class="no-highlight">137</i>&nbsp;        sessionInfoBean.setCurrentGame(getGame());</b>
+<i class="no-highlight">138</i>&nbsp;        try {
+<b class="fc"><i class="no-highlight">139</i>&nbsp;            setGame(gameStartService.finishTeamAssign(teamName));</b>
+<b class="fc"><i class="no-highlight">140</i>&nbsp;            teamComplete = true;</b>
+<b class="nc"><i class="no-highlight">141</i>&nbsp;        } catch (IOException e) {</b>
+<b class="nc"><i class="no-highlight">142</i>&nbsp;            displayError(&quot;Redirect error&quot;, e.getMessage());</b>
+<b class="nc"><i class="no-highlight">143</i>&nbsp;        } catch (IllegalArgumentException e) {</b>
+<b class="nc"><i class="no-highlight">144</i>&nbsp;            displayError(&quot;Not so fast&quot;, e.getMessage());</b>
+<b class="fc"><i class="no-highlight">145</i>&nbsp;        }</b>
+<b class="fc"><i class="no-highlight">146</i>&nbsp;    }</b>
+<i class="no-highlight">147</i>&nbsp;
+<i class="no-highlight">148</i>&nbsp;    /**
+<i class="no-highlight">149</i>&nbsp;     * enter game room if all teams ready to play
+<i class="no-highlight">150</i>&nbsp;     * triggered by socket update
+<i class="no-highlight">151</i>&nbsp;     */
+<i class="no-highlight">152</i>&nbsp;    public void enterGame() {
+<b class="fc"><i class="no-highlight">153</i>&nbsp;        if (teamComplete) {</b>
+<i class="no-highlight">154</i>&nbsp;            try {
+<b class="nc"><i class="no-highlight">155</i>&nbsp;                setGame(gameStartService.enterGame());</b>
+<b class="nc"><i class="no-highlight">156</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i class="no-highlight">157</i>&nbsp;                displayError(&quot;Redirect error&quot;, e.getMessage());</b>
+<b class="nc"><i class="no-highlight">158</i>&nbsp;            }</b>
+<i class="no-highlight">159</i>&nbsp;        }
+<b class="fc"><i class="no-highlight">160</i>&nbsp;    }</b>
+<i class="no-highlight">161</i>&nbsp;
+<i class="no-highlight">162</i>&nbsp;    /**
+<i class="no-highlight">163</i>&nbsp;     * reset all the player assignments
+<i class="no-highlight">164</i>&nbsp;     */
+<i class="no-highlight">165</i>&nbsp;    public void resetAssignments() {
+<b class="fc"><i class="no-highlight">166</i>&nbsp;        teamComplete = false;</b>
+<i class="no-highlight">167</i>&nbsp;
+<i class="no-highlight">168</i>&nbsp;        // reset teams
+<b class="fc"><i class="no-highlight">169</i>&nbsp;        for (Team t : getGame().getTeamList()) {</b>
+<b class="nc"><i class="no-highlight">170</i>&nbsp;            t.setTeamPlayers(new ArrayList&lt;&gt;());</b>
+<b class="nc"><i class="no-highlight">171</i>&nbsp;            gameStartService.getTeamService().saveTeam(t);</b>
+<b class="nc"><i class="no-highlight">172</i>&nbsp;        }</b>
+<i class="no-highlight">173</i>&nbsp;
+<b class="nc"><i class="no-highlight">174</i>&nbsp;        gameStartService.getGameJoinController().resetAssignments(getGame());</b>
+<b class="nc"><i class="no-highlight">175</i>&nbsp;    }</b>
+<i class="no-highlight">176</i>&nbsp;
+<i class="no-highlight">177</i>&nbsp;    //region getter &amp; setter
+<i class="no-highlight">178</i>&nbsp;    public String getTeamName() {
+<b class="nc"><i class="no-highlight">179</i>&nbsp;        this.teamName = gameStartService.getTeam().getTeamName();</b>
+<b class="nc"><i class="no-highlight">180</i>&nbsp;        return teamName == null ? &quot;&quot; : teamName;</b>
+<i class="no-highlight">181</i>&nbsp;    }
+<i class="no-highlight">182</i>&nbsp;
+<i class="no-highlight">183</i>&nbsp;    public void setTeamName(String name) {
+<b class="fc"><i class="no-highlight">184</i>&nbsp;        this.teamName = name;</b>
+<b class="fc"><i class="no-highlight">185</i>&nbsp;    }</b>
+<i class="no-highlight">186</i>&nbsp;
+<i class="no-highlight">187</i>&nbsp;    public String getTeamSizeString() {
+<b class="fc"><i class="no-highlight">188</i>&nbsp;        return gameStartService.getTeamSizeString();</b>
+<i class="no-highlight">189</i>&nbsp;    }
+<i class="no-highlight">190</i>&nbsp;
+<i class="no-highlight">191</i>&nbsp;    public PlayerAvailability getPlayer() {
+<b class="fc"><i class="no-highlight">192</i>&nbsp;        return player;</b>
+<i class="no-highlight">193</i>&nbsp;    }
+<i class="no-highlight">194</i>&nbsp;
+<i class="no-highlight">195</i>&nbsp;    public void setPlayer(PlayerAvailability player) {
+<b class="fc"><i class="no-highlight">196</i>&nbsp;        this.player = player;</b>
+<b class="fc"><i class="no-highlight">197</i>&nbsp;    }</b>
+<i class="no-highlight">198</i>&nbsp;
+<i class="no-highlight">199</i>&nbsp;    public boolean getTeamReady() {
+<b class="fc"><i class="no-highlight">200</i>&nbsp;        return gameStartService.teamReady();</b>
+<i class="no-highlight">201</i>&nbsp;    }
+<i class="no-highlight">202</i>&nbsp;
+<i class="no-highlight">203</i>&nbsp;    public boolean isTeamComplete() {
+<b class="fc"><i class="no-highlight">204</i>&nbsp;        return teamComplete;</b>
+<i class="no-highlight">205</i>&nbsp;    }
+<i class="no-highlight">206</i>&nbsp;    //endregion
+<i class="no-highlight">207</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-06-18 20:18</div>
+</div>
+</body>
+</html>

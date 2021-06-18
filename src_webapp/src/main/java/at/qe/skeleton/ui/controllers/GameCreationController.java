@@ -68,7 +68,8 @@ public class GameCreationController extends Controller implements Serializable {
                 IntStream.range(0,numberTeams).forEach(i -> game.getTeamList().add(teamService.saveTeam(new Team(game))));
                 game.setCountPlayers(numberTeams * game.getTeamSize());
                 game = gameService.saveGame(game);
-                displayInfo("Game created", "You can now create Teams and assign players or start the Game immediately.");
+                currentTopic = null;
+                displayInfo("Game created", "You can now create Teams and assign players or start the Game right away.");
                 PrimeFaces.current().executeScript("PF('gameCreationDialog').hide()");
             } catch (IllegalArgumentException e) {
                 displayError("Too few terms", e.getMessage());
@@ -76,6 +77,11 @@ public class GameCreationController extends Controller implements Serializable {
         } else {
             displayError("Score to win too small", "Score should be at least " + MIN_WIN_SCORE + " points.");
         }
+    }
+
+    public void doDeleteGame() {
+        gameService.deleteGame(game);
+        displayInfo("Game deleted", "");
     }
 
     //region getter & setter

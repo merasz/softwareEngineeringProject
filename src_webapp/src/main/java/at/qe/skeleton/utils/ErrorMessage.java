@@ -15,8 +15,6 @@ public class ErrorMessage implements Serializable {
     private static final long serialVersionUID = -7029377764414225966L;
     private String message = "";
 
-
-
     public String getMessage() {
         return message;
     }

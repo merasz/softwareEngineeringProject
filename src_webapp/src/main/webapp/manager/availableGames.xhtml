@@ -7,14 +7,12 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name ="content">
-
         <h:form id="gamesForm">
-            <p:growl id="message" showDetail="true" >
-                <p:autoUpdate />
-            </p:growl>
-
-            <p:commandButton style="width: 10%; margin-top: 9px;margin-right: 80px; float: right;" id="help"
-                             oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
+            <h:panelGroup layout="block" styleClass="helpTopRightOuter">
+                <p:commandButton styleClass="helpTopRight" id="help"
+                                 oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help">
+                </p:commandButton>
+            </h:panelGroup>
             <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
                 <h:panelGrid columns="1">
                     <h:outputText value="See all your past and current games here."/>
@@ -28,75 +26,64 @@
                 </h:panelGrid>
             </p:dialog>
 
-            <p:dataTable widgetVar="gameCreationTable" id="gameCreationTable" var="game" value="#{gameListController.games}" style="width: 80%; margin-top: 110px; float: right; margin-right: -200px">
+            <p:dataTable widgetVar="gameCreationTable" id="gameCreationTable" var="game" value="#{gameListController.games}"
+                         styleClass="fullScreenTable">
                 <f:facet name="header">
                     <p:panelGrid columns="1">
                         <h:outputText value="Games"/>
-                        <h:outputText value="See all your Games here
+                        <h:outputText value="See all your Games here:
                                                 &lt;br/&gt;
                                                 Edit or start Games that haven't already begun or create a new Game"
                                       style="font-weight: normal" escape="false"/>
                     </p:panelGrid>
                 </f:facet>
-                <p:column headerText="ID">
-                    <h:outputText value="#{game.gameId}"/>
-                </p:column>
-                <p:column headerText="Name">
+                <p:column headerText="Name" style="width: 20%;">
                     <h:outputText value="#{game.gameName}" />
                 </p:column>
-                <p:column headerText="Topic">
+                <p:column headerText="Topic" style="width: 20%;">
                     <h:outputText value="#{game.topic.topicName}" />
                 </p:column>
-                <p:column headerText="Teams">
+                <p:column headerText="Teams" style="width: 5%;text-align: center;">
                     <h:outputText value="#{game.teamList.size()}" disabled="true"/>
                 </p:column>
-                <p:column headerText="max Players">
+                <p:column headerText="max Players" style="width: 10%; text-align: center;">
                     <h:outputText value="#{game.countPlayers}" disabled="true"/>
                 </p:column>
-                <p:column headerText="Score to win">
+                <p:column headerText="Score to win" style="width: 10%; text-align: center;">
                     <h:outputText value="#{game.scoreToWin}" disabled="true"/>
                 </p:column>
-                <p:column headerText="Status">
+                <p:column headerText="Status" style="width: 15%;">
                     <h:outputText value="#{gameListController.getStatusString(game)}" disabled="true"/>
                 </p:column>
-                <p:column style="width:100px;text-align: center" headerText="Action">
-                    <p:commandButton title="Teams" icon="ui-icon-note" action="#{teamListController.doSetGame(gameCreationController.game)}"
+                <p:column style="width:150px;text-align: center" headerText="Operation">
+                    <p:commandButton title="start" icon="fa fa-fw fa-play" action="#{gameStartController.startGame(game)}"
+                                     disabled="#{game.active || game.endTime != null}">
+                    </p:commandButton>
+                    <p:commandButton title="Teams" icon="fa fa-fw fa-users" action="#{teamListController.doSetGame(gameCreationController.game)}"
                                      update=":teamsForm" oncomplete="$('#gamesForm').hide();$('#teamsForm').show();"
-                                     style="width:20px;height:20px" disabled="#{game.active || game.endTime != null}">
+                                     disabled="#{game.active || game.endTime != null}">
                         <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}" />
                     </p:commandButton>
-                    <h:outputText value="      " />
-                    <p:commandButton title="Start" icon="ui-icon-play" action="#{gameStartController.startGame(game)}"
-                                     style="width:20px;height:20px" disabled="#{game.active || game.endTime != null}">
+                    <p:commandButton title="delete" icon="ui-icon-trash" action="#{gameCreationController.doDeleteGame()}" update=":gamesForm:gameCreationTable">
+                        <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}"/>
+                        <p:confirm header="Confirm deletion"
+                                   message="Are you sure you want to delete this Game? You cannot undo this operation."
+                                   icon="ui-icon-alert" />
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
 
-            <p:dialog header="Edit Teams" id="teamsDialog" widgetVar="teamsDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-                <p:outputPanel id="userData" rendered="#{not empty gameController.game}">
-                    <div style="display: flex; justify-content: space-between; align-items: center">
-                        <div class="formHeading" style="font-weight: bold; font-size: 20px;">Game Name:</div>
-                        <div class="formText">#{gameController.game.gameName}</div>
-                    </div>
-                    <p:separator />
-                    <p:commandButton value="add Team" oncomplete="PF('autoAssignDialog').hide()" update=":gamesForm" style="display:block;margin: 0px auto"/>
-                    <h:panelGrid columns="3" style="margin-top:50px">
-                        <p:commandButton value="Save" action="#{userController.doSaveUser()}" oncomplete="PF('autoAssignDialog').hide()" update=":gamesForm:gameCreationTable"/>
-                        <p:commandButton value="Reload" action="#{userController.doReloadUser()}" update=":gamesForm:gameCreationTable"/>
-                        <p:commandButton value="Abort" onclick="PF('autoAssignDialog').hide()"/>
-                    </h:panelGrid>
-                </p:outputPanel>
-            </p:dialog>
+            <p:commandButton styleClass="buttonBelowRight" oncomplete="PF('gameCreationDialog').show()"
+                             icon="ui-icon-plusthick" action="#{gameCreationController.doCreateNewGame()}" value ="Create new Game"
+                             update="createGameForm">
+                <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}" />
+                <f:setPropertyActionListener value="#{game}" target="#{teamController.game}" />
+            </p:commandButton>
+
             <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="300">
                 <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                 <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
             </p:confirmDialog>
-
-            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" oncomplete="PF('gameCreationDialog').show()"
-                             icon="ui-icon-plusthick" action="#{gameCreationController.doCreateNewGame()}" value ="Create new Game" update="createGameForm">
-                <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}" />
-                <f:setPropertyActionListener value="#{game}" target="#{teamController.game}" />
-            </p:commandButton>
         </h:form>
 
         <h:form id="createGameForm">
@@ -114,7 +101,7 @@
 
                     <p:separator />
 
-                    <h:selectOneMenu id ="topic" value="#{gameCreationController.currentTopic}" converter="omnifaces.SelectItemsConverter">
+                    <h:selectOneMenu id ="topic" value="#{gameCreationController.currentTopic}" converter="omnifaces.SelectItemsConverter" style="margin:15px 0">
                         <f:selectItem itemLabel="Select topic" noSelectionOption="true"/>
                         <f:selectItems value="#{topicListController.topics}" var="topic" itemValue="#{topic}" itemLabel="#{topic.topicName}"/>
                         <f:ajax render="selected_item" />
@@ -158,28 +145,31 @@
         </h:form>
 
         <h:form id="teamsForm" style="display: none">
-            <p:dataTable widgetVar="teamsTable" id="teamsTable" var="team" value="#{teamListController.teamsByGame}" style="width: 83%; margin-top: 110px; float: right;">
+            <p:dataTable widgetVar="teamsTable" id="teamsTable" var="team" value="#{teamListController.teamsByGame}"
+                         styleClass="fullScreenTable">
                 <f:facet name="header">Teams - #{teamListController.game.gameName}</f:facet>
                 <p:column headerText="Team name">
                     <h:outputText value="#{team.teamName}"/>
                 </p:column>
                 <p:column style="width:100px;text-align: center" headerText="Player">
-                    <p:commandButton title="Player" icon="ui-icon-note" update=":playerForm:playerTable" oncomplete="$('#teamsForm').hide();$('#playerForm').show();"  style="width:20px;height:20px">
+                    <p:commandButton title="Player" icon="fa fa-fw fa-user" update=":playerForm:playerTable"
+                                     oncomplete="$('#teamsForm').hide();$('#playerForm').show();">
                         <f:setPropertyActionListener value="#{team}" target="#{playerListController.team}" />
                         <f:setPropertyActionListener value="#{team}" target="#{teamController.team}" />
                     </p:commandButton>
                 </p:column>
                 <p:column style="width:100px;text-align: center" headerText="Delete">
-                    <p:commandButton title="Delete" icon="ui-icon-trash" action="#{teamController.doClearTeam()}" update="teamsTable, :teamsForm:createTeamButton"  style="width:20px;height:20px">
+                    <p:commandButton title="Delete" icon="ui-icon-trash" action="#{teamController.doClearTeam()}"
+                                     update="teamsTable, :teamsForm:createTeamButton">
                         <f:setPropertyActionListener value="#{team}" target="#{teamController.team}" />
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
 
-            <p:commandButton id="createTeamButton" style="width: 25%; margin-top: 25px; float: right;" icon="ui-icon-plusthick"
+            <p:commandButton id="createTeamButton" style="width: 300px; margin-top: 20px; float: right;" icon="ui-icon-plusthick"
                              action="#{teamController.doSetTeam(teamListController.game)}" value ="Create new Team" update=":teamsForm:teamCreationDialog" >
             </p:commandButton>
-            <p:commandButton style="width: 200px; margin-top: 25px; float: left; margin-left: 290px" oncomplete="$('#teamsForm').hide();$('#gamesForm').show();" icon="ui-icon-arrowthick-1-w" value ="Back to Games">
+            <p:commandButton style="width: 200px; margin-top: 20px; float: left;" oncomplete="$('#teamsForm').hide();$('#gamesForm').show();" icon="ui-icon-arrowthick-1-w" value ="Back to Games">
             </p:commandButton>
 
             <p:dialog header="Create new Team" id="teamCreationDialog" widgetVar="teamCreationDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
@@ -192,7 +182,7 @@
                     <h:panelGrid columns ="2">
                         <p:commandButton value="Save" action="#{teamController.doSaveTeam}" update=":teamsForm:teamsTable">
                         </p:commandButton>
-                        <p:commandButton value="Abort" onclick="PF('Dialog').hide()"/>
+                        <p:commandButton value="Abort" onclick="PF('teamCreationDialog').hide()"/>
                     </h:panelGrid>
 
                 </p:outputPanel>
@@ -200,22 +190,27 @@
         </h:form>
 
         <h:form id="playerForm" style="display: none">
-            <p:dataTable widgetVar="playerTable" id="playerTable" var="player" value="#{playerListController.playerByTeam}" style="width: 83%; margin-top: 110px; float: right;">
+            <p:dataTable widgetVar="playerTable" id="playerTable" var="player" value="#{playerListController.playerByTeam}"
+                         styleClass="fullScreenTable">
                 <f:facet name="header">Players - #{teamController.team.teamName}</f:facet>
                 <p:column headerText="Player name">
                     <h:outputText value="#{player.username}"/>
                 </p:column>
                 <p:column style="width:100px;text-align: center" headerText="Delete">
-                    <p:commandButton title="Player" icon="ui-icon-trash" action="#{teamController.doDeletePlayer()}" update=":playerForm:playerTable"  style="width:20px;height:20px">
+                    <p:commandButton title="Player" icon="ui-icon-trash" action="#{teamController.doDeletePlayer()}"
+                                     update=":playerForm:playerTable">
                         <f:setPropertyActionListener value="#{player}" target="#{teamController.tmpPlayer}" />
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
-            <p:commandButton style="width: 25%; margin-top: 25px; float: right;" action="#{teamController.addPlayerDialog()}"
-                             icon="ui-icon-plusthick" value ="Add Player" update=":playerForm:playerAddDialog" >
+
+            <p:commandButton style="width: 300px; margin-top: 20px; float: right;" icon="ui-icon-plusthick"
+                             action="#{teamController.addPlayerDialog()}" value ="Add Player" update=":playerForm:playerAddDialog" >
                 <f:setPropertyActionListener value="#{playerListController.team}" target="#{teamController.team}" />
             </p:commandButton>
-
+            <p:commandButton style="width: 200px; margin-top: 20px; float: left;"
+                             oncomplete="$('#playerForm').hide();$('#teamsForm').show();" icon="ui-icon-arrowthick-1-w" value ="Back to Teams">
+            </p:commandButton>
 
             <p:dialog header="Add new Player" id="playerAddDialog" widgetVar="playerAddDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                 <div style="font-size: medium">
@@ -228,16 +223,12 @@
                         <f:selectItems value="#{teamController.getAssignablePlayers()}" var="player" itemLabel="#{player.username}" itemValue="#{player}" />
                     </p:selectOneListbox>
                     <h:panelGrid columns ="2">
-                        <p:commandButton value="Save" action="#{teamController.doSaveUserToTeam()}" oncomplete="PF('playerAddDialog').hide()" update=":playerForm:playerTable"/>
+                        <p:commandButton value="Save" action="#{teamController.doSaveUserToTeam()}" oncomplete="PF('playerAddDialog').hide()"
+                                         update=":playerForm:playerTable"/>
                         <p:commandButton value="Abort" onclick="PF('playerAddDialog').hide();$('#playerForm').show();"/>
                     </h:panelGrid>
                 </p:outputPanel>
             </p:dialog>
-
-            <p:commandButton style="width: 200px; margin-top: 25px; float: left; margin-left: 290px" oncomplete="$('#playerForm').hide();$('#teamsForm').show();" icon="ui-icon-arrowthick-1-w" value ="Back to Teams">
-            </p:commandButton>
-
-
         </h:form>
 
     </ui:define>

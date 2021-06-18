@@ -31,8 +31,8 @@ public class GameJoinController {
     @Autowired
     private UserRepository userRepository;
 
-    private List<String> sendTo = new CopyOnWriteArrayList<>();
-    private List<PlayerAvailability> playerAvailability = new CopyOnWriteArrayList<>();
+    private Map<Game, List<String>> sendTo = new ConcurrentHashMap<>();
+    private Map<Game, List<PlayerAvailability>> playerAvailabilities = new ConcurrentHashMap<>();
     private Map<Game, Boolean> allTeamsReady = new ConcurrentHashMap<>();
     private Map<Game, Set<Team>> teamTaken = new ConcurrentHashMap<>();
     private Map<Game, Set<Team>> teamAccepted = new ConcurrentHashMap<>();
@@ -43,47 +43,48 @@ public class GameJoinController {
      * @param game
      */
     public void onJoin(Game game) {
-        List<User> playerCircle = userRepository.findAllByRaspberry(game.getRaspberry());
-        sendTo.addAll(playerCircle.stream().map(User::getUsername).collect(Collectors.toList()));
-        teamAccepted.put(game, ConcurrentHashMap.newKeySet());
+        List<User> playerCircle = userRepository.findAllByRaspberryAndRaspberryNotNull(game.getRaspberry());
 
-        gameInitialized.put(game, false);
-
-        List<User> assignedPlayers = game.getTeamList().stream()
-                .flatMap(t -> t.getTeamPlayers().stream()).collect(Collectors.toList());
-
-        for (User u : playerCircle) {
-            PlayerAvailability pA = new PlayerAvailability(u, game);
-            if (assignedPlayers.contains(u)) {
-                pA.setAvailable(false);
-            }
-            playerAvailability.add(pA);
+        // create list of players with their availabilities for each player circle
+        if (!playerAvailabilities.containsKey(game)) {
+            List<PlayerAvailability> playerAvailability = new CopyOnWriteArrayList<>();
+            playerCircle.forEach(u -> playerAvailability.add(new PlayerAvailability(u, game)));
+            playerAvailabilities.put(game, playerAvailability);
         }
 
-        this.webSocketManager.getJoinChannel().send("teamJoin", sendTo);
+        // set availability for users already assigned to a team to false
+        List<User> assignedPlayers = game.getTeamList().stream()
+                .flatMap(t -> t.getTeamPlayers().stream()).collect(Collectors.toList());
+        playerAvailabilities.get(game).stream().filter(pa -> assignedPlayers.contains(pa.getUser()))
+                .forEach(pa -> pa.setAvailable(false));
+
+        // set-up other variables
+        teamAccepted.put(game, ConcurrentHashMap.newKeySet());
+        gameInitialized.put(game, false);
+
+        // register for websocket messages
+        sendTo.put(game, playerCircle.stream().map(User::getUsername).collect(Collectors.toList()));
+        updateJoinChannel(game);
     }
 
     /**
      * update when team leaders assign players
-     * @param user
-     * @param game
+     * @param user selected user
      */
     public void onSelect(User user, Game game) {
-        //updateGames(game);
-        playerAvailability.stream()
+        playerAvailabilities.get(game).stream()
                 .filter(pa -> pa.getUsername().equals(user.getUsername()) && pa.getGame().equals(game))
                 .forEach(pa -> pa.setAvailable(false));
-        this.webSocketManager.getJoinChannel().send("teamJoin", sendTo);
+        updateJoinChannel(game);
     }
 
-    public void updateJoinChannel() {
-        this.webSocketManager.getJoinChannel().send("teamJoin", sendTo);
+    public void updateJoinChannel(Game game) {
+        this.webSocketManager.getJoinChannel().send("teamJoin", sendTo.get(game));
     }
 
     /**
      * claim a team, when entering player select phase
-     * @param game
-     * @param team
+     * @param team team fetched by joined user
      */
     public void takeTeam(Game game, Team team) {
         teamTaken.computeIfAbsent(game, k -> ConcurrentHashMap.newKeySet());
@@ -92,8 +93,7 @@ public class GameJoinController {
 
     /**
      * gets list of player availabilities (player free to select or already assigned to a team)
-     * @param game
-     * @return
+     * @return list of PlayerAvailability
      */
     public List<PlayerAvailability> getPlayerAvailability(Game game) {
         return Collections.unmodifiableList(getGamePlayerAvailabilities(game));
@@ -102,8 +102,7 @@ public class GameJoinController {
     /**
      * updates set of Teams that have already been claimed
      * returns true if all teams have been claimed and all teams are ready to play
-     * @param game
-     * @param user
+     * @param user selecting player
      * @return boolean
      */
     public boolean updateReadyToStart(Game game, User user) {
@@ -115,8 +114,7 @@ public class GameJoinController {
     /**
      * returns true if all teams have been claimed and all teams are ready to play
      * teams are ready if all open team positions are assigned to players
-     * @param game
-     * @return
+     * @return boolean
      */
     public boolean allReadyToStart(Game game) {
         return this.allTeamsReady.get(game)
@@ -126,27 +124,34 @@ public class GameJoinController {
     /**
      * updates if all teams are ready to play
      * teams are ready if all open team positions are assigned to players
-     * @param game
      */
     public void updateTeamsReady(Game game) {
-        this.allTeamsReady.put(game,
-                getGamePlayerAvailabilities(game).stream().filter(pa -> !pa.isAvailable()).count() == game.getCountPlayers());
+        boolean allPlayersAssigned = getGamePlayerAvailabilities(game).stream()
+                .filter(pa -> !pa.isAvailable()).count() == game.getCountPlayers();
+        this.allTeamsReady.put(game, allPlayersAssigned);
+    }
+
+    /**
+     * reset all teams and player assignments
+     */
+    public void resetAssignments(Game game) {
+        getGamePlayerAvailabilities(game).forEach(pa -> pa.setAvailable(true));
+        allTeamsReady.put(game, false);
+        teamAccepted.put(game, ConcurrentHashMap.newKeySet());
+        updateJoinChannel(game);
     }
 
     /**
      * gets list of player availabilities by game (player free to select or already assigned to a team)
-     * @param game
      * @return List<PlayerAvailability>
      */
     private List<PlayerAvailability> getGamePlayerAvailabilities(Game game) {
-        return playerAvailability.stream().filter(pa -> pa.getGame().equals(game)).collect(Collectors.toList());
+        return playerAvailabilities.get(game).stream().filter(pa -> pa.getGame().equals(game)).collect(Collectors.toList());
     }
 
     /**
      * returns true if given team is available
      * (when set of taken teams does not contain given team)
-     * @param game
-     * @param team
      * @return boolean
      */
     public boolean teamAvailable(Game game, Team team) {
@@ -157,8 +162,7 @@ public class GameJoinController {
     /**
      * returns true if game is initialized
      * (when all teams are ready to join and game has been initialized in GameStartService)
-     * @param game
-     * @return
+     * @return boolean
      */
     public boolean isInitialized(Game game) {
         return gameInitialized.get(game);
@@ -166,10 +170,8 @@ public class GameJoinController {
 
     /**
      * set to true if game has been initialized in GameStartService
-     * @param game
      */
     public void setInitialized(Game game) {
         gameInitialized.put(game, true);
     }
-
 }

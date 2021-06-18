@@ -1,0 +1,247 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > WebSocketManager</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">at.qe.skeleton.ui.websockets</a>
+</div>
+
+<h1>Coverage Summary for Class: WebSocketManager (at.qe.skeleton.ui.websockets)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">WebSocketManager</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/9)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">WebSocketManager$MockitoMock$1439818741</td>
+  </tr>
+  <tr>
+    <td class="name">WebSocketManager$MockitoMock$1439818741$auxiliary$15R7wiCx</td>
+  </tr>
+  <tr>
+    <td class="name">WebSocketManager$MockitoMock$1439818741$auxiliary$41PnSCFI</td>
+  </tr>
+  <tr>
+    <td class="name">WebSocketManager$MockitoMock$1439818741$auxiliary$5VKaP6WB</td>
+  </tr>
+  <tr>
+    <td class="name">WebSocketManager$MockitoMock$1439818741$auxiliary$78z4MPcI</td>
+  </tr>
+  <tr>
+    <td class="name">WebSocketManager$MockitoMock$1439818741$auxiliary$7BZnrTq6</td>
+  </tr>
+  <tr>
+    <td class="name">WebSocketManager$MockitoMock$1439818741$auxiliary$ap87E9zI</td>
+  </tr>
+  <tr>
+    <td class="name">WebSocketManager$MockitoMock$1439818741$auxiliary$DHf4cPSF</td>
+  </tr>
+  <tr>
+    <td class="name">WebSocketManager$MockitoMock$1439818741$auxiliary$PWa7zDzY</td>
+  </tr>
+  <tr>
+    <td class="name">WebSocketManager$MockitoMock$1439818741$auxiliary$SVPWZEFA</td>
+  </tr>
+  <tr>
+    <td class="name">WebSocketManager$MockitoMock$1439818741$auxiliary$vzthjwOn</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/9)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package at.qe.skeleton.ui.websockets;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import java.io.Serializable;
+<i class="no-highlight">4</i>&nbsp;
+<i class="no-highlight">5</i>&nbsp;import javax.enterprise.context.ApplicationScoped;
+<i class="no-highlight">6</i>&nbsp;import javax.enterprise.context.SessionScoped;
+<i class="no-highlight">7</i>&nbsp;import javax.inject.Inject;
+<i class="no-highlight">8</i>&nbsp;import javax.inject.Named;
+<i class="no-highlight">9</i>&nbsp;
+<i class="no-highlight">10</i>&nbsp;import org.omnifaces.cdi.Push;
+<i class="no-highlight">11</i>&nbsp;import org.omnifaces.cdi.PushContext;
+<i class="no-highlight">12</i>&nbsp;
+<i class="no-highlight">13</i>&nbsp;/**
+<i class="no-highlight">14</i>&nbsp; * Due to technical restrictions (see [1] and [2]), spring cannot initialize the
+<i class="no-highlight">15</i>&nbsp; * pushContexts required for websockets (with simpler words: autowiring does not
+<i class="no-highlight">16</i>&nbsp; * work). Only a CDI-implementation (in our case &quot;Weld&quot; by jBoss) is capable of
+<i class="no-highlight">17</i>&nbsp; * doing that. Hence this class is used as a &quot;container&quot; for the required
+<i class="no-highlight">18</i>&nbsp; * pushContexts which is fully managed by CDI and excluded from the spring
+<i class="no-highlight">19</i>&nbsp; * DI-capabilities (autowiring, etc...).
+<i class="no-highlight">20</i>&nbsp; *
+<i class="no-highlight">21</i>&nbsp; * Doing this way, the webSocketManager&#39;s fields, i.e. the various pushContexts,
+<i class="no-highlight">22</i>&nbsp; * can be initialized properly and accessed over this class within a
+<i class="no-highlight">23</i>&nbsp; * spring-managed bean. DO NOT mix spring-annotations with CDI annotations AND
+<i class="no-highlight">24</i>&nbsp; * only use this manager for managing push-contexts!
+<i class="no-highlight">25</i>&nbsp; *
+<i class="no-highlight">26</i>&nbsp; * If you require additional pushContexts, just append them and include a proper
+<i class="no-highlight">27</i>&nbsp; * getter for it. Please note that if you don&#39;t specify any channel-name, the
+<i class="no-highlight">28</i>&nbsp; * name of the variable will be used instead.
+<i class="no-highlight">29</i>&nbsp; *
+<i class="no-highlight">30</i>&nbsp; *
+<i class="no-highlight">31</i>&nbsp; * This class is part of the skeleton project provided for students of the
+<i class="no-highlight">32</i>&nbsp; * courses &quot;Software Architecture&quot; and &quot;Software Engineering&quot; offered by the
+<i class="no-highlight">33</i>&nbsp; * University of Innsbruck.
+<i class="no-highlight">34</i>&nbsp; *
+<i class="no-highlight">35</i>&nbsp; *
+<i class="no-highlight">36</i>&nbsp; * [1] https://github.com/joinfaces/joinfaces/issues/690#issuecomment-654059926
+<i class="no-highlight">37</i>&nbsp; * [2]
+<i class="no-highlight">38</i>&nbsp; * https://github.com/spring-projects/spring-framework/issues/22243#issuecomment-460228188
+<i class="no-highlight">39</i>&nbsp; */
+<i class="no-highlight">40</i>&nbsp;@Named
+<i class="no-highlight">41</i>&nbsp;@SessionScoped
+<b class="fc"><i class="no-highlight">42</i>&nbsp;public class WebSocketManager implements Serializable {</b>
+<i class="no-highlight">43</i>&nbsp;
+<i class="no-highlight">44</i>&nbsp;    // add other channels here + getter for them
+<i class="no-highlight">45</i>&nbsp;    @Inject
+<i class="no-highlight">46</i>&nbsp;    @Push(channel = &quot;userRegistrationChannel&quot;)
+<i class="no-highlight">47</i>&nbsp;    private PushContext userRegistrationChannel;
+<i class="no-highlight">48</i>&nbsp;    @Inject
+<i class="no-highlight">49</i>&nbsp;    @Push(channel = &quot;messageChannel&quot;)
+<i class="no-highlight">50</i>&nbsp;    private PushContext messageChannel;
+<i class="no-highlight">51</i>&nbsp;    @Inject
+<i class="no-highlight">52</i>&nbsp;    @Push(channel = &quot;joinChannel&quot;)
+<i class="no-highlight">53</i>&nbsp;    private PushContext joinChannel;
+<i class="no-highlight">54</i>&nbsp;    @Inject
+<i class="no-highlight">55</i>&nbsp;    @Push(channel = &quot;scoreChannel&quot;)
+<i class="no-highlight">56</i>&nbsp;    private PushContext scoreChannel;
+<i class="no-highlight">57</i>&nbsp;    @Inject
+<i class="no-highlight">58</i>&nbsp;    @Push(channel = &quot;timeChannel&quot;)
+<i class="no-highlight">59</i>&nbsp;    private PushContext timeChannel;
+<i class="no-highlight">60</i>&nbsp;    @Inject
+<i class="no-highlight">61</i>&nbsp;    @Push(channel = &quot;termChannel&quot;)
+<i class="no-highlight">62</i>&nbsp;    private PushContext termChannel;
+<i class="no-highlight">63</i>&nbsp;    @Inject
+<i class="no-highlight">64</i>&nbsp;    @Push(channel = &quot;gameChannel&quot;)
+<i class="no-highlight">65</i>&nbsp;    private PushContext gameChannel;
+<i class="no-highlight">66</i>&nbsp;    @Inject
+<i class="no-highlight">67</i>&nbsp;    @Push(channel = &quot;infoChannel&quot;)
+<i class="no-highlight">68</i>&nbsp;    private PushContext infoChannel;
+<i class="no-highlight">69</i>&nbsp;
+<i class="no-highlight">70</i>&nbsp;
+<i class="no-highlight">71</i>&nbsp;    public PushContext getUserRegistrationChannel() {
+<b class="fc"><i class="no-highlight">72</i>&nbsp;        return userRegistrationChannel;</b>
+<i class="no-highlight">73</i>&nbsp;    }
+<i class="no-highlight">74</i>&nbsp;
+<i class="no-highlight">75</i>&nbsp;    public PushContext getMessageChannel() {
+<b class="fc"><i class="no-highlight">76</i>&nbsp;        return messageChannel;</b>
+<i class="no-highlight">77</i>&nbsp;    }
+<i class="no-highlight">78</i>&nbsp;
+<i class="no-highlight">79</i>&nbsp;    public PushContext getJoinChannel() {
+<b class="fc"><i class="no-highlight">80</i>&nbsp;        return joinChannel;</b>
+<i class="no-highlight">81</i>&nbsp;    }
+<i class="no-highlight">82</i>&nbsp;
+<i class="no-highlight">83</i>&nbsp;    public PushContext getScoreChannel() {
+<b class="fc"><i class="no-highlight">84</i>&nbsp;        return scoreChannel;</b>
+<i class="no-highlight">85</i>&nbsp;    }
+<i class="no-highlight">86</i>&nbsp;
+<i class="no-highlight">87</i>&nbsp;    public PushContext getTimeChannel() {
+<b class="fc"><i class="no-highlight">88</i>&nbsp;        return timeChannel;</b>
+<i class="no-highlight">89</i>&nbsp;    }
+<i class="no-highlight">90</i>&nbsp;
+<i class="no-highlight">91</i>&nbsp;    public PushContext getTermChannel() {
+<b class="fc"><i class="no-highlight">92</i>&nbsp;        return termChannel;</b>
+<i class="no-highlight">93</i>&nbsp;    }
+<i class="no-highlight">94</i>&nbsp;
+<i class="no-highlight">95</i>&nbsp;    public PushContext getGameChannel() {
+<b class="fc"><i class="no-highlight">96</i>&nbsp;        return gameChannel;</b>
+<i class="no-highlight">97</i>&nbsp;    }
+<i class="no-highlight">98</i>&nbsp;
+<i class="no-highlight">99</i>&nbsp;    public PushContext getInfoChannel() {
+<b class="fc"><i class="no-highlight">100</i>&nbsp;        return infoChannel;</b>
+<i class="no-highlight">101</i>&nbsp;    }
+<i class="no-highlight">102</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-06-18 20:18</div>
+</div>
+</body>
+</html>

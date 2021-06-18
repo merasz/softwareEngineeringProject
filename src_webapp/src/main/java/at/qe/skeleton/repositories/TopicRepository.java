@@ -21,7 +21,7 @@ public interface TopicRepository extends AbstractRepository<Topic, String> {
      * @param topicName
      * @return
      */
-    List<Topic> findByTopicNameContaining(String topicName);
+    List<Topic> findByTopicName(String topicName);
 
     /**
      * Returns all Topics in asc ordering.

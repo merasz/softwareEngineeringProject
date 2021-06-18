@@ -75,5 +75,5 @@ public interface UserRepository extends AbstractRepository<User, String> {
      * @param raspberry
      * @return List of users
      */
-    List<User> findAllByRaspberry(Raspberry raspberry);
+    List<User> findAllByRaspberryAndRaspberryNotNull(Raspberry raspberry);
 }

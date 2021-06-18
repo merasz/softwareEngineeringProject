@@ -1,0 +1,270 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > RaspberryController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">at.qe.skeleton.ui.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: RaspberryController (at.qe.skeleton.ui.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">RaspberryController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    87,5%
+  </span>
+  <span class="absValue">
+    (14/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    46,2%
+  </span>
+  <span class="absValue">
+    (24/52)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package at.qe.skeleton.ui.controllers;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import at.qe.skeleton.model.Raspberry;
+<i class="no-highlight">4</i>&nbsp;import at.qe.skeleton.services.RaspberryService;
+<i class="no-highlight">5</i>&nbsp;import org.primefaces.PrimeFaces;
+<i class="no-highlight">6</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i class="no-highlight">7</i>&nbsp;import org.springframework.context.annotation.Scope;
+<i class="no-highlight">8</i>&nbsp;import org.springframework.stereotype.Component;
+<i class="no-highlight">9</i>&nbsp;
+<i class="no-highlight">10</i>&nbsp;import java.io.Serializable;
+<i class="no-highlight">11</i>&nbsp;
+<i class="no-highlight">12</i>&nbsp;@Component
+<i class="no-highlight">13</i>&nbsp;@Scope(&quot;view&quot;)
+<b class="fc"><i class="no-highlight">14</i>&nbsp;public class RaspberryController extends Controller implements Serializable {</b>
+<i class="no-highlight">15</i>&nbsp;
+<i class="no-highlight">16</i>&nbsp;    @Autowired
+<i class="no-highlight">17</i>&nbsp;    private RaspberryService raspberryService;
+<i class="no-highlight">18</i>&nbsp;
+<i class="no-highlight">19</i>&nbsp;    @Autowired
+<i class="no-highlight">20</i>&nbsp;    private UserDetailController userDetailController;
+<i class="no-highlight">21</i>&nbsp;
+<i class="no-highlight">22</i>&nbsp;    @Autowired
+<i class="no-highlight">23</i>&nbsp;    private UserScoresController userScoresController;
+<i class="no-highlight">24</i>&nbsp;
+<i class="no-highlight">25</i>&nbsp;    /**
+<i class="no-highlight">26</i>&nbsp;     * Attribute to cache the currently displayed raspberry
+<i class="no-highlight">27</i>&nbsp;     */
+<i class="no-highlight">28</i>&nbsp;    private Raspberry raspberry;
+<i class="no-highlight">29</i>&nbsp;    private String ipAddress;
+<i class="no-highlight">30</i>&nbsp;    private String action;
+<i class="no-highlight">31</i>&nbsp;
+<i class="no-highlight">32</i>&nbsp;    /**
+<i class="no-highlight">33</i>&nbsp;     * Sets the currently displayed raspberry and reloads it form db.
+<i class="no-highlight">34</i>&nbsp;     *
+<i class="no-highlight">35</i>&nbsp;     * @param raspberry
+<i class="no-highlight">36</i>&nbsp;     */
+<i class="no-highlight">37</i>&nbsp;    public void setRaspberry(Raspberry raspberry) {
+<b class="fc"><i class="no-highlight">38</i>&nbsp;        this.raspberry = raspberry;</b>
+<b class="fc"><i class="no-highlight">39</i>&nbsp;    }</b>
+<i class="no-highlight">40</i>&nbsp;
+<i class="no-highlight">41</i>&nbsp;    /**
+<i class="no-highlight">42</i>&nbsp;     * Returns the currently displayed raspberry.
+<i class="no-highlight">43</i>&nbsp;     *
+<i class="no-highlight">44</i>&nbsp;     * @return Raspberry
+<i class="no-highlight">45</i>&nbsp;     */
+<b class="fc"><i class="no-highlight">46</i>&nbsp;    public Raspberry getRaspberry() {return raspberry;}</b>
+<i class="no-highlight">47</i>&nbsp;
+<i class="no-highlight">48</i>&nbsp;    /**
+<i class="no-highlight">49</i>&nbsp;     * Action to force a reload of the currently displayed raspberry.
+<i class="no-highlight">50</i>&nbsp;     */
+<i class="no-highlight">51</i>&nbsp;    public void doReloadRaspberry() {
+<b class="fc"><i class="no-highlight">52</i>&nbsp;        raspberry = raspberryService.loadRaspberryByIp(raspberry.getIpAddress());</b>
+<b class="nc"><i class="no-highlight">53</i>&nbsp;    }</b>
+<i class="no-highlight">54</i>&nbsp;
+<i class="no-highlight">55</i>&nbsp;    /**
+<i class="no-highlight">56</i>&nbsp;     * Action to save the current raspberry
+<i class="no-highlight">57</i>&nbsp;     *
+<i class="no-highlight">58</i>&nbsp;     */
+<i class="no-highlight">59</i>&nbsp;    public void doSaveRaspberry() {
+<b class="fc"><i class="no-highlight">60</i>&nbsp;        raspberry = raspberryService.saveRaspberry(raspberry);</b>
+<b class="fc"><i class="no-highlight">61</i>&nbsp;    }</b>
+<i class="no-highlight">62</i>&nbsp;
+<i class="no-highlight">63</i>&nbsp;    /**
+<i class="no-highlight">64</i>&nbsp;     * Action to delete the currently displayed raspberry.
+<i class="no-highlight">65</i>&nbsp;     */
+<i class="no-highlight">66</i>&nbsp;    public void doDeleteRaspberry() {
+<i class="no-highlight">67</i>&nbsp;        try {
+<b class="fc"><i class="no-highlight">68</i>&nbsp;            this.raspberryService.deleteRaspberry(raspberry);</b>
+<b class="fc"><i class="no-highlight">69</i>&nbsp;            raspberry = null;</b>
+<b class="fc"><i class="no-highlight">70</i>&nbsp;            displayInfo(&quot;Raspberry deleted&quot;, &quot;Raspberry successfully deleted.&quot;);</b>
+<b class="nc"><i class="no-highlight">71</i>&nbsp;        } catch (IllegalArgumentException e){</b>
+<b class="nc"><i class="no-highlight">72</i>&nbsp;            displayError(&quot;Error&quot;, e.getMessage());</b>
+<b class="fc"><i class="no-highlight">73</i>&nbsp;        } catch (Exception e) {</b>
+<b class="fc"><i class="no-highlight">74</i>&nbsp;            displayError(&quot;Error&quot;, &quot;Raspberry could not be deleted.&quot;);</b>
+<b class="nc"><i class="no-highlight">75</i>&nbsp;        }</b>
+<b class="nc"><i class="no-highlight">76</i>&nbsp;    }</b>
+<i class="no-highlight">77</i>&nbsp;
+<i class="no-highlight">78</i>&nbsp;    /**
+<i class="no-highlight">79</i>&nbsp;     * see if user is already authorized to perform an operation on selected raspberry
+<i class="no-highlight">80</i>&nbsp;     * @param isAdmin true if current user has role &#39;ADMIN&#39;
+<i class="no-highlight">81</i>&nbsp;     */
+<i class="no-highlight">82</i>&nbsp;    public void accessRaspberry(boolean isAdmin) {
+<b class="nc"><i class="no-highlight">83</i>&nbsp;        if (isAdmin) {</b>
+<b class="nc"><i class="no-highlight">84</i>&nbsp;            doPerformAction();</b>
+<i class="no-highlight">85</i>&nbsp;        } else {
+<b class="nc"><i class="no-highlight">86</i>&nbsp;            PrimeFaces.current().executeScript(&quot;PF(&#39;authorizeDialog&#39;).show()&quot;);</b>
+<i class="no-highlight">87</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">88</i>&nbsp;    }</b>
+<i class="no-highlight">89</i>&nbsp;
+<i class="no-highlight">90</i>&nbsp;    /**
+<i class="no-highlight">91</i>&nbsp;     * check ip address entered by user to check authorization to perform an operation on selected raspberry
+<i class="no-highlight">92</i>&nbsp;     */
+<i class="no-highlight">93</i>&nbsp;    public void authorize() {
+<b class="nc"><i class="no-highlight">94</i>&nbsp;        if (raspberry.getIpAddress().equals(ipAddress)) {</b>
+<b class="nc"><i class="no-highlight">95</i>&nbsp;            PrimeFaces.current().executeScript(&quot;PF(&#39;authorizeDialog&#39;).hide()&quot;);</b>
+<b class="nc"><i class="no-highlight">96</i>&nbsp;            doPerformAction();</b>
+<i class="no-highlight">97</i>&nbsp;        } else {
+<b class="nc"><i class="no-highlight">98</i>&nbsp;            displayError(&quot;Authorization failed&quot;, &quot;Make sure you enter the correct ip-address for this Raspberry Pi&quot;);</b>
+<i class="no-highlight">99</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">100</i>&nbsp;        ipAddress = null;</b>
+<b class="nc"><i class="no-highlight">101</i>&nbsp;    }</b>
+<i class="no-highlight">102</i>&nbsp;
+<i class="no-highlight">103</i>&nbsp;    /**
+<i class="no-highlight">104</i>&nbsp;     * perform an operation on selected raspberry
+<i class="no-highlight">105</i>&nbsp;     */
+<i class="no-highlight">106</i>&nbsp;    public void doPerformAction() {
+<b class="fc"><i class="no-highlight">107</i>&nbsp;        switch (action) {</b>
+<i class="no-highlight">108</i>&nbsp;            case &quot;EDIT&quot;:
+<b class="nc"><i class="no-highlight">109</i>&nbsp;                PrimeFaces.current().executeScript(&quot;PF(&#39;raspberryEditDialog&#39;).show()&quot;);</b>
+<b class="nc"><i class="no-highlight">110</i>&nbsp;                break;</b>
+<i class="no-highlight">111</i>&nbsp;            case &quot;INVALIDATE&quot;:
+<b class="nc"><i class="no-highlight">112</i>&nbsp;                doInvalidateApiKey();</b>
+<b class="nc"><i class="no-highlight">113</i>&nbsp;                break;</b>
+<i class="no-highlight">114</i>&nbsp;            case &quot;DELETE&quot;:
+<b class="nc"><i class="no-highlight">115</i>&nbsp;                doDeleteRaspberry();</b>
+<b class="nc"><i class="no-highlight">116</i>&nbsp;                break;</b>
+<i class="no-highlight">117</i>&nbsp;            case &quot;SET&quot;:
+<b class="nc"><i class="no-highlight">118</i>&nbsp;                userDetailController.saveUser();</b>
+<b class="nc"><i class="no-highlight">119</i>&nbsp;                displayInfo(&quot;Raspberry Pi changed&quot;, &quot;&quot;);</b>
+<b class="nc"><i class="no-highlight">120</i>&nbsp;                userScoresController.setUser(userDetailController.getSelectedUser());</b>
+<b class="nc"><i class="no-highlight">121</i>&nbsp;                PrimeFaces.current().executeScript(&quot;PF(&#39;raspberryEditDialog&#39;).hide()&quot;);</b>
+<b class="nc"><i class="no-highlight">122</i>&nbsp;                break;</b>
+<i class="no-highlight">123</i>&nbsp;            default:
+<i class="no-highlight">124</i>&nbsp;                break;
+<i class="no-highlight">125</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">126</i>&nbsp;        action = null;</b>
+<b class="nc"><i class="no-highlight">127</i>&nbsp;    }</b>
+<i class="no-highlight">128</i>&nbsp;
+<i class="no-highlight">129</i>&nbsp;    /**
+<i class="no-highlight">130</i>&nbsp;     * Action to create a new raspberry
+<i class="no-highlight">131</i>&nbsp;     *
+<i class="no-highlight">132</i>&nbsp;     */
+<i class="no-highlight">133</i>&nbsp;    public void doCreateRaspberry() {
+<b class="fc"><i class="no-highlight">134</i>&nbsp;        raspberry = raspberryService.createNewRaspberry();</b>
+<b class="fc"><i class="no-highlight">135</i>&nbsp;    }</b>
+<i class="no-highlight">136</i>&nbsp;
+<i class="no-highlight">137</i>&nbsp;    /**
+<i class="no-highlight">138</i>&nbsp;     * Action to invalidate the api key of the current raspberry
+<i class="no-highlight">139</i>&nbsp;     */
+<i class="no-highlight">140</i>&nbsp;    public void doInvalidateApiKey() {
+<b class="fc"><i class="no-highlight">141</i>&nbsp;        raspberry = raspberryService.invalidateApiKey(raspberry);</b>
+<b class="fc"><i class="no-highlight">142</i>&nbsp;    }</b>
+<i class="no-highlight">143</i>&nbsp;
+<i class="no-highlight">144</i>&nbsp;    //region getter &amp; setter
+<i class="no-highlight">145</i>&nbsp;    public RaspberryService getRaspberryService() {
+<b class="fc"><i class="no-highlight">146</i>&nbsp;        return raspberryService;</b>
+<i class="no-highlight">147</i>&nbsp;    }
+<i class="no-highlight">148</i>&nbsp;
+<i class="no-highlight">149</i>&nbsp;    public String getIpAddress() {
+<b class="fc"><i class="no-highlight">150</i>&nbsp;        return ipAddress;</b>
+<i class="no-highlight">151</i>&nbsp;    }
+<i class="no-highlight">152</i>&nbsp;
+<i class="no-highlight">153</i>&nbsp;    public void setIpAddress(String ipAddress) {
+<b class="fc"><i class="no-highlight">154</i>&nbsp;        this.ipAddress = ipAddress;</b>
+<b class="fc"><i class="no-highlight">155</i>&nbsp;    }</b>
+<i class="no-highlight">156</i>&nbsp;
+<i class="no-highlight">157</i>&nbsp;    public String getAction() {
+<b class="fc"><i class="no-highlight">158</i>&nbsp;        return action;</b>
+<i class="no-highlight">159</i>&nbsp;    }
+<i class="no-highlight">160</i>&nbsp;
+<i class="no-highlight">161</i>&nbsp;    public void setAction(String action) {
+<b class="fc"><i class="no-highlight">162</i>&nbsp;        this.action = action;</b>
+<b class="fc"><i class="no-highlight">163</i>&nbsp;    }</b>
+<i class="no-highlight">164</i>&nbsp;    //endregion
+<i class="no-highlight">165</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-06-18 20:18</div>
+</div>
+</body>
+</html>

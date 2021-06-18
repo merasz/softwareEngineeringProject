@@ -10,6 +10,7 @@
                 <p:growl id="message" showDetail="true" >
                     <p:autoUpdate />
                 </p:growl>
+
                 <input type="checkbox" id="check"/>
                 <div class="header">
                     <label for="check">
@@ -18,17 +19,29 @@
 
 
                     <div class="left_area">
-                     <h1>Gruppe6<span style="color: #0d9dbb">Team1</span></h1>
+                     <h1>Gruppe6<span style="color: #92dce5">Team1</span></h1>
                     </div>
 
-                    <div class="right_area">
-                        <a href="/logout" class="logout_btn">Logout</a>
+                    <div class="right_area .ui-button-text-icon-left">
+                        <a href="/logout" class="logout_btn ui-button ui-state-default ui-button-text ui-corner-all">Logout</a>
                     </div>
+                    <div style="clear:both"></div>
+<!---
+                    <div class="session_info">
+                        <ui:fragment rendered="#{sessionInfoBean.loggedIn}">
+                            Logged in as #{sessionInfoBean.currentUserName} [#{sessionInfoBean.currentUserRoles}]
+                        </ui:fragment>
+                        <ui:fragment rendered="#{!sessionInfoBean.loggedIn}">
+                            Not logged in
+                        </ui:fragment>
+                    </div>
+-->
                 </div>
 
                 <div class="sidebar">
-                        <a style="padding-left: 80px" href="/login.xhtml" ><img style="border: 0 none" src="/loginpage.jpg" class="logo" alt=""/> </a>
-                        <h4 style="padding-left: 70px">Gruppe6Team1</h4>
+                        <a href="#" class="topImg"><img style="border: 0 none" src="/loginpage.jpg" class="logo" alt=""/> </a>
+          <!---              <h4 style="padding-left: 70px">Gruppe6Team1</h4>    -->
+                        <h4>Logged in as #{sessionInfoBean.currentUserName}<br/>[#{sessionInfoBean.currentUserRoles}]</h4>
                     <p:commandLink id="profile" action="#{userScoresController.showProfile}">
                         <i class="far fa-user"></i><span>My Profile</span>
                     </p:commandLink>
@@ -40,9 +53,6 @@
                     </p:link>
                     <p:link outcome="/admin/users.xhtml" rendered="#{sessionInfoBean.hasRole('ADMIN')}">
                         <i class="fas fa-user-cog"></i><span>User Hub</span>
-                    </p:link>
-                    <p:link outcome="/admin/test.xhtml" rendered="#{sessionInfoBean.hasRole('ADMIN')}">
-                        <i class="fas fa-tasks"></i><span>Test Submenu</span>
                     </p:link>
                     <p:link outcome="/manager/raspberry.xhtml" rendered="#{sessionInfoBean.hasRole('ADMIN') or sessionInfoBean.hasRole('GAME_MANAGER')}">
                         <i class="fab fa-raspberry-pi"></i><span>Raspberries</span>
@@ -56,10 +66,6 @@
                     <p:commandLink id="join" action="#{gameStartController.joinGame}">
                         <i class="fas fa-gamepad"></i><span>Join Game</span>
                     </p:commandLink>
-
-                </div>
-
-                <div class="content">
 
                 </div>
             </h:form>

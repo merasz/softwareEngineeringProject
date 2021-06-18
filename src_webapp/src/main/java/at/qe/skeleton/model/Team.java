@@ -17,7 +17,7 @@ public class Team implements Serializable {
 
     @ManyToMany(cascade=CascadeType.ALL)
     @Fetch(FetchMode.JOIN)
-    private List<User> teamPlayers;
+    private Set<User> teamPlayers;
 
     private String teamName;
 
@@ -38,7 +38,7 @@ public class Team implements Serializable {
      */
     public Team(Game game) {
         this.game = game;
-        this.teamPlayers = new ArrayList<>();
+        this.teamPlayers = new HashSet<>();
     }
 
     public static long getSerialVersionUID() {
@@ -75,7 +75,7 @@ public class Team implements Serializable {
      * @param teamPlayers a list of users representing the team players
      */
     public void setTeamPlayers(List<User> teamPlayers) {
-        this.teamPlayers = teamPlayers;
+        this.teamPlayers = new HashSet<>(teamPlayers);
     }
 
     /**

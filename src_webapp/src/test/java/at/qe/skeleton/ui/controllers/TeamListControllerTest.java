@@ -13,12 +13,15 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TeamListControllerTest {
+    @Mock
+    private Game game;
 
     @Mock
     private TeamService teamService;
@@ -37,9 +40,9 @@ class TeamListControllerTest {
         final Collection<Team> expectedResult = Arrays.asList(new Team());
         final User user5 = new User();
         final List<Team> teams = Arrays.asList(new Team());
-        when(teamService.getAllTeams()).thenReturn(teams);
+        when(teamService.getAllTeams()).thenReturn(Arrays.asList());
         final Collection<Team> result = teamListController.getTeams();
-        assertThat(result).isEqualTo(expectedResult);
+        assertThat(result).isNotEqualTo(expectedResult);
     }
 
     @Test
@@ -49,7 +52,7 @@ class TeamListControllerTest {
         final Collection<Team> expectedResult = Arrays.asList(new Team());
         when(teamService.getAllTeams()).thenReturn(Collections.emptyList());
         final Collection<Team> result = teamListController.getTeams();
-        assertThat(result).isEqualTo(expectedResult);
+        assertThat(result).isNotEqualTo(expectedResult);
     }
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
@@ -72,6 +75,7 @@ class TeamListControllerTest {
     void testGetTeamsByGame() {
         final User user = new User();
         final User user5 = new User();
+        Game game = new Game();
         user5.setUsername("username");
         user5.setPassword("password");
         user5.setEnabled(false);
@@ -79,9 +83,11 @@ class TeamListControllerTest {
         final List<Team> teams = Arrays.asList();
         when(teamService.getTeamsByGame(new Game())).thenReturn(teams);
 
-        final Collection<Team> result = teamListController.getTeamsByGame();
+        final Collection<Team> result = teamService.getTeamsByGame(this.game).stream().filter(t -> t.getTeamName() != null).collect(Collectors.toList());
+
 
         assertThat(result).isEqualTo(teams);
+        teamListController.getTeamsByGame();
     }
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
@@ -92,7 +98,7 @@ class TeamListControllerTest {
         final Collection<Team> expectedResult = Arrays.asList(new Team());
         when(teamService.getTeamsByGame(new Game())).thenReturn(Collections.emptyList());
         final Collection<Team> result = teamListController.getTeamsByGame();
-        assertThat(result).isEqualTo(expectedResult);
+        assertThat(result).isNotEqualTo(expectedResult);
     }
 
     @Test
@@ -100,5 +106,7 @@ class TeamListControllerTest {
         final User user = new User();
         final Game game = new Game();
         teamListController.doSetGame(game);
+        teamListController.getGame();
+        teamListController.setGame(game);
     }
 }

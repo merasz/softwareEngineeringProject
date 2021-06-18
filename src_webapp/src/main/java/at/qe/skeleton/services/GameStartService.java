@@ -104,6 +104,7 @@ public class GameStartService extends GameService {
      * @param team
      */
     private void addUserToTeam(Team team) {
+        team = getTeamService().reloadTeam(team);
         if (!team.getTeamPlayers().contains(user)) {
             List<User> players = team.getTeamPlayers();
             players.add(user);
@@ -222,6 +223,10 @@ public class GameStartService extends GameService {
 
     public Team getTeam() {
         return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
     //endregion
 }

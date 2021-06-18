@@ -10,7 +10,6 @@ import org.springframework.security.core.*;
 import org.springframework.security.core.context.*;
 import org.springframework.stereotype.*;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.io.Serializable;
 import java.util.*;
 
@@ -71,7 +70,7 @@ public class TopicService implements Serializable {
      * @return boolean
      */
     public boolean topicExists(Topic topic) {
-        return !topicRepository.findByTopicNameContaining(topic.getTopicName()).isEmpty();
+        return !topicRepository.findByTopicName(topic.getTopicName()).isEmpty();
     }
 
     /**

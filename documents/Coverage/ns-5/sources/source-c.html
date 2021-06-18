@@ -1,0 +1,295 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Topic</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">at.qe.skeleton.model</a>
+</div>
+
+<h1>Coverage Summary for Class: Topic (at.qe.skeleton.model)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Topic</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (21/21)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (34/34)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Topic$HibernateProxy$OTCwQ2Eb</td>
+  </tr>
+  <tr>
+    <td class="name">Topic$HibernateProxy$Uo2icgDv</td>
+  </tr>
+  <tr>
+    <td class="name">Topic$MockitoMock$1369790100</td>
+  </tr>
+  <tr>
+    <td class="name">Topic$MockitoMock$1369790100$auxiliary$7PpW2ipK</td>
+  </tr>
+  <tr>
+    <td class="name">Topic$MockitoMock$1369790100$auxiliary$BVm3UZKb</td>
+  </tr>
+  <tr>
+    <td class="name">Topic$MockitoMock$1369790100$auxiliary$cz44ND3R</td>
+  </tr>
+  <tr>
+    <td class="name">Topic$MockitoMock$1369790100$auxiliary$DKyRi4cj</td>
+  </tr>
+  <tr>
+    <td class="name">Topic$MockitoMock$1369790100$auxiliary$EugWNNJ1</td>
+  </tr>
+  <tr>
+    <td class="name">Topic$MockitoMock$1369790100$auxiliary$Hk2LH46v</td>
+  </tr>
+  <tr>
+    <td class="name">Topic$MockitoMock$1369790100$auxiliary$IkaPoCEL</td>
+  </tr>
+  <tr>
+    <td class="name">Topic$MockitoMock$1369790100$auxiliary$ilqLlIT1</td>
+  </tr>
+  <tr>
+    <td class="name">Topic$MockitoMock$1369790100$auxiliary$k1z5iBr7</td>
+  </tr>
+  <tr>
+    <td class="name">Topic$MockitoMock$1369790100$auxiliary$mvIAtVnX</td>
+  </tr>
+  <tr>
+    <td class="name">Topic$MockitoMock$1369790100$auxiliary$QOZFkyUC</td>
+  </tr>
+  <tr>
+    <td class="name">Topic$MockitoMock$1369790100$auxiliary$TzGyTUsd</td>
+  </tr>
+  <tr>
+    <td class="name">Topic$MockitoMock$1369790100$auxiliary$Umw6yyFG</td>
+  </tr>
+  <tr>
+    <td class="name">Topic$MockitoMock$1369790100$auxiliary$uNFO45dr</td>
+  </tr>
+  <tr>
+    <td class="name">Topic$MockitoMock$1369790100$auxiliary$vQd5gTmW</td>
+  </tr>
+  <tr>
+    <td class="name">Topic$MockitoMock$1369790100$auxiliary$wBLu6cI5</td>
+  </tr>
+  <tr>
+    <td class="name">Topic$MockitoMock$1369790100$auxiliary$ZvNm30HQ</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (21/21)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (34/34)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package at.qe.skeleton.model;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import javax.persistence.*;
+<i class="no-highlight">4</i>&nbsp;import javax.persistence.Entity;
+<i class="no-highlight">5</i>&nbsp;import java.io.Serializable;
+<i class="no-highlight">6</i>&nbsp;import java.util.*;
+<i class="no-highlight">7</i>&nbsp;
+<i class="no-highlight">8</i>&nbsp;@Entity
+<i class="no-highlight">9</i>&nbsp;public class Topic implements Serializable {
+<i class="no-highlight">10</i>&nbsp;    private static final long serialVersionUID = 1L;
+<i class="no-highlight">11</i>&nbsp;
+<i class="no-highlight">12</i>&nbsp;    @Id
+<i class="no-highlight">13</i>&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+<i class="no-highlight">14</i>&nbsp;    private Integer id;
+<i class="no-highlight">15</i>&nbsp;
+<i class="no-highlight">16</i>&nbsp;    private String topicName;
+<i class="no-highlight">17</i>&nbsp;
+<i class="no-highlight">18</i>&nbsp;    @OneToMany(mappedBy = &quot;topic&quot;)
+<i class="no-highlight">19</i>&nbsp;    private List&lt;Game&gt; games;
+<i class="no-highlight">20</i>&nbsp;
+<i class="no-highlight">21</i>&nbsp;    @OneToMany(mappedBy = &quot;topic&quot;)
+<i class="no-highlight">22</i>&nbsp;    private List&lt;Term&gt; terms;
+<i class="no-highlight">23</i>&nbsp;
+<i class="no-highlight">24</i>&nbsp;    @Temporal(TemporalType.TIMESTAMP)
+<i class="no-highlight">25</i>&nbsp;    private Date createDate;
+<i class="no-highlight">26</i>&nbsp;
+<i class="no-highlight">27</i>&nbsp;    @Temporal(TemporalType.TIMESTAMP)
+<i class="no-highlight">28</i>&nbsp;    private Date updateDate;
+<i class="no-highlight">29</i>&nbsp;
+<i class="no-highlight">30</i>&nbsp;    @ManyToOne(optional = true)
+<i class="no-highlight">31</i>&nbsp;    private Topic updateTopic;
+<i class="no-highlight">32</i>&nbsp;
+<b class="fc"><i class="no-highlight">33</i>&nbsp;    public Topic() {</b>
+<b class="fc"><i class="no-highlight">34</i>&nbsp;    }</b>
+<i class="no-highlight">35</i>&nbsp;
+<b class="fc"><i class="no-highlight">36</i>&nbsp;    public Topic(String topicName) {</b>
+<b class="fc"><i class="no-highlight">37</i>&nbsp;        this.topicName = topicName;</b>
+<b class="fc"><i class="no-highlight">38</i>&nbsp;    }</b>
+<i class="no-highlight">39</i>&nbsp;
+<i class="no-highlight">40</i>&nbsp;    public String getTopicName() {
+<b class="fc"><i class="no-highlight">41</i>&nbsp;        return topicName;</b>
+<i class="no-highlight">42</i>&nbsp;    }
+<i class="no-highlight">43</i>&nbsp;
+<i class="no-highlight">44</i>&nbsp;    public void setTopicName(String topicName) {
+<b class="fc"><i class="no-highlight">45</i>&nbsp;        this.topicName = topicName;</b>
+<b class="fc"><i class="no-highlight">46</i>&nbsp;    }</b>
+<i class="no-highlight">47</i>&nbsp;
+<i class="no-highlight">48</i>&nbsp;    public void setTerms(List&lt;Term&gt; terms) {
+<b class="fc"><i class="no-highlight">49</i>&nbsp;        this.terms = terms;</b>
+<b class="fc"><i class="no-highlight">50</i>&nbsp;    }</b>
+<i class="no-highlight">51</i>&nbsp;
+<i class="no-highlight">52</i>&nbsp;    public List&lt;Term&gt; getTerms() {
+<b class="fc"><i class="no-highlight">53</i>&nbsp;        return terms;</b>
+<i class="no-highlight">54</i>&nbsp;    }
+<i class="no-highlight">55</i>&nbsp;
+<i class="no-highlight">56</i>&nbsp;    public static long getSerialVersionUID() {
+<b class="fc"><i class="no-highlight">57</i>&nbsp;        return serialVersionUID;</b>
+<i class="no-highlight">58</i>&nbsp;    }
+<i class="no-highlight">59</i>&nbsp;
+<i class="no-highlight">60</i>&nbsp;    public List&lt;Game&gt; getGames() {
+<b class="fc"><i class="no-highlight">61</i>&nbsp;        return games;</b>
+<i class="no-highlight">62</i>&nbsp;    }
+<i class="no-highlight">63</i>&nbsp;
+<i class="no-highlight">64</i>&nbsp;    public void setGames(List&lt;Game&gt; games) {
+<b class="fc"><i class="no-highlight">65</i>&nbsp;        this.games = games;</b>
+<b class="fc"><i class="no-highlight">66</i>&nbsp;    }</b>
+<i class="no-highlight">67</i>&nbsp;
+<i class="no-highlight">68</i>&nbsp;    public Date getCreateDate() {
+<b class="fc"><i class="no-highlight">69</i>&nbsp;        return createDate;</b>
+<i class="no-highlight">70</i>&nbsp;    }
+<i class="no-highlight">71</i>&nbsp;
+<i class="no-highlight">72</i>&nbsp;    public void setCreateDate(Date createDate) {
+<b class="fc"><i class="no-highlight">73</i>&nbsp;        this.createDate = createDate;</b>
+<b class="fc"><i class="no-highlight">74</i>&nbsp;    }</b>
+<i class="no-highlight">75</i>&nbsp;
+<i class="no-highlight">76</i>&nbsp;    public boolean isNew(){
+<b class="fc"><i class="no-highlight">77</i>&nbsp;        return (null == createDate);</b>
+<i class="no-highlight">78</i>&nbsp;    }
+<i class="no-highlight">79</i>&nbsp;
+<i class="no-highlight">80</i>&nbsp;    public Date getUpdateDate() {
+<b class="fc"><i class="no-highlight">81</i>&nbsp;        return updateDate;</b>
+<i class="no-highlight">82</i>&nbsp;    }
+<i class="no-highlight">83</i>&nbsp;
+<i class="no-highlight">84</i>&nbsp;    public void setUpdateDate(Date updateDate) {
+<b class="fc"><i class="no-highlight">85</i>&nbsp;        this.updateDate = updateDate;</b>
+<b class="fc"><i class="no-highlight">86</i>&nbsp;    }</b>
+<i class="no-highlight">87</i>&nbsp;
+<i class="no-highlight">88</i>&nbsp;    public Topic getUpdateTopic() {
+<b class="fc"><i class="no-highlight">89</i>&nbsp;        return updateTopic;</b>
+<i class="no-highlight">90</i>&nbsp;    }
+<i class="no-highlight">91</i>&nbsp;
+<i class="no-highlight">92</i>&nbsp;    public void setUpdateTopic(Topic updateTopic) {
+<b class="fc"><i class="no-highlight">93</i>&nbsp;        this.updateTopic = updateTopic;</b>
+<b class="fc"><i class="no-highlight">94</i>&nbsp;    }</b>
+<i class="no-highlight">95</i>&nbsp;
+<i class="no-highlight">96</i>&nbsp;    public Integer getId() {
+<b class="fc"><i class="no-highlight">97</i>&nbsp;        return id;</b>
+<i class="no-highlight">98</i>&nbsp;    }
+<i class="no-highlight">99</i>&nbsp;
+<i class="no-highlight">100</i>&nbsp;    public void setId(Integer id) {
+<b class="fc"><i class="no-highlight">101</i>&nbsp;        this.id = id;</b>
+<b class="fc"><i class="no-highlight">102</i>&nbsp;    }</b>
+<i class="no-highlight">103</i>&nbsp;
+<i class="no-highlight">104</i>&nbsp;    @Override
+<i class="no-highlight">105</i>&nbsp;    public boolean equals(Object obj) {
+<b class="fc"><i class="no-highlight">106</i>&nbsp;        if (obj == null) return false;</b>
+<b class="fc"><i class="no-highlight">107</i>&nbsp;        if (!(obj instanceof Topic)) return false;</b>
+<i class="no-highlight">108</i>&nbsp;
+<b class="fc"><i class="no-highlight">109</i>&nbsp;        final Topic other = (Topic) obj;</b>
+<b class="fc"><i class="no-highlight">110</i>&nbsp;        return Objects.equals(this.topicName, other.topicName);</b>
+<i class="no-highlight">111</i>&nbsp;    }
+<i class="no-highlight">112</i>&nbsp;
+<i class="no-highlight">113</i>&nbsp;    @Override
+<i class="no-highlight">114</i>&nbsp;    public int hashCode() {
+<b class="fc"><i class="no-highlight">115</i>&nbsp;        return (getTopicName() != null) ? (getClass().getSimpleName().hashCode() + getTopicName().hashCode()) : super.hashCode();</b>
+<i class="no-highlight">116</i>&nbsp;    }
+<i class="no-highlight">117</i>&nbsp;
+<i class="no-highlight">118</i>&nbsp;    @Override
+<i class="no-highlight">119</i>&nbsp;    public String toString() {
+<b class="fc"><i class="no-highlight">120</i>&nbsp;        return topicName;</b>
+<i class="no-highlight">121</i>&nbsp;    }
+<i class="no-highlight">122</i>&nbsp;
+<i class="no-highlight">123</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-06-18 20:18</div>
+</div>
+</body>
+</html>

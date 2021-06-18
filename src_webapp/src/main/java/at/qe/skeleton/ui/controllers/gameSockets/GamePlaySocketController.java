@@ -236,7 +236,8 @@ public class GamePlaySocketController {
      */
     public void onTimerOver(Game game) {
         if(game!=null && currentRoundRunning.get(game.getGameId()) != null && currentPlayerMap.get(game.getGameId()) != null && pointsMap.get(game.getGameId()) != null && currentRoundRunning.get(game.getGameId()) == 1) {
-            currentRoundRunning.put(game.getGameId(),0);
+            //currentRoundRunning.put(game.getGameId(),0);
+            stopRound(game);
         }
     }
 
@@ -245,7 +246,14 @@ public class GamePlaySocketController {
      * @param game current game
      */
     public void stopRound(Game game) {
-        websocketManager.getTimeChannel().send("stopTimer",getAllRecipients(game));
+
+        List<List<String>> recipients = getSeperatedRecipients(game, currentPlayerMap.get(game.getGameId()));
+        List<String> currentUser = recipients.get(0);
+        List<String> otherUser = recipients.get(1);
+
+        this.websocketManager.getTimeChannel().send("stopTimer",currentUser);
+        this.websocketManager.getTimeChannel().send("stopTimerOther",otherUser);
+
         gameInfoSocketController.setGameMessageToGame(game,"Was the term guessed correctly? Rate below!");
         websocketManager.getInfoChannel().send("infoUpdate",getAllRecipients(game));
     }

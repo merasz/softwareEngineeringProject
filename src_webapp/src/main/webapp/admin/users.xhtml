@@ -10,10 +10,11 @@
     <ui:define name ="content">
         <meta http-equiv="Pragma" content="no-cache" />
         <meta http-equiv="Expires" content="-1" />
-
-        <p:commandButton style="width: 10%; margin-top: 9px;margin-right: 80px; float: right;" id="help"
+        <h:panelGroup layout="block" styleClass="helpTopRightOuter">
+        <p:commandButton styleClass="helpTopRight" id="help"
                          oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
-        <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
+        </h:panelGroup>
+        <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" styleClass="helpDialog">
             <h:panelGrid columns="1">
                 <h3>Create User</h3>
                 <h:outputText value="Click on 'Create new User' to create a new User.
@@ -37,8 +38,10 @@
                                 " style="font-weight:normal"/>
             </h:panelGrid>
         </p:dialog>
-        <h:form id="userForm" style="width: 98%; margin-top: 15px;margin-left: 25px; float: right;">
-            <p:dataTable  id="usersTable" var="user" value="#{userListController.users}" widgetVar="usersTable" paginator="true" rows="10" emptyMessage="Select Role." style="width:85%; margin-top:100px; float:right;">
+
+        <h:form id="userForm" >
+            <p:dataTable  id="usersTable" var="user" value="#{userListController.users}" widgetVar="usersTable" paginator="true"
+                          rows="10" emptyMessage="Select Role." styleClass="fullScreenTable">
                 <f:facet name="header">
                     <p:outputPanel>
                         <div align="right">
@@ -53,17 +56,17 @@
                         </div>
                     </p:outputPanel>
                 </f:facet>
-                <p:column headerText="Username" filterBy="#{user.username}" filterMatchMode="contains" sortBy="#{user.username}" style="text-align: center; width: 20%">
+                <p:column headerText="Username" filterBy="#{user.username}" filterMatchMode="contains" sortBy="#{user.username}" style="text-align: center; width: 35%">
                     <h:outputText value="#{user.username}"/>
                 </p:column>
-                <p:column headerText="Roles" style="text-align: center; width: 25%">
+                <p:column headerText="Roles" style="text-align: center; width: 40%">
                     <h:outputText value="#{user.roles}" />
                 </p:column>
-                <p:column headerText="Enabled" style="text-align: center; width: 5%">
+                <p:column headerText="Enabled" style="text-align: center; width: 10%">
                     <h:selectBooleanCheckbox value="#{user.enabled}" disabled="true"/>
                 </p:column>
-                <p:column headerText="Operation" style="width:100px;text-align: center">
-                    <p:commandButton title="Edit" icon="ui-icon-note" update=":userForm:userEditDialog"
+                <p:column headerText="Operation" style="width:10%;text-align: center">
+                    <p:commandButton title="Edit" icon="fa fa-fw fa-edit" update=":userForm:userEditDialog"
                                      oncomplete="PF('userEditDialog').show()">
                         <f:setPropertyActionListener value="#{user}" target="#{userDetailController.selectedUser}" />
                     </p:commandButton>
@@ -75,9 +78,9 @@
                 </p:column>
             </p:dataTable>
 
-            <p:commandButton action="#{userDetailController.doCreateNewUser()}" style="width: 25%; margin-top: 25px; float: right;"
+            <p:commandButton action="#{userDetailController.doCreateNewUser()}" styleClass="buttonBelowRight"
                              oncomplete="PF('userCreationDialog').show()"
-                             icon="ui-icon-add-box" value ="Create new User" update=":userCreationForm">
+                             icon="ui-icon-plusthick" value ="Create new User" update=":userCreationForm">
             </p:commandButton>
 
             <p:dialog header="Edit User" id="userEditDialog" widgetVar="userEditDialog" modal="true"
@@ -86,8 +89,10 @@
                     <h:panelGrid columns="2">
                         <p:outputLabel for="username" value="Username: " />
                         <p:inputText id="username" value="#{userDetailController.selectedUser.username}" disabled="true"/>
-                        <p:outputLabel for="password" value="Password: " />
-                        <p:password id="password" value="#{userDetailController.selectedUser.password}" disabled="true"/>
+                        <p:outputLabel for="setPassword" value="enter new password: " />
+                        <p:password id="setPassword" autocomplete="new-password" value="#{userDetailController.password}" />
+                        <p:outputLabel for="confirmPassword" value="confirm new password: " />
+                        <p:password id="confirmPassword" autocomplete="new-password" value="#{userDetailController.confirmPassword}" />
                     </h:panelGrid>
                     <p:separator />
                     <h:panelGrid columns="2">
@@ -95,26 +100,25 @@
                         <p:selectBooleanCheckbox id="enabled" value="#{userDetailController.selectedUser.enabled}"/>
                     </h:panelGrid>
                     <p:separator />
-                <h:panelGrid columns="2">
+                <h:panelGrid columns="2" styleClass="fullWidth">
                     <p:outputLabel for="editRole" value="Role: "/>
                     <p:selectManyMenu id="editRole" value="#{userDetailController.selectedUser.roles}"
                                       collectionType="java.util.LinkedHashSet" showCheckbox="true"
-                                      required="true" requiredMessage="Role(s) required." style="width: 175px;">
+                                      required="true" requiredMessage="Role(s) required." style="width: 100%;">
                         <f:selectItems value="#{userDetailController.listRoles}"/>
                     </p:selectManyMenu>
                 </h:panelGrid>
-                    <h:panelGrid columns="2">
+                    <h:panelGrid columns="2" styleClass="fullWidth">
                         <p:outputLabel for="editRasp" value="Raspberry: "/>
                         <p:selectOneListbox id="editRasp"  value="#{userDetailController.selectedUser.raspberry}"
-                                            converter="#{raspberryConverter}" style="width:300px">
+                                            converter="#{raspberryConverter}" style="width:100%">
                             <f:selectItems value="#{raspberryListController.getRaspberries()}" var="raspberry"
-                                           itemLabel="#{raspberry.raspberryId} - #{raspberry.ipAddress}" itemValue="#{raspberry}"/>
+                                           itemLabel="#{raspberry.raspberryId} - #{raspberry.hostname}" itemValue="#{raspberry}"/>
                         </p:selectOneListbox>
                     </h:panelGrid>
                     <p:separator />
                     <h:panelGrid columns="3">
-                        <p:commandButton value="Save" action="#{userDetailController.doUpdateUser()}"
-                                         oncomplete="PF('userEditDialog').hide()" update=":userForm:usersTable"/>
+                        <p:commandButton value="Save" action="#{userDetailController.doUpdateUser()}" update=":userForm:usersTable"/>
                         <p:commandButton value="Reload" action="#{userDetailController.doReloadUser()}" update=":userForm:userData"/>
                         <p:commandButton value="Abort" onclick="PF('userEditDialog').hide()"/>
                     </h:panelGrid>
@@ -139,34 +143,36 @@
                             <f:validateRegex pattern="^[a-zA-Z0-9]+$" />
                             <f:validateLength minimum="4" maximum="16" />
                         </p:inputText>
-                        <p:outputLabel for="newPassword" value="Password: " />
-                        <p:password id="newPassword" value="#{userDetailController.newUser.password}" autocomplete="new-password"
-                                    placeholder="enter new password" required="true" requiredMessage="Insert Password." >
-                        <f:validateLength minimum="4" maximum="18" />
+                        <p:outputLabel for="newPassword" value="password: " />
+                        <p:password id="newPassword" value="#{userDetailController.password}" autocomplete="new-password"
+                                    placeholder="enter password" required="true" >
+                        </p:password>
+                        <p:outputLabel for="confirmPassword2" value="confirm password: " />
+                        <p:password id="confirmPassword2" value="#{userDetailController.confirmPassword}" autocomplete="new-password"
+                                    placeholder="confirm password" required="true" >
                         </p:password>
                     </h:panelGrid>
-                    <h:panelGrid columns="2">
+                    <h:panelGrid columns="2" styleClass="fullWidth">
                         <p:outputLabel for="newRole" value="Role: "/>
                         <p:selectManyMenu id="newRole" value="#{userDetailController.newUser.roles}"
                                           collectionType="java.util.LinkedHashSet" showCheckbox="true"
-                                          required="true" requiredMessage="Role(s) required." style="width: 175px;">
+                                          required="true" requiredMessage="Role(s) required." style="width: 100%;">
                             <f:selectItems value="#{userDetailController.listRoles}"/>
                         </p:selectManyMenu>
                     </h:panelGrid>
-                    <h:panelGrid columns="2">
+                    <h:panelGrid columns="2" styleClass="fullWidth">
                         <p:outputLabel for="newRasp" value="Raspberry: "/>
                         <p:selectOneListbox id="newRasp"  value="#{userDetailController.newUser.raspberry}"
-                                            converter="#{raspberryConverter}" style="width:300px">
+                                            converter="#{raspberryConverter}" style="width:100%">
                             <f:selectItems value="#{raspberryListController.getRaspberries()}" var="raspberry"
                                            itemLabel="#{raspberry.raspberryId} - #{raspberry.ipAddress}" itemValue="#{raspberry}"/>
                         </p:selectOneListbox>
                     </h:panelGrid>
                     <p:separator />
-
                     <h:panelGrid columns ="2">
-                        <p:commandButton value="Save" action="#{userDetailController.doSaveUser()}"
+                        <p:commandButton value="Save" action="#{userDetailController.doSaveNewUser()}"
                                          oncomplete="if (args &amp;&amp; !args.validationFailed) PF('userCreationDialog').hide()"
-                                         update=":userForm:usersTable">
+                                         update=":userForm" >
                         </p:commandButton>
                     </h:panelGrid>
                 </p:outputPanel>

@@ -8,31 +8,22 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name="content">
-        <h:form id="adminForm">
+        <h:form id="adminForm" >
             <p:growl id="growl" showDetail="false" life="6000">
                 <p:autoUpdate/>
             </p:growl>
 
-            <p:commandButton style="width: 10%; margin-top: 9px;margin-right: 80px; float: right;" id="help"
-                             oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
-
-            <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
-                <h:panelGrid columns="1">
-                    <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Admin view / Chart</h2>
-                    <h:outputText value="Here the admin sees the current Players in each Game."/>
-                    <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Ongoing Games</h2>
-                    <h:outputText value="Here the admin sees the current ongoing Games and the Teams from each Games."/>
-                </h:panelGrid>
-            </p:dialog>
-
-            <p:chart style="color: #00a7d0; width: 50%; margin-top: 80px; float: right;" type="bar" model="#{currentGamesController.model}" />
+            <p:chart styleClass="adminChart" style="color: #00a7d0; width: 60%; margin-top: 80px;" type="bar" model="#{currentGamesController.model}" />
 
             <p:dataTable widgetVar="adminTable" id="adminTable" var="game" value="#{gameListController.activeGames}"
-                         style="width: 83%; margin-top: 30px; float: right;">
-                <f:facet name="header">Ongoing Games</f:facet>
-                <p:column headerText="Game ID">
-                    <h:outputText value="#{game.gameId}"/>
-                </p:column>
+                         styleClass="fullScreenTable">
+                <f:facet name="header">
+                    <p:panelGrid columns="1">
+                        <h:outputText value="Currently Active Games"/>
+                        <h:outputText value="Check out info to all currently active Games here"
+                                      style="font-weight: normal" escape="false"/>
+                    </p:panelGrid>
+                </f:facet>
                 <p:column headerText="Game Name">
                     <h:outputText value="#{game.gameName}"/>
                 </p:column>
@@ -52,36 +43,31 @@
                 </p:column>
 
                 <p:column style="width:100px;text-align: center" headerText="Teams">
-                    <p:commandButton title="Teams" icon="ui-icon-note"
+                    <p:commandButton title="Teams" icon="fa fa-fw fa-users"
                                      action="#{teamListController.setGame(gameCreationController.game)}"
-                                     update=":teamsForm" oncomplete="$('#adminForm').hide();$('#teamsForm').show();"
-                                     style="width:20px;height:20px">
+                                     update=":teamsForm" oncomplete="$('#adminForm').hide();$('#teamsForm').show();">
                         <f:setPropertyActionListener value="#{game}" target="#{gameCreationController.game}"/>
                     </p:commandButton>
                 </p:column>
-
             </p:dataTable>
-
         </h:form>
 
         <h:form id="teamsForm" style="display: none">
             <p:dataTable widgetVar="teamsTable" id="teamsTable" var="scores" value="#{teamListController.teamScores}"
-                         style="width: 83%; margin-top: 110px; float: right;">
+                         styleClass="fullScreenTable">
                 <f:facet name="header">Teams - #{teamListController.game.gameName}</f:facet>
                 <p:column headerText="Team name">
                     <h:outputText value="#{scores.team.teamName}"/>
                 </p:column>
-                <p:column style="width:100px;text-align: center" headerText="Player">
+                <p:column style="width:100px;text-align: center" headerText="Score">
                     <h:outputText value="#{scores.totalRoundScore}" disabled="true"/>
                 </p:column>
             </p:dataTable>
-            <p:commandButton style="width: 200px; margin-top: 25px; float: left; margin-left: 290px"
+            <p:commandButton style="width: 200px; margin-top: 25px; float: left;"
                              oncomplete="$('#teamsForm').hide();$('#adminForm').show();" icon="ui-icon-arrowthick-1-w"
                              value="Back to Games">
             </p:commandButton>
         </h:form>
-        <h:form>
 
-        </h:form>
     </ui:define>
 </ui:composition>

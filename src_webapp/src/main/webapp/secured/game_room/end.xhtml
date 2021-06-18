@@ -14,6 +14,7 @@
 <h:head>
     <title>Game Finished</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" href="/resources/css/header.css"/>
     <link rel="stylesheet" href="/resources/css/style.css"/>
 </h:head>
 <h:body>
@@ -38,7 +39,7 @@
             </p:growl>
             <h:panelGroup layout="block" style="display: flex; flex-direction: column;align-items: center">
                 <p:dataTable widgetVar="scoreTable" id="scoreTable" var="score"
-                             value="#{scoreManagerController.getScores(sessionInfoBean.currentGame)}" >
+                             value="#{scoreManagerController.getScores(sessionInfoBean.currentGame)}" styleClass="fullScreenTable">
                     <f:facet name="header">Scores</f:facet>
                     <p:column headerText="Team">
                         <h:outputText value="#{score.team.teamName}"/>
@@ -49,7 +50,7 @@
                 </p:dataTable>
             </h:panelGroup>
         </h:form>
-        <h:button id="backButton" widgetVar="backBtn" value="Back to Lobby" outcome="/secured/welcome.xhtml" styleClass="gameButton" style="color: #000" />
+        <h:button id="backButton" widgetVar="backBtn" value="Back to Lobby" outcome="/secured/lobby.xhtml" styleClass="gameButton" style="color: #000" />
 
 
     </h:panelGroup>

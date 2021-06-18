@@ -6,6 +6,7 @@ import at.qe.skeleton.repositories.ScoreRepository;
 import at.qe.skeleton.ui.controllers.gameSockets.GameJoinController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -48,6 +49,19 @@ public class GameService {
      */
     public Game reloadGame(Game game) {
         return gameRepository.findByGameId(game.getGameId());
+    }
+
+    /**
+     * delete a Game instance from the database
+     */
+    public void deleteGame(Game game) {
+        scoreRepository.findGameScoresByGame(game).forEach(s -> scoreRepository.delete(s));
+        teamService.getTeamsByGame(game).forEach(t -> teamService.deleteTeam(t));
+        try {
+            gameRepository.delete(game);
+        } catch (DataIntegrityViolationException e) {
+            gameRepository.delete(game);
+        }
     }
 
     /**

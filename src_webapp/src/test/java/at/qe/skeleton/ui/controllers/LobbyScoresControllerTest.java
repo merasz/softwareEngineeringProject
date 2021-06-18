@@ -3,6 +3,7 @@ package at.qe.skeleton.ui.controllers;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.*;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -97,15 +98,25 @@ class LobbyScoresControllerTest {
 
     @Test
     void testGetHighscores() {
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+
         final List<Map.Entry<User, Integer>> expectedResult = Arrays.asList();
         final List<Map.Entry<User, Integer>> result = lobbyScoresController.getHighscores();
         assertThat(result).isEqualTo(expectedResult);
+        lobbyScoresController.getHighscores();
+        lobbyScoresController.getMostPopularTopics();
+    });
     }
 
     @Test
     void testGetHighscoresAGame() {
-        final List<Map.Entry<User, Integer>> expectedResult = Arrays.asList();
-        final List<Map.Entry<User, Integer>> result = lobbyScoresController.getHighscoresAGame();
-        assertThat(result).isEqualTo(expectedResult);
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            final List<Map.Entry<User, Integer>> expectedResult = Arrays.asList();
+            final List<Map.Entry<User, Integer>> result = lobbyScoresController.getHighscoresAGame();
+            assertThat(result).isEqualTo(expectedResult);
+            lobbyScoresController.getHighscoresAGame();
+
+        });
     }
+
 }

@@ -28,17 +28,17 @@ public class CurrentGamesController implements Serializable {
     public void createLineModel() {
         model = new BarChartModel();
         List<Game> activeGames = new ArrayList<>(gameService.getAllActiveGames());
-        model.setTitle("Admin View");
+        model.setTitle("Players in active Games");
 
         Axis y = model.getAxis(AxisType.Y);
-        y.setLabel("Current Players in each Game");
+        y.setLabel("Players in each Game");
 
         Axis x = model.getAxis(AxisType.X);
-        x.setLabel("Game ID");
+        x.setLabel("Game Name");
 
         for (Game activeGame : activeGames) {
             ChartSeries chartSeries = new ChartSeries();
-            chartSeries.set(activeGame.getGameId(), activeGame.getCountPlayers());
+            chartSeries.set(activeGame.getGameName(), activeGame.getCountPlayers());
             chartSeries.setLabel(activeGame.getGameName());
             model.addSeries(chartSeries);
         }

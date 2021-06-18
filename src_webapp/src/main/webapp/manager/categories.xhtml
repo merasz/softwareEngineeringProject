@@ -8,58 +8,79 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name="content">
+        <h:form enctype="multipart/form-data"  styleClass="buttonsTop">
+            <h:panelGroup layout="block" styleClass="buttonsTopInner">
+                <h:panelGroup layout="block" styleClass="left">
+                    <p:fileUpload value="#{topicParserController.file}" mode="simple" skinSimple="true" styleClass="uploader"/>
+                    <p:commandButton value="Submit" ajax="false" action="#{topicParserController.upload}" style="float: left"
+                                    styleClass="p-mt-3 ui-button-outlined p-d-block"/>
+                </h:panelGroup>
+                <p:commandButton style="width: 100px; float: right" id="help"
+                                 oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
+            </h:panelGroup>
 
-        <h:form enctype="multipart/form-data" style="width: 50%; margin-top: 10px; float: right;">
-            <p:fileUpload value="#{topicParserController.file}" mode="simple" skinSimple="true" style="color: white"/>
-            <p:commandButton value="Submit" ajax="false" action="#{topicParserController.upload}"
-                             styleClass="p-mt-3 ui-button-outlined p-d-block"/>
-        </h:form>
-        <h:form id="topicForm">
-            <p:commandButton style="width: 10%; margin-top: 9px;margin-right: 9px; float: right;" id="help"
-                             oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
             <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="400">
                 <h:panelGrid columns="1">
                     <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Choose File</h2>
-                    <h:outputText value="Click the 'choose' button to add a json File and submit. The JSON-file should contain 1 or more Topics and associated Terms."/>
+                    <h:outputText value="Click the 'choose' button to add a json File and submit. The JSON-file should contain only 1 Topic and its associated Terms.
+                        Example JSON FILE could look like this:
+                        &lt;br /&gt;
+                        { &#34;topic&#34; : &#34;TopicName&#34;, &lt;br /&gt; &#34;terms&#34; : [ &lt;br /&gt; &#34;
+                            Term1Name&#34;, &lt;br /&gt; &#34;Term2Name&#34; &lt;br /&gt;]&lt;br /&gt;}" escape="false"/>
                     <h2 style="color: #0d9dbb; font-weight: bold;">Create new Topic</h2>
                     <h:outputText value="Click to add a new Topic."/>
                     <h2 style="color: #0d9dbb; font-weight: bold; display: inline-block">Add Term</h2>
                     <h:outputText value="Click to add a new Term."/>
+                    <h2 style="color: #0d9dbb; font-weight: bold; display: inline-block">Edit Topic</h2>
+                    <h:outputText value="Click to change the name of the Topic."/>
                     <h2 style="color: #0d9dbb; font-weight: bold;">Delete Topic</h2>
                     <h:outputText
-                            value="Click to the button to delete the Topic. For now the topic deletion is not available because, if you want delete a topic, the user statistics w'ont be right."/>
+                            value="Click to the button to delete the Topic.
+                            You can only delete an empty Topic, the Terms of it must be deleted.
+                            &lt;br /&gt;
+                            If a Topic was already played once, you can only delete this Topic,
+                            if all Games with the selected Topic get also deleted, else the necessary statistics will get corrupted."
+                            escape="false"/>
                 </h:panelGrid>
             </p:dialog>
+        </h:form>
 
-            <p:dataTable widgetVar="topicCreationTable" id="topicCreationTable" var="topic"
-                         value="#{topicListController.topicAmount}" style="width: 83%; margin-top: 85px; float: right;">
+        <h:form id="topicForm">
+            <p:growl id="message" showDetail="true" >
+                <p:autoUpdate />
+            </p:growl>
+
+            <p:dataTable widgetVar="topicCreationTable" id="topicCreationTable" styleClass="fullScreenTable" var="topic"
+                         value="#{topicListController.topicAmount}">
                 <f:facet name="header">Topic Hub</f:facet>
                 <p:column headerText="Topic">
                     <h:outputText value="#{topic.topic.topicName}"/>
                 </p:column>
-                <p:column headerText="Number of Terms">
+                <p:column headerText="Terms" style="width:100px;text-align: center">
                     <h:outputText value="#{topic.gameCount}"/>
                 </p:column>
-
-                <p:column style="width:100px;text-align: center" headerText="create">
-                    <p:commandButton title="Terms" icon="ui-icon-note"
+                <p:column style="width:75px;text-align: center" headerText="Terms">
+                    <p:commandButton title="Terms" icon="fa fa-fw fa-list"
                                      action="#{termListController.doSetTopic(topicController.gameTopicCount.topic)}"
-                                     update=":termsForm" oncomplete="$('#topicForm').hide();$('#termsForm').show();"
-                                     style="width:20px;height:20px">
+                                     update=":termsForm" oncomplete="$('#topicForm').hide();$('#termsForm').show();">
                         <f:setPropertyActionListener value="#{topic}" target="#{topicController.gameTopicCount}"/>
                     </p:commandButton>
                 </p:column>
-                <p:column style="width:100px;text-align: center" headerText="delete">
-                    <p:commandButton action="#{topicController.doDeleteTopic}" icon="ui-icon-trash" title="Delete"
+                <p:column style="width:75px;text-align: center" headerText="edit">
+                    <p:commandButton icon="fa fa-fw fa-edit" title="edit" oncomplete="PF('topicEditDialog').show()" update=":editForm:topicEditDialog">
+                        <f:setPropertyActionListener value="#{topic.topic}" target="#{topicController.topic}"/>
+                    </p:commandButton>
+                </p:column>
+                <p:column style="width:75px;text-align: center" headerText="delete">
+                    <p:commandButton action="#{topicController.doDeleteTopic}" icon="ui-icon-trash" title="delete"
                                      update=":topicForm:topicCreationTable">
                         <f:setPropertyActionListener value="#{topic.topic}" target="#{topicController.topic}"/>
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
-            <p:commandButton style="width: 25%; margin-top: 25px; float: right;"
-                             oncomplete="PF('topicCreationDialog').show()" icon="ui-icon-add-box"
-                             action="#{topicController.doCreateNewTopic()}" value="Create new Topic">
-                <f:setPropertyActionListener value="#{topic}" target="#{topicController.topic}"/>
+            <p:commandButton styleClass="buttonBelowRight"
+                             oncomplete="PF('topicCreationDialog').show()" icon="ui-icon-plusthick" value="Create new Topic"
+                             action="#{topicController.doCreateNewTopic()}" update=":topicForm:topicCreationDialog">
             </p:commandButton>
 
             <p:dialog header="Create new Topic" id="topicCreationDialog" widgetVar="topicCreationDialog" modal="true"
@@ -67,12 +88,33 @@
                 <p:outputPanel id="topicCreateData">
                     <h:panelGrid columns="2">
                         <p:outputLabel for="topicName" value="Topic Name: "/>
-                        <p:inputText id="topicName" value="#{topicController.topic.topicName}"/>
+                        <p:inputText id="topicName" placeholder="new Topic name" value="#{topicController.topicName}"/>
                     </h:panelGrid>
+                    <p:separator/>
                     <h:panelGrid columns="2">
                         <p:commandButton value="Save" action="#{topicController.doSaveTopic()}"
+                                         update=":topicForm"/>
+                        <p:commandButton value="Abort" onclick="PF('topicCreationDialog').hide()"/>
+                    </h:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+
+        <h:form id="editForm" >
+            <p:dialog header="Edit Topic" id="topicEditDialog" widgetVar="topicEditDialog" modal="true"
+                      showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="topicEditData">
+                    <h:panelGrid columns="2">
+                        <h:outputText value="Topic name: "/>
+                        <h:outputText value="#{topicController.topic.topicName}"/>
+                        <p:outputLabel for="editName" value="new name: "/>
+                        <p:inputText id="editName" placeholder="new Topic name" value="#{topicController.topicName}"/>
+                    </h:panelGrid>
+                    <p:separator/>
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="Save" action="#{topicController.doEditTopic()}"
                                          update=":topicForm:topicCreationTable"/>
-                        <p:commandButton value="Abort" onclick="PF('Dialog').hide()"/>
+                        <p:commandButton value="Abort" onclick="PF('topicEditDialog').hide()"/>
                     </h:panelGrid>
                 </p:outputPanel>
             </p:dialog>
@@ -80,7 +122,7 @@
 
         <h:form id="termsForm" style="display: none" enctype="multipart/form-data">
             <p:dataTable widgetVar="termsTable" id="termsTable" var="term" value="#{termListController.termsByTopic}"
-                         style="width: 83%; margin-top: 110px; float: right;">
+                         styleClass="fullScreenTable">
                 <f:facet name="header">Creat new Term for Selected Topic</f:facet>
                 <p:column headerText="Term name">
                     <h:outputText value="#{term.termName}"/>
@@ -92,12 +134,12 @@
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
-            <p:commandButton style="width: 25%; margin-top: 25px; float: right;"
-                             oncomplete="PF('termCreationDialog').show()" icon="ui-icon-add-box"
+            <p:commandButton style="width: 300px; margin-top: 20px; margin-right: 20px; float: right;"
+                             oncomplete="PF('termCreationDialog').show()" icon="ui-icon-plusthick"
                              action="#{termsController.doCreateNewTerm()}" value="Create new Term" update=":termsForm:termCreationDialog">
                 <f:setPropertyActionListener value="#{term}" target="#{termsController.term}"/>
             </p:commandButton>
-            <p:commandButton style="width: 200px; margin-top: 25px; float: left; margin-left: 290px" oncomplete="$('#termsForm').hide();$('#topicForm').show();"
+            <p:commandButton style="width: 200px; margin-top: 20px; float: left; margin-bottom: 50px;" oncomplete="$('#termsForm').hide();$('#topicForm').show();"
                              update=":topicForm:topicCreationTable"
                              icon="ui-icon-arrowthick-1-w" value ="Back to Topics">
             </p:commandButton>
@@ -109,16 +151,13 @@
                         <p:outputLabel for="termName" value="Term Name: "/>
                         <p:inputText id="termName" value="#{termsController.term.termName}"/>
                     </h:panelGrid>
-
                     <p:separator/>
-
                     <h:panelGrid columns="2">
                         <p:commandButton value="Save"
                                          action="#{termsController.doSaveTerm(topicController.gameTopicCount.topic)}"
                                          update=":termsForm:termsTable"/>
                         <p:commandButton value="Abort" onclick="PF('termCreationDialog').hide()"/>
                     </h:panelGrid>
-
                 </p:outputPanel>
             </p:dialog>
         </h:form>

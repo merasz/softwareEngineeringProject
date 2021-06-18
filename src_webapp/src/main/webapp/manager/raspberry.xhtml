@@ -7,46 +7,66 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name ="content">
-
-        <p:commandButton style="width: 10%; margin-top: 9px;margin-right: 80px; float: right;" id="help"
+        <h:panelGroup layout="block" styleClass="helpTopRightOuter">
+        <p:commandButton styleClass="helpTopRight" id="help"
                          oncomplete="PF('helpDialog').show()" icon="ui-icon-info" value="Help" title="Help"/>
-        <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="300">
+        </h:panelGroup>
+        <p:dialog header="Info" id="helpDialog" widgetVar="helpDialog" width="500">
             <h:panelGrid columns="1">
+                <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Info</h2>
+                <h:outputText value="The Raspberry is used to simulate our virtual Game Room.
+                              The Raspberry is communicating via BLE with the TimeFlip, and the Raspberry is communicating via REST with our WebApp.
+                              &lt;br /&gt;
+                              To make it more secure, we added an API KEY for the REST communication, so only Raspberries who know our API-KEY can communicate with the WebApp.
+                              &lt;br /&gt;
+                              If a Game gets created, the Game will take place on the Raspberry of the Game creator. If you want to play on a different Raspberry, you have to switch the Raspberry in your Profile first.
+                              &lt;br /&gt;
+                              Only Users who have selected the same Raspberry can play together, else they wont show up in the Team selection.
+                              "
+                              escape="false"/>
                 <h2 style="color: #0d9dbb; font-weight: bold; margin-top: 2px">Edit Raspberry</h2>
-                <h:outputText value="Here you can edit the Raspberry"/>
+                <h:outputText value="Here you can edit the Raspberries Name its IP Address and its API KEY."
+                              escape="false"/>
                 <h2 style="color: #0d9dbb; font-weight: bold;">Invalidate API Key</h2>
-                <h:outputText value="Here you can invalidate API kEY"/>
+                <h:outputText value="Here you can invalidate API KEY"/>
                 <h2 style="color: #0d9dbb; font-weight: bold;">Delete Raspberry</h2>
                 <h:outputText value="Here you can delete the Raspberry"/>
             </h:panelGrid>
         </p:dialog>
 
-        <h:form id="raspberryForm" style="width: 98%; margin-top: 15px;margin-left: 25px; float: right;">
-            <p:dataTable id="raspberryTable" var="raspberry" value="#{raspberryListController.raspberries}" style="width:85%; margin-top:100px; float:right;">
-                <p:column headerText="ID" style="width: 75px">
+        <h:form id="raspberryForm" >
+            <p:dataTable id="raspberryTable" var="raspberry" value="#{raspberryListController.raspberries}"
+                          styleClass="fullScreenTable">
+                <p:column headerText="ID" style="width: 40px">
                     <h:outputText value="#{raspberry.raspberryId}"/>
                 </p:column>
-                <p:column headerText="Name">
+                <p:column headerText="Name" style="width: 20%">
                     <h:outputText value="#{raspberry.hostname}"/>
                 </p:column>
-                <p:column headerText="IP Address">
+                <p:column headerText="IP Address" rendered="#{sessionInfoBean.hasRole('ADMIN')}" style="width: 20%">
                     <h:outputText value="#{raspberry.ipAddress}"/>
                 </p:column>
-                <p:column headerText="API Key">
+                <p:column headerText="API Key" rendered="#{sessionInfoBean.hasRole('ADMIN')}">
                     <h:outputText value="#{raspberry.apiKey}"/>
                 </p:column>
-                <p:column headerText="inUse" style="width:50px">
+                <p:column headerText="inUse" style="width:10%">
                     <h:selectBooleanCheckbox value="#{raspberry.inUse}" disabled="true" style="margin: 0px auto; display: block"/>
                 </p:column>
-                <p:column headerText="actions" style="width:150px;text-align: center">
-                    <p:commandButton update=":raspberryForm:raspberryEditDialog" oncomplete="PF('raspberryEditDialog').show()" icon="ui-icon-note" title="Edit">
+                <p:column headerText="actions" style="width:15%;text-align: center">
+                    <p:commandButton update=":raspberryForm:raspberryEditDialog :authorizeForm:authorizeDialog" icon="fa fa-fw fa-edit" title="Edit"
+                                     action="#{raspberryController.accessRaspberry(sessionInfoBean.hasRole('ADMIN'))}" >
                         <f:setPropertyActionListener value="#{raspberry}" target="#{raspberryController.raspberry}" />
+                        <f:setPropertyActionListener value="EDIT" target="#{raspberryController.action}" />
                     </p:commandButton>
-                    <p:commandButton update=":raspberryForm:raspberryTable" title="Invalidate API Key" icon="ui-icon-close" action="#{raspberryController.doInvalidateApiKey()}">
+                    <p:commandButton update=":raspberryForm:raspberryTable :authorizeForm:authorizeDialog" title="Invalidate API Key" icon="ui-icon-close"
+                                     action="#{raspberryController.accessRaspberry(sessionInfoBean.hasRole('ADMIN'))}">
                         <f:setPropertyActionListener value="#{raspberry}" target="#{raspberryController.raspberry}" />
+                        <f:setPropertyActionListener value="INVALIDATE" target="#{raspberryController.action}" />
                     </p:commandButton>
-                    <p:commandButton update=":raspberryForm:raspberryTable" title="Delete Raspberry" icon="ui-icon-trash" action="#{raspberryController.doDeleteRaspberry()}">
+                    <p:commandButton update=":raspberryForm:raspberryTable :authorizeForm:authorizeDialog" title="Delete Raspberry" icon="ui-icon-trash"
+                                     action="#{raspberryController.accessRaspberry(sessionInfoBean.hasRole('ADMIN'))}">
                         <f:setPropertyActionListener value="#{raspberry}" target="#{raspberryController.raspberry}" />
+                        <f:setPropertyActionListener value="DELETE" target="#{raspberryController.action}" />
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
@@ -56,11 +76,24 @@
                 <p:outputPanel id="raspberryData" rendered="#{not empty raspberryController.raspberry}">
                     <h:panelGrid columns="2">
                         <p:outputLabel for="name" value="Device Name: " />
-                        <p:inputText id="name" value="#{raspberryController.raspberry.hostname}"/>
+                        <p:inputText id="name" value="#{raspberryController.raspberry.hostname}"
+                                     required="true" requiredMessage="Insert Device Name." placeholder="Device Name"
+                                     validatorMessage="Hostname length 4-16 characters of type letters/numbers.">
+                            <f:validateRegex pattern="^[a-zA-Z0-9]+$" />
+                            <f:validateLength minimum="4" maximum="16" />
+                        </p:inputText>
                         <p:outputLabel for="ipAddress" value="IP Address: " />
-                        <p:inputText id="ipAddress" value="#{raspberryController.raspberry.ipAddress}"/>
+                        <p:inputText id="ipAddress" value="#{raspberryController.raspberry.ipAddress}"
+                                     required="true" requiredMessage="Insert IP Address" placeholder="IP Address"
+                                     validatorMessage="IP Address length 4-16 characters of type numbers and '.'.">
+                            <f:validateLength minimum="4" maximum="16" />
+                        </p:inputText>
                         <p:outputLabel for="apiKey" value="API-KEY: " />
-                        <p:inputText id="apiKey" value="#{raspberryController.raspberry.apiKey}"/>
+                        <p:inputText id="apiKey" value="#{raspberryController.raspberry.apiKey}"
+                                     required="true" requiredMessage="Insert API-Key" placeholder="API KEY"
+                                     validatorMessage="API-KEY length 4-16 characters of type letters/numbers.">
+                            <f:validateLength minimum="4" maximum="16" />
+                        </p:inputText>
                     </h:panelGrid>
                     <p:separator />
                     <h:panelGrid columns="2">
@@ -74,10 +107,30 @@
                     </h:panelGrid>
                 </p:outputPanel>
             </p:dialog>
-
         </h:form>
+
+        <h:form id="authorizeForm">
+            <p:dialog header="Confirm Authorization" id="authorizeDialog" widgetVar="authorizeDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel >
+                    <div style="font-size: medium">
+                        <p>Enter the ip address of this <i>Raspberry Pi</i> to be able to edit it.</p>
+                    </div>
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="ipAuthorize" value="enter ip-address: " />
+                        <p:inputText id="ipAuthorize" value="#{raspberryController.ipAddress}"/>
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="Confirm" action="#{raspberryController.authorize}"/>
+                        <p:commandButton value="Abort" onclick="PF('authorizeDialog').hide()"/>
+                    </h:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+
         <!-- Create Raspberry Button -->
-        <p:commandButton update=":raspberryForm:raspberryEditDialog" oncomplete="PF('raspberryEditDialog').show();" title="Add new Raspberry" action="#{raspberryController.doCreateRaspberry()}"></p:commandButton>
+        <p:commandButton update=":raspberryForm:raspberryEditDialog" oncomplete="PF('raspberryEditDialog').show();" title="Add new Raspberry"
+                         action="#{raspberryController.doCreateRaspberry()}" icon="ui-icon-plusthick" value="Add new Raspberry" styleClass="buttonBelowRight">
+        </p:commandButton>
 
     </ui:define>
 </ui:composition>

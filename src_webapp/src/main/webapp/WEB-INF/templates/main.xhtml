@@ -11,30 +11,30 @@
     <!-- stylesheets here -->
     <h:outputStylesheet library="css" name="chat.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"/>
-    <link rel="stylesheet" href="/resources/css/categories.css"/>
+    <!-- <link rel="stylesheet" href="/resources/css/style.css"/> -->
     <link rel="stylesheet" href="/resources/css/header.css"/>
     <link rel="stylesheet" href="/resources/css/tables.css"/>
     <!-- js-utils here -->
     <h:outputScript library="js" name="chat.js"/>
-    <h:outputScript library="js" name="categories.js"/>
+    <h:outputScript library="js" name="scripts.js"/>
 </h:head>
 
-<h:body style="margin:10px;">
+<h:body>
 
 
     <div id="page">
-        <div class="header" style="margin-bottom: 20px;">
+        <div class="headerOuter">
             <ui:include src="/WEB-INF/includes/header.xhtml"/>
         </div>
 
         <div id="content">
             <ui:insert name="content">Content</ui:insert>
         </div>
-
-        <div id="footer" style="margin-top: 10px; margin-left: 30px;">
+<!---
+        <div id="footer" style="margin-top: 10px;">
             <ui:include src="/WEB-INF/includes/footer.xhtml"/>
         </div>
-
+-->
     </div>
 
 </h:body>

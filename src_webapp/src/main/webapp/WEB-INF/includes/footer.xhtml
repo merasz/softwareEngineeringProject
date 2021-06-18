@@ -1,35 +1,21 @@
+<!---
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <body>
+        <ui:composition>
+            <div style="position: fixed; bottom: 10px; right: 10px;">
+                <ui:fragment rendered="#{sessionInfoBean.loggedIn}">
+                    Logged in as #{sessionInfoBean.currentUserName} [#{sessionInfoBean.currentUserRoles}]
+                </ui:fragment>
+                <ui:fragment rendered="#{!sessionInfoBean.loggedIn}">
+                    Not logged in
+                </ui:fragment>
+            </div>
 
-<body>
-<ui:composition>
-
-    <div style="padding-top: 800px;" >
-        <ui:fragment rendered="#{sessionInfoBean.loggedIn}">
-            <table style="border: 1px solid #fafafa;width:200px;padding-left:0px; text-align: center; left:0px;position:absolute">
-                <tr style="color: white">
-                    <th colspan="2" style="border: 1px solid #ffffff;">Session Info</th>
-                </tr>
-                <tr >
-                    <th style="border: 1px solid #ffffff; color: white">Username</th>
-                    <th style="border: 1px solid #fdfdfd; color: white">Userroles</th>
-                </tr>
-                <tr>
-                    <td style="border: 1px solid #fdfdfd;color: white">#{sessionInfoBean.currentUserName}</td>
-                    <td style="border: 1px solid #ffffff;color: white">#{sessionInfoBean.currentUserRoles}</td>
-                </tr>
-            </table>
-        </ui:fragment>
-        <ui:fragment rendered="#{!sessionInfoBean.loggedIn}">
-            Not logged in
-        </ui:fragment>
-    </div>
-
-</ui:composition>
-</body>
+        </ui:composition>
+    </body>
 </html>
-
+-->

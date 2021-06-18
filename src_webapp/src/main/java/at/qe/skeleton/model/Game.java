@@ -14,6 +14,7 @@ public class Game implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer gameId;
+    @Column(unique = true)
     private String gameName;
     private int scoreToWin;
     private int countPlayers;
@@ -85,11 +86,11 @@ public class Game implements Serializable {
         return topic;
     }
 
-    public void setScores(List<Score> scoreList) {
+    public void setScoreList(List<Score> scoreList) {
         this.scoreList = scoreList;
     }
 
-    public List<Score> getScores() {
+    public List<Score> getScoreList() {
         return scoreList;
     }
 

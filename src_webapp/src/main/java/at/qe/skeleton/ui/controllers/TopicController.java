@@ -19,6 +19,7 @@ public class TopicController extends Controller implements Serializable {
     private TopicService topicService;
 
     public Topic topic;
+    public String topicName;
 
     public GameTopicCount gameTopicCount;
 
@@ -30,6 +31,7 @@ public class TopicController extends Controller implements Serializable {
     public void doCreateNewTopic() {
         topic = new Topic();
         gameTopicCount = new GameTopicCount();
+        topicName = null;
     }
 
     public GameTopicCount getGameTopicCount() {
@@ -42,8 +44,8 @@ public class TopicController extends Controller implements Serializable {
 
     public void doDeleteTopic() {
         try {
-            this.topicService.deleteTopic(topic);
-            this.topic = null;
+            topicService.deleteTopic(topic);
+            topic = null;
             displayInfo("Topic deleted", "Topic successfully deleted");
         } catch (IllegalArgumentException e) {
             displayError("Topic not empty", e.getMessage());
@@ -53,16 +55,32 @@ public class TopicController extends Controller implements Serializable {
     }
 
     public void doSaveTopic(){
-        try{
-            topic = topicService.saveTopic(topic);
-            topic = new Topic();
+        if (saveTopic()) {
             displayInfo("Topic saved", "");
             PrimeFaces.current().executeScript("PF('topicCreationDialog').hide()");
-        } catch (IllegalArgumentException e) {
-            displayError(e.getMessage(), e.getCause().getMessage());
         }
     }
 
+    public void doEditTopic(){
+        if (saveTopic()) {
+            displayInfo("Topic edited", "");
+            PrimeFaces.current().executeScript("PF('topicEditDialog').hide()");
+        }
+    }
+
+    public boolean saveTopic() {
+        try{
+            topic.setTopicName(topicName);
+            topicService.saveTopic(topic);
+            doCreateNewTopic();
+            return true;
+        } catch (IllegalArgumentException e) {
+            displayError(e.getMessage(), e.getCause().getMessage());
+            return false;
+        }
+    }
+
+    //region getter & setter
     public Collection<Topic> getTopics() {
         return topicService.getAllTopics();
     }
@@ -74,4 +92,13 @@ public class TopicController extends Controller implements Serializable {
     public void setTopic(Topic topic) {
         this.topic = topic;
     }
+
+    public String getTopicName() {
+        return topicName;
+    }
+
+    public void setTopicName(String topicName) {
+        this.topicName = topicName;
+    }
+    //endregion
 }

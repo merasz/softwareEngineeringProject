@@ -1,0 +1,357 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > UserScoresController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">at.qe.skeleton.ui.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: UserScoresController (at.qe.skeleton.ui.controllers)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserScoresController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (18/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    90,6%
+  </span>
+  <span class="absValue">
+    (29/32)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$7j9NxkNI</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$AYhl4faS</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$BAfWEovn</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$BJjEGl8q</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$cjrwlu6a</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$dR1OxHnj</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$dZpEi7us</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$EAGCrCTw</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$EM862qMm</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$FAl22gBe</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$iXwqglyk</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$JbR0zh0M</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$Jy6x70Zc</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$NNCKeh1C</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$RP5l0eiW</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$TL3pDwEc</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$UPI8NlI2</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$VIuLSm4l</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$xtST5A6v</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$Ya86qwfO</td>
+  </tr>
+  <tr>
+    <td class="name">UserScoresController$MockitoMock$1452334035$auxiliary$yyk29eCI</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (18/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    90,6%
+  </span>
+  <span class="absValue">
+    (29/32)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package at.qe.skeleton.ui.controllers;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import at.qe.skeleton.model.*;
+<i class="no-highlight">4</i>&nbsp;import at.qe.skeleton.services.*;
+<i class="no-highlight">5</i>&nbsp;import at.qe.skeleton.ui.beans.SessionInfoBean;
+<i class="no-highlight">6</i>&nbsp;import org.primefaces.model.chart.*;
+<i class="no-highlight">7</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i class="no-highlight">8</i>&nbsp;import org.springframework.context.annotation.Scope;
+<i class="no-highlight">9</i>&nbsp;import org.springframework.security.core.Authentication;
+<i class="no-highlight">10</i>&nbsp;import org.springframework.security.core.context.SecurityContextHolder;
+<i class="no-highlight">11</i>&nbsp;import org.springframework.stereotype.Component;
+<i class="no-highlight">12</i>&nbsp;
+<i class="no-highlight">13</i>&nbsp;import javax.annotation.PostConstruct;
+<i class="no-highlight">14</i>&nbsp;import java.io.Serializable;
+<i class="no-highlight">15</i>&nbsp;import java.util.*;
+<i class="no-highlight">16</i>&nbsp;
+<i class="no-highlight">17</i>&nbsp;/**
+<i class="no-highlight">18</i>&nbsp; * Controller for the user view.
+<i class="no-highlight">19</i>&nbsp; *
+<i class="no-highlight">20</i>&nbsp; * This class is part of the skeleton project provided for students of the
+<i class="no-highlight">21</i>&nbsp; * courses &quot;Software Architecture&quot; and &quot;Software Engineering&quot; offered by the
+<i class="no-highlight">22</i>&nbsp; * University of Innsbruck.
+<i class="no-highlight">23</i>&nbsp; */
+<i class="no-highlight">24</i>&nbsp;@Component
+<i class="no-highlight">25</i>&nbsp;@Scope(&quot;session&quot;)
+<b class="fc"><i class="no-highlight">26</i>&nbsp;public class UserScoresController extends Controller implements Serializable {</b>
+<i class="no-highlight">27</i>&nbsp;
+<i class="no-highlight">28</i>&nbsp;    @Autowired
+<i class="no-highlight">29</i>&nbsp;    private UserService userService;
+<i class="no-highlight">30</i>&nbsp;
+<i class="no-highlight">31</i>&nbsp;    @Autowired
+<i class="no-highlight">32</i>&nbsp;    private UserStatsService userStatsService;
+<i class="no-highlight">33</i>&nbsp;
+<i class="no-highlight">34</i>&nbsp;    @Autowired
+<i class="no-highlight">35</i>&nbsp;    private TeamService teamService;
+<i class="no-highlight">36</i>&nbsp;
+<i class="no-highlight">37</i>&nbsp;    @Autowired
+<i class="no-highlight">38</i>&nbsp;    private SessionInfoBean sessionInfoBean;
+<i class="no-highlight">39</i>&nbsp;
+<i class="no-highlight">40</i>&nbsp;    /**
+<i class="no-highlight">41</i>&nbsp;     * Attribute to cache the currently displayed user
+<i class="no-highlight">42</i>&nbsp;     */
+<i class="no-highlight">43</i>&nbsp;    private User user;
+<i class="no-highlight">44</i>&nbsp;
+<i class="no-highlight">45</i>&nbsp;    /**
+<i class="no-highlight">46</i>&nbsp;     * for accessing another player&#39;s profile
+<i class="no-highlight">47</i>&nbsp;     */
+<i class="no-highlight">48</i>&nbsp;    private String username;
+<i class="no-highlight">49</i>&nbsp;    private boolean viewPrivate;
+<i class="no-highlight">50</i>&nbsp;
+<i class="no-highlight">51</i>&nbsp;    /**
+<i class="no-highlight">52</i>&nbsp;     * display the user&#39;s profile
+<i class="no-highlight">53</i>&nbsp;     * @return redirection String to profile.xhtml
+<i class="no-highlight">54</i>&nbsp;     */
+<i class="no-highlight">55</i>&nbsp;    public String showProfile() {
+<b class="fc"><i class="no-highlight">56</i>&nbsp;        user = sessionInfoBean.getCurrentUser();</b>
+<b class="fc"><i class="no-highlight">57</i>&nbsp;        viewPrivate = true;</b>
+<b class="fc"><i class="no-highlight">58</i>&nbsp;        return &quot;/secured/profile.xhtml?faces-redirect=true&quot;;</b>
+<i class="no-highlight">59</i>&nbsp;    }
+<i class="no-highlight">60</i>&nbsp;
+<i class="no-highlight">61</i>&nbsp;    /**
+<i class="no-highlight">62</i>&nbsp;     * display the profile of another user
+<i class="no-highlight">63</i>&nbsp;     * @return redirection String to profile.xhtml
+<i class="no-highlight">64</i>&nbsp;     */
+<i class="no-highlight">65</i>&nbsp;    public String showOtherProfile() {
+<b class="fc"><i class="no-highlight">66</i>&nbsp;        user = userService.loadUser(username);</b>
+<b class="fc"><i class="no-highlight">67</i>&nbsp;        username = null;</b>
+<i class="no-highlight">68</i>&nbsp;
+<b class="fc"><i class="no-highlight">69</i>&nbsp;        if (user == null) {</b>
+<b class="fc"><i class="no-highlight">70</i>&nbsp;            displayError(&quot;User not found&quot;, &quot;Make sure the username is correct.&quot;);</b>
+<b class="nc"><i class="no-highlight">71</i>&nbsp;            return &quot;&quot;;</b>
+<i class="no-highlight">72</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">73</i>&nbsp;        viewPrivate = false;</b>
+<b class="nc"><i class="no-highlight">74</i>&nbsp;        return &quot;/secured/profile.xhtml?faces-redirect=true&quot;;</b>
+<i class="no-highlight">75</i>&nbsp;    }
+<i class="no-highlight">76</i>&nbsp;
+<i class="no-highlight">77</i>&nbsp;    /**
+<i class="no-highlight">78</i>&nbsp;     * Sets the user to the class attribute
+<i class="no-highlight">79</i>&nbsp;     * @param user User to set
+<i class="no-highlight">80</i>&nbsp;     */
+<i class="no-highlight">81</i>&nbsp;    public void setUser(User user) {
+<b class="fc"><i class="no-highlight">82</i>&nbsp;        this.user = user;</b>
+<b class="fc"><i class="no-highlight">83</i>&nbsp;        doReloadUser();</b>
+<b class="fc"><i class="no-highlight">84</i>&nbsp;    }</b>
+<i class="no-highlight">85</i>&nbsp;
+<i class="no-highlight">86</i>&nbsp;    /**
+<i class="no-highlight">87</i>&nbsp;     * Returns the currently displayed user.
+<i class="no-highlight">88</i>&nbsp;     * @return User
+<i class="no-highlight">89</i>&nbsp;     */
+<i class="no-highlight">90</i>&nbsp;    public User getUser() {
+<b class="fc"><i class="no-highlight">91</i>&nbsp;        return user;</b>
+<i class="no-highlight">92</i>&nbsp;    }
+<i class="no-highlight">93</i>&nbsp;
+<i class="no-highlight">94</i>&nbsp;
+<i class="no-highlight">95</i>&nbsp;    /**
+<i class="no-highlight">96</i>&nbsp;     * Action to force a reload of the currently displayed user.
+<i class="no-highlight">97</i>&nbsp;     */
+<i class="no-highlight">98</i>&nbsp;    public void doReloadUser() {
+<b class="fc"><i class="no-highlight">99</i>&nbsp;        user = userService.loadUser(user.getUsername());</b>
+<b class="fc"><i class="no-highlight">100</i>&nbsp;    }</b>
+<i class="no-highlight">101</i>&nbsp;
+<i class="no-highlight">102</i>&nbsp;    /**
+<i class="no-highlight">103</i>&nbsp;     * Action to get the best scores for the current user
+<i class="no-highlight">104</i>&nbsp;     * @return List of Scores
+<i class="no-highlight">105</i>&nbsp;     */
+<i class="no-highlight">106</i>&nbsp;    public List&lt;Score&gt; getBestScoresForUser() {
+<b class="fc"><i class="no-highlight">107</i>&nbsp;        return userStatsService.getBestScoresFromUser(this.user);</b>
+<i class="no-highlight">108</i>&nbsp;    }
+<i class="no-highlight">109</i>&nbsp;
+<i class="no-highlight">110</i>&nbsp;    /**
+<i class="no-highlight">111</i>&nbsp;     * Action to get the latest scores of the current user
+<i class="no-highlight">112</i>&nbsp;     * @return List of Scores
+<i class="no-highlight">113</i>&nbsp;     */
+<i class="no-highlight">114</i>&nbsp;    public List&lt;Score&gt; getLatestScoresForUser() {
+<b class="fc"><i class="no-highlight">115</i>&nbsp;        return userStatsService.getLatestScoresFromUser(this.user);</b>
+<i class="no-highlight">116</i>&nbsp;    }
+<i class="no-highlight">117</i>&nbsp;
+<i class="no-highlight">118</i>&nbsp;    /**
+<i class="no-highlight">119</i>&nbsp;     * Action to get the count of played games for the current user
+<i class="no-highlight">120</i>&nbsp;     * @return Number of games
+<i class="no-highlight">121</i>&nbsp;     */
+<b class="fc"><i class="no-highlight">122</i>&nbsp;    public int getGameCountForUser() { return userStatsService.getGameCountByUser(this.user); }</b>
+<i class="no-highlight">123</i>&nbsp;
+<i class="no-highlight">124</i>&nbsp;    /**
+<i class="no-highlight">125</i>&nbsp;     * Action to get the count of won games for the current user
+<i class="no-highlight">126</i>&nbsp;     * @return Number of won games
+<i class="no-highlight">127</i>&nbsp;     */
+<b class="fc"><i class="no-highlight">128</i>&nbsp;    public int getWonGamesByUser() { return userStatsService.getWonCountByUser(this.user); }</b>
+<i class="no-highlight">129</i>&nbsp;
+<i class="no-highlight">130</i>&nbsp;    /**
+<i class="no-highlight">131</i>&nbsp;     * Action to get the count of lost games for the current user
+<i class="no-highlight">132</i>&nbsp;     * @return Number of lost games
+<i class="no-highlight">133</i>&nbsp;     */
+<b class="fc"><i class="no-highlight">134</i>&nbsp;    public int getLostGamesByUser() { return userStatsService.getLostCountByUser(this.user); }</b>
+<i class="no-highlight">135</i>&nbsp;
+<i class="no-highlight">136</i>&nbsp;    /**
+<i class="no-highlight">137</i>&nbsp;     * Action to get the count of won games per topic for the current user
+<i class="no-highlight">138</i>&nbsp;     * @return List of Topics with Counts
+<i class="no-highlight">139</i>&nbsp;     */
+<i class="no-highlight">140</i>&nbsp;    public List&lt;GameTopicCount&gt; getWonGamesByTopics() {
+<b class="fc"><i class="no-highlight">141</i>&nbsp;        return userStatsService.getWonGamesByTopics(this.user);</b>
+<i class="no-highlight">142</i>&nbsp;    }
+<i class="no-highlight">143</i>&nbsp;
+<i class="no-highlight">144</i>&nbsp;    /**
+<i class="no-highlight">145</i>&nbsp;     * Action to get all teams a players has played ith
+<i class="no-highlight">146</i>&nbsp;     * @return List of teams
+<i class="no-highlight">147</i>&nbsp;     */
+<i class="no-highlight">148</i>&nbsp;    public List&lt;Team&gt; getTeamsByPlayer() {
+<b class="fc"><i class="no-highlight">149</i>&nbsp;        Set&lt;Team&gt; tmp = new HashSet&lt;&gt;(teamService.getTeamsByPlayer(this.user));</b>
+<b class="fc"><i class="no-highlight">150</i>&nbsp;        return new ArrayList&lt;&gt;(tmp);</b>
+<i class="no-highlight">151</i>&nbsp;    }
+<i class="no-highlight">152</i>&nbsp;
+<i class="no-highlight">153</i>&nbsp;    /**
+<i class="no-highlight">154</i>&nbsp;     * Action to get the top team for a game
+<i class="no-highlight">155</i>&nbsp;     * @param game Game
+<i class="no-highlight">156</i>&nbsp;     * @return Team with highest Score
+<i class="no-highlight">157</i>&nbsp;     */
+<i class="no-highlight">158</i>&nbsp;    public Team getTopTeamFromGame(Game game) {
+<b class="fc"><i class="no-highlight">159</i>&nbsp;        return userStatsService.getTopTeamForGame(game);</b>
+<i class="no-highlight">160</i>&nbsp;    }
+<i class="no-highlight">161</i>&nbsp;
+<i class="no-highlight">162</i>&nbsp;    //region getter &amp; setter
+<i class="no-highlight">163</i>&nbsp;    public String getUsername() {
+<b class="fc"><i class="no-highlight">164</i>&nbsp;        return username;</b>
+<i class="no-highlight">165</i>&nbsp;    }
+<i class="no-highlight">166</i>&nbsp;
+<i class="no-highlight">167</i>&nbsp;    public void setUsername(String username) {
+<b class="fc"><i class="no-highlight">168</i>&nbsp;        this.username = username;</b>
+<b class="fc"><i class="no-highlight">169</i>&nbsp;    }</b>
+<i class="no-highlight">170</i>&nbsp;
+<i class="no-highlight">171</i>&nbsp;    public void setViewPrivate(boolean viewPrivate) {
+<b class="fc"><i class="no-highlight">172</i>&nbsp;        this.viewPrivate = viewPrivate;</b>
+<b class="fc"><i class="no-highlight">173</i>&nbsp;    }</b>
+<i class="no-highlight">174</i>&nbsp;
+<i class="no-highlight">175</i>&nbsp;    public boolean isViewPrivate() {
+<b class="fc"><i class="no-highlight">176</i>&nbsp;        return viewPrivate;</b>
+<i class="no-highlight">177</i>&nbsp;    }
+<i class="no-highlight">178</i>&nbsp;    //endregion
+<i class="no-highlight">179</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-06-18 20:18</div>
+</div>
+</body>
+</html>

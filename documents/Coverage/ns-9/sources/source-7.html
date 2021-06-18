@@ -1,0 +1,159 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > LobbyScoresController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">at.qe.skeleton.ui.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: LobbyScoresController (at.qe.skeleton.ui.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LobbyScoresController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (4/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66,7%
+  </span>
+  <span class="absValue">
+    (6/9)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package at.qe.skeleton.ui.controllers;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import at.qe.skeleton.model.*;
+<i class="no-highlight">4</i>&nbsp;import at.qe.skeleton.services.*;
+<i class="no-highlight">5</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i class="no-highlight">6</i>&nbsp;import org.springframework.context.annotation.Scope;
+<i class="no-highlight">7</i>&nbsp;import org.springframework.stereotype.Component;
+<i class="no-highlight">8</i>&nbsp;
+<i class="no-highlight">9</i>&nbsp;import javax.annotation.PostConstruct;
+<i class="no-highlight">10</i>&nbsp;import java.io.Serializable;
+<i class="no-highlight">11</i>&nbsp;import java.util.*;
+<i class="no-highlight">12</i>&nbsp;import java.util.stream.Collectors;
+<i class="no-highlight">13</i>&nbsp;
+<i class="no-highlight">14</i>&nbsp;/**
+<i class="no-highlight">15</i>&nbsp; * Controller for the user view.
+<i class="no-highlight">16</i>&nbsp; *
+<i class="no-highlight">17</i>&nbsp; * This class is part of the skeleton project provided for students of the
+<i class="no-highlight">18</i>&nbsp; * courses &quot;Software Architecture&quot; and &quot;Software Engineering&quot; offered by the
+<i class="no-highlight">19</i>&nbsp; * University of Innsbruck.
+<i class="no-highlight">20</i>&nbsp; */
+<i class="no-highlight">21</i>&nbsp;@Component
+<i class="no-highlight">22</i>&nbsp;@Scope(&quot;view&quot;)
+<b class="fc"><i class="no-highlight">23</i>&nbsp;public class LobbyScoresController extends Controller implements Serializable {</b>
+<i class="no-highlight">24</i>&nbsp;
+<i class="no-highlight">25</i>&nbsp;    @Autowired
+<i class="no-highlight">26</i>&nbsp;    private GameService gameService;
+<i class="no-highlight">27</i>&nbsp;
+<i class="no-highlight">28</i>&nbsp;    @Autowired
+<i class="no-highlight">29</i>&nbsp;    private ScoreService scoreService;
+<i class="no-highlight">30</i>&nbsp;
+<i class="no-highlight">31</i>&nbsp;    private Collection&lt;Topic&gt; mostPopularTopics;
+<i class="no-highlight">32</i>&nbsp;    private Map&lt;User, Integer&gt; mostValuedUsersWithScore;
+<i class="no-highlight">33</i>&nbsp;
+<i class="no-highlight">34</i>&nbsp;    @PostConstruct
+<i class="no-highlight">35</i>&nbsp;    public void init(){
+<b class="fc"><i class="no-highlight">36</i>&nbsp;        mostPopularTopics = gameService.getMostPopularTopics();</b>
+<b class="fc"><i class="no-highlight">37</i>&nbsp;        mostValuedUsersWithScore = scoreService.getUsersWithScores();</b>
+<b class="fc"><i class="no-highlight">38</i>&nbsp;    }</b>
+<i class="no-highlight">39</i>&nbsp;
+<i class="no-highlight">40</i>&nbsp;    public Collection&lt;Topic&gt; getMostPopularTopics() {
+<b class="nc"><i class="no-highlight">41</i>&nbsp;        return mostPopularTopics.stream().limit(3).collect(Collectors.toList());</b>
+<i class="no-highlight">42</i>&nbsp;    }
+<i class="no-highlight">43</i>&nbsp;
+<i class="no-highlight">44</i>&nbsp;    public List&lt;Map.Entry&lt;User, Integer&gt;&gt; getHighscores() {
+<b class="fc"><i class="no-highlight">45</i>&nbsp;        Set&lt;Map.Entry&lt;User, Integer&gt;&gt; productSet = mostValuedUsersWithScore.entrySet();</b>
+<b class="nc"><i class="no-highlight">46</i>&nbsp;        return new ArrayList&lt;Map.Entry&lt;User, Integer&gt;&gt;(productSet);</b>
+<i class="no-highlight">47</i>&nbsp;    }
+<i class="no-highlight">48</i>&nbsp;
+<i class="no-highlight">49</i>&nbsp;    public List&lt;Map.Entry&lt;User, Integer&gt;&gt; getHighscoresAGame() {
+<b class="fc"><i class="no-highlight">50</i>&nbsp;        Set&lt;Map.Entry&lt;User, Integer&gt;&gt; productSet = mostValuedUsersWithScore.entrySet();</b>
+<b class="nc"><i class="no-highlight">51</i>&nbsp;        return new ArrayList&lt;Map.Entry&lt;User, Integer&gt;&gt;(productSet);</b>
+<i class="no-highlight">52</i>&nbsp;    }
+<i class="no-highlight">53</i>&nbsp;
+<i class="no-highlight">54</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-06-18 20:18</div>
+</div>
+</body>
+</html>

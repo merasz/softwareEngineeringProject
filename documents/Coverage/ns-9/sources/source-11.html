@@ -1,0 +1,189 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > TopicParserController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">at.qe.skeleton.ui.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: TopicParserController (at.qe.skeleton.ui.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TopicParserController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (4/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    28,6%
+  </span>
+  <span class="absValue">
+    (10/35)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package at.qe.skeleton.ui.controllers;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import at.qe.skeleton.model.Topic;
+<i class="no-highlight">4</i>&nbsp;import at.qe.skeleton.services.TermsService;
+<i class="no-highlight">5</i>&nbsp;import at.qe.skeleton.services.TopicService;
+<i class="no-highlight">6</i>&nbsp;import org.json.simple.JSONObject;
+<i class="no-highlight">7</i>&nbsp;import org.primefaces.model.file.*;
+<i class="no-highlight">8</i>&nbsp;import org.slf4j.*;
+<i class="no-highlight">9</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i class="no-highlight">10</i>&nbsp;import org.springframework.boot.json.*;
+<i class="no-highlight">11</i>&nbsp;import org.springframework.stereotype.Controller;
+<i class="no-highlight">12</i>&nbsp;
+<i class="no-highlight">13</i>&nbsp;import org.json.simple.parser.JSONParser;
+<i class="no-highlight">14</i>&nbsp;
+<i class="no-highlight">15</i>&nbsp;import javax.faces.application.*;
+<i class="no-highlight">16</i>&nbsp;import javax.faces.context.*;
+<i class="no-highlight">17</i>&nbsp;import java.io.*;
+<i class="no-highlight">18</i>&nbsp;
+<i class="no-highlight">19</i>&nbsp;@Controller
+<b class="fc"><i class="no-highlight">20</i>&nbsp;public class TopicParserController {</b>
+<i class="no-highlight">21</i>&nbsp;
+<i class="no-highlight">22</i>&nbsp;    @Autowired
+<i class="no-highlight">23</i>&nbsp;    private TermsService termsService;
+<i class="no-highlight">24</i>&nbsp;
+<i class="no-highlight">25</i>&nbsp;    @Autowired
+<i class="no-highlight">26</i>&nbsp;    private TopicService topicService;
+<i class="no-highlight">27</i>&nbsp;
+<b class="fc"><i class="no-highlight">28</i>&nbsp;    private final Logger log = LoggerFactory.getLogger(this.getClass());</b>
+<i class="no-highlight">29</i>&nbsp;
+<i class="no-highlight">30</i>&nbsp;    private UploadedFile file;
+<i class="no-highlight">31</i>&nbsp;
+<i class="no-highlight">32</i>&nbsp;    public void upload() {
+<b class="fc"><i class="no-highlight">33</i>&nbsp;        if (file != null) {</b>
+<i class="no-highlight">34</i>&nbsp;            try {
+<b class="fc"><i class="no-highlight">35</i>&nbsp;                String isItJson = file.getFileName().substring(file.getFileName().length()-4);</b>
+<b class="nc"><i class="no-highlight">36</i>&nbsp;                if(isItJson.equals(&quot;json&quot;)) {</b>
+<b class="nc"><i class="no-highlight">37</i>&nbsp;                    parseAndSave();</b>
+<b class="nc"><i class="no-highlight">38</i>&nbsp;                    FacesMessage message = new FacesMessage(&quot;Successfull&quot;, file.getFileName() + &quot; is uploaded.&quot;);</b>
+<b class="nc"><i class="no-highlight">39</i>&nbsp;                    FacesContext.getCurrentInstance().addMessage(null, message);</b>
+<b class="nc"><i class="no-highlight">40</i>&nbsp;                }</b>
+<i class="no-highlight">41</i>&nbsp;                else {
+<b class="nc"><i class="no-highlight">42</i>&nbsp;                    FacesMessage message = new FacesMessage(&quot;Unsuccessful&quot;, file.getFileName() + &quot; please use a json file.&quot;);</b>
+<b class="nc"><i class="no-highlight">43</i>&nbsp;                    FacesContext.getCurrentInstance().addMessage(null, message);</b>
+<i class="no-highlight">44</i>&nbsp;                }
+<b class="fc"><i class="no-highlight">45</i>&nbsp;            } catch (Exception e) {</b>
+<b class="fc"><i class="no-highlight">46</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i class="no-highlight">47</i>&nbsp;            }</b>
+<i class="no-highlight">48</i>&nbsp;        }
+<b class="fc"><i class="no-highlight">49</i>&nbsp;    }</b>
+<i class="no-highlight">50</i>&nbsp;
+<i class="no-highlight">51</i>&nbsp;    public void parseAndSave() {
+<i class="no-highlight">52</i>&nbsp;        try {
+<b class="nc"><i class="no-highlight">53</i>&nbsp;            InputStream inputStream = file.getInputStream();</b>
+<b class="nc"><i class="no-highlight">54</i>&nbsp;            JSONParser jsonParser = new JSONParser();</b>
+<b class="nc"><i class="no-highlight">55</i>&nbsp;            JSONObject jsonObject = (JSONObject) jsonParser.parse(new InputStreamReader(inputStream, &quot;UTF-8&quot;));</b>
+<b class="nc"><i class="no-highlight">56</i>&nbsp;            String topicName = jsonObject.get(&quot;topic&quot;).toString();</b>
+<i class="no-highlight">57</i>&nbsp;
+<i class="no-highlight">58</i>&nbsp;
+<i class="no-highlight">59</i>&nbsp;            Topic topic;
+<b class="nc"><i class="no-highlight">60</i>&nbsp;            if (topicService.topicExists(new Topic(topicName))) {</b>
+<b class="nc"><i class="no-highlight">61</i>&nbsp;                topic = topicService.loadTopic(topicName);</b>
+<i class="no-highlight">62</i>&nbsp;            }
+<i class="no-highlight">63</i>&nbsp;            else {
+<b class="nc"><i class="no-highlight">64</i>&nbsp;                topic = new Topic(topicName);</b>
+<b class="nc"><i class="no-highlight">65</i>&nbsp;                topicService.saveTopic(topic);</b>
+<i class="no-highlight">66</i>&nbsp;            }
+<b class="nc"><i class="no-highlight">67</i>&nbsp;            termsService.importTerms(jsonObject, topic);</b>
+<b class="nc"><i class="no-highlight">68</i>&nbsp;        } catch (Exception e) {</b>
+<b class="nc"><i class="no-highlight">69</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i class="no-highlight">70</i>&nbsp;            String errorMessage = file.getFileName() + &quot; has a invalid JSON-Format.&quot;;</b>
+<b class="nc"><i class="no-highlight">71</i>&nbsp;            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,&quot;Error!&quot;, errorMessage);</b>
+<b class="nc"><i class="no-highlight">72</i>&nbsp;            FacesContext.getCurrentInstance().addMessage(null, message);</b>
+<b class="nc"><i class="no-highlight">73</i>&nbsp;            throw new JsonParseException();</b>
+<b class="nc"><i class="no-highlight">74</i>&nbsp;        }</b>
+<b class="nc"><i class="no-highlight">75</i>&nbsp;    }</b>
+<i class="no-highlight">76</i>&nbsp;
+<i class="no-highlight">77</i>&nbsp;    public void setFile(UploadedFile file) {
+<b class="fc"><i class="no-highlight">78</i>&nbsp;        this.file = file;</b>
+<b class="fc"><i class="no-highlight">79</i>&nbsp;    }</b>
+<i class="no-highlight">80</i>&nbsp;
+<i class="no-highlight">81</i>&nbsp;    public UploadedFile getFile() {
+<b class="fc"><i class="no-highlight">82</i>&nbsp;        return file;</b>
+<i class="no-highlight">83</i>&nbsp;    }
+<i class="no-highlight">84</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-06-18 20:18</div>
+</div>
+</body>
+</html>
