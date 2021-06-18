@@ -13,6 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ScoreTest {
 
     @Mock
+    private User mockUser;
+    @Mock
     private Team mockTeam;
     @Mock
     private Game mockGame;
@@ -21,7 +23,7 @@ class ScoreTest {
 
     @BeforeEach
     void setUp() {
-        scoreUnderTest = new Score(0, 0L, mockTeam, mockGame);
+        scoreUnderTest = new Score(mockUser, mockTeam, mockGame);
     }
 
     @Test

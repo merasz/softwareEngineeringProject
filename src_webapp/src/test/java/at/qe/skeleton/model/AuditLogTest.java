@@ -10,20 +10,31 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AuditLogTest {
+
+    private AuditLog auditLogUnderTest;
+
+    @BeforeEach
+    void setUp() {
+        auditLogUnderTest = new AuditLog();
+    }
+
     @Test
     void testGetSerialVersionUID() {
-        assertThat(Term.getSerialVersionUID()).isEqualTo(1L);
+        assertThat(auditLogUnderTest.getSerialVersionUID()).isEqualTo(2L);
     }
+
     @Test
     void testSetId() {
         AuditLog auditLog = new AuditLog();
         auditLog.setId(3);
         assertTrue(auditLog.getId() == 3);
     }
+
     @Test
     void testGetId() {
         AuditLog auditLog = new AuditLog();
@@ -47,14 +58,14 @@ public class AuditLogTest {
     @Test
     void testGetUpdateUser() {
         User user = new User();
-        user.setUpdateUser(user);
-        assertTrue(user.getUpdateUser() == user);
+        auditLogUnderTest.setUpdateUser(user);
+        assertTrue(auditLogUnderTest.getUpdateUser() == user);
     }
     @Test
     void testSetUpdateUser() {
         User user = new User();
-        user.setUpdateUser(user);
-        assertTrue(user.getUpdateUser() == user);
+        auditLogUnderTest.setUpdateUser(user);
+        assertTrue(auditLogUnderTest.getUpdateUser() == user);
     }
 
     @Test
@@ -77,4 +88,15 @@ public class AuditLogTest {
         assertThat(result).isTrue();
     }
 
+    @Test
+    void testEquals() {
+        final boolean result = auditLogUnderTest.equals("o");
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    void testHashCode() {
+        final int result = auditLogUnderTest.hashCode();
+        assertThat(result).isEqualTo(31);
+    }
 }

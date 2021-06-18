@@ -1,5 +1,6 @@
 package at.qe.skeleton.model;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -346,5 +347,13 @@ class UserTest {
     void testIsNew() {
         final boolean result = userUnderTest.isNew();
         assertThat(result).isTrue();
+    }
+
+    @Test
+    void testCompareTo() {
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            final User o = new User();
+             userUnderTest.compareTo(o);
+        });
     }
 }

@@ -2,6 +2,7 @@ package at.qe.skeleton.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import java.util.*;
 
@@ -9,15 +10,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AuditLogEntryTest {
-    private AuditLogEntry auditLogEntry;
+
+    @Mock
+    private int mockAuditLogId;
+    @Mock
+    private String mockMessage;
+    @Mock
+    private Date mockModificationDate;
+
+    private AuditLogEntry auditLogEntryUnderTest;
 
     @BeforeEach
     void setUp() {
-        auditLogEntry = new AuditLogEntry();
+        auditLogEntryUnderTest = new AuditLogEntry(mockAuditLogId, mockMessage, mockModificationDate);
         }
     @Test
     void testGetSerialVersionUID() {
-        assertThat(Term.getSerialVersionUID()).isEqualTo(1L);
+        assertThat(auditLogEntryUnderTest.getSerialVersionUID()).isEqualTo(2L);
     }
 
     @Test
@@ -27,6 +36,7 @@ public class AuditLogEntryTest {
         auditLogEntry.setAuditLogEvents(auditLogEvents);
         assertTrue(auditLogEntry.getAuditLogEvents() == auditLogEvents);
     }
+    
     @Test
     void testGetAuditLogEvents() {
         AuditLogEntry auditLogEntry = new AuditLogEntry();
@@ -34,24 +44,26 @@ public class AuditLogEntryTest {
         auditLogEntry.setAuditLogEvents(auditLogEvents);
         assertTrue(auditLogEntry.getAuditLogEvents() == auditLogEvents);
     }
+    
     @Test
     void testGetAuditLogId() {
-        AuditLogEntry auditLogEntry = new AuditLogEntry();
-        auditLogEntry.setAuditLogEntryId(10);
-        assertTrue(auditLogEntry.getAuditLogEntryId() == 10);
+        auditLogEntryUnderTest.setAuditLogId(mockAuditLogId);
+        assertTrue(auditLogEntryUnderTest.getAuditLogId() == mockAuditLogId);
     }
+    
     @Test
     void testSetAuditLogId() {
-        AuditLogEntry auditLogEntry = new AuditLogEntry();
-        auditLogEntry.setAuditLogEntryId(10);
-        assertTrue(auditLogEntry.getAuditLogEntryId() == 10);
+        auditLogEntryUnderTest.setAuditLogId(mockAuditLogId);
+        assertTrue(auditLogEntryUnderTest.getAuditLogId() == mockAuditLogId);
     }
+    
     @Test
     void testGetAuditLogEntryId() {
         AuditLogEntry auditLogEntry = new AuditLogEntry();
         auditLogEntry.setAuditLogEntryId(13);
         assertTrue(auditLogEntry.getAuditLogEntryId() == 13);
     }
+
     @Test
     void testSetAuditLogEntryId() {
         AuditLogEntry auditLogEntry = new AuditLogEntry();
@@ -79,6 +91,7 @@ public class AuditLogEntryTest {
         auditLogEntry.setModificationDate(date);
         assertTrue(auditLogEntry.getModificationDate() == date);
     }
+
     @Test
     void testGetUpdateDate() {
         AuditLogEntry auditLogEntry = new AuditLogEntry();
@@ -86,13 +99,6 @@ public class AuditLogEntryTest {
         auditLogEntry.setModificationDate(date);
         assertTrue(auditLogEntry.getModificationDate() == date);
     }
-
-
-
-
-
-
-
 }
 
 

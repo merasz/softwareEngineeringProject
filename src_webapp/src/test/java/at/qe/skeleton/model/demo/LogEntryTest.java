@@ -15,6 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(MockitoExtension.class)
 class LogEntryTest {
 
+    private LogEntryType mockLogEntryType;
+
     @Mock
     private User mockUser;
     @Mock
@@ -55,6 +57,15 @@ class LogEntryTest {
         assertTrue(logEntryUnderTest.getTimestamp() == timestamp);
     }
 
-    //TODO: getter/setter LogTypeEntry
+    @Test
+    void testGetLogType() {
+        logEntryUnderTest.setLogType(mockLogEntryType);
+        assertTrue(logEntryUnderTest.getLogType() == mockLogEntryType);
+    }
 
+    @Test
+    void testSetLogType() {
+        logEntryUnderTest.setLogType(mockLogEntryType);
+        assertTrue(logEntryUnderTest.getLogType() == mockLogEntryType);
+    }
 }

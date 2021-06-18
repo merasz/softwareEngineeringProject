@@ -123,6 +123,20 @@ class TopicTest {
     }
 
     @Test
+    void testGetId() {
+        Integer integer = 1;
+        topicUnderTest.setId(integer);
+        assertTrue(topicUnderTest.getId() == integer);
+    }
+
+    @Test
+    void testSetId() {
+        Integer integer = 1;
+        topicUnderTest.setId(integer);
+        assertTrue(topicUnderTest.getId() == integer);
+    }
+
+    @Test
     void testEquals() {
         final boolean result = topicUnderTest.equals("obj");
         assertThat(result).isFalse();

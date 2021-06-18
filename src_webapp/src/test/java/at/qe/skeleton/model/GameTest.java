@@ -25,7 +25,6 @@ public class GameTest {
     @Mock
     private Topic topic;
 
-
     @Test
     void testGetScoreToWin() {
         Game game = new Game();
@@ -69,8 +68,6 @@ public class GameTest {
         game.setRaspberry(raspberry);
         assertTrue(game.getRaspberry() == raspberry);
     }
-
-
 
     @Test
     void testSetTeamList() {
@@ -170,7 +167,7 @@ public class GameTest {
 
     @Test
     void testGetSerialVersionUID() {
-        assertThat(Topic.getSerialVersionUID()).isEqualTo(1L);
+        assertThat(Game.getSerialVersionUID()).isEqualTo(1L);
     }
 
     @Test
@@ -234,12 +231,6 @@ public class GameTest {
         final boolean result = game.equals("o");
         assertThat(result).isFalse();
     }
-
-    /*@Test
-    void testHashCode() {
-        final int result = game.hashCode();
-        assertThat(result).isEqualTo(10);
-    }*/
 }
 
 
