@@ -57,43 +57,17 @@ class TopicParserControllerTest {
     @InjectMocks
     private TopicParserController topicParserController;
 
-
-   /* public void upload() {
-        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
-            assertThat(uploadedFile).isEqualTo(uploadedFile);
-            //if (uploadedFile != null) {
-            try {
-                String isItJson = uploadedFile.getFileName().substring(uploadedFile.getFileName().length() - 4);
-                assertTrue(isItJson.equals("json"));
-                //if(isItJson.equals("json")) {
-                topicParserController.parseAndSave();
-                FacesMessage message = new FacesMessage("Successfull", uploadedFile.getFileName() + " is uploaded.");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                //}
-                //else {
-                assertFalse(isItJson.equals("json"));
-                FacesMessage message1 = new FacesMessage("Unsuccessful", uploadedFile.getFileName() + " please use a json file.");
-                FacesContext.getCurrentInstance().addMessage(null, message1);
-                //}
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            topicParserController.getFile();
-        });
-        }*/
-
    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testUpload(){
-            Assertions.assertThrows(java.lang.StringIndexOutOfBoundsException.class, () -> {
+       //Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
 
                 TopicParserController topicParserController = new TopicParserController();
-                when(uploadedFile.getFileName()).thenReturn("");
-
+                when(uploadedFile.getFileName()).thenReturn(null);
                 try {
-                    String isItJson = uploadedFile.getFileName().substring(uploadedFile.getFileName().length() - 4);
-                    when(isItJson.equals("json"));
+                    String isItJson = new String();
+                    isItJson = uploadedFile.getFileName().substring(uploadedFile.getFileName().length() - 4);
+                    assertThat(isItJson.equals("json")).isEqualTo(true);
                     topicParserController.parseAndSave();
                     FacesMessage message = new FacesMessage("Successfull", uploadedFile.getFileName() + " is uploaded.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
@@ -104,38 +78,47 @@ class TopicParserControllerTest {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            });
+                topicParserController.setFile(uploadedFile);
+                 topicParserController.getFile();
+                topicParserController.upload();
+            //});
+
     }
 
-/*
+
 @Test
 void testParseAndSave() {
-    try {
-        InputStream inputStream = uploadedFile.getInputStream();
-        JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObject = (JSONObject) jsonParser.parse(new InputStreamReader(inputStream, "UTF-8"));
-        String topicName = jsonObject.get("topic").toString();
+    Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+        try {
+
+            InputStream inputStream = uploadedFile.getInputStream();
+            JSONParser jsonParser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(new InputStreamReader(inputStream, "UTF-8"));
+            String topicName = jsonObject.get("topic").toString();
 
 
-        Topic topic;
-        if (mockTopicService.topicExists(new Topic(topicName))) {
-            topic = mockTopicService.loadTopic(topicName);
+            Topic topic;
+            if (mockTopicService.topicExists(new Topic(topicName))) {
+                topic = mockTopicService.loadTopic(topicName);
+            } else {
+                topic = new Topic(topicName);
+                mockTopicService.saveTopic(topic);
+            }
+            mockTermsService.importTerms(jsonObject, topic);
+        } catch (Exception e) {
+            e.printStackTrace();
+            String errorMessage = uploadedFile.getFileName() + " has a invalid JSON-Format.";
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", errorMessage);
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            throw new JsonParseException();
+
         }
-        else {
-            topic = new Topic(topicName);
-            mockTopicService.saveTopic(topic);
-        }
-        mockTermsService.importTerms(jsonObject, topic);
-    } catch (Exception e) {
-        e.printStackTrace();
-        String errorMessage = uploadedFile.getFileName() + " has a invalid JSON-Format.";
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error!", errorMessage);
-        FacesContext.getCurrentInstance().addMessage(null, message);
-        throw new JsonParseException();
+        topicParserController.setFile(uploadedFile);
+        topicParserController.getFile();
+        topicParserController.parseAndSave();
 
-    }
-    topicParserController.getFile();
-}*/
+    });
+}
 
 
 

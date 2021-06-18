@@ -37,6 +37,7 @@ class ChatManagerControllerTest {
     Set<User> possibleRecipients = new ConcurrentSkipListSet<>();
     Map<String, List<Message>> chats = new ConcurrentHashMap<>();
 
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testOnLogin(){
         Assertions.assertThrows(java.lang.NullPointerException.class, () -> {

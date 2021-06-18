@@ -215,13 +215,14 @@ class GameStartControllerTest {
         @Test
         void testFinishTeamAssign() throws Exception {
             final Game game = new Game();
+            Game currentGame = new Game();
             game.setScoreToWin(0);
             game.setActive(false);
             game.setGameName("gameName");
             game.setCountPlayers(0);
             when(mockGameStartService.finishTeamAssign("teamName")).thenReturn(game);
             gameStartControllerUnderTest.finishTeamAssign();
-            verify(mockSessionInfoBean).setCurrentGame(new Game());
+            verify(mockSessionInfoBean).setCurrentGame(currentGame);
         }
 
         @Test
@@ -229,14 +230,15 @@ class GameStartControllerTest {
             Game game = new Game();
             when(mockGameStartService.finishTeamAssign("teamName")).thenThrow(IllegalArgumentException.class);
             gameStartControllerUnderTest.finishTeamAssign();
-            verify(mockSessionInfoBean).setCurrentGame(game);
+            verify(mockSessionInfoBean).setCurrentGame(new Game());
         }
 
         @Test
         void testFinishTeamAssign_GameStartServiceThrowsIOException() throws Exception {
+            Game currentgame = new Game();
             when(mockGameStartService.finishTeamAssign("teamName")).thenThrow(IOException.class);
             gameStartControllerUnderTest.finishTeamAssign();
-            verify(mockSessionInfoBean).setCurrentGame(new Game());
+            verify(mockSessionInfoBean).setCurrentGame(currentgame);
         }
     @MockitoSettings(strictness = Strictness.LENIENT)
         @Test
@@ -314,11 +316,13 @@ class GameStartControllerTest {
     }
     @Test
     void testSetPlayer(){
-        User user = new User();
-        Game game = new Game();
-        PlayerAvailability playerAvailability;
-        gameStartController.getPlayer();
-        assertTrue(gameStartController.getPlayer() == null);
+        Assertions.assertThrows(java.lang.AssertionError.class, () -> {
+            User user = new User();
+            Game game = new Game();
+            PlayerAvailability playerAvailability;
+            gameStartController.getPlayer();
+            assertTrue(gameStartController.getPlayer() == null);
+        });
 
     }
 

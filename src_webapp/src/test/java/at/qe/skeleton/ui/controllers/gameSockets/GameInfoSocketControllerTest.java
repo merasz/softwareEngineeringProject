@@ -2,6 +2,7 @@ package at.qe.skeleton.ui.controllers.gameSockets;
 
 import at.qe.skeleton.model.GameTopicCount;
 import at.qe.skeleton.model.Topic;
+import at.qe.skeleton.model.demo.Message;
 import at.qe.skeleton.services.TopicService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -26,8 +27,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
+
 @ExtendWith(MockitoExtension.class)
 class GameInfoSocketControllerTest {
+    @Mock
+    GameInfoSocketController gameInfoSocketController;
+
+    @InjectMocks
+    GameInfoSocketControllerTest gameInfoSocketControllerTest;
 
 
 
@@ -43,7 +51,14 @@ class GameInfoSocketControllerTest {
             assertTrue(gameInfoSocketController.getMessageMap() == msg);
             gameInfoSocketController.getMessageMap();
             gameInfoSocketController.setMessageMap(msg);
+            Map<Integer,String> messageMap =new HashMap<>();
+            when(messageMap.put(game.getGameId(),message)).thenReturn(message);
+            //gameInfoSocketController.getMessageMap();
+            gameInfoSocketController.setGameMessageToGame(game, "hola");
+            //gameInfoSocketCon
+
         });
+
     }
 
 

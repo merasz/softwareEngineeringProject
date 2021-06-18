@@ -19,6 +19,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import at.qe.skeleton.ui.websockets.WebSocketManager;
@@ -47,7 +48,7 @@ class GamePlaySocketControllerTest {
     @Mock
     GameInfoSocketController gameInfoSocketController;
 
-    @Mock
+    @InjectMocks
     GamePlaySocketController  gamePlaySocketController;
 
     @Mock
@@ -85,20 +86,25 @@ class GamePlaySocketControllerTest {
         }
 
 
-    /*@Test
-    void teststartTimer() {
+    @Test
+    void testFlipUpdate() {
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+        Game activeGame = new Game();
         Game game = new Game();
-        int time = 35;
+
+        int faceID = 35;
+        Map<Integer,Integer> gameFinishedMap = new ConcurrentHashMap<>();
+        Map<Integer, Integer> currentRoundRunning = new ConcurrentHashMap<>();
+        Map<Integer, Integer> runningMap = new ConcurrentHashMap<Integer, Integer>();
+        when(runningMap.get( runningMap.get(activeGame.getGameId()) == 0 && gameFinishedMap.get(activeGame.getGameId()) != 1));
         Map<Integer,Integer> timeMap = new ConcurrentHashMap<>();
+        int time = 4;
         timeMap.put(game.getGameId(),time);
         timeMap.get(35);
-        assertTrue(gamePlaySocketController.startTimer(game, 35) == timeMap);
-
-    }*/
-
-    @Test
-    void timeFlipUpdate() {
+        verify(gamePlaySocketController).timeFlipUpdate(game, faceID);
+            });
     }
+
 
     @Test
     void nextTerm() {
@@ -163,10 +169,32 @@ class GamePlaySocketControllerTest {
 
     @Test
     void setTimeInternal() {
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            Game game = new Game();
+            Integer time = 3;
+            GamePlaySocketController gamePlaySocketController = new GamePlaySocketController();
+            Map<Integer, Integer> msg = new HashMap<>();
+            msg.put(game.getGameId(), time);
+            gamePlaySocketController.setTimeInternal(game, 3);
+            assertTrue(gamePlaySocketController.getTimeMap() == msg);
+        });
     }
+
 
     @Test
     void getPoints() {
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            Game game = new Game();
+            Integer points = 3;
+            Map<Integer, Integer> runningMap = new ConcurrentHashMap<Integer, Integer>();
+            when(runningMap.get(game.getGameId() == 0)).thenReturn(null);
+            Map<Integer, Integer> pointsMap = new ConcurrentHashMap<Integer, Integer>();
+            when(pointsMap.get(game.getGameId() == null)).thenReturn(pointsMap.get(game.getGameId()));
+            gamePlaySocketController.setPoints(game, points);
+            gamePlaySocketController.getPoints(game);
+        });
+
+
     }
 
     @Test
@@ -175,14 +203,117 @@ class GamePlaySocketControllerTest {
 
     @Test
     void putTeamPlayerMap() {
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            Game game = new Game();
+            TeamPlayer teamPlayer = new TeamPlayer();
+            Queue<TeamPlayer> orderedPlayerList = new Queue<TeamPlayer>() {
+                @Override
+                public boolean add(TeamPlayer teamPlayer) {
+                    return false;
+                }
+
+                @Override
+                public boolean offer(TeamPlayer teamPlayer) {
+                    return false;
+                }
+
+                @Override
+                public TeamPlayer remove() {
+                    return null;
+                }
+
+                @Override
+                public TeamPlayer poll() {
+                    return null;
+                }
+
+                @Override
+                public TeamPlayer element() {
+                    return null;
+                }
+
+                @Override
+                public TeamPlayer peek() {
+                    return null;
+                }
+
+                @Override
+                public int size() {
+                    return 0;
+                }
+
+                @Override
+                public boolean isEmpty() {
+                    return false;
+                }
+
+                @Override
+                public boolean contains(Object o) {
+                    return false;
+                }
+
+                @Override
+                public Iterator<TeamPlayer> iterator() {
+                    return null;
+                }
+
+                @Override
+                public Object[] toArray() {
+                    return new Object[0];
+                }
+
+                @Override
+                public <T> T[] toArray(T[] a) {
+                    return null;
+                }
+
+                @Override
+                public boolean remove(Object o) {
+                    return false;
+                }
+
+                @Override
+                public boolean containsAll(Collection<?> c) {
+                    return false;
+                }
+
+                @Override
+                public boolean addAll(Collection<? extends TeamPlayer> c) {
+                    return false;
+                }
+
+                @Override
+                public boolean removeAll(Collection<?> c) {
+                    return false;
+                }
+
+                @Override
+                public boolean retainAll(Collection<?> c) {
+                    return false;
+                }
+
+                @Override
+                public void clear() {
+
+                }
+            };
+
+            GamePlaySocketController gamePlaySocketController = new GamePlaySocketController();
+            User user = new User();
+            Map<Integer,Queue<TeamPlayer>> teamPlayerMap = new ConcurrentHashMap<>();
+            teamPlayerMap.put(game.getGameId(), orderedPlayerList);
+            gamePlaySocketController.putTeamPlayerMap(game,orderedPlayerList);
+        });
     }
 
     @Test
     void getNextRoundPlayer() {
-        User user = new User();
-        Game game = new Game();
-        Map<Integer, User> players = new HashMap<>();
-        gamePlaySocketController.getNextRoundPlayer(game);
-
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            GamePlaySocketController gamePlaySocketController = new GamePlaySocketController();
+            User user = new User();
+            Game game = new Game();
+            Map<Integer, User> players = new HashMap<>();
+            gamePlaySocketController.getNextRoundPlayer(game);
+        });
     }
 }

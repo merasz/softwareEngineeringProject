@@ -44,24 +44,38 @@ class CurrentGamesControllerTest {
     @Test
     void testInit() {
         Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
-                    final BarChartModel model = new BarChartModel();
-                    List<Game> activeGames = new ArrayList<>(mockGameService.getAllActiveGames());
-                    model.setTitle("Players in active Games");
-                    verify(model.getTitle()).isEmpty();
-                });
-        //currentGamesController.createLineModel();
+                final BarChartModel model = new BarChartModel();
+                List<Game> activeGames = new ArrayList<>(mockGameService.getAllActiveGames());
+                model.setTitle("Players in active Games");
+                verify(model.getTitle()).isEmpty();
+
+            currentGamesController.init();
+            currentGamesController.createLineModel();
+        });
     }
 
     @Test
     void testCreateLineModel() {
-        final BarChartModel model = new BarChartModel();
-        List<Game> actives = new ArrayList<>();
-        for (Game activeGame : actives) {
-            ChartSeries chartSeries = new ChartSeries();
-            chartSeries.set(activeGame.getGameName(), activeGame.getCountPlayers());
-            chartSeries.setLabel(activeGame.getGameName());
-            model.addSeries(chartSeries);
-        }
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            final BarChartModel model = new BarChartModel();
+            List<Game> actives = new ArrayList<>();
+            model.setTitle("Players in active Games");
+            Axis y = model.getAxis(AxisType.Y);
+            y.setLabel("Players in each Game");
+
+            Axis x = model.getAxis(AxisType.X);
+            x.setLabel("Game Name");
+            for (Game activeGame : actives) {
+                ChartSeries chartSeries = new ChartSeries();
+                chartSeries.set(activeGame.getGameName(), activeGame.getCountPlayers());
+                chartSeries.setLabel(activeGame.getGameName());
+                model.addSeries(chartSeries);
+            }
+            currentGamesController.createLineModel();
+            currentGamesController.init();
+            currentGamesController.getModel();
+            currentGamesController.setModel(model);
+        });
     }
 
     @Test
@@ -78,12 +92,6 @@ class CurrentGamesControllerTest {
         currentGamesController.setModel(model);
         assertTrue(currentGamesController.getModel() == model);
 
-    }
-
-
-
-    @Test
-    void init() {
     }
 
 

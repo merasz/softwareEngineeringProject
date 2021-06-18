@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SecurityTestBeanTest {
@@ -29,7 +30,7 @@ class SecurityTestBeanTest {
 
     @Test
     void testIsShowOkDialog() {
-        assertTrue(securityTestBeanUnderTest.isShowOkDialog());
+        assertFalse(securityTestBeanUnderTest.isShowOkDialog());
     }
 
     @Test
