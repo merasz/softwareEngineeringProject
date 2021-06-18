@@ -93,6 +93,9 @@ class GameStartControllerTest {
                 assertThat(result).isEqualTo("result");
             });
         }
+
+
+
     @MockitoSettings(strictness = Strictness.LENIENT)
         @Test
         void testJoinGame() {
@@ -291,6 +294,7 @@ class GameStartControllerTest {
     @Test
     void testGetTeamName() {
         Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            gameStartControllerUnderTest.setTeamName("team1");
             when(gameStartService.getTeam().getTeamName()).thenReturn("result");
             final String result = gameStartController.getTeamName();
             assertThat(result).isEqualTo("result");
@@ -299,6 +303,7 @@ class GameStartControllerTest {
     @Test
     void testSetTeamName() {
         Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            gameStartControllerUnderTest.setTeamName("group1");
             when(gameStartService.getTeam().getTeamName()).thenReturn("result");
             final String name = gameStartController.getTeamName();
             assertThat(name).isEqualTo("result");

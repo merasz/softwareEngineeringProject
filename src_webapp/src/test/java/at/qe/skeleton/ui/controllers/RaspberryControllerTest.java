@@ -178,16 +178,12 @@ class RaspberryControllerTest {
         raspberryController.setAction("no");
         assertTrue(raspberryController.getAction() == "no");
     }
-
-    /*@Test
+    @Test
     void getRaspberryService(){
-        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+
            Raspberry raspberry = new Raspberry();
             raspberryController.setRaspberry(raspberry);
-            assertTrue(raspberryController.getRaspberryService());
-            assertThat(raspberryController.getRaspberryService() == raspberry);
             raspberryController.getRaspberryService();
-        });
-    }*/
+    }
 }
 

@@ -100,7 +100,9 @@ class TopicControllerTest {
         });
     }
 
-    public void doEditTopic(){
+    @Test
+     void doEditTopic(){
+        topicControllerUnderTest.doEditTopic();
         assertTrue(topicControllerUnderTest.saveTopic());
         Controller controller = new Controller() {
                 @Override

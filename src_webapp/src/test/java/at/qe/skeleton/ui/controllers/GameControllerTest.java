@@ -11,6 +11,7 @@ import at.qe.skeleton.services.TopicService;
 import at.qe.skeleton.services.UserService;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
 import at.qe.skeleton.ui.controllers.gameSockets.GameJoinController;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -49,6 +50,16 @@ class GameControllerTest {
 
     @InjectMocks
     private GameController gameController;
+
+    @Test
+    void testGetGames(){
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            List<Game> games = gameService.getGameRepository().findAll();
+            assertThat(gameController.getGames() == games);
+        });
+        gameController.getGames();
+
+    }
 
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test

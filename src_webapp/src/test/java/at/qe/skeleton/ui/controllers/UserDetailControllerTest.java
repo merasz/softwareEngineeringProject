@@ -57,6 +57,8 @@ class UserDetailControllerTest {
         userDetailController.setSelectedUser(user);
         assertFalse(userDetailController.getSelectedUser() == selectedUser);
         userDetailControllerUnderTest.doCreateNewUser();
+        userDetailControllerUnderTest.setSelectedUser(new User());
+        userDetailControllerUnderTest.getSelectedUser();
     }
 
 

@@ -8,6 +8,7 @@ import at.qe.skeleton.repositories.TermsRepository;
 import at.qe.skeleton.services.GameStartService;
 import at.qe.skeleton.services.TermsService;
 import at.qe.skeleton.services.TopicService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,6 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -39,9 +41,11 @@ class TermListControllerTest {
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testGetTerms(){
-        final Collection<Term> terms = Arrays.asList((new Term()));
-        when(termsService.getAllTerms()).thenReturn(terms);
-        termListController.getTerm();
+            Collection<Term> terms = termsService.getAllTerms();
+            assertThat(termListController.getTerms() == terms);
+
+        termListController.getTerms();
+
     }
 
     @MockitoSettings(strictness = Strictness.LENIENT)
@@ -95,13 +99,14 @@ class TermListControllerTest {
         termListController.getTopics();
     }
 
-    /*
+
     @Test
     void testGetTermsOfTopic() {
-        final Term term = new Term();
-        TopicService myService = mock(TopicService.class, Mockito.RETURNS_DEEP_STUBS);
-        when(myService.getAllTopics()).thenThrow(IllegalArgumentException.class);
-        when(termsService.getTermsRepository()).thenReturn(null);
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            Topic topic = new Topic();
+            List<Term> terms =  termsService.getTermsRepository().findAllByTopic(topic);
+            assertThat(termListController.getTermsOfTopic() == terms);
+        });
         termListController.getTermsOfTopic();
-    }*/
+    }
 }
