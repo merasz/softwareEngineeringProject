@@ -15,7 +15,8 @@
         <link rel="stylesheet" href="/resources/css/style.css"/>
     </h:head>
 
-    <h:body style="background-color: #34495e; background-image: url(/resources/css/loginpage.jpg)">
+    <h:body>
+        <img src="/loginpage.jpg" class="loginImage" />
         <div class="login-box" style="box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
                 border: 2px solid #3498db; height:800px; width:500px;">
             <div class="login-box-body">
@@ -28,15 +29,18 @@
                                 <h:outputText value="Choose your Team Players"/>
                             </div>
 
-                            <h:panelGrid columns ="3" >
+                            <h:panelGrid columns ="2" >
                                 <p:outputLabel for="teamName" value="Team Name: " style="color: white"/>
                                 <p:inputText id="teamName" value="#{gameStartController.teamName}" placeholder="#{gameStartController.teamName}"
                                              style="color: black; background-color: white"/>
+
+                            </h:panelGrid>
+                            <h:panelGroup layout="block">
                                 <p:commandButton id="reset" action="#{gameStartController.resetAssignments}" value="reset Teams"
                                                  update="playerList"
                                                  style="height:40px; width:150px; border: 2px solid #3498db; font-weight: normal;
                                                  border-radius: 48px; padding: 0; margin-top: 5px; text-align: center" />
-                            </h:panelGrid>
+                            </h:panelGroup>
 
                             <div style="font-size: large; color: white; padding-bottom: 20px">
                                 <h:outputText id="numberAssigned" value="#{gameStartController.teamSizeString}"/>
