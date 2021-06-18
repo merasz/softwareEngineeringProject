@@ -1,0 +1,58 @@
+Die ist das Projekt der Gruppe 1 in PS Gruppe 6.
+
+Mitglied 1: (Michael Hauser ,01267565)
+Mitglied 2: (Angela Todhri, 11815296)
+Mitglied 3: (Ismail Üner, 11721981)
+Mitglied 4: (Flaminia Anselmi, 11934695)
+Mitglied 5: (Sebastian Hepp, 01015083)
+Mitglied 6: (Maximilian Heine, 01317323)
+
+Um unser Programm einfach zu starten, bieten wir diese Schritte an:
+
+Als erstes das Archiv "src_rasp" auf den Raspberry übertragen. Wir verwenden dazu SSH
+
+rasp auf local
+scp -r pi@*.*.*.*:/home/pi/src_rasp /**pathToProject**/g6t1/src_ble/bleclient/
+
+local auf rasp
+scp -r /**pathToProject**/g6t1/src_ble/bleclient/ pi@*.*.*.*:/home/pi/src_rasp/
+
+
+Starten der Applikation:
+
+Die App mittels Docker Compose ausführen:
+docker-compose up
+
+- Docker mit unserer Webapp starten
+- Webapp unter localhost:8080 starten
+- mit Admin und passwd einloggen
+- in den Reiter Raspberry navigieren
+- hier den bestehenden Raspberry verwenden oder Neuen anlegen
+
+Dies erfolgt auf dem RASPBERRY.
+Daten sollten wie oben gezeigt vom lokalen Rechner, auf der die WebApp läuft, auf den Raspberry
+übertragen werden. Am Raspberry sollte nur der src_rasp Ordner kopiert werden.
+Es wird davon ausgegangen, dass der Raspberry schon soweit konfiguriert ist, das nach Konfiguration
+der config.json das Programm läuffähig ist und keine weiteren Abhängigkeiten bestehen.
+
+In der Webapp im Reiter Raspberry findet man die Informationen die man in config.json setzen muss:
+Bsp:
+Sollte der bestehende Raspberry mit dem namen TopGamerz gewählt werden, sehen die configs so aus:
+
+TopGamerz - 192.168.0.10 - 7173b055-4674-4ca2-8348-60e1b3fa8204
+
+die IP 192.168.0.10 in das file config.json im Feld "ipAddress" hinzufügen und
+7173b055-4674-4ca2-8348-60e1b3fa8204 im Feld "api key" hinzufüge.
+
+Nun noch eine Shell öffnen, mit welcher wir herausfinden welcher hostname/ip unser raspberry besitzt.
+Ein einfaches kommando dafür wäre: hostname -I
+oder: ifconfig
+
+Fie erhaltene IP im Feld "backend" einfügen
+In unserem Fall war es eine IP im lokalen Netzwerk 10.0.0.11
+
+Danach ./runner.sh ausführen und der Raspberry sollte nun die BLE Kommunikation mit dem Timeflip beginnen.
+Sollte der Timeflip nun auch richtig aufgesetzt sein, kann die REST Kommunikation starten.
+
+Bei etwaigen Problemen kann ein Reset mittels "docker-compose down" und ein erneutes Hochfahren helfen.
+
