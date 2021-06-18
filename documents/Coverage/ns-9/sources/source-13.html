@@ -1,0 +1,403 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > UserDetailController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">at.qe.skeleton.ui.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: UserDetailController (at.qe.skeleton.ui.controllers)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserDetailController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (21/21)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    48,7%
+  </span>
+  <span class="absValue">
+    (38/78)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$0nglGkSx</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$5E3zO46i</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$8NXctICv</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$aY20VUBA</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$CDYkBPmz</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$dNndli4u</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$dYL0viCK</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$FBT4x12s</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$gpARJKnp</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$gWZz3VFN</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$i1TpBYRG</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$I9PdFQ7i</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$iA46tcRI</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$JLlEJpaA</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$Nxhgl7nF</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$oo8xVe3n</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$REx8nsbp</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$seEUFRJM</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$sS0j4WmI</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$tTb3AH3F</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$VNQSOSPW</td>
+  </tr>
+  <tr>
+    <td class="name">UserDetailController$MockitoMock$2058652794$auxiliary$zXiUV24K</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (21/21)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    48,7%
+  </span>
+  <span class="absValue">
+    (38/78)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package at.qe.skeleton.ui.controllers;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import at.qe.skeleton.model.User;
+<i class="no-highlight">4</i>&nbsp;import at.qe.skeleton.model.UserRole;
+<i class="no-highlight">5</i>&nbsp;import at.qe.skeleton.services.UserService;
+<i class="no-highlight">6</i>&nbsp;import at.qe.skeleton.ui.controllers.demo.UserStatusController;
+<i class="no-highlight">7</i>&nbsp;import org.primefaces.PrimeFaces;
+<i class="no-highlight">8</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i class="no-highlight">9</i>&nbsp;import org.springframework.context.annotation.Scope;
+<i class="no-highlight">10</i>&nbsp;import org.springframework.stereotype.Component;
+<i class="no-highlight">11</i>&nbsp;
+<i class="no-highlight">12</i>&nbsp;import javax.annotation.PostConstruct;
+<i class="no-highlight">13</i>&nbsp;import java.io.Serializable;
+<i class="no-highlight">14</i>&nbsp;import java.util.ArrayList;
+<i class="no-highlight">15</i>&nbsp;import java.util.Arrays;
+<i class="no-highlight">16</i>&nbsp;import java.util.HashSet;
+<i class="no-highlight">17</i>&nbsp;import java.util.List;
+<i class="no-highlight">18</i>&nbsp;
+<i class="no-highlight">19</i>&nbsp;/**
+<i class="no-highlight">20</i>&nbsp; * Controller for the user view.
+<i class="no-highlight">21</i>&nbsp; *
+<i class="no-highlight">22</i>&nbsp; * This class is part of the skeleton project provided for students of the
+<i class="no-highlight">23</i>&nbsp; * courses &quot;Software Architecture&quot; and &quot;Software Engineering&quot; offered by the
+<i class="no-highlight">24</i>&nbsp; * University of Innsbruck.
+<i class="no-highlight">25</i>&nbsp; */
+<i class="no-highlight">26</i>&nbsp;@Component
+<i class="no-highlight">27</i>&nbsp;@Scope(&quot;view&quot;)
+<b class="fc"><i class="no-highlight">28</i>&nbsp;public class UserDetailController extends Controller implements Serializable {</b>
+<i class="no-highlight">29</i>&nbsp;
+<i class="no-highlight">30</i>&nbsp;    @Autowired
+<i class="no-highlight">31</i>&nbsp;    private UserListController userListController;
+<i class="no-highlight">32</i>&nbsp;
+<i class="no-highlight">33</i>&nbsp;    @Autowired
+<i class="no-highlight">34</i>&nbsp;    UserStatusController userStatusController;
+<i class="no-highlight">35</i>&nbsp;
+<i class="no-highlight">36</i>&nbsp;    @Autowired
+<i class="no-highlight">37</i>&nbsp;    private UserService userService;
+<i class="no-highlight">38</i>&nbsp;
+<i class="no-highlight">39</i>&nbsp;    /**
+<i class="no-highlight">40</i>&nbsp;     * Attribute to cache the currently displayed user
+<i class="no-highlight">41</i>&nbsp;     */
+<i class="no-highlight">42</i>&nbsp;    private User newUser;
+<i class="no-highlight">43</i>&nbsp;    private User selectedUser;
+<i class="no-highlight">44</i>&nbsp;
+<i class="no-highlight">45</i>&nbsp;    private String password;
+<i class="no-highlight">46</i>&nbsp;    private String confirmPassword;
+<i class="no-highlight">47</i>&nbsp;
+<i class="no-highlight">48</i>&nbsp;    @PostConstruct
+<i class="no-highlight">49</i>&nbsp;    public void init() {
+<b class="fc"><i class="no-highlight">50</i>&nbsp;        doCreateNewUser();</b>
+<b class="fc"><i class="no-highlight">51</i>&nbsp;    }</b>
+<i class="no-highlight">52</i>&nbsp;
+<i class="no-highlight">53</i>&nbsp;    public void doCreateNewUser() {
+<b class="fc"><i class="no-highlight">54</i>&nbsp;        newUser = new User();</b>
+<b class="fc"><i class="no-highlight">55</i>&nbsp;    }</b>
+<i class="no-highlight">56</i>&nbsp;
+<i class="no-highlight">57</i>&nbsp;    /**
+<i class="no-highlight">58</i>&nbsp;     * Sets the currently displayed user and reloads it form db. This user is
+<i class="no-highlight">59</i>&nbsp;     * targeted by any further calls of
+<i class="no-highlight">60</i>&nbsp;     * {@link #doReloadUser()}, {@link #doSaveNewUser()} and
+<i class="no-highlight">61</i>&nbsp;     * {@link #doDeleteUser()}.
+<i class="no-highlight">62</i>&nbsp;     *
+<i class="no-highlight">63</i>&nbsp;     * @param selectedUser
+<i class="no-highlight">64</i>&nbsp;     */
+<i class="no-highlight">65</i>&nbsp;    public void setSelectedUser(User selectedUser) {
+<b class="fc"><i class="no-highlight">66</i>&nbsp;        this.selectedUser = selectedUser;</b>
+<b class="fc"><i class="no-highlight">67</i>&nbsp;        doReloadUser();</b>
+<b class="fc"><i class="no-highlight">68</i>&nbsp;    }</b>
+<i class="no-highlight">69</i>&nbsp;
+<i class="no-highlight">70</i>&nbsp;    /**
+<i class="no-highlight">71</i>&nbsp;     * Returns the currently displayed user.
+<i class="no-highlight">72</i>&nbsp;     *
+<i class="no-highlight">73</i>&nbsp;     * @return User
+<i class="no-highlight">74</i>&nbsp;     */
+<i class="no-highlight">75</i>&nbsp;    public User getSelectedUser() {
+<b class="fc"><i class="no-highlight">76</i>&nbsp;        return selectedUser;</b>
+<i class="no-highlight">77</i>&nbsp;    }
+<i class="no-highlight">78</i>&nbsp;
+<i class="no-highlight">79</i>&nbsp;    /**
+<i class="no-highlight">80</i>&nbsp;     * Action to force a reload of the currently displayed user.
+<i class="no-highlight">81</i>&nbsp;     */
+<i class="no-highlight">82</i>&nbsp;    public void doReloadUser() {
+<b class="fc"><i class="no-highlight">83</i>&nbsp;        selectedUser = userService.loadUser(selectedUser.getUsername());</b>
+<b class="fc"><i class="no-highlight">84</i>&nbsp;    }</b>
+<i class="no-highlight">85</i>&nbsp;
+<i class="no-highlight">86</i>&nbsp;    /**
+<i class="no-highlight">87</i>&nbsp;     * Action to delete the currently displayed user.
+<i class="no-highlight">88</i>&nbsp;     */
+<i class="no-highlight">89</i>&nbsp;    public void doDeleteUser() {
+<i class="no-highlight">90</i>&nbsp;        try {
+<b class="fc"><i class="no-highlight">91</i>&nbsp;            this.userService.deleteUser(selectedUser);</b>
+<b class="fc"><i class="no-highlight">92</i>&nbsp;            selectedUser = null;</b>
+<b class="fc"><i class="no-highlight">93</i>&nbsp;            displayInfo(&quot;User deleted&quot;, &quot;Account successfully deleted.&quot;);</b>
+<b class="nc"><i class="no-highlight">94</i>&nbsp;            userListController.loadUsers();</b>
+<b class="nc"><i class="no-highlight">95</i>&nbsp;        } catch (IllegalArgumentException e){</b>
+<b class="nc"><i class="no-highlight">96</i>&nbsp;            displayError(&quot;User not deleted&quot;, e.getMessage());</b>
+<b class="nc"><i class="no-highlight">97</i>&nbsp;        }</b>
+<b class="nc"><i class="no-highlight">98</i>&nbsp;    }</b>
+<i class="no-highlight">99</i>&nbsp;
+<i class="no-highlight">100</i>&nbsp;    /**
+<i class="no-highlight">101</i>&nbsp;     * Action to save the currently displayed user.
+<i class="no-highlight">102</i>&nbsp;     */
+<i class="no-highlight">103</i>&nbsp;    public void doSaveNewUser() {
+<i class="no-highlight">104</i>&nbsp;        try {
+<b class="fc"><i class="no-highlight">105</i>&nbsp;            saveNewUser();</b>
+<b class="fc"><i class="no-highlight">106</i>&nbsp;            displayInfo(&quot;User created&quot;, &quot;&quot;);</b>
+<b class="nc"><i class="no-highlight">107</i>&nbsp;            userStatusController.addUserStatus(selectedUser);</b>
+<b class="nc"><i class="no-highlight">108</i>&nbsp;            doCreateNewUser();</b>
+<b class="nc"><i class="no-highlight">109</i>&nbsp;            userListController.loadUsers();</b>
+<b class="nc"><i class="no-highlight">110</i>&nbsp;        } catch (IllegalArgumentException e) {</b>
+<b class="nc"><i class="no-highlight">111</i>&nbsp;            displayError(e.getMessage(), e.getCause().getMessage());</b>
+<b class="nc"><i class="no-highlight">112</i>&nbsp;        }</b>
+<b class="nc"><i class="no-highlight">113</i>&nbsp;    }</b>
+<i class="no-highlight">114</i>&nbsp;
+<i class="no-highlight">115</i>&nbsp;    private void saveNewUser() throws IllegalArgumentException {
+<b class="fc"><i class="no-highlight">116</i>&nbsp;        selectedUser = newUser;</b>
+<b class="fc"><i class="no-highlight">117</i>&nbsp;        if (!(password == null) &amp;&amp; !password.isEmpty()) {</b>
+<b class="nc"><i class="no-highlight">118</i>&nbsp;            updatePassword();</b>
+<i class="no-highlight">119</i>&nbsp;        }
+<b class="fc"><i class="no-highlight">120</i>&nbsp;        if(!userService.isUsernameAlreadyTaken(selectedUser)) {</b>
+<b class="fc"><i class="no-highlight">121</i>&nbsp;            selectedUser = userService.saveUser(selectedUser);</b>
+<i class="no-highlight">122</i>&nbsp;        } else {
+<b class="nc"><i class="no-highlight">123</i>&nbsp;            throw new IllegalArgumentException(&quot;User not created&quot;, new Throwable(&quot;Username already exists.&quot;));</b>
+<i class="no-highlight">124</i>&nbsp;        }
+<b class="fc"><i class="no-highlight">125</i>&nbsp;    }</b>
+<i class="no-highlight">126</i>&nbsp;
+<i class="no-highlight">127</i>&nbsp;    /**
+<i class="no-highlight">128</i>&nbsp;     * Sign up as a new user from login-page
+<i class="no-highlight">129</i>&nbsp;     */
+<i class="no-highlight">130</i>&nbsp;    public void signUp() {
+<b class="fc"><i class="no-highlight">131</i>&nbsp;        newUser.setRoles(new HashSet&lt;&gt;());</b>
+<i class="no-highlight">132</i>&nbsp;        try {
+<b class="nc"><i class="no-highlight">133</i>&nbsp;            saveNewUser();</b>
+<b class="nc"><i class="no-highlight">134</i>&nbsp;            displayInfo(&quot;Account created&quot;, &quot;You can log in now.&quot;);</b>
+<b class="nc"><i class="no-highlight">135</i>&nbsp;        } catch (IllegalArgumentException e) {</b>
+<b class="nc"><i class="no-highlight">136</i>&nbsp;            displayError(e.getMessage(), e.getCause().getMessage());</b>
+<b class="nc"><i class="no-highlight">137</i>&nbsp;        }</b>
+<b class="nc"><i class="no-highlight">138</i>&nbsp;    }</b>
+<i class="no-highlight">139</i>&nbsp;
+<i class="no-highlight">140</i>&nbsp;    /**
+<i class="no-highlight">141</i>&nbsp;     * Edit the currently displayed user.
+<i class="no-highlight">142</i>&nbsp;     */
+<i class="no-highlight">143</i>&nbsp;    public void doUpdateUser() {
+<i class="no-highlight">144</i>&nbsp;        try {
+<b class="fc"><i class="no-highlight">145</i>&nbsp;            if (!password.isEmpty()) {</b>
+<b class="nc"><i class="no-highlight">146</i>&nbsp;                updatePassword();</b>
+<i class="no-highlight">147</i>&nbsp;            }
+<b class="nc"><i class="no-highlight">148</i>&nbsp;            saveUser();</b>
+<b class="nc"><i class="no-highlight">149</i>&nbsp;            PrimeFaces.current().executeScript(&quot;PF(&#39;userEditDialog&#39;).hide()&quot;);</b>
+<b class="nc"><i class="no-highlight">150</i>&nbsp;            displayInfo(&quot;User edited&quot;, &quot;&quot;);</b>
+<b class="nc"><i class="no-highlight">151</i>&nbsp;        } catch (IllegalArgumentException e) {</b>
+<b class="nc"><i class="no-highlight">152</i>&nbsp;            displayError(e.getMessage(), e.getCause().getMessage());</b>
+<b class="nc"><i class="no-highlight">153</i>&nbsp;        }</b>
+<b class="nc"><i class="no-highlight">154</i>&nbsp;    }</b>
+<i class="no-highlight">155</i>&nbsp;
+<i class="no-highlight">156</i>&nbsp;    /**
+<i class="no-highlight">157</i>&nbsp;     * Edit the own users password in the profile.
+<i class="no-highlight">158</i>&nbsp;     */
+<i class="no-highlight">159</i>&nbsp;    public void updatePasswordDialog() {
+<i class="no-highlight">160</i>&nbsp;        try {
+<b class="fc"><i class="no-highlight">161</i>&nbsp;            updatePassword();</b>
+<b class="nc"><i class="no-highlight">162</i>&nbsp;            saveUser();</b>
+<b class="nc"><i class="no-highlight">163</i>&nbsp;            PrimeFaces.current().executeScript(&quot;PF(&#39;changePasswordDialog&#39;).hide()&quot;);</b>
+<b class="nc"><i class="no-highlight">164</i>&nbsp;            displayInfo(&quot;Password changed&quot;, &quot;&quot;);</b>
+<b class="nc"><i class="no-highlight">165</i>&nbsp;        } catch (IllegalArgumentException e) {</b>
+<b class="nc"><i class="no-highlight">166</i>&nbsp;            displayError(e.getMessage(), e.getCause().getMessage());</b>
+<b class="nc"><i class="no-highlight">167</i>&nbsp;        }</b>
+<b class="nc"><i class="no-highlight">168</i>&nbsp;    }</b>
+<i class="no-highlight">169</i>&nbsp;
+<i class="no-highlight">170</i>&nbsp;    private void updatePassword() throws IllegalArgumentException {
+<b class="fc"><i class="no-highlight">171</i>&nbsp;        if (password.length() &gt; 3) {</b>
+<b class="nc"><i class="no-highlight">172</i>&nbsp;            if (password.equals(confirmPassword)) {</b>
+<b class="nc"><i class="no-highlight">173</i>&nbsp;                selectedUser.setPassword(password);</b>
+<i class="no-highlight">174</i>&nbsp;            } else {
+<b class="nc"><i class="no-highlight">175</i>&nbsp;                throw new IllegalArgumentException(&quot;Password not changed&quot;, new Throwable(&quot;Confirmation password does not match.&quot;));</b>
+<i class="no-highlight">176</i>&nbsp;            }
+<i class="no-highlight">177</i>&nbsp;        } else {
+<b class="nc"><i class="no-highlight">178</i>&nbsp;            throw new IllegalArgumentException(&quot;Password invalid&quot;, new Throwable(&quot;Your password must be at least 4 characters long.&quot;));</b>
+<i class="no-highlight">179</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">180</i>&nbsp;    }</b>
+<i class="no-highlight">181</i>&nbsp;
+<i class="no-highlight">182</i>&nbsp;    /**
+<i class="no-highlight">183</i>&nbsp;     * simply save a user and update UserListController.
+<i class="no-highlight">184</i>&nbsp;     */
+<i class="no-highlight">185</i>&nbsp;    public void saveUser() {
+<b class="fc"><i class="no-highlight">186</i>&nbsp;        selectedUser = userService.saveUser(selectedUser);</b>
+<b class="fc"><i class="no-highlight">187</i>&nbsp;        userListController.loadUsers();</b>
+<b class="fc"><i class="no-highlight">188</i>&nbsp;    }</b>
+<i class="no-highlight">189</i>&nbsp;
+<i class="no-highlight">190</i>&nbsp;    /**
+<i class="no-highlight">191</i>&nbsp;     * Get User Roles for datatable filter.
+<i class="no-highlight">192</i>&nbsp;     */
+<i class="no-highlight">193</i>&nbsp;    public List&lt;UserRole&gt; getListRoles(){
+<b class="fc"><i class="no-highlight">194</i>&nbsp;        return Arrays.asList(UserRole.values());</b>
+<i class="no-highlight">195</i>&nbsp;    }
+<i class="no-highlight">196</i>&nbsp;
+<i class="no-highlight">197</i>&nbsp;    //region getter &amp; setter
+<i class="no-highlight">198</i>&nbsp;    public User getNewUser() {
+<b class="fc"><i class="no-highlight">199</i>&nbsp;        return newUser;</b>
+<i class="no-highlight">200</i>&nbsp;    }
+<i class="no-highlight">201</i>&nbsp;
+<i class="no-highlight">202</i>&nbsp;    public void setNewUser(User newUser) {
+<b class="fc"><i class="no-highlight">203</i>&nbsp;        this.newUser = newUser;</b>
+<b class="fc"><i class="no-highlight">204</i>&nbsp;    }</b>
+<i class="no-highlight">205</i>&nbsp;
+<i class="no-highlight">206</i>&nbsp;    public String getPassword() {
+<b class="fc"><i class="no-highlight">207</i>&nbsp;        return password;</b>
+<i class="no-highlight">208</i>&nbsp;    }
+<i class="no-highlight">209</i>&nbsp;
+<i class="no-highlight">210</i>&nbsp;    public void setPassword(String password) {
+<b class="fc"><i class="no-highlight">211</i>&nbsp;        this.password = password;</b>
+<b class="fc"><i class="no-highlight">212</i>&nbsp;    }</b>
+<i class="no-highlight">213</i>&nbsp;
+<i class="no-highlight">214</i>&nbsp;    public String getConfirmPassword() {
+<b class="fc"><i class="no-highlight">215</i>&nbsp;        return confirmPassword;</b>
+<i class="no-highlight">216</i>&nbsp;    }
+<i class="no-highlight">217</i>&nbsp;
+<i class="no-highlight">218</i>&nbsp;    public void setConfirmPassword(String confirmPassword) {
+<b class="fc"><i class="no-highlight">219</i>&nbsp;        this.confirmPassword = confirmPassword;</b>
+<b class="fc"><i class="no-highlight">220</i>&nbsp;    }</b>
+<i class="no-highlight">221</i>&nbsp;    //endregion
+<i class="no-highlight">222</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-06-18 20:18</div>
+</div>
+</body>
+</html>

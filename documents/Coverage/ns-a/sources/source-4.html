@@ -1,0 +1,251 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ScoreManagerController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">at.qe.skeleton.ui.controllers.gameSockets</a>
+</div>
+
+<h1>Coverage Summary for Class: ScoreManagerController (at.qe.skeleton.ui.controllers.gameSockets)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ScoreManagerController</td>
+<td class="coverageStat">
+  <span class="percent">
+    66,7%
+  </span>
+  <span class="absValue">
+    (4/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    22,6%
+  </span>
+  <span class="absValue">
+    (7/31)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ScoreManagerController$MockitoMock$1823659847</td>
+  </tr>
+  <tr>
+    <td class="name">ScoreManagerController$MockitoMock$1823659847$auxiliary$EuvPRjHA</td>
+  </tr>
+  <tr>
+    <td class="name">ScoreManagerController$MockitoMock$1823659847$auxiliary$ImQ0hwyv</td>
+  </tr>
+  <tr>
+    <td class="name">ScoreManagerController$MockitoMock$1823659847$auxiliary$LItiY81R</td>
+  </tr>
+  <tr>
+    <td class="name">ScoreManagerController$MockitoMock$1823659847$auxiliary$lnp4h3kH</td>
+  </tr>
+  <tr>
+    <td class="name">ScoreManagerController$MockitoMock$1823659847$auxiliary$OWUHOC6D</td>
+  </tr>
+  <tr>
+    <td class="name">ScoreManagerController$MockitoMock$1823659847$auxiliary$UfZGjI74</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    66,7%
+  </span>
+  <span class="absValue">
+    (4/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    22,6%
+  </span>
+  <span class="absValue">
+    (7/31)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package at.qe.skeleton.ui.controllers.gameSockets;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import at.qe.skeleton.model.Game;
+<i class="no-highlight">4</i>&nbsp;import at.qe.skeleton.model.Score;
+<i class="no-highlight">5</i>&nbsp;import at.qe.skeleton.model.Team;
+<i class="no-highlight">6</i>&nbsp;import at.qe.skeleton.model.User;
+<i class="no-highlight">7</i>&nbsp;import at.qe.skeleton.model.demo.*;
+<i class="no-highlight">8</i>&nbsp;import at.qe.skeleton.repositories.GameRepository;
+<i class="no-highlight">9</i>&nbsp;import at.qe.skeleton.repositories.ScoreRepository;
+<i class="no-highlight">10</i>&nbsp;
+<i class="no-highlight">11</i>&nbsp;import at.qe.skeleton.repositories.TeamRepository;
+<i class="no-highlight">12</i>&nbsp;import at.qe.skeleton.ui.websockets.WebSocketManager;
+<i class="no-highlight">13</i>&nbsp;import at.qe.skeleton.utils.CDIAutowired;
+<i class="no-highlight">14</i>&nbsp;import at.qe.skeleton.utils.CDIContextRelated;
+<i class="no-highlight">15</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i class="no-highlight">16</i>&nbsp;import org.springframework.context.annotation.Scope;
+<i class="no-highlight">17</i>&nbsp;import org.springframework.stereotype.Controller;
+<i class="no-highlight">18</i>&nbsp;
+<i class="no-highlight">19</i>&nbsp;import java.sql.Timestamp;
+<i class="no-highlight">20</i>&nbsp;import java.text.SimpleDateFormat;
+<i class="no-highlight">21</i>&nbsp;import java.time.LocalDateTime;
+<i class="no-highlight">22</i>&nbsp;import java.util.Collection;
+<i class="no-highlight">23</i>&nbsp;import java.util.Collections;
+<i class="no-highlight">24</i>&nbsp;import java.util.Date;
+<i class="no-highlight">25</i>&nbsp;import java.util.Map;
+<i class="no-highlight">26</i>&nbsp;import java.util.concurrent.ConcurrentHashMap;
+<i class="no-highlight">27</i>&nbsp;import java.util.concurrent.atomic.AtomicBoolean;
+<i class="no-highlight">28</i>&nbsp;
+<i class="no-highlight">29</i>&nbsp;/**
+<i class="no-highlight">30</i>&nbsp; * This controller holds and manages all user&#39;s status-information (i.e. their
+<i class="no-highlight">31</i>&nbsp; * online-status)
+<i class="no-highlight">32</i>&nbsp; *
+<i class="no-highlight">33</i>&nbsp; * This class is part of the skeleton project provided for students of the
+<i class="no-highlight">34</i>&nbsp; * courses &quot;Software Architecture&quot; and &quot;Software Engineering&quot; offered by the
+<i class="no-highlight">35</i>&nbsp; * University of Innsbruck.
+<i class="no-highlight">36</i>&nbsp; */
+<i class="no-highlight">37</i>&nbsp;@Controller
+<i class="no-highlight">38</i>&nbsp;@Scope(&quot;application&quot;)
+<i class="no-highlight">39</i>&nbsp;@CDIContextRelated
+<b class="fc"><i class="no-highlight">40</i>&nbsp;public class ScoreManagerController {</b>
+<i class="no-highlight">41</i>&nbsp;
+<i class="no-highlight">42</i>&nbsp;    @Autowired
+<i class="no-highlight">43</i>&nbsp;    private ScoreRepository scoreRepository;
+<i class="no-highlight">44</i>&nbsp;
+<i class="no-highlight">45</i>&nbsp;    @Autowired
+<i class="no-highlight">46</i>&nbsp;    private GameRepository gameRepository;
+<i class="no-highlight">47</i>&nbsp;
+<i class="no-highlight">48</i>&nbsp;    @Autowired
+<i class="no-highlight">49</i>&nbsp;    TeamRepository teamRepository;
+<i class="no-highlight">50</i>&nbsp;
+<i class="no-highlight">51</i>&nbsp;
+<i class="no-highlight">52</i>&nbsp;    @CDIAutowired
+<i class="no-highlight">53</i>&nbsp;    private WebSocketManager websocketManager;
+<b class="fc"><i class="no-highlight">54</i>&nbsp;    private Map&lt;Integer,Map&lt;String, TeamScoreInfo&gt;&gt; scores = new ConcurrentHashMap&lt;&gt;();</b>
+<i class="no-highlight">55</i>&nbsp;
+<i class="no-highlight">56</i>&nbsp;    /**
+<i class="no-highlight">57</i>&nbsp;     * Action which sets up the List of scores for the game to be shown in the frontend
+<i class="no-highlight">58</i>&nbsp;     * @param game Game
+<i class="no-highlight">59</i>&nbsp;     */
+<i class="no-highlight">60</i>&nbsp;    public void setupScores(Game game) {
+<b class="nc"><i class="no-highlight">61</i>&nbsp;        Map&lt;String, TeamScoreInfo&gt; tmp = new ConcurrentHashMap&lt;&gt;();</b>
+<b class="nc"><i class="no-highlight">62</i>&nbsp;        System.out.println(game);</b>
+<b class="nc"><i class="no-highlight">63</i>&nbsp;        this.scoreRepository.findGameScoresByGame(game)</b>
+<b class="nc"><i class="no-highlight">64</i>&nbsp;              .forEach(score -&gt; tmp.put(score.getTeam().getTeamName(), new TeamScoreInfo(score.getTeam(),score.getTotalRoundScore())));</b>
+<b class="nc"><i class="no-highlight">65</i>&nbsp;        scores.put(game.getGameId(), tmp);</b>
+<b class="nc"><i class="no-highlight">66</i>&nbsp;    }</b>
+<i class="no-highlight">67</i>&nbsp;
+<i class="no-highlight">68</i>&nbsp;    /**
+<i class="no-highlight">69</i>&nbsp;     * Action to get the List of TeamScores for a Game
+<i class="no-highlight">70</i>&nbsp;     * @param game Game
+<i class="no-highlight">71</i>&nbsp;     * @return Collection of TeamScores
+<i class="no-highlight">72</i>&nbsp;     */
+<i class="no-highlight">73</i>&nbsp;    public Collection&lt;TeamScoreInfo&gt; getScores(Game game) {
+<b class="fc"><i class="no-highlight">74</i>&nbsp;        if(this.scores.get(game.getGameId()) == null) {return null;}</b>
+<b class="nc"><i class="no-highlight">75</i>&nbsp;        return Collections.unmodifiableCollection(this.scores.get(game.getGameId()).values());</b>
+<i class="no-highlight">76</i>&nbsp;    }
+<i class="no-highlight">77</i>&nbsp;
+<i class="no-highlight">78</i>&nbsp;    /**
+<i class="no-highlight">79</i>&nbsp;     * Action to add scores to a team in a game and check if winning score is reached
+<i class="no-highlight">80</i>&nbsp;     * @param game Game playing
+<i class="no-highlight">81</i>&nbsp;     * @param user User who played
+<i class="no-highlight">82</i>&nbsp;     * @param roundScore Score to add
+<i class="no-highlight">83</i>&nbsp;     * @return true if game is won, else false
+<i class="no-highlight">84</i>&nbsp;     */
+<i class="no-highlight">85</i>&nbsp;    public boolean addScoreToTeam(Game game, User user, int roundScore) {
+<b class="fc"><i class="no-highlight">86</i>&nbsp;        Team team = teamRepository.findByTeamPlayersAndGame(user,game);</b>
+<b class="nc"><i class="no-highlight">87</i>&nbsp;        Score tmp = new Score();</b>
+<b class="nc"><i class="no-highlight">88</i>&nbsp;        tmp.setGame(game);</b>
+<b class="nc"><i class="no-highlight">89</i>&nbsp;        tmp.setTotalRoundScore(roundScore);</b>
+<b class="nc"><i class="no-highlight">90</i>&nbsp;        tmp.setTeam(team);</b>
+<b class="nc"><i class="no-highlight">91</i>&nbsp;        tmp.setUser(user);</b>
+<b class="nc"><i class="no-highlight">92</i>&nbsp;        scoreRepository.save(tmp);</b>
+<b class="nc"><i class="no-highlight">93</i>&nbsp;        setupScores(game);</b>
+<i class="no-highlight">94</i>&nbsp;
+<b class="nc"><i class="no-highlight">95</i>&nbsp;        AtomicBoolean gameWon = new AtomicBoolean(false);</b>
+<b class="nc"><i class="no-highlight">96</i>&nbsp;        scores.get(game.getGameId()).forEach((key,value) -&gt; {</b>
+<b class="nc"><i class="no-highlight">97</i>&nbsp;            if(value.getScore() &gt;= game.getScoreToWin()){</b>
+<b class="nc"><i class="no-highlight">98</i>&nbsp;                System.out.println(&quot;IN LOOP &quot; + key + &quot; &quot; + value.getScore());</b>
+<b class="nc"><i class="no-highlight">99</i>&nbsp;                gameWon.set(true);</b>
+<i class="no-highlight">100</i>&nbsp;            }
+<b class="nc"><i class="no-highlight">101</i>&nbsp;        });</b>
+<b class="nc"><i class="no-highlight">102</i>&nbsp;        return gameWon.get();</b>
+<i class="no-highlight">103</i>&nbsp;    }
+<i class="no-highlight">104</i>&nbsp;
+<i class="no-highlight">105</i>&nbsp;    /**
+<i class="no-highlight">106</i>&nbsp;     * Action to set a game as finished
+<i class="no-highlight">107</i>&nbsp;     * @param game
+<i class="no-highlight">108</i>&nbsp;     */
+<i class="no-highlight">109</i>&nbsp;    public void setGameEnd(Game game) {
+<b class="fc"><i class="no-highlight">110</i>&nbsp;        Date end = Timestamp.valueOf(LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">111</i>&nbsp;        Game newgame = gameRepository.findByGameId(game.getGameId());</b>
+<b class="fc"><i class="no-highlight">112</i>&nbsp;        newgame.setEndTime(end);</b>
+<b class="nc"><i class="no-highlight">113</i>&nbsp;        newgame.setActive(false);</b>
+<i class="no-highlight">114</i>&nbsp;
+<b class="nc"><i class="no-highlight">115</i>&nbsp;        gameRepository.save(newgame);</b>
+<b class="nc"><i class="no-highlight">116</i>&nbsp;    }</b>
+<i class="no-highlight">117</i>&nbsp;
+<i class="no-highlight">118</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-06-18 20:18</div>
+</div>
+</body>
+</html>

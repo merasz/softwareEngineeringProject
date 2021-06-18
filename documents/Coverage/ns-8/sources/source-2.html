@@ -1,0 +1,170 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > MessageBean</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">at.qe.skeleton.ui.beans</a>
+</div>
+
+<h1>Coverage Summary for Class: MessageBean (at.qe.skeleton.ui.beans)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MessageBean</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (8/10)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">MessageBean$MockitoMock$1340327217</td>
+  </tr>
+  <tr>
+    <td class="name">MessageBean$MockitoMock$1340327217$auxiliary$4TUCTkAL</td>
+  </tr>
+  <tr>
+    <td class="name">MessageBean$MockitoMock$1340327217$auxiliary$9OAoOrXu</td>
+  </tr>
+  <tr>
+    <td class="name">MessageBean$MockitoMock$1340327217$auxiliary$hkjighBp</td>
+  </tr>
+  <tr>
+    <td class="name">MessageBean$MockitoMock$1340327217$auxiliary$okIyd7es</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (8/10)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package at.qe.skeleton.ui.beans;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import org.slf4j.Logger;
+<i class="no-highlight">4</i>&nbsp;import org.slf4j.LoggerFactory;
+<i class="no-highlight">5</i>&nbsp;import org.springframework.stereotype.Controller;
+<i class="no-highlight">6</i>&nbsp;
+<i class="no-highlight">7</i>&nbsp;import javax.annotation.ManagedBean;
+<i class="no-highlight">8</i>&nbsp;import javax.faces.application.FacesMessage;
+<i class="no-highlight">9</i>&nbsp;import javax.faces.context.FacesContext;
+<i class="no-highlight">10</i>&nbsp;import java.io.Serializable;
+<i class="no-highlight">11</i>&nbsp;
+<i class="no-highlight">12</i>&nbsp;/**
+<i class="no-highlight">13</i>&nbsp; * Message Bean to show informations or errors to the user
+<i class="no-highlight">14</i>&nbsp; */
+<i class="no-highlight">15</i>&nbsp;@ManagedBean
+<b class="fc"><i class="no-highlight">16</i>&nbsp;public class MessageBean implements Serializable {</b>
+<b class="fc"><i class="no-highlight">17</i>&nbsp;    private final Logger logger = LoggerFactory.getLogger(this.getClass());</b>
+<i class="no-highlight">18</i>&nbsp;
+<i class="no-highlight">19</i>&nbsp;    /**
+<i class="no-highlight">20</i>&nbsp;     * Show success message
+<i class="no-highlight">21</i>&nbsp;     *
+<i class="no-highlight">22</i>&nbsp;     * @param summary Short summary.
+<i class="no-highlight">23</i>&nbsp;     * @param text    Text to be displayed.
+<i class="no-highlight">24</i>&nbsp;     */
+<i class="no-highlight">25</i>&nbsp;    public void alertInformation(String summary, String info) {
+<b class="fc"><i class="no-highlight">26</i>&nbsp;        logger.info(&quot;Message Success: &quot; + info);</b>
+<b class="fc"><i class="no-highlight">27</i>&nbsp;        FacesContext context = FacesContext.getCurrentInstance();</b>
+<b class="fc"><i class="no-highlight">28</i>&nbsp;        context.addMessage(summary , new FacesMessage(FacesMessage.SEVERITY_INFO, summary, info));</b>
+<b class="nc"><i class="no-highlight">29</i>&nbsp;    }</b>
+<i class="no-highlight">30</i>&nbsp;
+<i class="no-highlight">31</i>&nbsp;    /**
+<i class="no-highlight">32</i>&nbsp;     * Show error message
+<i class="no-highlight">33</i>&nbsp;     *
+<i class="no-highlight">34</i>&nbsp;     * @param summary Short summary.
+<i class="no-highlight">35</i>&nbsp;     * @param text    Text to be displayed.
+<i class="no-highlight">36</i>&nbsp;     */
+<i class="no-highlight">37</i>&nbsp;    public void alertError(String summary, String info) {
+<b class="fc"><i class="no-highlight">38</i>&nbsp;        logger.info(&quot;Message Error: &quot; + info);</b>
+<b class="fc"><i class="no-highlight">39</i>&nbsp;        FacesContext context = FacesContext.getCurrentInstance();</b>
+<b class="fc"><i class="no-highlight">40</i>&nbsp;        context.addMessage(summary, new FacesMessage(FacesMessage.SEVERITY_ERROR, summary, info));</b>
+<b class="nc"><i class="no-highlight">41</i>&nbsp;    }</b>
+<i class="no-highlight">42</i>&nbsp;
+<i class="no-highlight">43</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-06-18 20:18</div>
+</div>
+</body>
+</html>

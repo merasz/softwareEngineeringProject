@@ -1,0 +1,190 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > APIService</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+    @import "../../.css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../.js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">at.qe.skeleton.api.service</a>
+</div>
+
+<h1>Coverage Summary for Class: APIService (at.qe.skeleton.api.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">APIService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    72%
+  </span>
+  <span class="absValue">
+    (18/25)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package at.qe.skeleton.api.service;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import at.qe.skeleton.api.controller.APIController;
+<i class="no-highlight">4</i>&nbsp;import at.qe.skeleton.api.model.PiRequest;
+<i class="no-highlight">5</i>&nbsp;import at.qe.skeleton.model.Game;
+<i class="no-highlight">6</i>&nbsp;import at.qe.skeleton.model.Raspberry;
+<i class="no-highlight">7</i>&nbsp;import at.qe.skeleton.repositories.RaspberryRepository;
+<i class="no-highlight">8</i>&nbsp;import at.qe.skeleton.services.GameService;
+<i class="no-highlight">9</i>&nbsp;import at.qe.skeleton.services.RaspberryService;
+<i class="no-highlight">10</i>&nbsp;import at.qe.skeleton.ui.controllers.gameSockets.GamePlaySocketController;
+<i class="no-highlight">11</i>&nbsp;import at.qe.skeleton.utils.CDIAutowired;
+<i class="no-highlight">12</i>&nbsp;import at.qe.skeleton.utils.CDIContextRelated;
+<i class="no-highlight">13</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i class="no-highlight">14</i>&nbsp;import org.springframework.context.annotation.Scope;
+<i class="no-highlight">15</i>&nbsp;import org.springframework.stereotype.Component;
+<i class="no-highlight">16</i>&nbsp;import org.springframework.stereotype.Service;
+<i class="no-highlight">17</i>&nbsp;
+<i class="no-highlight">18</i>&nbsp;import java.util.Random;
+<i class="no-highlight">19</i>&nbsp;import java.util.concurrent.atomic.AtomicLong;
+<i class="no-highlight">20</i>&nbsp;
+<i class="no-highlight">21</i>&nbsp;@Service
+<b class="fc"><i class="no-highlight">22</i>&nbsp;public class APIService {</b>
+<i class="no-highlight">23</i>&nbsp;
+<i class="no-highlight">24</i>&nbsp;    @Autowired
+<i class="no-highlight">25</i>&nbsp;    RaspberryRepository raspberryRepository;
+<i class="no-highlight">26</i>&nbsp;
+<i class="no-highlight">27</i>&nbsp;    @Autowired
+<i class="no-highlight">28</i>&nbsp;    RaspberryService raspberryService;
+<i class="no-highlight">29</i>&nbsp;
+<i class="no-highlight">30</i>&nbsp;    @Autowired
+<i class="no-highlight">31</i>&nbsp;    GameService gameService;
+<i class="no-highlight">32</i>&nbsp;
+<i class="no-highlight">33</i>&nbsp;    @Autowired
+<i class="no-highlight">34</i>&nbsp;    GamePlaySocketController gamePlaySocketController;
+<i class="no-highlight">35</i>&nbsp;
+<i class="no-highlight">36</i>&nbsp;    /**
+<i class="no-highlight">37</i>&nbsp;     * Method to get an API Key from the DB or generate a new one if no one is present
+<i class="no-highlight">38</i>&nbsp;     * @param raspberry Raspberry Pi for which the API Key is requested
+<i class="no-highlight">39</i>&nbsp;     * @return the API Key
+<i class="no-highlight">40</i>&nbsp;     */
+<i class="no-highlight">41</i>&nbsp;    public String generateApiKeyForRaspberry(Raspberry raspberry) {
+<i class="no-highlight">42</i>&nbsp;
+<b class="fc"><i class="no-highlight">43</i>&nbsp;        int leftLimit = 48; // numeral &#39;0&#39;</b>
+<b class="fc"><i class="no-highlight">44</i>&nbsp;        int rightLimit = 122; // letter &#39;z&#39;</b>
+<b class="fc"><i class="no-highlight">45</i>&nbsp;        int targetStringLength = 36;</b>
+<b class="fc"><i class="no-highlight">46</i>&nbsp;        Random random = new Random();</b>
+<i class="no-highlight">47</i>&nbsp;
+<i class="no-highlight">48</i>&nbsp;        /* https://www.baeldung.com/java-random-string */
+<b class="fc"><i class="no-highlight">49</i>&nbsp;        String generatedString = random.ints(leftLimit, rightLimit + 1)</b>
+<b class="fc"><i class="no-highlight">50</i>&nbsp;                .filter(i -&gt; (i &lt;= 57 || i &gt;= 65) &amp;&amp; (i &lt;= 90 || i &gt;= 97))</b>
+<b class="fc"><i class="no-highlight">51</i>&nbsp;                .limit(targetStringLength)</b>
+<b class="fc"><i class="no-highlight">52</i>&nbsp;                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)</b>
+<b class="fc"><i class="no-highlight">53</i>&nbsp;                .toString();</b>
+<i class="no-highlight">54</i>&nbsp;
+<b class="fc"><i class="no-highlight">55</i>&nbsp;        raspberry.setApiKey(generatedString);</b>
+<b class="fc"><i class="no-highlight">56</i>&nbsp;        raspberryRepository.save(raspberry);</b>
+<i class="no-highlight">57</i>&nbsp;
+<b class="fc"><i class="no-highlight">58</i>&nbsp;        return generatedString;</b>
+<i class="no-highlight">59</i>&nbsp;    }
+<i class="no-highlight">60</i>&nbsp;
+<i class="no-highlight">61</i>&nbsp;
+<i class="no-highlight">62</i>&nbsp;    /**
+<i class="no-highlight">63</i>&nbsp;     * Method to send Time Flip Updates to the Main program
+<i class="no-highlight">64</i>&nbsp;     * @param piRequest Request from the Raspberry Pi
+<i class="no-highlight">65</i>&nbsp;     */
+<i class="no-highlight">66</i>&nbsp;    public void updateTimeFlip(PiRequest piRequest) {
+<i class="no-highlight">67</i>&nbsp;
+<b class="fc"><i class="no-highlight">68</i>&nbsp;        System.out.println(&quot;IP: &quot; + piRequest.getIpAddress());</b>
+<b class="fc"><i class="no-highlight">69</i>&nbsp;        System.out.println(&quot;Facet: &quot; + piRequest.getFacetId());</b>
+<i class="no-highlight">70</i>&nbsp;
+<b class="fc"><i class="no-highlight">71</i>&nbsp;        int facet = piRequest.getFacetId();</b>
+<b class="fc"><i class="no-highlight">72</i>&nbsp;        if(0 &lt; facet &amp;&amp; facet &lt; 12) {</b>
+<b class="nc"><i class="no-highlight">73</i>&nbsp;            Raspberry raspi = raspberryService.loadRaspberryByIp(piRequest.getIpAddress());</b>
+<b class="nc"><i class="no-highlight">74</i>&nbsp;            if (raspi != null) {</b>
+<b class="nc"><i class="no-highlight">75</i>&nbsp;                Integer raspiId = raspi.getRaspberryId();</b>
+<b class="nc"><i class="no-highlight">76</i>&nbsp;                Game activeGame = gameService.getRunningGameByRaspberry(raspiId);</b>
+<b class="nc"><i class="no-highlight">77</i>&nbsp;                if (activeGame != null) {</b>
+<b class="nc"><i class="no-highlight">78</i>&nbsp;                    System.out.println(activeGame.getGameId());</b>
+<b class="nc"><i class="no-highlight">79</i>&nbsp;                    gamePlaySocketController.timeFlipUpdate(activeGame, piRequest.getFacetId());</b>
+<i class="no-highlight">80</i>&nbsp;                }
+<i class="no-highlight">81</i>&nbsp;            }
+<i class="no-highlight">82</i>&nbsp;        }
+<i class="no-highlight">83</i>&nbsp;
+<b class="fc"><i class="no-highlight">84</i>&nbsp;    }</b>
+<i class="no-highlight">85</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-06-18 20:18</div>
+</div>
+</body>
+</html>
