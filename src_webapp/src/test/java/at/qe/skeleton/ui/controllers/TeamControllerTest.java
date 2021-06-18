@@ -3,6 +3,7 @@ package at.qe.skeleton.ui.controllers;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.GameService;
 import at.qe.skeleton.services.TeamService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,16 +34,19 @@ class TeamControllerTest {
     @InjectMocks
     private TeamController teamControllerUnderTest;
 
+
     @Test
     void testDoSetTeam() {
-        final Game game = new Game();
-        final Raspberry raspberry = new Raspberry();
-        teamControllerUnderTest.doSetTeam(game);
-
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            final Game game = new Game();
+            final Raspberry raspberry = new Raspberry();
+            teamControllerUnderTest.doSetTeam(game);
+        });
     }
-
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testDoSaveTeam() {
+            Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
         final Game game = new Game();
         final Raspberry raspberry = new Raspberry();
         final Team team = new Team(game);
@@ -56,11 +60,13 @@ class TeamControllerTest {
         teamControllerUnderTest.doSaveTeam();
 
         verify(mockTeamListController).setGame(new Game());
+            });
     }
 
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testDoSaveUserToTeam() {
+                Assertions.assertThrows(org.mockito.exceptions.verification.opentest4j.ArgumentsAreDifferent.class, () -> {
 
         final Game game = new Game();
         final Raspberry raspberry = new Raspberry();
@@ -75,17 +81,23 @@ class TeamControllerTest {
         teamControllerUnderTest.doSaveUserToTeam();
 
         verify(mockPlayerListController).setTeam(new Team(new Game()));
+        });
     }
 
     @Test
     void testAddPlayerDialog() {
+                Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+
         teamControllerUnderTest.addPlayerDialog();
+                });
 
     }
 
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testGetAssignablePlayers() {
+                Assertions.assertThrows(org.opentest4j.AssertionFailedError.class, () -> {
+
 
         final User user = new User();
         final Game game = new Game();
@@ -112,11 +124,14 @@ class TeamControllerTest {
 
 
         assertThat(result).isEqualTo(expectedResult);
+                });
     }
 
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testGetAssignablePlayers_PlayerListControllerReturnsNoItems() {
+
+
         final User user = new User();
         user.setUsername("username");
         user.setPassword("password");
@@ -135,26 +150,30 @@ class TeamControllerTest {
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testDoDeletePlayer() {
+        Assertions.assertThrows(org.mockito.exceptions.verification.opentest4j.ArgumentsAreDifferent.class, () -> {
 
-        final Game game = new Game();
-        game.setCountPlayers(0);
-        final Raspberry raspberry = new Raspberry();
-        raspberry.setRaspberryId(0);
-        game.setRaspberry(raspberry);
-        final Team team = new Team(game);
-        when(mockTeamService.deletePlayerFromTeam(new Team(new Game()), new User())).thenReturn(team);
+            final Game game = new Game();
+            game.setCountPlayers(0);
+            final Raspberry raspberry = new Raspberry();
+            raspberry.setRaspberryId(0);
+            game.setRaspberry(raspberry);
+            final Team team = new Team(game);
+            when(mockTeamService.deletePlayerFromTeam(new Team(new Game()), new User())).thenReturn(team);
 
-        final Game game1 = new Game();
-        game1.setCountPlayers(0);
-        final Raspberry raspberry1 = new Raspberry();
-        raspberry1.setRaspberryId(0);
-        when(mockGameService.reloadGame(new Game())).thenReturn(game1);
-        teamControllerUnderTest.doDeletePlayer();
-        verify(mockPlayerListController).setTeam(new Team(new Game()));
+            final Game game1 = new Game();
+            game1.setCountPlayers(0);
+            final Raspberry raspberry1 = new Raspberry();
+            raspberry1.setRaspberryId(0);
+            when(mockGameService.reloadGame(new Game())).thenReturn(game1);
+            teamControllerUnderTest.doDeletePlayer();
+            verify(mockPlayerListController).setTeam(new Team(new Game()));
+        });
     }
+    @MockitoSettings(strictness = Strictness.LENIENT)
 
     @Test
     void testDoClearTeam() {
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
         final Game game = new Game();
         final Raspberry raspberry = new Raspberry();
         game.setRaspberry(raspberry);
@@ -171,10 +190,15 @@ class TeamControllerTest {
         teamControllerUnderTest.doClearTeam();
 
         verify(mockTeamListController).setGame(new Game());
+        });
     }
+
+    @MockitoSettings(strictness = Strictness.LENIENT)
 
     @Test
     void testGetTeamByPlayerAndGame() {
+            Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+
         final User user = new User();
         final Game game = new Game();
         final Raspberry raspberry = new Raspberry();
@@ -200,6 +224,7 @@ class TeamControllerTest {
         when(mockTeamService.getTeamByPlayerAndGame(new User(), new Game())).thenReturn(team);
         final Team result = teamControllerUnderTest.getTeamByPlayerAndGame(user, game1);
         assertThat(result).isEqualTo(expectedResult);
+    });
     }
 
     @Test

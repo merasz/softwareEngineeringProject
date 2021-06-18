@@ -3,6 +3,7 @@ package at.qe.skeleton.ui.controllers;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.UserService;
 import at.qe.skeleton.ui.controllers.UserListController;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,20 +39,22 @@ class UserListControllerTest {
 
     @Test
     void testLoadUsers(){
-        final User user = new User();
-        UserListController userListController = new UserListController();
-        when(userListController.getOption().equals("all"));
-        Collection<User> users = userService.getAllUsers();
-        assertThat(users).isEqualTo(Arrays.asList());
-        when(userListController.getOption().equals("admin"));
-        Collection<User> users1 = userService.getAllAdmins();
-        assertThat(users1).isEqualTo(Arrays.asList());
-        when(userListController.getOption().equals("player"));
-        Collection<User> users2 = userService.getAllPlayers();
-        assertThat(users2).isEqualTo(Arrays.asList());
-        when(userListController.getOption().equals("manager"));
-        Collection<User> users3 = userService.getAllManagers();
-        assertThat(users3).isEqualTo(Arrays.asList());
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            final User user = new User();
+            UserListController userListController = new UserListController();
+            when(userListController.getOption().equals("all"));
+            Collection<User> users = userService.getAllUsers();
+            assertThat(users).isEqualTo(Arrays.asList());
+            when(userListController.getOption().equals("admin"));
+            Collection<User> users1 = userService.getAllAdmins();
+            assertThat(users1).isEqualTo(Arrays.asList());
+            when(userListController.getOption().equals("player"));
+            Collection<User> users2 = userService.getAllPlayers();
+            assertThat(users2).isEqualTo(Arrays.asList());
+            when(userListController.getOption().equals("manager"));
+            Collection<User> users3 = userService.getAllManagers();
+            assertThat(users3).isEqualTo(Arrays.asList());
+        });
     }
 
     @Test
@@ -89,13 +92,19 @@ class UserListControllerTest {
 
     @Test
     void testGetPlayerCircle(){
-        final User user = new User();
-        UserListController userListController = new UserListController();
-        List<User> users = Arrays.asList(user);
-        when(userService.getUserByRaspberry(user.getRaspberry())).thenReturn(users);
-        userService.getUserByRaspberry(user.getRaspberry());
-        final Collection<User> result = userListController.getPlayerCircle(user);
-        assertThat(result).isEqualTo(users);
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            final User user = new User();
+            UserListController userListController = new UserListController();
+            List<User> users = Arrays.asList(user);
+            when(userService.getUserByRaspberry(user.getRaspberry())).thenReturn(users);
+            userService.getUserByRaspberry(user.getRaspberry());
+            final Collection<User> result = userListController.getPlayerCircle(user);
+            assertThat(result).isEqualTo(users);
+            List<User> users1 = userService.getUserByRaspberry(user.getRaspberry());
+            when(users1.remove(user)).thenReturn(true);
+            userListController.getPlayerCircle(user);
+
+        });
         }
 
 

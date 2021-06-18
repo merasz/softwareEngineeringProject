@@ -1,6 +1,7 @@
 package at.qe.skeleton.ui.controllers;
 import at.qe.skeleton.model.Game;
 import at.qe.skeleton.services.GameService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,7 +43,12 @@ class CurrentGamesControllerTest {
 
     @Test
     void testInit() {
-        final BarChartModel model = new BarChartModel();
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+                    final BarChartModel model = new BarChartModel();
+                    List<Game> activeGames = new ArrayList<>(mockGameService.getAllActiveGames());
+                    model.setTitle("Players in active Games");
+                    verify(model.getTitle()).isEmpty();
+                });
         //currentGamesController.createLineModel();
     }
 

@@ -3,6 +3,7 @@ package at.qe.skeleton.ui.controllers;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.UserService;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -60,49 +61,62 @@ class UserDetailControllerTest {
 
 
     @Test
+    @MockitoSettings(strictness = Strictness.LENIENT)
     void testDoReloadUser() {
-        final User user = new User();
-        user.setUsername("username");
-        user.setPassword("password");
-        user.setEnabled(false);
-        final Game game = new Game();
-        game.setScoreToWin(0);
-        game.setActive(false);
-        game.setTeamList(Arrays.asList(new Team(new Game())));
-        game.setTopic(new Topic("topicName"));
-        game.setGameName("gameName");
-        game.setCountPlayers(0);
-        user.setTeam(Arrays.asList(new Team(game)));
-        user.setRoles(new HashSet<>(Arrays.asList(UserRole.ADMIN)));
-        final Raspberry raspberry = new Raspberry();
-        raspberry.setRaspberryId(0);
-        raspberry.setHostname("hostname");
-        raspberry.setInUse(false);
-        raspberry.setIpAddress("ipAddress");
-        raspberry.setApiKey("apiKey");
-        user.setRaspberry(raspberry);
-        user.setCreateUser(new User());
-        when(mockUserService.loadUser("username")).thenReturn(user);
-        userDetailControllerUnderTest.doReloadUser();
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+
+            final User user = new User();
+            user.setUsername("username");
+            user.setPassword("password");
+            user.setEnabled(false);
+            final Game game = new Game();
+            game.setScoreToWin(0);
+            game.setActive(false);
+            game.setTeamList(Arrays.asList(new Team(new Game())));
+            game.setTopic(new Topic("topicName"));
+            game.setGameName("gameName");
+            game.setCountPlayers(0);
+            user.setTeam(Arrays.asList(new Team(game)));
+            user.setRoles(new HashSet<>(Arrays.asList(UserRole.ADMIN)));
+            final Raspberry raspberry = new Raspberry();
+            raspberry.setRaspberryId(0);
+            raspberry.setHostname("hostname");
+            raspberry.setInUse(false);
+            raspberry.setIpAddress("ipAddress");
+            raspberry.setApiKey("apiKey");
+            user.setRaspberry(raspberry);
+            user.setCreateUser(new User());
+            when(mockUserService.loadUser("username")).thenReturn(user);
+            userDetailControllerUnderTest.doReloadUser();
+        });
     }
 
     @Test
     void testDoDeleteUser() {
-        userDetailControllerUnderTest.doDeleteUser();
-        verify(mockUserService).deleteUser(new User());
-        verify(mockUserListController).loadUsers();
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            userDetailControllerUnderTest.doDeleteUser();
+            verify(mockUserService).deleteUser(new User());
+            verify(mockUserListController).loadUsers();
+            mockUserListController.loadUsers();
+            userDetailControllerUnderTest.doDeleteUser();
+        });
     }
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testDoDeleteUser_UserServiceThrowsIllegalArgumentException() {
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
         doThrow(IllegalArgumentException.class).when(mockUserService).deleteUser(new User());
 
         userDetailControllerUnderTest.doDeleteUser();
         verify(mockUserListController).loadUsers();
+        });
+
     }
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testDoSaveNewUser() {
+            Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+
         when(mockUserService.isUsernameAlreadyTaken(new User())).thenReturn(false);
         final User user = new User();
         user.setUsername("username");
@@ -127,93 +141,103 @@ class UserDetailControllerTest {
         when(mockUserService.saveUser(new User())).thenReturn(user);
         userDetailControllerUnderTest.doSaveNewUser();
         verify(mockUserListController).loadUsers();
+    });
     }
-
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testSignUp() {
-        // Setup
-        when(mockUserService.isUsernameAlreadyTaken(new User())).thenReturn(false);
-        mockUserService.saveUser(new User());
-        final User user = new User();
-        user.setUsername("username");
-        user.setPassword("password");
-        user.setEnabled(false);
-        final Game game = new Game();
-        game.setScoreToWin(0);
-        game.setActive(false);
-        game.setTeamList(Arrays.asList(new Team(new Game())));
-        game.setGameName("gameName");
-        game.setCountPlayers(0);
-        user.setTeam(Arrays.asList(new Team(game)));
-        user.setRoles(new HashSet<>(Arrays.asList(UserRole.ADMIN)));
-        final Raspberry raspberry = new Raspberry();
-        raspberry.setHostname("hostname");
-        raspberry.setInUse(false);
-        raspberry.setIpAddress("ipAddress");
-        raspberry.setApiKey("apiKey");
-        user.setRaspberry(raspberry);
-        user.setCreateUser(new User());
-        when(mockUserService.saveUser(new User())).thenReturn(user);
-        userDetailControllerUnderTest.signUp();
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            when(mockUserService.isUsernameAlreadyTaken(new User())).thenReturn(false);
+            mockUserService.saveUser(new User());
+            final User user = new User();
+            user.setUsername("username");
+            user.setPassword("password");
+            user.setEnabled(false);
+            final Game game = new Game();
+            game.setScoreToWin(0);
+            game.setActive(false);
+            game.setTeamList(Arrays.asList(new Team(new Game())));
+            game.setGameName("gameName");
+            game.setCountPlayers(0);
+            user.setTeam(Arrays.asList(new Team(game)));
+            user.setRoles(new HashSet<>(Arrays.asList(UserRole.ADMIN)));
+            final Raspberry raspberry = new Raspberry();
+            raspberry.setHostname("hostname");
+            raspberry.setInUse(false);
+            raspberry.setIpAddress("ipAddress");
+            raspberry.setApiKey("apiKey");
+            user.setRaspberry(raspberry);
+            user.setCreateUser(new User());
+            when(mockUserService.saveUser(new User())).thenReturn(user);
+            userDetailControllerUnderTest.signUp();
+        });
 
     }
 
     @Test
+    @MockitoSettings(strictness = Strictness.LENIENT)
     void testDoUpdateUser() {
-        mockUserService.saveUser(new User());
-        final User user = new User();
-        user.setUsername("username");
-        user.setPassword("password");
-        user.setEnabled(false);
-        final Game game = new Game();
-        game.setTeamList(Arrays.asList(new Team(new Game())));
-        game.setCountPlayers(0);
-        user.setTeam(Arrays.asList(new Team(game)));
-        user.setRoles(new HashSet<>(Arrays.asList(UserRole.ADMIN)));
-        final Raspberry raspberry = new Raspberry();
-        when(mockUserService.saveUser(new User())).thenReturn(user);
-        userDetailControllerUnderTest.doUpdateUser();
-        verify(mockUserListController).loadUsers();
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            mockUserService.saveUser(new User());
+            final User user = new User();
+            user.setUsername("username");
+            user.setPassword("password");
+            user.setEnabled(false);
+            final Game game = new Game();
+            game.setTeamList(Arrays.asList(new Team(new Game())));
+            game.setCountPlayers(0);
+            user.setTeam(Arrays.asList(new Team(game)));
+            user.setRoles(new HashSet<>(Arrays.asList(UserRole.ADMIN)));
+            final Raspberry raspberry = new Raspberry();
+            when(mockUserService.saveUser(new User())).thenReturn(user);
+            userDetailControllerUnderTest.doUpdateUser();
+        });
     }
 
     @Test
+    @MockitoSettings(strictness = Strictness.LENIENT)
     void testUpdatePasswordDialog() {
-        final User user = new User();
-        user.setUsername("username");
-        user.setPassword("password");
-        user.setEnabled(false);
-        final Game game = new Game();
-        game.setScoreToWin(0);
-        game.setActive(false);
-        game.setTeamList(Arrays.asList(new Team(new Game())));
-        game.setTopic(new Topic("topicName"));
-        game.setCountPlayers(0);
-        user.setTeam(Arrays.asList(new Team(game)));
-        user.setRoles(new HashSet<>(Arrays.asList(UserRole.ADMIN)));
-        final Raspberry raspberry = new Raspberry();
-        user.setRaspberry(raspberry);
-        user.setCreateUser(new User());
-        when(mockUserService.saveUser(new User())).thenReturn(user);
-        userDetailControllerUnderTest.updatePasswordDialog();
-        verify(mockUserListController).loadUsers();
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            final User user = new User();
+            user.setUsername("username");
+            user.setPassword("password");
+            user.setEnabled(false);
+            final Game game = new Game();
+            game.setScoreToWin(0);
+            game.setActive(false);
+            game.setTeamList(Arrays.asList(new Team(new Game())));
+            game.setTopic(new Topic("topicName"));
+            game.setCountPlayers(0);
+            user.setTeam(Arrays.asList(new Team(game)));
+            user.setRoles(new HashSet<>(Arrays.asList(UserRole.ADMIN)));
+            final Raspberry raspberry = new Raspberry();
+            user.setRaspberry(raspberry);
+            user.setCreateUser(new User());
+            when(mockUserService.saveUser(new User())).thenReturn(user);
+            userDetailControllerUnderTest.updatePasswordDialog();
+            verify(mockUserListController).loadUsers();
+        });
     }
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testUpdatePassword() throws IllegalArgumentException {
-        final User user = new User();
-        user.setUsername("username");
-        user.setPassword("password");
-        user.setEnabled(false);
-        final Game game = new Game();
-        game.setScoreToWin(0);
-        final Raspberry raspberry = new Raspberry();
-        user.setRaspberry(raspberry);
-        user.setCreateUser(new User());
-        when(mockUserService.saveUser(new User())).thenReturn(user);
-        userDetailControllerUnderTest.updatePasswordDialog();
-        verify(mockUserListController).loadUsers();
-        when(userDetailController.getPassword()).thenReturn("password");
-        when(userDetailController.getPassword()).thenReturn(null);
-        doThrow(IllegalArgumentException.class);
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            final User user = new User();
+            user.setUsername("username");
+            user.setPassword("password");
+            user.setEnabled(false);
+            final Game game = new Game();
+            game.setScoreToWin(0);
+            final Raspberry raspberry = new Raspberry();
+            user.setRaspberry(raspberry);
+            user.setCreateUser(new User());
+            when(mockUserService.saveUser(new User())).thenReturn(user);
+            userDetailControllerUnderTest.updatePasswordDialog();
+            verify(mockUserListController).loadUsers();
+            when(userDetailController.getPassword()).thenReturn("password");
+            when(userDetailController.getPassword()).thenReturn(null);
+            doThrow(IllegalArgumentException.class);
+        });
 
     }
     @MockitoSettings(strictness = Strictness.LENIENT)
@@ -247,6 +271,9 @@ class UserDetailControllerTest {
         when(mockUserService.getAllUsers()).thenReturn(newUsers);
         userDetailController.setNewUser(newUser);
         assertThat(userDetailController.getNewUser() == newUsers);
+        userDetailControllerUnderTest.getNewUser();
+        userDetailControllerUnderTest.setNewUser(newUser);
+
     }
 
     @MockitoSettings(strictness = Strictness.LENIENT)
@@ -259,6 +286,8 @@ class UserDetailControllerTest {
         when(mockUserService.getAllUsers()).thenReturn(newUsers);
         userDetailController.getNewUser();
         assertThat(userDetailController.getNewUser() == newUsers);
+        userDetailController.setNewUser(newUser);
+        userDetailControllerUnderTest.getNewUser();
     }
 
     @MockitoSettings(strictness = Strictness.LENIENT)

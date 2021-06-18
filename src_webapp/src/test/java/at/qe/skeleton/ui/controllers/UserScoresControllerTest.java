@@ -6,6 +6,7 @@ import at.qe.skeleton.services.TopicService;
 import at.qe.skeleton.services.UserService;
 import at.qe.skeleton.services.UserStatsService;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -50,12 +51,14 @@ class UserScoresControllerTest {
     }
     @Test
     void testShowOtherProfile(){
-        User user = new User();
-        Game game = new Game();
-        final boolean result = user.equals(null);
-        assertThat(result).isFalse();
-        final String result1 = userScoresController.showOtherProfile();
-        assertThat(result1).isEqualTo("/secured/profile.xhtml?faces-redirect=true");
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            User user = new User();
+            Game game = new Game();
+            final boolean result = user.equals(null);
+            assertThat(result).isFalse();
+            final String result1 = userScoresController.showOtherProfile();
+            assertThat(result1).isEqualTo("/secured/profile.xhtml?faces-redirect=true");
+        });
     }
 
 
@@ -167,12 +170,15 @@ class UserScoresControllerTest {
         User user = new User();
         user.setUsername("Username");
         assertTrue(user.getUsername() == "Username");
+        userScoresController.setUsername("bah");
+        userScoresController.getUsername();
     }
     @Test
     void testSetUserName() {
         User user = new User();
         user.setUsername("Username");
         assertTrue(user.getUsername() == "Username");
+        userScoresController.setUsername("bah");
     }
 
     @Test

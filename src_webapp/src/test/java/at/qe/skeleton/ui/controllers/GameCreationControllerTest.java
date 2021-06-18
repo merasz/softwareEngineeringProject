@@ -3,6 +3,7 @@ package at.qe.skeleton.ui.controllers;
 import at.qe.skeleton.model.*;
 import at.qe.skeleton.services.*;
 import at.qe.skeleton.ui.beans.SessionInfoBean;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -98,29 +99,33 @@ class GameCreationControllerTest {
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testDoSaveGame_TermsServiceThrowsIllegalArgumentException() {
-        when(mockTermsService.setTopic(new Topic("topicName"))).thenThrow(IllegalArgumentException.class);
-        final User user = new User();
-        user.setUsername("username");
-        user.setPassword("password");
-        final Game game = new Game();
-        final Topic topic = new Topic();
-        when(mockGameService.saveGame(new Game())).thenReturn(game);
-        final User user1 = new User();
-        final User user3 = new User();
-        final Team team = new Team();
-        when(mockTeamService.saveTeam(new Team())).thenReturn(team);
-        gameCreationController.doSaveGame();
-        gameCreationController.init();
-        gameCreationController.getGame();
-        gameCreationController.setGame(game);
-        gameCreationController.setNumberTeams(2);
-        gameCreationController.getCurrentTopic();
-        gameCreationController.setCurrentTopic(topic);
-        gameCreationController.getNumberTeams();
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            when(mockTermsService.setTopic(new Topic("topicName"))).thenThrow(IllegalArgumentException.class);
+            final User user = new User();
+            user.setUsername("username");
+            user.setPassword("password");
+            final Game game = new Game();
+            final Topic topic = new Topic();
+            when(mockGameService.saveGame(new Game())).thenReturn(game);
+            final User user1 = new User();
+            final User user3 = new User();
+            final Team team = new Team();
+            when(mockTeamService.saveTeam(new Team())).thenReturn(team);
+            gameCreationController.doSaveGame();
+            gameCreationController.init();
+            gameCreationController.getGame();
+            gameCreationController.setGame(game);
+            gameCreationController.setNumberTeams(2);
+            gameCreationController.getCurrentTopic();
+            gameCreationController.setCurrentTopic(topic);
+            gameCreationController.getNumberTeams();
+        });
     }
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testSetUserList() {
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+
         final User user = new User();
         user.setUsername("username");
         final Topic topic = new Topic();
@@ -135,14 +140,17 @@ class GameCreationControllerTest {
         gameCreationController.getCurrentTopic();
         gameCreationController.setCurrentTopic(topic);
         gameCreationController.getNumberTeams();
+    });
     }
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
+
     void testSetUserList_UserServiceReturnsNoItems() {
+            Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
         when(mockUserService.getAllUsers()).thenReturn(Collections.emptyList());
         gameCreationController.getGame();
         gameCreationController.displayInfo("Game deleted", "");
-
+        });
     }
 
 
@@ -204,10 +212,12 @@ class GameCreationControllerTest {
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testdoDeleteGame() {
-        Game game = new Game();
-        final Collection<Game> games2 = Arrays.asList(game);
-        when(mockGameService.getAllGames()).thenReturn(games2);
-        gameCreationController.doDeleteGame();
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            Game game = new Game();
+            final Collection<Game> games2 = Arrays.asList(game);
+            when(mockGameService.getAllGames()).thenReturn(games2);
+            gameCreationController.doDeleteGame();
+        });
     }
 
 

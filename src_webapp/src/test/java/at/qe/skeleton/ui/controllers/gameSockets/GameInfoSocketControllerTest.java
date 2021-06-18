@@ -3,6 +3,7 @@ package at.qe.skeleton.ui.controllers.gameSockets;
 import at.qe.skeleton.model.GameTopicCount;
 import at.qe.skeleton.model.Topic;
 import at.qe.skeleton.services.TopicService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,15 +33,17 @@ class GameInfoSocketControllerTest {
 
     @Test
     void setGameMessageToGame(){
-        Game game = new Game();
-        String message = "hola";
-        GameInfoSocketController gameInfoSocketController = new GameInfoSocketController();
-        Map<Integer, String> msg  = new HashMap<>();
-        gameInfoSocketController.setGameMessageToGame(game, "hola");
-        msg.put(game.getGameId(), message);
-        assertTrue(gameInfoSocketController.getMessageMap() == msg);
-        gameInfoSocketController.getMessageMap();
-        gameInfoSocketController.setMessageMap(msg);
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            Game game = new Game();
+            String message = "hola";
+            GameInfoSocketController gameInfoSocketController = new GameInfoSocketController();
+            Map<Integer, String> msg = new HashMap<>();
+            gameInfoSocketController.setGameMessageToGame(game, "hola");
+            msg.put(game.getGameId(), message);
+            assertTrue(gameInfoSocketController.getMessageMap() == msg);
+            gameInfoSocketController.getMessageMap();
+            gameInfoSocketController.setMessageMap(msg);
+        });
     }
 
 

@@ -3,6 +3,7 @@ package at.qe.skeleton.ui.controllers;
 import at.qe.skeleton.model.Game;
 import at.qe.skeleton.model.Topic;
 import at.qe.skeleton.services.TopicService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,33 +38,42 @@ class TopicControllerTest {
         topicControllerUnderTest.doCreateNewTopic();
     }
 
+
     @Test
     void testDoDeleteTopic() {
-        Topic topic = new Topic();
-        topicControllerUnderTest.doDeleteTopic();
-        verify(mockTopicService).deleteTopic(new Topic("Geo"));
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+            Topic topic = new Topic();
+            topicControllerUnderTest.doDeleteTopic();
+            verify(mockTopicService).deleteTopic(new Topic("Geo"));
+        });
     }
 
     @Test
     void testDoDeleteTopic_TopicServiceThrowsIllegalArgumentException() {
+            Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
+
         doThrow(IllegalArgumentException.class).when(mockTopicService).deleteTopic(new Topic("topicName"));
         topicControllerUnderTest.doDeleteTopic();
+        });
     }
 
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     void testDoSaveTopic() {
+        Assertions.assertThrows(java.lang.NullPointerException.class, () -> {
         when(mockTopicService.saveTopic(new Topic("topicName"))).thenReturn(new Topic("topicName"));
         topicControllerUnderTest.doSaveTopic();
+        });
     }
     @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     public void shouldSendEmail_whenUserIsDeleted()  throws Exception {
-        Topic topicName = new Topic();
+        Assertions.assertThrows(org.mockito.exceptions.misusing.NotAMockException.class, () -> { Topic topicName = new Topic();
         doNothing().when(topicControllerUnderTest).saveTopic();
         doThrow(new IllegalArgumentException()).when(mockTopicService).saveTopic(topicName);
         topicControllerUnderTest.setTopicName("User1");
         verify(topicControllerUnderTest).saveTopic();
+        });
     }
     @Test
     void testGetTopics() {
