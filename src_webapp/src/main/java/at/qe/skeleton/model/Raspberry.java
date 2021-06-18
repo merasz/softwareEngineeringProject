@@ -18,6 +18,7 @@ public class Raspberry implements Serializable {
     private List<User> users;
 
     private boolean inUse;
+    @Column(unique = true)
     private String ipAddress;
     private String apiKey;
 

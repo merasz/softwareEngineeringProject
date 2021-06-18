@@ -14,6 +14,7 @@ public class Game implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer gameId;
+    @Column(unique = true)
     private String gameName;
     private int scoreToWin;
     private int countPlayers;
